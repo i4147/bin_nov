@@ -21,7 +21,7 @@ def fsz(sz: float) -> str:
         return "0 B"
     i = min(int(int(sz).bit_length() - 1) // 10, len(units) - 1)
     sz /= 1024**i
-    return f"{int(sz)} {units[i]}B"
+    return f"{sz:.3f} {units[i]}B"
 
 
 def gsz(path: str | Path) -> int:
