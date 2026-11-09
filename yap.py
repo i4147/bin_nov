@@ -17,13 +17,14 @@ import subprocess
 import sys
 from typing import Any, Callable
 
-from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+from dh import MAX_WORKERS, SKIP_DIRS
+from atomicio import atomic_write
 from loguru import logger
 
 
 BACKENDS: tuple[str, ...] = ("black", "yapf", "autopep8", "ruff", "isort", "autoflake")
 DEFAULT_LINE_LENGTH: int = 120
-DEFAULT_TARGET: str = "3.12"
+DEFAULT_TARGET: str = "3.11"
 DEFAULT_EXTS: tuple[str, ...] = (".py", ".pyi", ".pyw")
 
 

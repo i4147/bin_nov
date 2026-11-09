@@ -134,7 +134,7 @@ def _safe_extractall(tar: tarfile.TarFile, path: Path) -> None:
     try:
         tar.extractall(path, filter="data")
     except TypeError:
-        tar.extractall(path)
+        tar.extractall(path,filter='data')
 
 
 @dataclass(slots=True)
