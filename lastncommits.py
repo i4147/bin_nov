@@ -39,7 +39,7 @@ def get_created_files(n_commits: int) -> list:
         sys.exit(1)
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 2:
         print("Usage: python3 list_commits.py <N>")
         print("       where N is the number of commits to analyze")

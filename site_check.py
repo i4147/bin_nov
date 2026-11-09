@@ -10,9 +10,10 @@ from pathlib import Path
 import pkgutil
 import py_compile
 import site
+from typing import Any
 
 
-def run_sanity_check():
+def run_sanity_check() -> dict[str, list[Any]]:
     issues = {"compilation_errors": [], "import_errors": []}
     site_dirs = site.getsitepackages()
     if hasattr(site, "getusersitepackages"):

@@ -15,13 +15,13 @@ import os
 from pathlib import Path
 import sys
 import tokenize
-from typing import TypeAlias
+from typing import Any, Callable, Iterable, TypeAlias
 
 from dh import MAX_WORKERS, cprint, get_pyfiles
 from xxhash import xxh64_hexdigest
 
 
-DUPLICATES_CACHE_FILENAME = ".cache.json"
+DUPLICATES_CACHE_FILENAME: str = ".cache.json"
 
 ProcessResult: TypeAlias = tuple[str, str | None, str | None]
 ProcessingFailure: TypeAlias = tuple[str, str]

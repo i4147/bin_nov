@@ -24,7 +24,7 @@ ANSI_ESCAPE_RE = re.compile(
 CONTROL_CHARS_RE = re.compile(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]")
 
 
-def apply_carriage_returns(text):
+def apply_carriage_returns(text: str) -> str:
     out_lines = []
     for line in text.split("\n"):
         if "\r" not in line:
@@ -37,7 +37,7 @@ def apply_carriage_returns(text):
     return "\n".join(out_lines)
 
 
-def apply_backspaces(text):
+def apply_backspaces(text: str) -> str:
     prev = None
     while prev != text:
         prev = text
@@ -46,7 +46,7 @@ def apply_backspaces(text):
     return text
 
 
-def clean(text):
+def clean(text: str) -> str:
     text = text.replace("\r\n", "\n")
     text = ANSI_ESCAPE_RE.sub("", text)
     text = apply_carriage_returns(text)
@@ -55,7 +55,7 @@ def clean(text):
     return text
 
 
-def clean_file(path):
+def clean_file(path: Path) -> bool:
     try:
         original = path.read_text(encoding="utf-8", errors="replace")
     except OSError as e:
@@ -71,7 +71,7 @@ def clean_file(path):
     return True
 
 
-def main():
+def main() -> int:
     args = sys.argv[1:]
     if args:
         paths = [Path(a) for a in args]

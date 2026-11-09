@@ -11,7 +11,7 @@ from zipfile import ZipFile
 from packaging.utils import canonicalize_name
 
 
-def parse_metadata_from_wheel(wheel_path: Path):
+def parse_metadata_from_wheel(wheel_path: Path) -> tuple[str,]:
     with ZipFile(wheel_path) as zf:
         meta_name = next(
             (n for n in zf.namelist() if n.endswith(".dist-info/METADATA")),

@@ -25,7 +25,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Any, Iterable, Sequence
+from typing import Any, Iterable, NoReturn, Sequence
 import zipfile
 
 
@@ -36,8 +36,8 @@ except ModuleNotFoundError:
         import tomli as tomllib
     except ModuleNotFoundError:
         tomllib = None
-README_SUFFIXES = {".md", ".markdown", ".mdown", ".mkdn"}
-BINARY_SUFFIXES = (".so", ".pyd", ".dll")
+README_SUFFIXES: set[str] = {".md", ".markdown", ".mdown", ".mkdn"}
+BINARY_SUFFIXES: tuple[str, str, str] = (".so", ".pyd", ".dll")
 
 
 def die(msg: str, code: int = 1) -> "NoReturn":
@@ -836,7 +836,7 @@ def render_setup_py_from_wheel(meta: dict[str, Any], ext_modules: list[str], ent
     )
 
 
-GITIGNORE_DEFAULT = (
+GITIGNORE_DEFAULT: str = (
     "__pycache__/\n*.py[cod]\n*.egg-info/\ndist/\nbuild/\n.venv/\nvenv/\nenv/\n"
     ".mypy_cache/\n.ruff_cache/\n.pytest_cache/\n.coverage\n"
 )
@@ -899,7 +899,7 @@ GITIGNORE_DEV = textwrap.dedent("""\
     .env.local
     .env.*.local
     """)
-PYPROJECT_SETUPTOOLS_SRC = """\
+PYPROJECT_SETUPTOOLS_SRC: str = """\
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
@@ -913,7 +913,7 @@ dependencies = []
 [tool.setuptools.packages.find]
 where = ["src"]
 {scripts_block}"""
-PYPROJECT_HATCHLING_TYPER = """\
+PYPROJECT_HATCHLING_TYPER: str = """\
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -950,14 +950,14 @@ path = "src/{module}/__init__.py"
 line-length = 88
 target-version = ['py310']
 """
-PYPROJECT_SETUPTOOLS_CFG = """\
+PYPROJECT_SETUPTOOLS_CFG: str = """\
 [build-system]
 requires = ["setuptools>=69.0", "wheel"]
 build-backend = "setuptools.build_meta"
 [project.scripts]
 {name} = "{name}:main"
 """
-SETUP_CFG_TEMPLATE = """\
+SETUP_CFG_TEMPLATE: str = """\
 [metadata]
 name = {name}
 version = {version}
@@ -1242,7 +1242,7 @@ PRE_COMMIT_CONFIG = textwrap.dedent("""\
           - id: isort
             args: ["--profile", "black"]
     """)
-DEV_PACKAGES = [
+DEV_PACKAGES: list[str] = [
     "ruff",
     "black",
     "isort",
@@ -1251,7 +1251,7 @@ DEV_PACKAGES = [
     "pytest-cov",
     "pre-commit",
 ]
-DEV_PYPROJECT = """\
+DEV_PYPROJECT: str = """\
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -1359,7 +1359,7 @@ def cmd_dev(args: argparse.Namespace) -> int:
     return 0
 
 
-NEW_SCRIPT_TEMPLATE = '''#!/usr/bin/env python3
+NEW_SCRIPT_TEMPLATE: str = '''#!/usr/bin/env python3
 """Standalone script scaffold."""
 from pathlib import Path
 import sys

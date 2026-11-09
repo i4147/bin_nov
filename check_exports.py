@@ -9,12 +9,13 @@ import argparse
 import ast
 from collections.abc import Iterator
 from pathlib import Path
+from typing import Any
 
 from dh import SKIP_DIRS
 from loguru import logger
 
 
-ICONS = {"functions": "🔧", "classes": "🏛️ ", "constants": "📌"}
+ICONS: dict[str, str] = {"functions": "🔧", "classes": "🏛️ ", "constants": "📌"}
 
 
 def extract_definitions(path: Path) -> dict[str, list[str]]:

@@ -12,6 +12,7 @@ import shutil
 import sys
 import termios
 import tty
+from typing import Any, Iterable
 
 
 try:
@@ -23,15 +24,15 @@ try:
     from readchar import key as rk
 except ImportError:
     sys.exit("readchar is required.  Install it with:  pip install readchar")
-RESET = "\x1b[0m"
-HOME = "\x1b[H"
-CLEAR = "\x1b[2J"
-HIDE_CURSOR = "\x1b[?25l"
-SHOW_CURSOR = "\x1b[?25h"
-ENTER_ALT = "\x1b[?1049h"
-LEAVE_ALT = "\x1b[?1049l"
-REVERSE = "\x1b[7m"
-TIMEOUT_SENTINEL = "\x00"
+RESET: str = "\x1b[0m"
+HOME: str = "\x1b[H"
+CLEAR: str = "\x1b[2J"
+HIDE_CURSOR: str = "\x1b[?25l"
+SHOW_CURSOR: str = "\x1b[?25h"
+ENTER_ALT: str = "\x1b[?1049h"
+LEAVE_ALT: str = "\x1b[?1049l"
+REVERSE: str = "\x1b[7m"
+TIMEOUT_SENTINEL: str = "\x00"
 
 
 class RenderError(RuntimeError):

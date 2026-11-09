@@ -21,10 +21,10 @@ from dh import WORKERS
 from loguru import logger
 
 
-SUPPORTED_EXTENSIONS = {".html", ".css", ".js", ".jsx", ".tsx", ".ts"}
-ASSETS_DIR = Path("assets")
-CHUNK_SIZE = 8192
-MAX_FILE_SIZE = 100 * 1024 * 1024
+SUPPORTED_EXTENSIONS: set[str] = {".html", ".css", ".js", ".jsx", ".tsx", ".ts"}
+ASSETS_DIR: Path = Path("assets")
+CHUNK_SIZE: int = 8192
+MAX_FILE_SIZE: int = 100 * 1024 * 1024
 BASE64_SIGNATURES: dict[str, tuple[bytes, str, str]] = {
     "image/png": (b"\x89PNG\r\n\x1a\n", ".png", "images"),
     "image/jpeg": (b"\xff\xd8\xff", ".jpg", "images"),

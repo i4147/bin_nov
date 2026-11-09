@@ -16,7 +16,7 @@ from multiprocessing import Pool
 import os
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING
+from typing import Any, Iterable, Sequence, TYPE_CHECKING
 
 from dh import DEFAULT_XZ_MAX_WORKERS, DEFAULT_ZSTD_MAX_WORKERS
 from loguru import logger
@@ -40,11 +40,11 @@ except ImportError:
         return f"{value:.1f} PB"
 
 
-DEFAULT_ZSTD_LEVEL = 3
-DEFAULT_ZSTD_THREADS = 4
-DEFAULT_ZSTD_CHUNK_SIZE = 131_072
-DEFAULT_XZ_PRESET = 9
-DEFAULT_XZ_THREADS = 4
+DEFAULT_ZSTD_LEVEL: int = 3
+DEFAULT_ZSTD_THREADS: int = 4
+DEFAULT_ZSTD_CHUNK_SIZE: int = 131_072
+DEFAULT_XZ_PRESET: int = 9
+DEFAULT_XZ_THREADS: int = 4
 ZSTD_EXTENSIONS = frozenset({".zst"})
 ZSTD_SKIP_EXTENSIONS = frozenset({
     ".xz",
@@ -188,7 +188,7 @@ ZSTD_EXCLUDED_DIR_NAMES = frozenset({
     ".egg-info",
     "zstandard",
 })
-ZSTD_EXCLUDED_DIR_PATTERNS = ["*.egg-info", "*.dist-info"]
+ZSTD_EXCLUDED_DIR_PATTERNS: list[str] = ["*.egg-info", "*.dist-info"]
 XZ_SKIP_EXTENSIONS = frozenset({
     ".zip",
     ".br",

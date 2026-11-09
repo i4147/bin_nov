@@ -16,19 +16,20 @@ import sys
 import tempfile
 import termios
 import tty
+from typing import Any, Sequence
 
 
-RESET = "\x1b[0m"
-HOME = "\x1b[H"
-CLEAR = "\x1b[2J"
-HIDE_CURSOR = "\x1b[?25l"
-SHOW_CURSOR = "\x1b[?25h"
-ENTER_ALT = "\x1b[?1049h"
-LEAVE_ALT = "\x1b[?1049l"
-REVERSE = "\x1b[7m"
-HALF_BLOCK = "\u2580"
+RESET: str = "\x1b[0m"
+HOME: str = "\x1b[H"
+CLEAR: str = "\x1b[2J"
+HIDE_CURSOR: str = "\x1b[?25l"
+SHOW_CURSOR: str = "\x1b[?25h"
+ENTER_ALT: str = "\x1b[?1049h"
+LEAVE_ALT: str = "\x1b[?1049l"
+REVERSE: str = "\x1b[7m"
+HALF_BLOCK: str = "\u2580"
 DEVNULL = subprocess.DEVNULL
-WHITESPACE = b" \t\r\n\v\f"
+WHITESPACE: bytes = b" \t\r\n\v\f"
 PAGES_RE = re.compile(rb"^Pages:\s*(\d+)", re.MULTILINE)
 
 

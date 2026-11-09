@@ -16,14 +16,14 @@ from pathlib import Path
 import re
 import sqlite3
 import sys
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Iterable, Iterator, Optional
 
 from dh import MAX_WORKERS
 from loguru import logger
 
 
 Tables = dict[str, list[dict[str, Any]]]
-MMAP_THRESHOLD = 5 * 1024 * 1024
+MMAP_THRESHOLD: int = 5 * 1024 * 1024
 
 
 def _require(modname: str):
@@ -66,7 +66,7 @@ def _flat(value: Any) -> Any:
     return json.dumps(value, ensure_ascii=False, default=str)
 
 
-def _infer_sql_type(values) -> str:
+def _infer_sql_type(values: list[Any]) -> str:
     kind: Optional[str] = None
     for v in values:
         if v is None:
@@ -230,7 +230,7 @@ _INSERT_RE = re.compile(
     r'INSERT\s+(?:OR\s+\w+\s+)?INTO\s+[`"\[\]]?(\w+)[`"\[\]]?\s*' r"(?:\(([^)]*)\))?\s*VALUES\s*",
     re.IGNORECASE,
 )
-_NON_COLUMN_KEYWORDS = {
+_NON_COLUMN_KEYWORDS: set[str] = {
     "PRIMARY",
     "FOREIGN",
     "UNIQUE",
@@ -271,7 +271,7 @@ def _split_top_level(s: str) -> list[str]:
     return parts
 
 
-def _iter_create_tables(text: str):
+def _iter_create_tables(text: str) -> Iterator[str]:
     for m in _CREATE_RE.finditer(text):
         name = m.group(1)
         i, depth, start = m.end(), 1, m.end()
@@ -294,7 +294,7 @@ def _iter_create_tables(text: str):
         yield name, text[start : i - 1]
 
 
-def _iter_inserts(text: str):
+def _iter_inserts(text: str) -> Iterator[str]:
     for m in _INSERT_RE.finditer(text):
         name = m.group(1)
         cols = m.group(2)
@@ -896,7 +896,7 @@ def write_dbf(tables: Tables, out_path: Path) -> list[Path]:
     return [out_path]
 
 
-def _geo_to_tables(gdf) -> Tables:
+def _geo_to_tables(gdf: Any) -> Tables:
     df = gdf.copy()
     if "geometry" in df.columns:
         df["geometry"] = df["geometry"].apply(lambda g: g.wkt if g is not None else None)

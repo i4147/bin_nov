@@ -9,10 +9,11 @@ import os
 from pathlib import Path
 import sys
 from tempfile import NamedTemporaryFile
+from typing import Any
 
 
-SKIP_CONTENT_TAGS = {"script", "style", "noscript", "template", "head"}
-BLOCK_TAGS = {
+SKIP_CONTENT_TAGS: set[str] = {"script", "style", "noscript", "template", "head"}
+BLOCK_TAGS: set[str] = {
     "address",
     "article",
     "aside",
@@ -51,7 +52,7 @@ BLOCK_TAGS = {
     "tr",
     "ul",
 }
-RAWTEXT_TAGS = {"script", "style", "textarea", "title"}
+RAWTEXT_TAGS: set[str] = {"script", "style", "textarea", "title"}
 
 
 def _find_safe_splits(path: Path, n: int) -> list[int]:
@@ -124,23 +125,23 @@ class _TextExtractor(HTMLParser):
         self._chunks: list[str] = []
         self._pending_space = False
 
-    def handle_starttag(self, tag, attrs):
+    def handle_starttag(self, tag: str, attrs: Any) -> None:
         if tag in SKIP_CONTENT_TAGS:
             self._skip_depth += 1
         elif tag in BLOCK_TAGS:
             self._pending_space = True
 
-    def handle_startendtag(self, tag, attrs):
+    def handle_startendtag(self, tag: str, attrs: Any) -> None:
         if tag in BLOCK_TAGS:
             self._pending_space = True
 
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag: str) -> None:
         if tag in SKIP_CONTENT_TAGS and self._skip_depth:
             self._skip_depth -= 1
         elif tag in BLOCK_TAGS:
             self._pending_space = True
 
-    def handle_data(self, data):
+    def handle_data(self, data: Any) -> None:
         if self._skip_depth:
             return
         if self._pending_space:

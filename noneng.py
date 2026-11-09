@@ -14,15 +14,15 @@ import codecs
 from dataclasses import dataclass
 import multiprocessing
 from pathlib import Path
-from typing import Any, Iterable, Iterator
+from typing import Any, Iterable, Iterator, Sequence
 
 from dh import SKIP_DIRS, WORKERS
 from loguru import logger
 
 
-CHUNK_SIZE = 64 * 1024
-DETECTION_SIZE = 4000
-MIN_LETTERS = 20
+CHUNK_SIZE: int = 64 * 1024
+DETECTION_SIZE: int = 4000
+MIN_LETTERS: int = 20
 _BACKEND: str = ""
 _DETECTOR: Any = None
 

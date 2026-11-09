@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import shutil
 import sys
+from typing import Any, Iterable, Iterator
 
 from dh import SKIP_DIRS
 from fastwalk import walk_dirs
@@ -76,7 +77,7 @@ def gsz(path: Path) -> int:
     return total
 
 
-def walk(root: Path):
+def walk(root: Path) -> Iterator[Path]:
     for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
         dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
         for name in filenames:
@@ -180,7 +181,7 @@ def cmd_termux(do_apply: bool = True) -> int:
     return 0
 
 
-JUNK_SUFFIXES = (
+JUNK_SUFFIXES: tuple[str, ...] = (
     ".pyc",
     ".tmp",
     ".log",

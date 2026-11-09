@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import shutil
 import sys
+from typing import Any, Iterable
 
 from ppdeep import compare, hash_from_file
 import ssdeep
@@ -39,14 +40,14 @@ def get_all_files(root: str = "."):
     return paths
 
 
-def compute_hashes(files):
+def compute_hashes(files: list[Path]):
     hashes = {}
     for f in files:
         hashes[f] = hash_from_file(str(f))
     return hashes
 
 
-def group_similar_files(hashes, threshold: int):
+def group_similar_files(hashes: dict[str, Any], threshold: int):
     matrx = {}
     visited = set()
     groups = []
@@ -72,7 +73,7 @@ def group_similar_files(hashes, threshold: int):
     return groups
 
 
-def copy_groups(groups, output_dir="output") -> None:
+def copy_groups(groups: Iterable[Any], output_dir = "output") -> None:
     Path(output_dir).mkdir(exist_ok=True, parents=True)
     for idx, group in enumerate(groups, start=1):
         group_dir = Path(output_dir).joinpath(f"group_{idx}")
@@ -84,7 +85,7 @@ def copy_groups(groups, output_dir="output") -> None:
                 print(f"Failed to copy {f}: {e}")
 
 
-def write_report(groups, format="csv", output_dir="output") -> None:
+def write_report(groups: Iterable[Any], format = "csv", output_dir = "output") -> None:
     Path(output_dir).mkdir(exist_ok=True, parents=True)
     if format == "csv":
         report_file = Path(output_dir).joinpath("similar_report.csv")
@@ -103,7 +104,7 @@ def write_report(groups, format="csv", output_dir="output") -> None:
         print(f"JSON report written to {report_file}")
 
 
-def colorize_score(score, threshold) -> str:
+def colorize_score(score: str, threshold: float) -> str:
     if not USE_COLOR or score == "":
         return str(score)
     if score == 100 or score >= threshold + 10:
@@ -113,7 +114,7 @@ def colorize_score(score, threshold) -> str:
     return Fore.RED + str(score) + Style.RESET_ALL
 
 
-def write_matrix(hashes, threshold: int, output_dir="output", pretty=False) -> None:
+def write_matrix(hashes: dict[str, Any], threshold: int, output_dir = "output", pretty = False) -> None:
     Path(output_dir).mkdir(exist_ok=True, parents=True)
     files = list(hashes.keys())
     matrix_file = Path(output_dir).joinpath("similarity_matrix.csv")

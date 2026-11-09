@@ -10,9 +10,9 @@ import stat
 
 HOME = Path.home()
 cwd = Path.cwd()
-PREFIX = Path(os.environ.get("PREFIX", "/data/data/com.termux/files/usr"))
-NEW_SHEBANG = f"#!{PREFIX}/bin/python3.14"
-OLD_PREFIXES = (
+PREFIX: Path = Path(os.environ.get("PREFIX", "/data/data/com.termux/files/usr"))
+NEW_SHEBANG: str = f"#!{PREFIX}/bin/python3.14"
+OLD_PREFIXES: tuple[str, ...] = (
     str(HOME / ".local/bin"),
     str(PREFIX / "bin"),
     "/usr/bin",
@@ -85,7 +85,7 @@ def rewrite_file(path: Path) -> bool:
     return True
 
 
-def main():
+def main() -> None:
     if not cwd.is_dir():
         print(f"Directory not found: {cwd}")
         return

@@ -10,7 +10,7 @@ import operator
 from pathlib import Path
 import string
 import sys
-from typing import Callable, Iterator, Sequence
+from typing import Any, Callable, Iterable, Iterator, Sequence
 import zlib
 
 from dh import cprint
@@ -438,7 +438,7 @@ def join_simple_lines(text: str) -> str:
     return "\n".join(out)
 
 
-_STUB_HEADER = "import base64 as _b,zlib as _z\nexec(_z.decompress(_b.b85decode(_p)))\n"
+_STUB_HEADER: str = "import base64 as _b,zlib as _z\nexec(_z.decompress(_b.b85decode(_p)))\n"
 
 
 def wrap_payload(source: str, *, level: int = 9) -> str:

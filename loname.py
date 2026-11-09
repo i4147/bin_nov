@@ -11,7 +11,7 @@ import sys
 from dh import unique_path
 
 
-recursive = "-r" in sys.argv
+recursive: bool = "-r" in sys.argv
 
 
 _CYAN: str = "\033[36m"

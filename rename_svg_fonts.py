@@ -3,12 +3,14 @@
 Reads each ``.svg`` file, extracts the font id, sanitises the characters that cannot appear in a file name and renames the file to ``<font-id>.svg``, refusing to overwrite an existing target.
 Usage: rename_svg_fonts [FILE.svg | DIRECTORY] Examples: $ rename_svg_fonts fonts/ Runs as a script (``python rename_svg_fonts.py``) in the directory it should act on; the module can also be imported."""
 
+from __future__ import annotations
+
 from pathlib import Path
 import re
 import sys
 
 
-def extract_font_id(svg_text):
+def extract_font_id(svg_text: str) -> str | None:
     match = re.search(r'<font[^>]*\bid="([^"]+)"', svg_text, re.IGNORECASE)
     if match:
         return match.group(1).strip()

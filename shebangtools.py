@@ -8,16 +8,16 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import Optional, Sequence
+from typing import Any, Iterator, Optional, Sequence
 
 from dh import MAX_WORKERS
 
 
-TERMUX_PREFIX = "/data/data/com.termux/files/usr"
-DEFAULT_SHEBANG_FIX = "#!/data/data/com.termux/usr"
-DEFAULT_SHEBANG_ADD = f"#!{TERMUX_PREFIX}/bin/env python"
-DEFAULT_SHEBANG_SH = f"#!{TERMUX_PREFIX}/bin/bash"
-_TERMUX_PY_SHEBANGS = {
+TERMUX_PREFIX: str = "/data/data/com.termux/files/usr"
+DEFAULT_SHEBANG_FIX: str = "#!/data/data/com.termux/usr"
+DEFAULT_SHEBANG_ADD: str = f"#!{TERMUX_PREFIX}/bin/env python"
+DEFAULT_SHEBANG_SH: str = f"#!{TERMUX_PREFIX}/bin/bash"
+_TERMUX_PY_SHEBANGS: set[str] = {
     f"#!{TERMUX_PREFIX}/bin/python",
     f"#!{TERMUX_PREFIX}/bin/python3.14",
     f"#!{TERMUX_PREFIX}/bin/python3.13",
@@ -26,7 +26,7 @@ _TERMUX_PY_SHEBANGS = {
     f"#!{TERMUX_PREFIX}/bin/env python",
     f"#!{TERMUX_PREFIX}/bin/env python3",
 }
-_SHEBANG_TO_EXT = {
+_SHEBANG_TO_EXT: dict[str, str] = {
     "python": ".py",
     "python3": ".py",
     "python2": ".py",
@@ -36,7 +36,7 @@ _SHEBANG_TO_EXT = {
     "ksh": ".sh",
     "dash": ".sh",
 }
-_RENAME_PATTERNS = [
+_RENAME_PATTERNS: list[tuple[Any, ...]] = [
     (r"#!/data/data/com.termux/files/usr/bin/python3?", ".py"),
     (r"#!/data/data/com.termux/files/usr/bin/python3.14?", ".py"),
     (r"#!/data/data/com.termux/files/usr/bin/python3.14?", ".py"),
@@ -81,7 +81,7 @@ _RENAME_PATTERNS = [
     (r"#!/usr/bin/env awk", ".awk"),
     (r"#!/usr/bin/sed", ".sed"),
 ]
-_PY_SKIP_EXT = [
+_PY_SKIP_EXT: list[re.Pattern[str]] = [
     re.compile(p, re.IGNORECASE)
     for p in (
         r"\.(md|txt|rst|json|yaml|yml|toml|ini|cfg|conf|log|lock|gitignore|dockerignore)$",
@@ -94,7 +94,7 @@ _PY_SKIP_EXT = [
         r"\.(pyc|pyo|pyd)$",
     )
 ]
-_PY_SPECIAL_STEMS = {
+_PY_SPECIAL_STEMS: set[str] = {
     "setup",
     "manage",
     "app",
@@ -107,7 +107,7 @@ _PY_SPECIAL_STEMS = {
     "cli",
     "run",
 }
-_PY_INDICATOR = [
+_PY_INDICATOR: list[re.Pattern[str]] = [
     re.compile(p, re.MULTILINE)
     for p in (
         r"^(from|import)\s+",
@@ -169,7 +169,7 @@ def _looks_like_python(path: Path) -> bool:
     return any(p.search(text) for p in _PY_INDICATOR)
 
 
-def _iter_python_files(root: Path):
+def _iter_python_files(root: Path) -> Iterator[Path]:
     for path in root.rglob("*"):
         if any(part.startswith(".") and part != "." for part in path.parts) and ".git" in path.parts:
             continue

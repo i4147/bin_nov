@@ -18,7 +18,7 @@ from multiprocessing import Pool
 from pathlib import Path
 import sys
 import tarfile
-from typing import Iterable, Iterator, Optional
+from typing import Any, Iterable, Iterator, Optional
 import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS
@@ -50,7 +50,7 @@ except ImportError:
     except ImportError:
         brotli = None
         _HAS_BROTLI = False
-ARCHIVE_SUFFIXES = (
+ARCHIVE_SUFFIXES: tuple[str, ...] = (
     ".zip",
     ".whl",
     ".tar",
@@ -61,11 +61,11 @@ ARCHIVE_SUFFIXES = (
     ".tbz2",
     ".txz",
 )
-COMPRESSED_SUFFIXES = (".gz", ".bz2", ".xz", ".lzma", ".zst", ".br")
-PYTHON_SUFFIX = ".py"
-KIND_ORDER = ("func", "class", "const")
-KIND_TO_FILE_DEFAULT = {"func": "funcs.py", "class": "classes.py", "const": "const.py"}
-TYPEVAR_NAMES = {"TypeVar", "NewType", "ParamSpec", "TypeVarTuple"}
+COMPRESSED_SUFFIXES: tuple[str, ...] = (".gz", ".bz2", ".xz", ".lzma", ".zst", ".br")
+PYTHON_SUFFIX: str = ".py"
+KIND_ORDER: tuple[str, str, str] = ("func", "class", "const")
+KIND_TO_FILE_DEFAULT: dict[str, str] = {"func": "funcs.py", "class": "classes.py", "const": "const.py"}
+TYPEVAR_NAMES: set[str] = {"TypeVar", "NewType", "ParamSpec", "TypeVarTuple"}
 
 
 @dataclass
@@ -88,7 +88,7 @@ class Definition:
     path: Optional[Path] = None
 
 
-def _success(msg: str, *args) -> None:
+def _success(msg: str, *args: Any) -> None:
     if _HAS_LOGURU:
         logger.success(msg, *args)
     else:

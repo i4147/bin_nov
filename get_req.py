@@ -6,9 +6,10 @@ Usage: get_req [PACKAGE] Examples: $ get_req requests $ get_req Runs as a script
 from importlib.metadata import PackageNotFoundError, distributions, metadata
 import json
 import sys
+from typing import Any
 
 
-def get_requires_dist(pkgname):
+def get_requires_dist(pkgname: Any):
     try:
         return metadata(pkgname).get_all("Requires-Dist") or []
     except PackageNotFoundError:

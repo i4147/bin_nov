@@ -11,9 +11,10 @@ import keyword
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterable, Sequence
 
 
-_S = r'(?:"""(?:\\.|[^\\])*?"""' r"|'''(?:\\.|[^\\])*?'''" r'|"(?:\\.|[^"\\\n])*"' r"|'(?:\\.|[^'\\\n])*')"
+_S: str = r'(?:"""(?:\\.|[^\\])*?"""' r"|'''(?:\\.|[^\\])*?'''" r'|"(?:\\.|[^"\\\n])*"' r"|'(?:\\.|[^'\\\n])*')"
 TOKEN_RE = re.compile(
     "|".join([
         r"(?P<ws>[ \t\r]+)",
@@ -28,8 +29,8 @@ TOKEN_RE = re.compile(
     re.DOTALL,
 )
 OPEN, CLOSE = "([{", ")]}"
-COMPOUND = {"def", "class", "if", "elif", "else", "for", "while", "try", "except", "finally", "with", "async"}
-ALWAYS_START = {
+COMPOUND: set[str] = {"def", "class", "if", "elif", "else", "for", "while", "try", "except", "finally", "with", "async"}
+ALWAYS_START: set[str] = {
     "def",
     "class",
     "return",
@@ -50,16 +51,16 @@ ALWAYS_START = {
     "async",
     "for",
 }
-CONTINUERS = {"and", "or", "in", "is", "not", "as"}
+CONTINUERS: set[str] = {"and", "or", "in", "is", "not", "as"}
 NOT_OPERAND = set(keyword.kwlist) - {"True", "False", "None", "pass", "break", "continue"}
-CONT = {
+CONT: dict[str, set[str]] = {
     "elif": {"if", "elif"},
     "else": {"if", "elif", "for", "while", "try", "except"},
     "except": {"try", "except"},
     "finally": {"try", "except", "else"},
 }
-IFISH = {"if", "elif", "else", "except", "finally"}
-SCOPED = {"for", "with", "ndef"}
+IFISH: set[str] = {"if", "elif", "else", "except", "finally"}
+SCOPED: set[str] = {"for", "with", "ndef"}
 
 
 @dataclass

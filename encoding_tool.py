@@ -31,6 +31,7 @@ import html
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterable, Sequence
 
 
 SAMPLE_SIZE: int = 100_000
@@ -193,7 +194,7 @@ def decode_code_lines(text: str) -> str:
     return "\n".join(out) + "\n"
 
 
-UNESCAPE_KINDS = {
+UNESCAPE_KINDS: dict[str, Any] = {
     "unicode": decode_unicode_escapes,
     "hex": decode_hex_escapes,
     "html": html.unescape,

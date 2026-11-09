@@ -10,7 +10,7 @@ import sys
 from dh import get_files, mpf
 
 
-def process_file(path) -> None:
+def process_file(path: Path) -> None:
     path = Path(path)
     print(f"processing {path.name}")
     stubfile = path.with_suffix(".pyi")

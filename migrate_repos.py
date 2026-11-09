@@ -8,6 +8,8 @@ Without this flag the script is dry-run only.
 Examples: $ migrate_repos --skip-ssh --apply Command-line script: run ``python migrate_repos.py`` or the ``migrate_repos`` command.
 The module is importable as well."""
 
+from __future__ import annotations
+
 import argparse
 from datetime import datetime
 import os
@@ -15,16 +17,17 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+from typing import Any
 
 from dh import SKIP_DIRS
 from loguru import logger
 
 
-DEFAULT_OLD_USERNAME = "i4147"
-DEFAULT_OLD_EMAIL = "yesnacoc@gmail.com"
-DEFAULT_NEW_USERNAME = "i4147"
-DEFAULT_NEW_EMAIL = "yesnacoc@gmail.com"
-TEXT_EXTENSIONS = {
+DEFAULT_OLD_USERNAME: str = "i4147"
+DEFAULT_OLD_EMAIL: str = "yesnacoc@gmail.com"
+DEFAULT_NEW_USERNAME: str = "i4147"
+DEFAULT_NEW_EMAIL: str = "yesnacoc@gmail.com"
+TEXT_EXTENSIONS: set[str] = {
     ".py",
     ".toml",
     ".cfg",
@@ -44,7 +47,7 @@ TEXT_EXTENSIONS = {
     ".npmrc",
     ".yarnrc",
 }
-TEXT_FILENAMES = {
+TEXT_FILENAMES: set[str] = {
     "setup.py",
     "pyproject.toml",
     "package.json",
@@ -55,8 +58,8 @@ TEXT_FILENAMES = {
     ".npmrc",
     "Makefile",
 }
-MAX_FILE_SIZE = 5 * 1024 * 1024
-LOG_FILE = "github_identity_migrate.log"
+MAX_FILE_SIZE: int = 5 * 1024 * 1024
+LOG_FILE: str = "github_identity_migrate.log"
 _console = logger.add(sys.stdout)
 _file_handler = logger.add(
     LOG_FILE,
@@ -72,7 +75,7 @@ class C:
     BOLD = "\033[1m"
 
 
-def color(text, c):
+def color(text: str, c: str):
     if not sys.stdout.isatty():
         return text
     return f"{c}{text}{C.RESET}"
@@ -104,7 +107,7 @@ def backup_file(path: Path) -> Path:
     return backup_path
 
 
-def run_cmd(cmd, input_text=None, check=False):
+def run_cmd(cmd: str, input_text = None, check = False) -> subprocess.CompletedProcess[str]:
     logger.debug(f"Running command: {' '.join(cmd)}")
     result = subprocess.run(
         cmd,
@@ -117,7 +120,7 @@ def run_cmd(cmd, input_text=None, check=False):
     return result
 
 
-def update_global_git_config(new_username, new_email, apply_changes):
+def update_global_git_config(new_username: str, new_email: str, apply_changes: Any) -> None:
     logger.info(color("\n=== Step 1: Global git config ===", C.BOLD))
     result = run_cmd(["git", "config", "--global", "--get", "user.name"])
     current_name = result.stdout.strip()
@@ -144,7 +147,7 @@ def find_local_git_configs(home_dir: Path):
     return configs
 
 
-def update_local_git_configs(home_dir, old_username, old_email, new_username, new_email, apply_changes):
+def update_local_git_configs(home_dir: Path, old_username: str, old_email: str, new_username: str, new_email: str, apply_changes: Any) -> None:
     logger.info(color("\n=== Step 1b: Local repo .git/config files ===", C.BOLD))
     configs = find_local_git_configs(home_dir)
     logger.info(f"Found {len(configs)} local repo git config file(s).")
@@ -186,7 +189,7 @@ def scan_files(home_dir: Path):
     return matches
 
 
-def preview_and_replace(home_dir, old_username, old_email, new_username, new_email, apply_changes):
+def preview_and_replace(home_dir: Path, old_username: str, old_email: str, new_username: str, new_email: str, apply_changes: Any) -> None:
     logger.info(color("\n=== Step 2: Scanning files under home folder ===", C.BOLD))
     logger.info(f"Home directory: {home_dir}")
     candidates = scan_files(home_dir)
@@ -253,7 +256,7 @@ def preview_and_replace(home_dir, old_username, old_email, new_username, new_ema
         logger.info(color(f"[APPLIED] Updated {fpath} (backup: {backup_path})", C.GREEN))
 
 
-def create_new_ssh_key(new_email, key_path: Path, apply_changes):
+def create_new_ssh_key(new_email: str, key_path: Path, apply_changes: Any) -> Path | None:
     logger.info(color("\n=== Step 3: Create new SSH key ===", C.BOLD))
     logger.info(f"Target key path: {key_path}")
     logger.info(f"Key type: ed25519, comment: {new_email}")
@@ -303,7 +306,7 @@ def create_new_ssh_key(new_email, key_path: Path, apply_changes):
     return pub_path
 
 
-def find_old_ssh_keys(ssh_dir: Path, old_username, old_email):
+def find_old_ssh_keys(ssh_dir: Path, old_username: str, old_email: str):
     matches = []
     if not ssh_dir.exists():
         return matches
@@ -318,7 +321,7 @@ def find_old_ssh_keys(ssh_dir: Path, old_username, old_email):
     return matches
 
 
-def remove_old_ssh_keys(ssh_dir: Path, old_username, old_email, apply_changes):
+def remove_old_ssh_keys(ssh_dir: Path, old_username: str, old_email: str, apply_changes: Any) -> None:
     logger.info(color("\n=== Step 4: Find & remove old SSH keys ===", C.BOLD))
     logger.info(f"SSH directory: {ssh_dir}")
     matches = find_old_ssh_keys(ssh_dir, old_username, old_email)
@@ -367,7 +370,7 @@ def remove_old_ssh_keys(ssh_dir: Path, old_username, old_email, apply_changes):
             logger.error(f"Failed to remove key files: {e}")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Migrate local GitHub identity (git config, files, SSH keys). "
         "Defaults to dry-run; pass --apply to make changes."

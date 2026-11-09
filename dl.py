@@ -53,7 +53,7 @@ import re
 import signal
 import sys
 import time
-from typing import Optional
+from typing import Any, Optional, Sequence
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -65,11 +65,11 @@ import requests
 from tqdm import tqdm
 
 
-_HAS_PYCURL = True
+_HAS_PYCURL: bool = True
 from loguru import logger
 
 
-_DEFAULT_UA = (
+_DEFAULT_UA: str = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 )
 
@@ -426,7 +426,7 @@ def _parse_size(s: str) -> int:
     return int(n * mult)
 
 
-_EXT_WHITELIST = [
+_EXT_WHITELIST: list[str] = [
     r"\.ttf$",
     r"\.woff$",
     r"\.woff2$",
@@ -484,7 +484,7 @@ def _batch_worker(url: str, dest_dir: str, engine: str, resume: bool, timeout: f
         return (url, False, str(e))
 
 
-def _sig_ignore(_signum, _frame):
+def _sig_ignore(_signum: int, _frame: Any) -> None:
     return None
 
 

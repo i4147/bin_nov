@@ -7,14 +7,15 @@ Usage: neg IMAGE [IMAGE ...] Examples: $ neg photo.jpg scan.png Runs as a script
 import io
 from pathlib import Path
 import sys
+from typing import Any
 
 from atomicio import atomic_write
 from PIL import Image, ImageOps, UnidentifiedImageError
 
 
-DIRECT_MODES = {"L", "RGB", "CMYK"}
+DIRECT_MODES: set[str] = {"L", "RGB", "CMYK"}
 
-META_KEYS = ("exif", "icc_profile", "dpi")
+META_KEYS: tuple[str, str, str] = ("exif", "icc_profile", "dpi")
 
 
 def negate(img: Image.Image) -> Image.Image:

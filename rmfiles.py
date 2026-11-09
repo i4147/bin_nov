@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 
-DEFAULT_LIST = "list.txt"
+DEFAULT_LIST: str = "list.txt"
 
 
 def main() -> int:

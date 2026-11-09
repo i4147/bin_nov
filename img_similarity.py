@@ -18,7 +18,7 @@ from typing import Any, Iterable, Optional, Sequence
 from dh import MAX_WORKERS
 
 
-SUPPORTED_EXTS = {
+SUPPORTED_EXTS: set[str] = {
     ".jpg",
     ".jpeg",
     ".png",
@@ -45,8 +45,8 @@ DEFAULT_THRESHOLDS: dict[str, float] = {
     "multihash": 10.0,
 }
 METHODS = tuple(DEFAULT_THRESHOLDS.keys())
-MULTIHASH_W = {"phash": 0.5, "dhash": 0.3, "ahash": 0.2}
-_IMAGEHASH_METHODS = {
+MULTIHASH_W: dict[str, float] = {"phash": 0.5, "dhash": 0.3, "ahash": 0.2}
+_IMAGEHASH_METHODS: set[str] = {
     "ahash",
     "phash",
     "dhash",
@@ -347,7 +347,7 @@ def resolve_hash_size(args: argparse.Namespace) -> int:
     return 16 if args.method == "dct-phash" else 8
 
 
-def _pipeline(args: argparse.Namespace):
+def _pipeline(args: argparse.Namespace) -> None:
     root = Path(args.directory).resolve()
     if not root.is_dir():
         err(f"Not a directory: {root}")

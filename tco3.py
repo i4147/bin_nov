@@ -22,7 +22,7 @@ Translator = Callable[[str], str]
 REQUEST_LOCK = threading.Lock()
 GOOGLETRANS_LOCK = threading.Lock()
 PYGOOGLETRANSLATION_LOCK = threading.Lock()
-LAST_REQUEST_TIME = 0.0
+LAST_REQUEST_TIME: float = 0.0
 
 
 def configure_logging() -> None:
@@ -321,7 +321,7 @@ FACTORIES: dict[str, Callable[[str, str], Translator]] = {
     "watson": _make_watson,
     "azure": _make_azure,
 }
-FALLBACK_ORDER = [
+FALLBACK_ORDER: list[str] = [
     "deepl",
     "deep_translator",
     "translate",

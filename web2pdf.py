@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
+from typing import Any
 
 from rich.console import Console
 from weasyprint import CSS, HTML
@@ -21,7 +22,7 @@ PAPER: dict[str, tuple[float, float]] = {
     "Legal": (216, 356),
     "Tabloid": (279, 432),
 }
-UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+UA: str = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 
 
 def is_url(s: str) -> bool:

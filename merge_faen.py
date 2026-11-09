@@ -72,7 +72,7 @@ def process_file_pair(fa_path: Path, en_path: Path) -> tuple[dict[str, str], set
         return {}, set(), [f"Unexpected error: {e}"]
 
 
-def merge_translations(src_dir: str = "."):
+def merge_translations(src_dir: str = ".") -> None:
     output_json = "dic_fa_en.json"
     output_failed = "failed-fa.txt"
     translations = load_existing_translations(output_json)

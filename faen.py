@@ -11,7 +11,7 @@ import sys
 
 
 class Bidirectionaldictionary:
-    def __init__(self, json_file: str = "/sdcard/dic/dic.json"):
+    def __init__(self, json_file: str = "/sdcard/dic/dic.json") -> None:
         self.json_file = Path(json_file)
         self.persian_to_english: dict[str, str] = {}
         self.english_to_persian: dict[str, str] = {}
@@ -168,7 +168,7 @@ class Bidirectionaldictionary:
         print(f"🎲 Random: {persian} → {english}")
 
 
-def main():
+def main() -> None:
     dict_app = Bidirectionaldictionary("dic.json")
     search_history = []
     print("\n" + "=" * 40)

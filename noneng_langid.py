@@ -3,16 +3,19 @@
 Decodes each text file, classifies the lines above the minimum length with ``py3langid`` and prints the lines whose detected language is not English with their confidence, colourising the output and skipping binary extensions.
 Usage: noneng_langid Examples: $ noneng_langid Runs as a script (``python noneng_langid.py``) in the directory it should act on; the module can also be imported."""
 
+from __future__ import annotations
+
 import math
 from pathlib import Path
 import sys
+from typing import Any, Iterator
 
 from dh import SKIP_DIRS
 import py3langid as langid
 
 
 ROOT = Path.cwd()
-SKIP_EXTS = {
+SKIP_EXTS: set[str] = {
     ".pyc",
     ".pyo",
     ".so",
@@ -37,15 +40,15 @@ SKIP_EXTS = {
     ".avi",
     ".ico",
 }
-MIN_LEN = 12
-MIN_CONF = 0.65
-RESET = "\033[0m"
-BOLD = "\033[1m"
-YELLOW = "\033[33m"
-MAGENTA = "\033[35m"
+MIN_LEN: int = 12
+MIN_CONF: float = 0.65
+RESET: str = "\033[0m"
+BOLD: str = "\033[1m"
+YELLOW: str = "\033[33m"
+MAGENTA: str = "\033[35m"
 
 
-def walk_files(root: Path):
+def walk_files(root: Path) -> Iterator[Path]:
     for path in root.iterdir():
         if path.is_dir():
             if path.name in SKIP_DIRS or path.name.startswith("."):
@@ -57,7 +60,7 @@ def walk_files(root: Path):
             yield path
 
 
-def decode_text(path: Path):
+def decode_text(path: Path) -> str | None:
     try:
         data = path.read_bytes()
     except OSError:
@@ -72,7 +75,7 @@ def decode_text(path: Path):
     return None
 
 
-def iter_lines(text: str):
+def iter_lines(text: str) -> Iterator[str]:
     for lineno, line in enumerate(text.splitlines(), 1):
         line = line.strip()
         if len(line) >= MIN_LEN and any(ch.isalpha() for ch in line):
@@ -95,7 +98,7 @@ def detect(text: str):
     return top_lang, conf
 
 
-def main():
+def main() -> None:
     print(f"{BOLD}Scanning: {ROOT}{RESET}")
     for path in walk_files(ROOT):
         text = decode_text(path)

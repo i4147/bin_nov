@@ -11,7 +11,7 @@ import sys
 
 
 LOG_DIR = Path.home() / "tmp" / "apps"
-FSA = "/data/data/com.termux/files/home/bashbin/felo-sa.mjs"
+FSA: str = "/data/data/com.termux/files/home/bashbin/felo-sa.mjs"
 
 
 def create_log_file():
@@ -25,7 +25,7 @@ def create_log_file():
     return log_file
 
 
-def write_log_header(log_file, cmd_args):
+def write_log_header(log_file: Path, cmd_args: str) -> None:
     timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     with open(log_file, "a", encoding="utf-8") as f:
         f.write("================================\n")
@@ -35,7 +35,7 @@ def write_log_header(log_file, cmd_args):
         f.write("--- Output ---\n")
 
 
-def write_log_footer(log_file, exit_code):
+def write_log_footer(log_file: Path, exit_code: str) -> None:
     timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     with open(log_file, "a", encoding="utf-8") as f:
         f.write("\n--- End ---\n")
@@ -44,7 +44,7 @@ def write_log_footer(log_file, exit_code):
         f.write("================================\n")
 
 
-def main():
+def main() -> int:
     log_file = create_log_file()
     cmd_args = sys.argv[1:]
     if not cmd_args:

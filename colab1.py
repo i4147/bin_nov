@@ -11,7 +11,7 @@ import zipfile
 
 from google.colab import drive
 
-EXCLUDE_PREFIXES = "setuptools", "pip"
+EXCLUDE_PREFIXES: tuple[str, str] = "setuptools", "pip"
 
 
 def excluded(name: str) -> bool:

@@ -5,11 +5,12 @@ Usage: cwin [paths ...] Examples: $ cwin ~/downloads --dry-run Runs as a script 
 
 from pathlib import Path
 import sys
+from typing import Any, Iterable, Iterator
 
 from dh import fsz
 
 
-DARWIN_PATTERNS = {
+DARWIN_PATTERNS: set[str] = {
     ".DS_Store",
     ".AppleDouble",
     ".LSOverride",
@@ -19,7 +20,7 @@ DARWIN_PATTERNS = {
     "._*",
     ".com.apple.*",
 }
-WINDOWS_PATTERNS = {
+WINDOWS_PATTERNS: set[str] = {
     "*.exe",
     "*.dll",
     "*.sys",
@@ -55,7 +56,7 @@ def matches_pattern(path: Path, patterns: set) -> bool:
     return False
 
 
-def walk_directory(root_dir: Path):
+def walk_directory(root_dir: Path) -> Iterator[Path]:
     try:
         for entry in root_dir.iterdir():
             yield entry
@@ -115,7 +116,7 @@ def find_and_remove_files(root_dir: Path | None = None) -> dict:
     return stats
 
 
-def main():
+def main() -> None:
     stats = find_and_remove_files(Path.cwd())
 
 

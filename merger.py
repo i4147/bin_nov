@@ -8,11 +8,12 @@ import argparse
 from pathlib import Path
 import subprocess
 import sys
+from typing import Any, Iterable, Sequence
 
 from dh import get_nobinary, get_random_filename, should_skip
 
 
-MAX_CLIPBOARD_BYTES = 1024 * 1024
+MAX_CLIPBOARD_BYTES: int = 1024 * 1024
 
 
 def runcmd(cmd: list[str]) -> int:

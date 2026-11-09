@@ -108,7 +108,7 @@ class Renderer:
 
 
 class Tokenizer:
-    def __init__(self, options: dict[str, Any]):
+    def __init__(self, options: dict[str, Any]) -> None:
         self.options = options
         self.rules = self._build_rules()
 
@@ -286,7 +286,7 @@ class Tokenizer:
 
 
 class Lexer:
-    def __init__(self, options: dict[str, Any]):
+    def __init__(self, options: dict[str, Any]) -> None:
         self.options = options
         self.tokenizer = Tokenizer(options)
 
@@ -311,7 +311,7 @@ class Lexer:
 
 
 class Parser:
-    def __init__(self, options: dict[str, Any]):
+    def __init__(self, options: dict[str, Any]) -> None:
         self.options = options
         self.renderer = options.get("renderer") or Renderer()
         self.tokenizer = Tokenizer(options)
@@ -433,7 +433,7 @@ class Parser:
 
 
 class Marked:
-    def __init__(self, *args: dict[str, Any] | Callable[[Any], None]):
+    def __init__(self, *args: dict[str, Any] | Callable[[Any], None]) -> None:
         self.defaults: dict[str, Any] = {
             "async": False,
             "breaks": False,

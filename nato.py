@@ -10,7 +10,7 @@ from pathlib import Path
 import sys
 
 
-NATO = {
+NATO: dict[str, str] = {
     "A": "Alpha",
     "B": "Bravo",
     "C": "Charlie",

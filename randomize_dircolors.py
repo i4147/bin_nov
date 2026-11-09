@@ -5,9 +5,10 @@ Usage: randomize_dircolors Examples: $ randomize_dircolors Runs as a script (``p
 
 from pathlib import Path
 from random import choice as random_choice
+from typing import Any
 
 
-extensions = [
+extensions: list[str] = [
     ".Z",
     ".a",
     ".b",
@@ -862,7 +863,7 @@ extensions = [
     ".traineddata",
     ".json-tmlanguage",
 ]
-colorz = [
+colorz: list[tuple[Any, ...]] = [
     (240, 248, 255),
     (250, 235, 215),
     (0, 255, 255),

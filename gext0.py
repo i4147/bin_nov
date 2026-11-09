@@ -14,8 +14,8 @@ from typing import Any
 import zipfile
 
 
-OUTPUT_DIR = Path("output")
-ARCHIVE_EXTENSIONS = (
+OUTPUT_DIR: Path = Path("output")
+ARCHIVE_EXTENSIONS: tuple[str, ...] = (
     ".whl",
     ".zip",
     ".tar.gz",
@@ -25,11 +25,11 @@ ARCHIVE_EXTENSIONS = (
     ".tar",
     ".zst",
 )
-ALLOWED_PYTHON_EXTENSIONS = (".py", "")
+ALLOWED_PYTHON_EXTENSIONS: tuple[str, str] = (".py", "")
 
 
 class EntityExtractor(ast.NodeVisitor):
-    def __init__(self, source_content: str, original_path: Path):
+    def __init__(self, source_content: str, original_path: Path) -> None:
         self.entities = []
         self.source_lines = source_content.splitlines(keepends=True)
         self.original_path = original_path
@@ -46,7 +46,7 @@ class EntityExtractor(ast.NodeVisitor):
             code_slice[-1] = last_line[: node.end_col_offset]
         return "".join(code_slice)
 
-    def _extract_and_save(self, node: ast.AST, entity_type: str, name: str):
+    def _extract_and_save(self, node: ast.AST, entity_type: str, name: str) -> None:
         entity_code = self._get_source_slice(node)
         self.entities.append({
             "name": name,
@@ -59,34 +59,34 @@ class EntityExtractor(ast.NodeVisitor):
             "is_function": entity_type == "function",
         })
 
-    def visit_FunctionDef(self, node: ast.FunctionDef):
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
         if self.scope_depth == 0:
             self._extract_and_save(node, "function", node.name)
         self.scope_depth += 1
         self.generic_visit(node)
         self.scope_depth -= 1
 
-    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef):
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
         if self.scope_depth == 0:
             self._extract_and_save(node, "function", node.name)
         self.scope_depth += 1
         self.generic_visit(node)
         self.scope_depth -= 1
 
-    def visit_ClassDef(self, node: ast.ClassDef):
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:
         if self.scope_depth == 0:
             self._extract_and_save(node, "class", node.name)
         self.scope_depth += 1
         self.generic_visit(node)
         self.scope_depth -= 1
 
-    def visit_Assign(self, node: ast.Assign):
+    def visit_Assign(self, node: ast.Assign) -> None:
         if self.scope_depth == 0 and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
             target_name = node.targets[0].id
             if re.match("^[A-Z_][A-Z0-9_]*$", target_name):
                 self._extract_and_save(node, "constant", target_name)
 
-    def generic_visit(self, node: ast.AST):
+    def generic_visit(self, node: ast.AST) -> None:
         super().generic_visit(node)
 
 
@@ -103,7 +103,7 @@ def get_unique_path(base_path: Path) -> Path:
         i += 1
 
 
-def save_entity(entity: dict[str, Any]):
+def save_entity(entity: dict[str, Any]) -> None:
     filename_base = f"{entity['full_name']}.py"
     output_path_base = OUTPUT_DIR / entity["type"] / filename_base
     output_path_base.parent.mkdir(parents=True, exist_ok=True)
@@ -203,7 +203,7 @@ def worker_process(path_str: str) -> list[dict[str, Any]]:
     return process_single_file(path)
 
 
-def main():
+def main() -> None:
     print(f"Starting analysis in {Path.cwd()}...")
     if OUTPUT_DIR.exists():
         shutil.rmtree(OUTPUT_DIR)

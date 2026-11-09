@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 
 
-_BASE = (
+_BASE: str = (
     "\U0001f300-\U0001f5ff"
     "\U0001f600-\U0001f64f"
     "\U0001f680-\U0001f6ff"
@@ -27,10 +27,10 @@ _BASE = (
     "\U000025a0-\U000025ff"
     "\U00002500-\U0000257f"
 )
-_VS = "\ufe0e\ufe0f"
-_SKIN = "\U0001f3fb-\U0001f3ff"
-_ZWJ = "\u200d"
-_RI = "\U0001f1e6-\U0001f1ff"
+_VS: str = "\ufe0e\ufe0f"
+_SKIN: str = "\U0001f3fb-\U0001f3ff"
+_ZWJ: str = "\u200d"
+_RI: str = "\U0001f1e6-\U0001f1ff"
 EMOJI_RE = re.compile(
     f"(?:[{_BASE}][{_VS}]?[{_SKIN}]?(?:{_ZWJ}[{_BASE}][{_VS}]?[{_SKIN}]?)*|[{_RI}]{{2}})",
     flags=re.UNICODE,

@@ -17,7 +17,7 @@ from pathlib import Path
 import stat as st
 import sys
 import time
-from typing import Iterator, Optional, Sequence
+from typing import Any, Iterable, Iterator, Optional, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
@@ -26,7 +26,7 @@ try:
     from tqdm import tqdm
 except Exception:
 
-    def tqdm(it, **_kwargs):
+    def tqdm(it: Iterable[Any], **_kwargs: Any):
         return it
 
 
@@ -374,7 +374,7 @@ def run_parallel(cfg: Config, items: list[tuple[str, Path]], jobs: int) -> Stats
     jobs = max(1, min(jobs, os.cpu_count() or 1, 32))
     chunk = max(1000, len(items) // (jobs * 10) or 1)
 
-    def _work(pair):
+    def _work(pair: Any):
         return apply_one(cfg, *pair)
 
     total = Stats()

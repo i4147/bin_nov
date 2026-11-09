@@ -14,7 +14,7 @@ from dh import SKIP_DIRS
 from isbinary import is_binary
 
 
-MAX_CONTEXT_DISPLAY = 3
+MAX_CONTEXT_DISPLAY: int = 3
 
 
 def process_file(

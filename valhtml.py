@@ -8,11 +8,12 @@ import argparse
 from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import Any, Callable, Iterable
 
 from loguru import logger
 
 
-VOID_ELEMENTS = {
+VOID_ELEMENTS: set[str] = {
     "area",
     "base",
     "br",
@@ -31,24 +32,24 @@ VOID_ELEMENTS = {
 
 
 class _TagChecker(HTMLParser):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.stack = []
         self.errors = []
 
-    def _pos(self):
+    def _pos(self) -> str:
         line, col = self.getpos()
         return f"line {line}, col {col}"
 
-    def handle_starttag(self, tag, attrs):
+    def handle_starttag(self, tag: str, attrs: Any) -> None:
         if tag in VOID_ELEMENTS:
             return
         self.stack.append((tag, self._pos()))
 
-    def handle_startendtag(self, tag, attrs):
+    def handle_startendtag(self, tag: str, attrs: Any) -> None:
         return
 
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag: str) -> None:
         if tag in VOID_ELEMENTS:
             self.errors.append(f"{self._pos()}: closing tag </{tag}> for void element")
             return
@@ -68,7 +69,7 @@ class _TagChecker(HTMLParser):
         return self.errors
 
 
-def check_tags(raw):
+def check_tags(raw: str):
     checker = _TagChecker()
     try:
         checker.feed(raw)
@@ -78,32 +79,32 @@ def check_tags(raw):
 
 
 class _StackParser(HTMLParser):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(convert_charrefs=False)
         self.stack = []
         self.errors = []
         self.output = []
 
-    def _pos(self):
+    def _pos(self) -> str:
         line, col = self.getpos()
         return f"line {line}, col {col}"
 
     @staticmethod
-    def _attrs(attrs):
+    def _attrs(attrs: Iterable[Any]) -> str:
         out = []
         for k, v in attrs:
             out.append(f" {k}" if v is None else f' {k}="{escape(v, quote=True)}"')
         return "".join(out)
 
-    def handle_starttag(self, tag, attrs):
+    def handle_starttag(self, tag: str, attrs: Any) -> None:
         self.output.append(f"<{tag}{self._attrs(attrs)}>")
         if tag not in VOID_ELEMENTS:
             self.stack.append((tag, self._pos()))
 
-    def handle_startendtag(self, tag, attrs):
+    def handle_startendtag(self, tag: str, attrs: Any) -> None:
         self.output.append(f"<{tag}{self._attrs(attrs)}/>")
 
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag: str) -> None:
         if tag in VOID_ELEMENTS:
             self.errors.append(f"{self._pos()}: closing </{tag}> for void element; removed")
             return
@@ -122,25 +123,25 @@ class _StackParser(HTMLParser):
         self.stack.pop()
         self.output.append(f"</{tag}>")
 
-    def handle_data(self, data):
+    def handle_data(self, data: Any) -> None:
         self.output.append(data)
 
-    def handle_entityref(self, name):
+    def handle_entityref(self, name: str) -> None:
         self.output.append(f"&{name};")
 
-    def handle_charref(self, name):
+    def handle_charref(self, name: str) -> None:
         self.output.append(f"&#{name};")
 
-    def handle_comment(self, data):
+    def handle_comment(self, data: str) -> None:
         self.output.append(f"<!--{data}-->")
 
-    def handle_decl(self, decl):
+    def handle_decl(self, decl: str) -> None:
         self.output.append(f"<!{decl}>")
 
-    def handle_pi(self, data):
+    def handle_pi(self, data: str) -> None:
         self.output.append(f"<?{data}>")
 
-    def finish(self):
+    def finish(self) -> tuple[str,]:
         super().close()
         while self.stack:
             tag, pos = self.stack.pop()
@@ -149,13 +150,13 @@ class _StackParser(HTMLParser):
         return "".join(self.output), self.errors
 
 
-def backend_html_parser(raw):
+def backend_html_parser(raw: str) -> tuple[str,]:
     p = _StackParser()
     p.feed(raw)
     return p.finish()
 
 
-def backend_lxml(raw):
+def backend_lxml(raw: str):
     from lxml import (
         etree,
         html as lxml_html,
@@ -172,7 +173,7 @@ def backend_lxml(raw):
     return fixed, errors
 
 
-def backend_html5lib(raw):
+def backend_html5lib(raw: str):
     from xml.etree import ElementTree as ET
 
     import html5lib
@@ -189,7 +190,7 @@ def backend_html5lib(raw):
     return fixed, errors
 
 
-def backend_beautifulsoup(raw):
+def backend_beautifulsoup(raw: str):
     from bs4 import BeautifulSoup
 
     errors = []
@@ -203,7 +204,7 @@ def backend_beautifulsoup(raw):
     return fixed, errors
 
 
-def backend_tidy(raw):
+def backend_tidy(raw: str):
     from tidylib import tidy_document
 
     options = {
@@ -224,7 +225,7 @@ def backend_tidy(raw):
     return fixed, errors
 
 
-BACKENDS = {
+BACKENDS: dict[str, Any] = {
     "html.parser": backend_html_parser,
     "lxml": backend_lxml,
     "html5lib": backend_html5lib,
@@ -233,7 +234,7 @@ BACKENDS = {
 }
 
 
-def process_file(path, backend_fn):
+def process_file(path: Path, backend_fn: Callable[..., Any]) -> str:
     try:
         raw = path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
@@ -276,7 +277,7 @@ def process_file(path, backend_fn):
     return "fixed"
 
 
-def main():
+def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("-b", "--backend", choices=sorted(BACKENDS), default="html.parser")
     args = ap.parse_args()

@@ -12,19 +12,19 @@ import os
 from pathlib import Path
 import sys
 import tokenize
-from typing import TYPE_CHECKING
+from typing import Any, Iterable, TYPE_CHECKING
 
 from dh import MAX_WORKERS, SKIP_DIR
 import libcst as cst
 
 
 class TypeAnnotationRemover(cst.CSTTransformer):
-    def leave_Param(self, original_node, updated_node):
+    def leave_Param(self, original_node: cst.Param, updated_node: cst.Param) -> cst.CSTNode:
         if updated_node.annotation is None:
             return updated_node
         return updated_node.with_changes(annotation=None)
 
-    def leave_FunctionDef(self, original_node, updated_node):
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.CSTNode:
         changes = {}
         if updated_node.returns is not None:
             changes["returns"] = None
@@ -34,12 +34,12 @@ class TypeAnnotationRemover(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(**changes)
 
-    def leave_ClassDef(self, original_node, updated_node):
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.CSTNode:
         if getattr(updated_node, "type_parameters", None) is not None:
             return updated_node.with_changes(type_parameters=None)
         return updated_node
 
-    def leave_AnnAssign(self, original_node, updated_node):
+    def leave_AnnAssign(self, original_node: cst.AnnAssign, updated_node: cst.AnnAssign) -> cst.CSTNode:
         if updated_node.value is None:
             return cst.RemoveFromParent()
         return cst.Assign(
@@ -48,17 +48,17 @@ class TypeAnnotationRemover(cst.CSTTransformer):
             semicolon=updated_node.semicolon,
         )
 
-    def leave_SimpleStatementLine(self, original_node, updated_node):
+    def leave_SimpleStatementLine(self, original_node: cst.SimpleStatementLine, updated_node: cst.SimpleStatementLine) -> cst.CSTNode:
         if not updated_node.body:
             return cst.RemoveFromParent()
         return updated_node
 
-    def leave_SimpleStatementSuite(self, original_node, updated_node):
+    def leave_SimpleStatementSuite(self, original_node: cst.SimpleStatementSuite, updated_node: cst.SimpleStatementSuite) -> cst.CSTNode:
         if not updated_node.body:
             return updated_node.with_changes(body=[cst.Pass()])
         return updated_node
 
-    def leave_IndentedBlock(self, original_node, updated_node):
+    def leave_IndentedBlock(self, original_node: cst.IndentedBlock, updated_node: cst.IndentedBlock) -> cst.CSTNode:
         if not updated_node.body:
             return updated_node.with_changes(body=[cst.SimpleStatementLine(body=[cst.Pass()])])
         return updated_node

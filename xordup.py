@@ -10,7 +10,7 @@ from dh import cprint, mpf
 from xorhash import get_xorhash
 
 
-REMOVE = "-r" in sys.argv
+REMOVE: bool = "-r" in sys.argv
 
 
 def find_dups_optimized(root: Path):

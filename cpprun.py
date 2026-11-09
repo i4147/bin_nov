@@ -7,11 +7,12 @@ import os
 from pathlib import Path
 import stat
 import sys
+from typing import Any, Iterable
 
 import sh
 
 
-COMPILERS = {
+COMPILERS: dict[str, tuple[Any, ...]] = {
     ".c": ("clang", ("clang", "gcc")),
     ".cpp": ("clang++", ("clang++", "g++")),
     ".cc": ("clang++", ("clang++", "g++")),
@@ -19,14 +20,14 @@ COMPILERS = {
 }
 
 
-def _pick_compiler(candidates):
+def _pick_compiler(candidates: Iterable[Any]):
     for c in candidates:
         if sh.which(c):
             return c
     return None
 
 
-def cpp_run(*args):
+def cpp_run(*args: Any):
     if not args:
         print("Usage: cpprun <file.c|file.cpp|file.cc> [args...]")
         return 1

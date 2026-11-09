@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import sys
 import time
+from typing import Any, Iterable
 
 from tree_sitter import Language, Node, Parser
 
@@ -28,7 +29,7 @@ class ProcessResult:
     file_type: str = ""
 
 
-EXTENSION_TO_LANGUAGE = {
+EXTENSION_TO_LANGUAGE: dict[str, str] = {
     ".js": "tree_sitter_javascript",
     ".jsx": "tree_sitter_javascript",
     ".ts": "tree_sitter_typescript",
@@ -107,7 +108,7 @@ EXTENSION_TO_LANGUAGE = {
 
 
 class UniversalCommentRemover:
-    def __init__(self):
+    def __init__(self) -> None:
         self._parser_cache: dict[str, Parser] = {}
         self._language_cache: dict[str, Language] = {}
 
@@ -152,7 +153,7 @@ class UniversalCommentRemover:
     def _get_comment_ranges(self, root_node: Node) -> list[tuple[int, int]]:
         comment_ranges = []
 
-        def visit_node(node: Node):
+        def visit_node(node: Node) -> None:
             if node.type in (
                 "comment",
                 "line_comment",
@@ -364,7 +365,7 @@ def process_files_parallel(files: list[Path], num_workers: int = 8) -> list[Proc
     return results
 
 
-def print_summary(results: list[ProcessResult], total_files: int, start_time: float):
+def print_summary(results: list[ProcessResult], total_files: int, start_time: float) -> None:
     total_time = time.perf_counter() - start_time
     successful = sum(1 for r in results if r.success)
     failed = sum(1 for r in results if not r.success)
@@ -407,7 +408,7 @@ def print_summary(results: list[ProcessResult], total_files: int, start_time: fl
     print("=" * 70)
 
 
-def main():
+def main() -> None:
     inputs = sys.argv[1:]
     print("Universal Comment Remover")
     print("=" * 50)

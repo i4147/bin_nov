@@ -6,7 +6,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 import sys
 import tarfile
-from typing import Optional, Sequence
+from typing import Any, Optional, Sequence
 
 from dh import _SNAPR_WORKERS
 from loguru import logger
@@ -22,9 +22,9 @@ except ImportError:
 from dh import cprint, fsz, get_files, gsz
 
 
-_BLOCK_SIZE = 16384
-_MAX_OFFSET_1B = 2047
-_MAX_OFFSET_2B = 65535
+_BLOCK_SIZE: int = 16384
+_MAX_OFFSET_1B: int = 2047
+_MAX_OFFSET_2B: int = 65535
 
 
 def _encode_varint(value: int) -> bytes:
@@ -133,7 +133,7 @@ def snapper_compress(data: bytes) -> bytes:
 
 
 class SnapperError(Exception):
-    def __init__(self, msg: str, algorithm: Optional[str] = None):
+    def __init__(self, msg: str, algorithm: Optional[str] = None) -> None:
         super().__init__(msg)
         self.algorithm = algorithm
 
@@ -307,7 +307,7 @@ def snapper_cli(args: argparse.Namespace) -> int:
     return 0
 
 
-_SNAPR_EXT = ".sn"
+_SNAPR_EXT: str = ".sn"
 
 
 def _snapr_compress_file(path: Path, remove_original: bool = True) -> tuple[bool, str]:

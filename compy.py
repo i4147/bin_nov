@@ -19,16 +19,17 @@ import sys
 import sysconfig
 import token
 import tokenize
+from typing import Any, Iterable
 
 from dh import MAX_WORKERS, runcmd
 
 
-OUTPUT_FILE = Path("compressed.txt")
-COMPRESSION_NOTE = (
+OUTPUT_FILE: Path = Path("compressed.txt")
+COMPRESSION_NOTE: str = (
     "# NOTE: This code is compressed. Standard library imports have been removed. "
     "You may rename variables and functions freely."
 )
-PROTECTED_NAMES = {
+PROTECTED_NAMES: set[str] = {
     "__name__",
     "__main__",
     "__file__",
@@ -67,7 +68,7 @@ PROTECTED_NAMES = {
 }
 BUILTIN_NAMES = set(dir(builtins))
 KEYWORDS = set(keyword.kwlist)
-SHORT_NAMES = [
+SHORT_NAMES: list[list[Any]] = [
     *list("abcdefghijklmnopqrstuvwxyz"),
     *list("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
 ]

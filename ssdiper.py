@@ -11,7 +11,7 @@ from collections import defaultdict
 import json
 import operator
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Any, Callable, Optional, Sequence, TextIO
 
 from dh import get_files
 
@@ -40,10 +40,10 @@ try:
     from datasketch import MinHash
 except ImportError:
     MinHash = None
-TLSH_MIN_DATA_LENGTH = 50
-MINHASH_NUM_PERM = 128
-MINHASH_SHINGLE_SIZE = 5
-SIMHASH_SHINGLE_SIZE = 3
+TLSH_MIN_DATA_LENGTH: int = 50
+MINHASH_NUM_PERM: int = 128
+MINHASH_SHINGLE_SIZE: int = 5
+SIMHASH_SHINGLE_SIZE: int = 3
 
 
 def calculate_ssdeep_hash(path: Path, min_file_size: int = 1) -> Optional[str]:

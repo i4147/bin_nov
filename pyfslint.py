@@ -20,16 +20,16 @@ import re
 import stat
 import subprocess
 import sys
-from typing import TYPE_CHECKING
+from typing import Any, Iterable, Sequence, TYPE_CHECKING
 
 
-RESET = "\x1b[0m"
-BOLD = "\x1b[1m"
-RED = "\x1b[31m"
-YELLOW = "\x1b[33m"
-CYAN = "\x1b[36m"
-GREEN = "\x1b[32m"
-GREY = "\x1b[90m"
+RESET: str = "\x1b[0m"
+BOLD: str = "\x1b[1m"
+RED: str = "\x1b[31m"
+YELLOW: str = "\x1b[33m"
+CYAN: str = "\x1b[36m"
+GREEN: str = "\x1b[32m"
+GREY: str = "\x1b[90m"
 
 
 def _c(color: str, text: str) -> str:
@@ -80,7 +80,7 @@ def _walk_err(exc: OSError) -> None:
     warn(f"walk error: {exc}")
 
 
-CHUNK = 65536
+CHUNK: int = 65536
 
 
 def _file_hash(path: Path) -> str | None:
@@ -261,7 +261,7 @@ def findid(roots: list[Path]) -> int:
     return total
 
 
-ELF_MAGIC = b"\x7fELF"
+ELF_MAGIC: bytes = b"\x7fELF"
 
 
 def _is_elf(path: Path) -> bool:

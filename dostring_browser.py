@@ -9,6 +9,7 @@ import ast
 from dataclasses import dataclass
 from pathlib import Path
 import sys
+from typing import Any
 
 from rich.console import Console
 from rich.markdown import Markdown
@@ -36,11 +37,11 @@ def _key_set(*names: str) -> set[str]:
 
 NEXT_KEYS = {" ", "j", "f", "\n", "\r"} | _key_set("SPACE", "ENTER", "PAGE_DOWN", "RIGHT", "DOWN", "TAB")
 PREV_KEYS = {"b", "k"} | _key_set("PAGE_UP", "LEFT", "UP", "BACKSPACE")
-NEXT_FILE_KEYS = {"n", "]", ">"}
-PREV_FILE_KEYS = {"p", "[", "<"}
-FIRST_KEYS = {"g"}
-LAST_KEYS = {"G"}
-QUIT_KEYS = {"q", "Q", "\x03", "\x04", "\x1b"}
+NEXT_FILE_KEYS: set[str] = {"n", "]", ">"}
+PREV_FILE_KEYS: set[str] = {"p", "[", "<"}
+FIRST_KEYS: set[str] = {"g"}
+LAST_KEYS: set[str] = {"G"}
+QUIT_KEYS: set[str] = {"q", "Q", "\x03", "\x04", "\x1b"}
 
 
 def classify(key: str) -> str | None:

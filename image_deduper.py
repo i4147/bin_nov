@@ -12,11 +12,11 @@ import imagehash
 from PIL import Image
 
 
-DRY_RUN = True
-IMAGE_EXTENSIONS = (".webp", ".jpg", ".jpeg", ".png", ".tiff", ".tif")
+DRY_RUN: bool = True
+IMAGE_EXTENSIONS: tuple[str, ...] = (".webp", ".jpg", ".jpeg", ".png", ".tiff", ".tif")
 
 
-def main():
+def main() -> None:
     hash_groups = defaultdict(list)
     print("Scanning directories recursively for images...")
     image_count = 0

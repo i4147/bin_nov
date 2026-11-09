@@ -5,6 +5,7 @@ Usage: calc [EXPRESSION ...] Examples: $ calc '(3 + 4) * 2' $ calc Runs as a scr
 
 import re
 import sys
+from typing import Any
 
 from textual.app import App, ComposeResult
 from textual.containers import Grid
@@ -123,7 +124,7 @@ class Calculator(Static):
             return "Error"
 
 
-def parse_expression(expr):
+def parse_expression(expr: str):
     expr = expr.replace(" ", "")
     pattern = r"^([\d.]+)\s*([+\-*/×÷])\s*([\d.]+)$"
     match = re.match(pattern, expr)
@@ -132,7 +133,7 @@ def parse_expression(expr):
     return (None, None, None)
 
 
-def evaluate_cli(args):
+def evaluate_cli(args: list[Any]) -> bool:
     expr = " ".join(args)
     num1_str, operator, num2_str = parse_expression(expr)
     if num1_str is None:

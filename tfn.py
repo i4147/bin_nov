@@ -9,7 +9,7 @@ from dh import FONT_EXTENSIONS, unique_path
 from fontTools.ttLib import TTFont
 
 
-STYLE_MAPPING = {
+STYLE_MAPPING: dict[str, str] = {
     "normal": "Regular",
     "regular": "Regular",
     "bold": "Bold",
@@ -29,7 +29,7 @@ STYLE_MAPPING = {
 }
 
 
-def get_font_name_and_style(font_path):
+def get_font_name_and_style(font_path: Path):
     font_path.suffix.lower()
     try:
         font = TTFont(font_path)
@@ -61,7 +61,7 @@ def get_font_name_and_style(font_path):
         return (None, None)
 
 
-def sanitize_filename(name) -> str:
+def sanitize_filename(name: str) -> str:
     if not name:
         return "Unknown"
     sanitized = "".join(c if c.isalnum() or c in ("-", "_", " ") else "_" for c in name)

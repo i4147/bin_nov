@@ -11,12 +11,13 @@ from collections import defaultdict
 import json
 import operator
 from pathlib import Path
+from typing import Any, Iterable, TextIO
 
 from dh import get_files
 import ssdeep
 
 
-def X(h, M=1):
+def X(h: str, M = 1):
     try:
         if h.stat().st_size < M:
             return None
@@ -36,7 +37,7 @@ def X(h, M=1):
         return None
 
 
-def Z(ag, ai=70):
+def Z(ag: Iterable[Any], ai = 70):
     t = {}
     for h in ag:
         I = X(h)
@@ -67,7 +68,7 @@ def Z(ag, ai=70):
     return D
 
 
-def ah(s, J="simz.json"):
+def ah(s: TextIO, J = "simz.json") -> None:
     try:
         with Path(J).open("w", encoding="utf-8") as d:
             json.dump(s, d, indent=2, ensure_ascii=False)
@@ -75,18 +76,18 @@ def ah(s, J="simz.json"):
         print(f"Error saving data to JSON file '{J}': {c}")
 
 
-def U(name):
+def U(name: str):
     C = Path(name)
     if C.stem.endswith("_1"):
         return C.stem[:-2] + C.suffix
     return name
 
 
-def V(k, l):
+def V(k: Any, l: Any) -> bool:
     return U(k) == l or U(l) == k
 
 
-def group_similar(ae="simz.json"):
+def group_similar(ae = "simz.json"):
     cwd = Path.cwd()
     y = cwd / ae
     if not y.exists():
@@ -103,7 +104,7 @@ def group_similar(ae="simz.json"):
         m.add(q["file2"])
     o = {d: d for d in m}
 
-    def B(r):
+    def B(r: int):
         n = r
         while o[n] != n:
             n = o[n]
@@ -111,7 +112,7 @@ def group_similar(ae="simz.json"):
             o[r], r = (n, o[r])
         return n
 
-    def aj(k, l):
+    def aj(k: Any, l: Any) -> None:
         O, P = (B(k), B(l))
         if O != P:
             o[O] = P
@@ -142,7 +143,7 @@ def group_similar(ae="simz.json"):
     print(f"\nDone. Created {len(z)} group(s).")
 
 
-def af():
+def af() -> None:
     N = argparse.ArgumentParser()
     N.add_argument(
         "-g",

@@ -25,7 +25,7 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import Iterable, Optional
+from typing import Any, Iterable, Optional
 import urllib.parse
 
 from dh import MAX_WORKERS
@@ -163,7 +163,7 @@ def check_titles(base_dir: Path, node: TreeNode, sync: bool) -> bool:
     return matched
 
 
-def add_outline(html_root, reader: pypdf.PdfReader, writer: pypdf.PdfWriter, node: TreeNode) -> None:
+def add_outline(html_root: Any, reader: pypdf.PdfReader, writer: pypdf.PdfWriter, node: TreeNode) -> None:
     if not node.is_root():
         element_id = _outline_id(node)
         try:
@@ -361,7 +361,7 @@ def cmd_rename_pages(args: argparse.Namespace) -> int:
     return 0
 
 
-_GS_BASIC = [
+_GS_BASIC: list[str] = [
     "-sDEVICE=pdfwrite",
     "-dCompatibilityLevel=1.4",
     "-dDownsampleColorImages=true",
@@ -376,7 +376,7 @@ _GS_BASIC = [
     "-dNOPAUSE",
     "-dBATCH",
 ]
-_GS_SCREEN = [
+_GS_SCREEN: list[str] = [
     "-dBATCH",
     "-dColorConversionStrategy=/sRGB",
     "-dColorImageDownsampleType=/Bicubic",
@@ -397,7 +397,7 @@ _GS_SCREEN = [
     "-dSubsetFonts=true",
     "-sDEVICE=pdfwrite",
 ]
-_GS_MOBILE = [
+_GS_MOBILE: list[str] = [
     "-sDEVICE=pdfwrite",
     "-dCompatibilityLevel=1.4",
     "-dPDFSETTINGS=/screen",
@@ -506,7 +506,7 @@ def _shrink_qpdf(pdf: Path) -> None:
             tmp.unlink(missing_ok=True)
 
 
-_SHRINK_ENGINES = {
+_SHRINK_ENGINES: dict[str, Any] = {
     "gs-basic": _shrink_gs_basic,
     "gs-screen": _shrink_gs_screen,
     "gs-mobile": _shrink_gs_mobile,

@@ -19,8 +19,8 @@ from urllib.parse import urlparse
 
 CURRENT_DIR = Path.cwd()
 HOME_ENV = Path.home() / ".env"
-DEFAULT_BACKEND = "subprocess"
-SIZE_THRESHOLD = 5 * 1024 * 1024
+DEFAULT_BACKEND: str = "subprocess"
+SIZE_THRESHOLD: int = 5 * 1024 * 1024
 
 
 def load_env_token() -> Optional[str]:

@@ -1,6 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Translate lines in a text file with persistent caching and progress saving."""
 
+from __future__ import annotations
+
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
@@ -12,30 +14,31 @@ import sqlite3
 import sys
 import threading
 import time
+from typing import Any, Callable, Sequence
 
 from dh import MAX_WORKERS
 from googletrans import Translator
 from loguru import logger
 
 
-RETRY_ATTEMPTS = 4
-RETRY_DELAY = 0.6
-MAX_CHUNK_SIZE = 2000
-SAVE_INTERVAL = 10
-interrupted = False
+RETRY_ATTEMPTS: int = 4
+RETRY_DELAY: float = 0.6
+MAX_CHUNK_SIZE: int = 2000
+SAVE_INTERVAL: int = 10
+interrupted: bool = False
 
 
-def signal_handler(signum, frame):
+def signal_handler(signum: int, frame: Any) -> None:
     global interrupted
     interrupted = True
     logger.warning("Received interrupt signal. Saving progress and exiting gracefully...")
 
 
-def contains_cyrillic(text):
+def contains_cyrillic(text: str) -> bool:
     return bool(re.search(r"[\u0400-\u04FF\u0500-\u052F\u2DE0-\u2DFF\uA640-\uA69F\u1C80-\u1C8F]", text))
 
 
-def create_chunks(lines, max_chunk_size):
+def create_chunks(lines: list[Any], max_chunk_size: int):
     chunks = []
     current_chunk = []
     current_size = 0
@@ -60,7 +63,7 @@ def create_chunks(lines, max_chunk_size):
 
 
 class TranslationCache:
-    def __init__(self, db_path):
+    def __init__(self, db_path: Path) -> None:
         self.db_path = db_path.expanduser()
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
@@ -78,7 +81,7 @@ class TranslationCache:
         self.conn.commit()
         self.lock = threading.Lock()
 
-    def get_many(self, texts, source_lang, target_lang):
+    def get_many(self, texts: Sequence[Any], source_lang: str, target_lang: str):
         found = {}
         with self.lock:
             for start in range(0, len(texts), 900):
@@ -93,7 +96,7 @@ class TranslationCache:
                 found.update(rows.fetchall())
         return found
 
-    def set_many(self, translations, source_lang, target_lang):
+    def set_many(self, translations: dict[str, Any], source_lang: str, target_lang: str) -> None:
         if not translations:
             return
         with self.lock:
@@ -126,13 +129,13 @@ class TranslationCache:
                 "pairs": [{"source": r[0], "target": r[1], "count": r[2]} for r in pairs],
             }
 
-    def close(self):
+    def close(self) -> None:
         with self.lock:
             self.conn.commit()
             self.conn.close()
 
 
-def translate_text(text, source_lang, target_lang):
+def translate_text(text: str, source_lang: str, target_lang: str):
     translator = None
     try:
         for attempt in range(1, RETRY_ATTEMPTS + 1):
@@ -173,14 +176,14 @@ def translate_text(text, source_lang, target_lang):
                 logger.debug("Could not close translator client: {}", exc)
 
 
-def translate_chunk_factory(source_lang, target_lang):
-    def translate_chunk(chunk):
+def translate_chunk_factory(source_lang: str, target_lang: str) -> Callable[..., Any]:
+    def translate_chunk(chunk: Any):
         return chunk, translate_text("\n".join(chunk), source_lang, target_lang)
 
     return translate_chunk
 
 
-def save_progress(all_lines, results, output_path, json_path, source_lang, target_lang):
+def save_progress(all_lines: list[Any], results: list[Any], output_path: Path, json_path: Path, source_lang: str, target_lang: str) -> None:
     try:
         with output_path.open("w", encoding="utf-8") as f:
             translated_count = 0
@@ -215,7 +218,7 @@ def save_progress(all_lines, results, output_path, json_path, source_lang, targe
         logger.error("Error saving progress: {}", exc)
 
 
-def main():
+def main() -> int | None:
     global interrupted
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
@@ -307,7 +310,7 @@ def main():
         stop_saving = threading.Event()
         to_cache = {}
 
-        def save():
+        def save() -> None:
             with results_lock:
                 save_progress(all_lines, results, output_path, json_path, source_lang, target_lang)
 
@@ -323,7 +326,7 @@ def main():
                 num_workers,
             )
 
-            def periodic_save():
+            def periodic_save() -> None:
                 while not stop_saving.wait(args.save_interval):
                     save()
 

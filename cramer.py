@@ -5,11 +5,14 @@ Takes a file or a folder, compresses every match (or decompresses the ``.sz``/``
 Usage: cramer PATH [--compress|--decompress] [--algo snappy|lz4|gzip] Positional arguments: path File or folder to process Options: -c, --compress Compress files (default) -d, --decompress Decompress files -a, --algo -k, --keep Keep the original files --dry-run Show what would happen, don't write or delete --skip-existing Skip files whose output already exists Examples: $ cramer data/ --algo lz4 $ cramer data/ --decompress Command-line script: run ``python cramer.py`` or the ``cramer`` command.
 The module is importable as well."""
 
+from __future__ import annotations
+
 import argparse
 import contextlib
 import os
 from pathlib import Path
 import sys
+from typing import Any
 
 
 try:
@@ -17,7 +20,7 @@ try:
 except ImportError:
     print("cramjam is required: pip install cramjam", file=sys.stderr)
     sys.exit(1)
-CODECS = {
+CODECS: dict[str, tuple[Any, ...]] = {
     "snappy": (
         ".sz",
         lambda d, l: bytes(cj.snappy.compress(d)),
@@ -67,11 +70,11 @@ CODECS = {
         11,
     ),
 }
-DEFAULT_ALGO = "snappy"
-EXT_TO_ALGO = {ext: name for name, (ext, _, _, _) in CODECS.items()}
+DEFAULT_ALGO: str = "snappy"
+EXT_TO_ALGO: dict[Any, Any] = {ext: name for name, (ext, _, _, _) in CODECS.items()}
 
 
-def compress_file(path: Path, algo: str, level, keep: bool, dry_run: bool) -> dict:
+def compress_file(path: Path, algo: str, level: int, keep: bool, dry_run: bool) -> dict:
     ext, comp_fn, decomp_fn, _ = CODECS[algo]
     out_path = path.with_name(path.name + ext)
     result = {
@@ -206,7 +209,7 @@ def decompress_file(path: Path, algo: str, keep: bool, dry_run: bool) -> dict:
     return result
 
 
-def collect_files_for_compress(root: Path, skip_suffixes):
+def collect_files_for_compress(root: Path, skip_suffixes: Any) -> list[Path]:
     if root.is_file():
         return [] if root.suffix.lower() in skip_suffixes else [root]
     if root.is_dir():
@@ -214,7 +217,7 @@ def collect_files_for_compress(root: Path, skip_suffixes):
     return []
 
 
-def collect_files_for_decompress(root: Path, algo_filter):
+def collect_files_for_decompress(root: Path, algo_filter: Any):
     def matches(p: Path) -> bool:
         if algo_filter is not None:
             return p.name.endswith(CODECS[algo_filter][0])
@@ -227,7 +230,7 @@ def collect_files_for_decompress(root: Path, algo_filter):
     return []
 
 
-def detect_algo(path: Path, forced: str):
+def detect_algo(path: Path, forced: str) -> str | None:
     if forced is not None:
         return forced
     for ext in sorted(EXT_TO_ALGO, key=len, reverse=True):
@@ -236,7 +239,7 @@ def detect_algo(path: Path, forced: str):
     return None
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,

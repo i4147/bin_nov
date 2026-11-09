@@ -14,7 +14,7 @@ from multiprocessing import Pool
 from pathlib import Path
 import sys
 import time
-from typing import TYPE_CHECKING, Optional, Sequence
+from typing import Any, Optional, Sequence, TYPE_CHECKING
 
 from dh import MAX_WORKERS, fsz
 from loguru import logger
@@ -41,18 +41,18 @@ except ImportError:
 INPUT_FORMATS = frozenset({"ttf", "otf", "woff", "woff2", "pfa", "pfb"})
 OUTPUT_FORMATS = frozenset({"ttf", "otf", "woff", "woff2"})
 TYPE1_FORMATS = frozenset({"pfa", "pfb"})
-SUPPORTED_FORMATS = INPUT_FORMATS
-SFNT_VERSIONS = {
+SUPPORTED_FORMATS: frozenset[Any] = INPUT_FORMATS
+SFNT_VERSIONS: dict[str, Any] = {
     "ttf": 0x00010000,
     "otf": "OTTO",
 }
-FLAVORS = {
+FLAVORS: dict[str, str] = {
     "woff": "woff",
     "woff2": "woff2",
 }
-DEFAULT_OUTPUT_FORMAT = "woff2"
+DEFAULT_OUTPUT_FORMAT: str = "woff2"
 CFF_TABLES = frozenset({"CFF ", "CFF2"})
-TRUETYPE_TABLE = "glyf"
+TRUETYPE_TABLE: str = "glyf"
 
 
 @dataclass

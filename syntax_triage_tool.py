@@ -15,6 +15,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+from typing import Any, Iterable
 
 
 DEFAULT_WORKERS: int = 8
@@ -67,7 +68,7 @@ def check_lua(path: Path) -> tuple[Path, bool, str]:
     return path, True, ""
 
 
-CHECKERS = {"ast": check_python_ast, "black": check_python_black, "lua": check_lua}
+CHECKERS: dict[str, Any] = {"ast": check_python_ast, "black": check_python_black, "lua": check_lua}
 
 
 def collect_files(inputs: Sequence[Path], suffix: str, excluded_names: frozenset[str]) -> list[Path]:

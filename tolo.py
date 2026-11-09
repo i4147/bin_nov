@@ -14,7 +14,7 @@ from dh import unique_path
 h = Path.home() / ".local" / "bin"
 
 
-def i(a):
+def i(a: Path) -> list[Path]:
     g = Path(a)
     if g.exists():
         return [g]
@@ -22,7 +22,7 @@ def i(a):
     return [Path(f) for f in k if Path(f).is_file()]
 
 
-def main():
+def main() -> None:
     args = sys.argv[1:]
     if not args:
         print(f"usage: {Path(sys.argv[0]).name} [-f LISTFILE] [FILE ...]", file=sys.stderr)

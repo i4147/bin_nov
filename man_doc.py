@@ -53,7 +53,7 @@ def get_files(path: str | Path, ext: list[str] | None = None) -> list[Path]:
     return files
 
 
-def safe_run(path) -> bool:
+def safe_run(path: Path) -> bool:
     path = Path(path)
     is_gzipped = path.suffix == ".gz"
     if is_gzipped:
@@ -81,7 +81,7 @@ def safe_run(path) -> bool:
             Path(tmp_path).unlink()
 
 
-def process_file(path) -> bool:
+def process_file(path: Path) -> bool:
     path = Path(path)
     if not path.exists():
         return False

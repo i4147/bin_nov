@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 import pdfkit
 
 
-def get_site_name(url):
+def get_site_name(url: str) -> str:
     if "://" not in url:
         url = "http://" + url
     host = urlparse(url).hostname or "website"
@@ -18,7 +18,7 @@ def get_site_name(url):
     return re.sub(r"[^A-Za-z0-9_-]", "_", host)
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 2:
         print("Usage: python script.py <url>")
         sys.exit(1)

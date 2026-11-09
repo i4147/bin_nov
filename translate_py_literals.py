@@ -8,6 +8,7 @@ from functools import lru_cache
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterable
 
 
 try:
@@ -143,7 +144,7 @@ def resolve_input_paths(inputs: list[str]) -> list[Path]:
     return unique_files
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Translate non-English string literals in Python scripts in-place.")
     parser.add_argument(
         "files",

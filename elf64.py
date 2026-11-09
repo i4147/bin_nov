@@ -8,21 +8,21 @@ import argparse
 import multiprocessing as mp
 from pathlib import Path
 import sys
-from typing import Iterator
+from typing import Any, Iterator
 
 from dh import MAX_WORKERS, is_binary
 from elftools.common.exceptions import ELFError
 from elftools.elf.elffile import ELFFile
 
 
-ELF_TYPES = {
+ELF_TYPES: dict[str, str] = {
     "ET_NONE": "no file type",
     "ET_REL": "relocatable object",
     "ET_EXEC": "executable",
     "ET_DYN": "shared object / PIE",
     "ET_CORE": "core dump",
 }
-ELF_MACHINES = {
+ELF_MACHINES: dict[str, str] = {
     "EM_386": "x86",
     "EM_X86_64": "x86-64",
     "EM_ARM": "ARM",

@@ -15,48 +15,49 @@ import re
 import sys
 import time
 import tokenize
+from typing import Any, Callable
 
 
 STRING_RE = re.compile(r'^([rufbRUFB]*)([\'"]{3}|[\'"]{1})(.*)\2$', flags=re.DOTALL)
 COMMENT_RE = re.compile(r"^(#+)(\s*)(.*)$", flags=re.DOTALL)
-STATE_FILE = Path(".translation_state.json")
+STATE_FILE: Path = Path(".translation_state.json")
 
 
 class TargetFinder(ast.NodeVisitor):
-    def __init__(self):
+    def __init__(self) -> None:
         self.target_lines = set()
 
-    def visit_Call(self, node):
+    def visit_Call(self, node: ast.AST) -> None:
         if isinstance(node.func, ast.Name) and node.func.id == "print":
             for arg in ast.walk(node):
                 if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
                     self.target_lines.add(arg.lineno)
         self.generic_visit(node)
 
-    def visit_FunctionDef(self, node):
+    def visit_FunctionDef(self, node: ast.AST) -> None:
         self._add_docstring(node)
         self.generic_visit(node)
 
-    def visit_AsyncFunctionDef(self, node):
+    def visit_AsyncFunctionDef(self, node: ast.AST) -> None:
         self._add_docstring(node)
         self.generic_visit(node)
 
-    def visit_ClassDef(self, node):
+    def visit_ClassDef(self, node: ast.AST) -> None:
         self._add_docstring(node)
         self.generic_visit(node)
 
-    def visit_Module(self, node):
+    def visit_Module(self, node: ast.AST) -> None:
         self._add_docstring(node)
         self.generic_visit(node)
 
-    def _add_docstring(self, node):
+    def _add_docstring(self, node: ast.AST) -> None:
         if node.body and isinstance(node.body[0], ast.Expr):
             val = node.body[0].value
             if isinstance(val, ast.Constant) and isinstance(val.value, str):
                 self.target_lines.add(val.lineno)
 
 
-def get_translator_func(backend_name):
+def get_translator_func(backend_name: str):
     try:
         if backend_name == "deep_translator":
             from deep_translator import GoogleTranslator
@@ -86,7 +87,7 @@ def get_translator_func(backend_name):
         sys.exit(1)
 
 
-def safe_translate(text, translate_func, retries=3):
+def safe_translate(text: str, translate_func: Callable[..., Any], retries = 3):
     if not text.strip():
         return text
     for attempt in range(retries):
@@ -98,7 +99,7 @@ def safe_translate(text, translate_func, retries=3):
     return text
 
 
-def batch_translate(items, translate_func):
+def batch_translate(items: list[Any], translate_func: Any) -> None:
     batch_size = 4
     for i in range(0, len(items), batch_size):
         batch = items[i : i + batch_size]
@@ -115,7 +116,7 @@ def batch_translate(items, translate_func):
         time.sleep(1.0)
 
 
-def apply_replacements(source_code, replacements):
+def apply_replacements(source_code: str, replacements: list[Any]) -> str:
     lines = source_code.splitlines(keepends=True)
     replacements.sort(key=lambda x: (x[0], x[1]), reverse=True)
     for start_row, start_col, end_row, end_col, new_text in replacements:
@@ -131,7 +132,7 @@ def apply_replacements(source_code, replacements):
     return "".join(lines)
 
 
-def process_file(filepath, translate_func):
+def process_file(filepath: Path, translate_func: Any) -> bool:
     try:
         source_code = filepath.read_text(encoding="utf-8")
     except UnicodeDecodeError:
@@ -202,17 +203,17 @@ def process_file(filepath, translate_func):
     return True
 
 
-def load_state():
+def load_state() -> dict[str, list[Any]]:
     if STATE_FILE.exists():
         return json.loads(STATE_FILE.read_text(encoding="utf-8"))
     return {"processed_files": []}
 
 
-def save_state(state):
+def save_state(state: Any) -> None:
     STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="In-place Python Comment, Docstring, and Print Statement Translator")
     parser.add_argument(
         "inputs",

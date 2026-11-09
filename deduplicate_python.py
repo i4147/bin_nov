@@ -4,6 +4,8 @@ Hashes the top-level definitions (ast or tree-sitter, archives included), writes
 Usage: deduplicate_python [-m|-c] [paths ...] Options: -m, --move Move duplicate objects to utils.py and add imports -c, --copy Copy duplicate objects to utils.py without changing source files Examples: $ deduplicate_python -c src/ Command-line script: run ``python deduplicate_python.py`` or the ``deduplicate_python`` command.
 The module is importable as well."""
 
+from __future__ import annotations
+
 import argparse
 import ast
 import bz2
@@ -17,6 +19,7 @@ import sys
 import tarfile
 import tempfile
 import zipfile
+from typing import Any, Iterable
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -37,7 +40,7 @@ try:
     import brotli
 except ImportError:
     brotli = None
-SUPPORTED_ARCHIVES = (
+SUPPORTED_ARCHIVES: tuple[str, ...] = (
     ".zip",
     ".tar",
     ".tar.gz",
@@ -249,10 +252,10 @@ def should_skip_dir(path: Path) -> bool:
     return path.name in skip_names
 
 
-def collect_python_files(base: Path):
+def collect_python_files(base: Path) -> list[Any] | None:
     files = []
 
-    def walk(p: Path):
+    def walk(p: Path) -> None:
         if should_skip_dir(p):
             return
         try:
@@ -311,12 +314,12 @@ def get_utils_path(base: Path) -> Path:
         i += 1
 
 
-def build_import_line(utils_module_name: str, names) -> str:
+def build_import_line(utils_module_name: str, names: list[Any]) -> str:
     names = sorted(set(names))
     return f"from {utils_module_name} import ({', '.join(names)})\n"
 
 
-def write_utils_file(path: Path, objects) -> bool:
+def write_utils_file(path: Path, objects: Iterable[Any]) -> bool:
     content = "\n\n".join(obj["snippet"].rstrip() for obj in objects).rstrip() + "\n"
     try:
         ast.parse(content)
@@ -340,7 +343,7 @@ def insert_import_after_shebang(code: str, import_line: str) -> str:
     return "".join(lines)
 
 
-def remove_snippets_from_code(code: str, objects) -> str:
+def remove_snippets_from_code(code: str, objects: Iterable[Any]) -> str:
     if not objects:
         return code
     if all(o.get("start_byte") is not None and o.get("end_byte") is not None for o in objects):
@@ -363,7 +366,7 @@ def remove_snippets_from_code(code: str, objects) -> str:
     return "".join(lines)
 
 
-def update_file_for_move(path: Path, objects_to_remove, utils_module_name: str) -> bool:
+def update_file_for_move(path: Path, objects_to_remove: Iterable[Any], utils_module_name: str) -> bool:
     code = safe_read_text(path)
     if code is None:
         return False

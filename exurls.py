@@ -7,7 +7,7 @@ The module is importable as well."""
 import argparse
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING
+from typing import Any, Iterable, Sequence, TYPE_CHECKING
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
@@ -54,7 +54,7 @@ def extract_links(url: str, session: requests.Session):
     return sorted(links)
 
 
-def split_internal_external(base_url, links):
+def split_internal_external(base_url: str, links: Iterable[Any]) -> tuple[list[Any], list[Any]]:
     base_domain = urlparse(base_url).netloc
     internal = []
     external = []
@@ -66,7 +66,7 @@ def split_internal_external(base_url, links):
     return internal, external
 
 
-def save_links(name: str, links) -> None:
+def save_links(name: str, links: Sequence[Any]) -> None:
     path = Path(name)
     content = "\n".join(links)
     path.write_text(content, encoding="utf-8")

@@ -13,6 +13,7 @@ import argparse
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterable
 
 
 def parse_metadata_dependencies(metadata_path: Path) -> dict:
@@ -67,7 +68,7 @@ def generate_report(pkgs_data: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Report dependencies of installed Python packages by parsing local METADATA files."
     )

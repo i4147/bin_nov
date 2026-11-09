@@ -16,21 +16,21 @@ import shutil
 import subprocess
 import sys
 import time
-from typing import Any, Iterator, Optional, Sequence
+from typing import Any, Iterable, Iterator, Optional, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
 
-MISSING_LIB_PATTERNS = (
+MISSING_LIB_PATTERNS: tuple[str, ...] = (
     "error while loading shared libraries",
     "cannot open shared object file",
     "no such file",
     "not found",
     "failed to load",
 )
-PROBE_ARGS = ("--help", "-h", "--version", "-v", "--info")
-_ANSI = {
+PROBE_ARGS: tuple[str, ...] = ("--help", "-h", "--version", "-v", "--info")
+_ANSI: dict[str, str] = {
     "red": "\033[31m",
     "green": "\033[32m",
     "yellow": "\033[33m",

@@ -9,7 +9,7 @@ import sys
 from dh import mpf_map
 
 
-CHUNKSIZE = 15_850
+CHUNKSIZE: int = 15_850
 
 
 def split_at_boundary(text: str, max_size: int) -> tuple[str, str]:

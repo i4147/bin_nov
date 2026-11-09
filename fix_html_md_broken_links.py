@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 
 
-static_dir = "/sdcard/_static"
+static_dir: str = "/sdcard/_static"
 
 
 def fix_links(path: Path) -> None:

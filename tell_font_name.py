@@ -4,9 +4,12 @@ Reads the name table with fontTools, picks the best family/subfamily combination
 Usage: tell_font_name FONT [...
 ] Examples: $ tell_font_name ~/fonts/*.ttf Runs as a script (``python tell_font_name.py``) in the directory it should act on; the module can also be imported."""
 
+from __future__ import annotations
+
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterable
 
 from dh import cprint, get_files, mpf, unique_path
 from fontTools.ttLib import TTFont
@@ -22,7 +25,7 @@ def clean_filename(s: str) -> str:
     return s.strip("_-.")
 
 
-def get_best_name(font: TTFont, name_id: int):
+def get_best_name(font: TTFont, name_id: int) -> str | None:
     fallback = None
     for rec in font["name"].names:
         if rec.nameID != name_id:
@@ -38,7 +41,7 @@ def get_best_name(font: TTFont, name_id: int):
     return fallback
 
 
-def get_font_names(path) -> tuple[str, str] | tuple[None, None]:
+def get_font_names(path: Path) -> tuple[str, str] | tuple[None, None]:
     font = TTFont(path)
     family = get_best_name(font, 1)
     subfamily = get_best_name(font, 2)

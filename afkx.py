@@ -16,7 +16,7 @@ import shutil
 import subprocess
 import sys
 import tarfile
-from typing import Optional
+from typing import Any, Callable, Iterable, Optional
 import zipfile
 
 from dh import MAX_WORKERS
@@ -345,7 +345,7 @@ def autofix_file(path: str, unused: list[UnusedImport], dry_run: bool = False) -
         return False, f"Write error: {exc}"
 
 
-AUTOFLAKE_CMD = ["autoflake", "--remove-all-unused-imports", "--ignore-init-module-imports"]
+AUTOFLAKE_CMD: list[str] = ["autoflake", "--remove-all-unused-imports", "--ignore-init-module-imports"]
 
 
 def run_autoflake_on_file(path: str) -> FileResult:
@@ -438,7 +438,7 @@ def collect_targets(paths: list[str], exclude_patterns: list[str]) -> tuple[list
 
 def _handle_single_file(
     p: Path,
-    excluded,
+    excluded: Callable[..., Any],
     py_files: list[str],
     archive_members: list[tuple[str, str]],
 ) -> None:

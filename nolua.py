@@ -9,13 +9,13 @@ from pathlib import Path
 from dh import get_files
 
 
-def has_lua(root_dir):
+def has_lua(root_dir: Path) -> bool:
     lua_files = []
     lua_files = get_files(root_dir, ext=[".lua"])
     return bool(lua_files)
 
 
-def move_to_start(src):
+def move_to_start(src: Path) -> None:
     dest = "/data/data/com.termux/files/home/.vim/pack/plugins/start"
     if not Path(dest).exists():
         Path(dest).mkdir(exist_ok=True)

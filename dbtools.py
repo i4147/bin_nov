@@ -47,7 +47,7 @@ import sqlite3
 import sys
 import tempfile
 import traceback
-from typing import TYPE_CHECKING, Any
+from typing import Any, Iterable, Sequence, TYPE_CHECKING
 
 from dh import MAX_WORKERS, SQL_MAX_WORKERS
 from loguru import logger
@@ -69,7 +69,7 @@ def _setup_logging(verbose: bool = False) -> None:
 
 
 DEFAULT_TEXT_ENCODINGS: tuple[str, ...] = ("utf-8", "latin-1", "cp1252", "iso-8859-1")
-DEFAULT_TEXT_CHAR_LIMIT = 1024 * 1024
+DEFAULT_TEXT_CHAR_LIMIT: int = 1024 * 1024
 
 
 def _table_exists(cursor: sqlite3.Cursor, table: str) -> bool:
@@ -450,8 +450,8 @@ def cmd_search_rule(args: argparse.Namespace) -> int:
     return 0
 
 
-MDB_EXTS = {".mdb", ".accdb"}
-MDB_FETCH = 1000
+MDB_EXTS: set[str] = {".mdb", ".accdb"}
+MDB_FETCH: int = 1000
 
 
 def _mdb_serialize(v: Any) -> Any:
@@ -637,8 +637,8 @@ def cmd_mdb_to_json(args: argparse.Namespace) -> int:
     return 0 if fail == 0 else 1
 
 
-SQL_CHUNK = 1024 * 1024
-SQL_DEFAULT_ENCODING = "utf-8"
+SQL_CHUNK: int = 1024 * 1024
+SQL_DEFAULT_ENCODING: str = "utf-8"
 _SQL_INSERT_RE = re.compile(
     r"""
     \bINSERT\s+(?:IGNORE\s+)?INTO\s+

@@ -12,7 +12,7 @@ import re
 import signal
 import sys
 import time
-from typing import Final, Iterable, Sequence
+from typing import Any, Final, Iterable, Sequence
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS, SKIP_DIRS
@@ -45,7 +45,7 @@ class InterruptFlag:
     def __bool__(self) -> bool:
         return self.set
 
-    def trigger(self, *_args) -> None:
+    def trigger(self, *_args: Any) -> None:
         print("\n⚠️  Ctrl+C — finishing current chunk then stopping.")
         self.set = True
 

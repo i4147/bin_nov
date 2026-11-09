@@ -20,10 +20,10 @@ from pathlib import Path
 import re
 import sys
 import tokenize
-from typing import Final
+from typing import Any, Final, Iterable
 
 
-__version__ = "1.1.0"
+__version__: str = "1.1.0"
 DEPRECATED_FAMILY: Final[dict[str, str]] = {
     "Str": "str",
     "Num": "num",

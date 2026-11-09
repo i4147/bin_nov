@@ -7,6 +7,7 @@ from multiprocessing import Pool, cpu_count
 from pathlib import Path
 import re
 import sys
+from typing import Any
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -40,7 +41,7 @@ class CommentRemover:
     SINGLE_COMMENT_PATTERN = r"//(?:\\\r?\n|[^\n])*"
     MULTI_COMMENT_PATTERN = r"/\*.*?\*/"
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.string_regex = re.compile(self.STRING_PATTERN)
         self.single_comment_regex = re.compile(self.SINGLE_COMMENT_PATTERN)
         self.multi_comment_regex = re.compile(self.MULTI_COMMENT_PATTERN, re.DOTALL)
@@ -55,7 +56,7 @@ class CommentRemover:
         protected_strings = {}
         placeholder_counter = [0]
 
-        def replace_string(match):
+        def replace_string(match: re.Match[str]) -> str:
             placeholder = f"__STRING_PLACEHOLDER_{placeholder_counter[0]}__"
             protected_strings[placeholder] = match.group(0)
             placeholder_counter[0] += 1

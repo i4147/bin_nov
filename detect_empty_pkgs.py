@@ -4,6 +4,8 @@ Opens each archive of the current directory and flags the ones without code (no 
 Usage: detect_empty_pkgs [-a] Options: -a, --apply Actually move the archives (default is dry-run) Examples: $ detect_empty_pkgs -a Command-line script: run ``python detect_empty_pkgs.py`` or the ``detect_empty_pkgs`` command.
 The module is importable as well."""
 
+from __future__ import annotations
+
 import argparse
 import ast
 import multiprocessing as mp
@@ -11,13 +13,14 @@ from pathlib import Path
 import shutil
 import tarfile
 import zipfile
+from typing import Any, Iterator
 
 from dh import MAX_WORKERS
 
 
-MIN_ARCHIVE_BYTES = 300
-TARGET_GLOBS = ("*.tar.gz", "*.whl", "*.zip")
-METADATA_NAMES = {
+MIN_ARCHIVE_BYTES: int = 300
+TARGET_GLOBS: tuple[str, str, str] = ("*.tar.gz", "*.whl", "*.zip")
+METADATA_NAMES: set[str] = {
     "PKG-INFO",
     "METADATA",
     "setup.cfg",
@@ -48,7 +51,7 @@ METADATA_NAMES = {
     "RECORD",
     "WHEEL",
 }
-NON_CODE_PREFIXES = (
+NON_CODE_PREFIXES: tuple[str, ...] = (
     "docs/",
     "doc/",
     "examples/",
@@ -64,7 +67,7 @@ NON_CODE_PREFIXES = (
 class _Member:
     __slots__ = ("_read", "name", "size")
 
-    def __init__(self, name, size, read):
+    def __init__(self, name: str, size: int, read: bool) -> None:
         self.name = name
         self.size = size
         self._read = read
@@ -75,7 +78,7 @@ class _Member:
 
 
 class Archive:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path) -> None:
         self.path = path
         lower = path.name.lower()
         if lower.endswith(".tar.gz"):
@@ -94,12 +97,12 @@ class Archive:
             self._fh = zipfile.ZipFile(self.path, "r")
         return self
 
-    def __exit__(self, *exc):
+    def __exit__(self, *exc: Any) -> None:
         if self._fh is not None:
             self._fh.close()
             self._fh = None
 
-    def files(self):
+    def files(self) -> Iterator[_Member]:
         fh = self._fh
         if self.kind == "tar":
             for m in fh.getmembers():
@@ -129,26 +132,26 @@ def _basename(member: _Member) -> str:
     return member.name.replace("\\", "/").rsplit("/", 1)[-1]
 
 
-def _check_no_files(members):
+def _check_no_files(members: list[Any]) -> str | None:
     if not members:
         return "no files in archive"
     return None
 
 
-def _check_no_py(members):
+def _check_no_py(members: list[Any]) -> str | None:
     if not any(_is_py(m) for m in members):
         return "no .py files"
     return None
 
 
-def _check_only_setup_py(members):
+def _check_only_setup_py(members: list[Any]) -> str | None:
     py = [m for m in members if _is_py(m)]
     if len(py) == 1 and _basename(py[0]) == "setup.py":
         return "only setup.py"
     return None
 
 
-def _check_all_non_setup_empty(members):
+def _check_all_non_setup_empty(members: list[Any]) -> str | None:
     py = [m for m in members if _is_py(m)]
     non_setup = [m for m in py if _basename(m) != "setup.py"]
     if not non_setup:
@@ -159,7 +162,7 @@ def _check_all_non_setup_empty(members):
     return "all non-setup .py files are empty"
 
 
-def _check_only_metadata(members):
+def _check_only_metadata(members: list[Any]) -> str | None:
     if not members:
         return None
     for m in members:
@@ -172,7 +175,7 @@ def _check_only_metadata(members):
     return "only metadata files"
 
 
-def _check_only_pyc(members):
+def _check_only_pyc(members: list[Any]) -> str | None:
     if any(_is_py(m) for m in members):
         return None
     has_compiled = any(m.name.endswith((".pyc", ".pyo")) or "__pycache__" in m.name for m in members)
@@ -181,7 +184,7 @@ def _check_only_pyc(members):
     return None
 
 
-def _check_only_docs_tests(members):
+def _check_only_docs_tests(members: list[Any]) -> str | None:
     if not members:
         return None
     for m in members:
@@ -209,7 +212,7 @@ def _py_is_trivial(src: str) -> bool:
     return True
 
 
-def _check_imports_only(members):
+def _check_imports_only(members: list[Any]) -> str | None:
     py = [m for m in members if _is_py(m)]
     if not py:
         return None
@@ -228,14 +231,14 @@ def _check_imports_only(members):
     return None
 
 
-def _check_tiny(members):
+def _check_tiny(members: list[Any]) -> str | None:
     total = sum(m.size for m in members)
     if total < MIN_ARCHIVE_BYTES:
         return f"archive content too small ({total} bytes)"
     return None
 
 
-_CHECKS = (
+_CHECKS: tuple[Any, ...] = (
     _check_no_files,
     _check_no_py,
     _check_only_setup_py,
@@ -298,7 +301,7 @@ def parse_args():
     return ap.parse_args()
 
 
-def main():
+def main() -> None:
     args = parse_args()
     cwd = Path.cwd()
     empty_dir = cwd / "empty"

@@ -11,7 +11,7 @@ from dataclasses import dataclass
 import multiprocessing as mp
 from pathlib import Path
 import re
-from typing import Optional
+from typing import Any, Iterable, Optional
 
 from dh import MAX_WORKERS
 
@@ -32,18 +32,18 @@ HTML_BADGE_PATTERN = re.compile(
     r"<p\b[^>]*>[\s\S]*?<img\b[\s\S]*?</p>|" r"<a\b[^>]*>\s*<img\b[\s\S]*?</a>|" r"<img\b[^>]*/?>",
     re.IGNORECASE,
 )
-RST_IMAGE_PATTERNS = [
+RST_IMAGE_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"^\s*\.\.\ +image::\s+https?://[^\s]+", re.IGNORECASE | re.MULTILINE),
     re.compile(r"^\s*\.\.\ +figure::\s+https?://[^\s]+", re.IGNORECASE | re.MULTILINE),
     re.compile(r"^\s*\.\.\ +\|.*\|\s+image::\s+https?://[^\s]+", re.IGNORECASE | re.MULTILINE),
 ]
-MD_PATTERNS_SMART = [
+MD_PATTERNS_SMART: list[re.Pattern[str]] = [
     re.compile(r"^\[!\[.*?\]\(https?://[^\)]+\)\]\(https?://[^\)]+\)", re.MULTILINE),
     re.compile(r"!\[.*?\]\(https?://[^\)]+\)", re.MULTILINE),
     re.compile(r"!\[.*?\]\((?!https?://)[^\)]+\)", re.MULTILINE),
     re.compile(r'<img[^>]+src\s*=\s*["\'][^"\']["\'][^>]*>', re.IGNORECASE),
 ]
-BADGE_DOMAINS = [
+BADGE_DOMAINS: list[str] = [
     "shields.io",
     "badge.fury.io",
     "travis-ci.org",
@@ -53,7 +53,7 @@ BADGE_DOMAINS = [
     "readthedocs.org",
     "packagist.org",
 ]
-REMOTE_PREFIXES = ("http://", "https://", "//")
+REMOTE_PREFIXES: tuple[str, str, str] = ("http://", "https://", "//")
 IMG_TAG_RE = re.compile(r'<img\b[^>]*\bsrc\s*=\s*["\']([^"\']) ["\'][^>]*>', re.IGNORECASE)
 MD_INLINE_IMG_RE = re.compile(r"!\[.*?\]\((.*?)\)", re.IGNORECASE)
 MD_REF_DEF_RE = re.compile(r"^\s*\[(.*?)\]:\s*(\S+)", re.MULTILINE)
@@ -151,7 +151,7 @@ def clean_file_remote(path: Path) -> FileStats:
         removed = 0
         if path.suffix.lower() in {".html", ".htm"}:
 
-            def repl(m):
+            def repl(m: re.Match[str]):
                 nonlocal removed
                 src = m.group(1)
                 if src.startswith(REMOTE_PREFIXES):
@@ -162,7 +162,7 @@ def clean_file_remote(path: Path) -> FileStats:
             modified = IMG_TAG_RE.sub(repl, modified)
         elif path.suffix.lower() == ".md":
 
-            def inline_repl(m):
+            def inline_repl(m: re.Match[str]):
                 nonlocal removed
                 url = m.group(1)
                 if url.startswith(REMOTE_PREFIXES):
@@ -173,7 +173,7 @@ def clean_file_remote(path: Path) -> FileStats:
             modified = MD_INLINE_IMG_RE.sub(inline_repl, modified)
         elif path.suffix.lower() in {".rst", ".txt"}:
 
-            def rst_repl(m):
+            def rst_repl(m: Any) -> str:
                 nonlocal removed
                 removed += 1
                 return ""

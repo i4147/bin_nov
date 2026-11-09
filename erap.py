@@ -14,7 +14,7 @@ import multiprocessing
 from pathlib import Path
 import shutil
 import subprocess
-from typing import Iterable, Iterator
+from typing import Any, Iterable, Iterator
 
 from dh import MAX_WORKERS
 
@@ -35,7 +35,7 @@ REPORT_TOOLS: dict[str, list[str]] = {
 }
 DEFAULT_APPEND_TOOLS: list[str] = ["ty", "pyright", "pyrefly"]
 DEFAULT_REPORT_DIR: str = "report"
-_DH_IMPORT_PATTERN = "error[unresolved-import]:cannot resolve imported module `dh`"
+_DH_IMPORT_PATTERN: str = "error[unresolved-import]:cannot resolve imported module `dh`"
 
 
 def _run(cmd: list[str]) -> tuple[int, str]:

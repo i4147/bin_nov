@@ -59,7 +59,7 @@ def render_pdf_from_html(
     doc.write_pdf(str(output), stylesheets=sheets)
 
 
-_INLINE_CSS_TEMPLATE = """
+_INLINE_CSS_TEMPLATE: str = """
 @page {
     size: A4;
     margin: 20mm;
@@ -128,7 +128,7 @@ li { margin-bottom: 0.4em; }
 img { max-width: 100%; height: auto; display: block;
       margin: 20px auto; border-radius: 4px; }
 """
-_LOCAL_FONT_FACES = """\
+_LOCAL_FONT_FACES: str = """\
 @font-face {
     font-family: "LocalInter";
     src: url("fonts/Inter-Regular.ttf");
@@ -214,7 +214,7 @@ class _CHMHtmlExtractor(HTMLParser):
         return "".join(self.content)
 
 
-_CHM_STYLE_HEADER = (
+_CHM_STYLE_HEADER: str = (
     '<!DOCTYPE html><html><head><meta charset="utf-8">'
     "<style>"
     "body { font-family:Arial,sans-serif; line-height:1.6; margin:2em; }"
@@ -516,8 +516,8 @@ def cmd_html(args: argparse.Namespace) -> int:
     return 0
 
 
-_MARKDOWN2_SIMPLE_EXTRAS = ["cuddled-lists", "tables"]
-_MARKDOWN2_FULL_EXTRAS = [
+_MARKDOWN2_SIMPLE_EXTRAS: list[str] = ["cuddled-lists", "tables"]
+_MARKDOWN2_FULL_EXTRAS: list[str] = [
     "header-ids",
     "fenced-code-blocks",
     "tables",
@@ -527,7 +527,7 @@ _PYGMENTS_RE = re.compile(
     r'<pre><code class="language-(\w+)">(.*?)</code></pre>',
     re.DOTALL,
 )
-_TOC_NAV = '\n<nav class="toc">\n<h1>Contents</h1>\n<ul></ul>\n</nav>\n'
+_TOC_NAV: str = '\n<nav class="toc">\n<h1>Contents</h1>\n<ul></ul>\n</nav>\n'
 
 
 def _convert_markdown2(
@@ -680,7 +680,7 @@ def cmd_dict(args: argparse.Namespace) -> int:
     return 0
 
 
-_PRECISE_FONTS = [
+_PRECISE_FONTS: list[tuple[Any, ...]] = [
     ("Inter", "normal", 400, "Inter-Regular.ttf"),
     ("Inter", "normal", 700, "Inter-Bold.ttf"),
     ("Inter", "italic", 400, "Inter-Italic.ttf"),
@@ -706,7 +706,7 @@ def _font_face(font_dir: Path, family: str, style: str, weight: int, filename: s
     )
 
 
-_PRECISE_CSS_BODY = """
+_PRECISE_CSS_BODY: str = """
 /* Global Reset & Base Typography */
 html, body {
     margin: 0; padding: 0;

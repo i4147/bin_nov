@@ -7,7 +7,7 @@ import ast as ast_module
 import multiprocessing as mp
 from pathlib import Path
 import sys
-from typing import Sequence
+from typing import Any, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -32,9 +32,9 @@ try:
     HAS_LOGURU = True
 except ImportError:
     HAS_LOGURU = False
-SUPPORTED_BACKENDS = ("libcst", "tree-sitter", "ast")
-PRESERVED_COMMENTS = ("# type", "# fmt")
-SHEBANG_PREFIX = "#!"
+SUPPORTED_BACKENDS: tuple[str, str, str] = ("libcst", "tree-sitter", "ast")
+PRESERVED_COMMENTS: tuple[str, str] = ("# type", "# fmt")
+SHEBANG_PREFIX: str = "#!"
 
 
 def setup_logger(verbose: bool = False) -> None:
@@ -128,7 +128,7 @@ def strip_comments_libcst(source: str, options: argparse.Namespace) -> str:
     class CommentRemover(cst.CSTTransformer):
         METADATA_DEPENDENCIES = (ParentNodeProvider,)
 
-        def __init__(self, options: argparse.Namespace):
+        def __init__(self, options: argparse.Namespace) -> None:
             self.options = options
 
         def leave_Comment(
@@ -205,7 +205,7 @@ def strip_comments_libcst(source: str, options: argparse.Namespace) -> str:
 
 
 class AstTransformer(ast_module.NodeTransformer):
-    def __init__(self, options: argparse.Namespace):
+    def __init__(self, options: argparse.Namespace) -> None:
         self.options = options
 
     def _remove_docstring(self, node: ast_module.AST) -> None:

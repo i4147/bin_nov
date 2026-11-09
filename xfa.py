@@ -8,7 +8,7 @@ from multiprocessing import Pool, cpu_count
 from pathlib import Path
 import re
 import sys
-from typing import Any, Generator, Optional
+from typing import Any, Generator, Optional, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -28,7 +28,7 @@ try:
     HAZM_AVAILABLE = True
 except ImportError:
     HAZM_AVAILABLE = False
-TEXT_EXTENSIONS = {
+TEXT_EXTENSIONS: set[str] = {
     ".txt",
     ".py",
     ".md",
@@ -46,8 +46,8 @@ TEXT_EXTENSIONS = {
     ".ts",
     ".sql",
 }
-PERSIAN_UNICODE_RANGE = "\u0600-\u06ff\u0670\u064b-\u065f\u200c"
-STOPWORDS = {
+PERSIAN_UNICODE_RANGE: str = "\u0600-\u06ff\u0670\u064b-\u065f\u200c"
+STOPWORDS: set[str] = {
     "و",
     "به",
     "از",
@@ -85,8 +85,8 @@ STOPWORDS = {
     "ار",
     "ای",
 }
-DEFAULT_OUTPUT = "fa.txt"
-DEFAULT_MIN_LENGTH = 0
+DEFAULT_OUTPUT: str = "fa.txt"
+DEFAULT_MIN_LENGTH: int = 0
 
 
 def setup_logger(verbose: bool) -> Any:
@@ -125,7 +125,7 @@ def build_combined_stopwords() -> set[str]:
 
 
 class PersianTokenizer:
-    def __init__(self):
+    def __init__(self) -> None:
         if HAZM_AVAILABLE:
             self.normalizer = Normalizer()
             self.tokenizer = WordTokenizer()

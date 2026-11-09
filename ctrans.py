@@ -19,16 +19,16 @@ import signal
 import sys
 import tempfile
 import threading
-from typing import Callable, Optional
+from typing import Any, Callable, Iterator, Optional, TextIO
 
 
 try:
     from loguru import logger
 except ImportError:
     sys.exit("loguru is required:  pip install loguru")
-MAX_ATTEMPTS = 3
-BACKOFF_BASE = 1.0
-LOG_FILE = "translate_words.log"
+MAX_ATTEMPTS: int = 3
+BACKOFF_BASE: float = 1.0
+LOG_FILE: str = "translate_words.log"
 _CONSOLE_LOCK = threading.Lock()
 Translator = Callable[[str], str]
 
@@ -161,11 +161,11 @@ def _require_env(name: str, backend: str) -> str:
     return value
 
 
-def _as_text(value) -> str:
+def _as_text(value: str) -> str:
     return "" if value is None else str(value)
 
 
-async def _await(awaitable):
+async def _await(awaitable: Any):
     return await awaitable
 
 
@@ -405,7 +405,7 @@ _BACKEND_FACTORIES: dict[str, Callable[[str, str, str], Translator]] = {
     "watson": _make_watson,
     "azure": _make_azure,
 }
-_DEFAULT_CHAIN = [
+_DEFAULT_CHAIN: list[str] = [
     "deepl",
     "deep_translator",
     "libretranslate_remote",
@@ -491,7 +491,7 @@ def build_translator(preferred: Optional[str], source: str, target: str, script_
     )
 
 
-def _stderr_sink(message) -> None:
+def _stderr_sink(message: str) -> None:
     with _CONSOLE_LOCK:
         sys.stderr.write(str(message))
         sys.stderr.flush()
@@ -510,7 +510,7 @@ def setup_logging() -> None:
     logger.add(_stderr_sink, level="ERROR", format="{level}: {message}\n")
 
 
-def iter_words(path: str):
+def iter_words(path: str) -> Iterator[str]:
     with open(path, "r", encoding="utf-8-sig", errors="replace") as handle:
         for line in handle:
             word = line.strip()
@@ -658,7 +658,7 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     return p.parse_args(argv)
 
 
-def _raise_interrupt(signum, frame) -> None:
+def _raise_interrupt(signum: int, frame: Any) -> None:
     raise KeyboardInterrupt
 
 

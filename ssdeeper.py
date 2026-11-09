@@ -8,19 +8,20 @@ import operator
 from pathlib import Path
 import shutil
 import sys
+from typing import Any, Sequence
 
 from dh import get_files
 import ssdeep
 
 
-def relative(path, base):
+def relative(path: Path, base: Any) -> str:
     try:
         return str(path.relative_to(base))
     except ValueError:
         return str(path)
 
 
-def compute_hashes(files, min_size):
+def compute_hashes(files: list[Path], min_size: int):
     hashes = []
     for path in files:
         p = Path(path)
@@ -37,7 +38,7 @@ def compute_hashes(files, min_size):
     return hashes
 
 
-def compare_hashes(hashes, threshold, base):
+def compare_hashes(hashes: Sequence[Any], threshold: float, base: Any):
     results = []
     for i in range(len(hashes)):
         path_a, hash_a = hashes[i]
@@ -57,7 +58,7 @@ def compare_hashes(hashes, threshold, base):
     return results
 
 
-def group_files(results, base):
+def group_files(results: list[Any], base: Any) -> None:
     for index, item in enumerate(results, 1):
         group = base / "group{:03d}".format(index)
         group.mkdir(parents=True, exist_ok=True)
@@ -74,7 +75,7 @@ def group_files(results, base):
                 continue
 
 
-def main(argv=None):
+def main(argv = None) -> int:
     parser = argparse.ArgumentParser(description="Find similar files using ssdeep.")
     parser.add_argument("path", nargs="?", default=".", help="directory to scan")
     parser.add_argument("-t", "--threshold", type=int, default=70)

@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import Iterator, Sequence
+from typing import Any, Iterator, Sequence
 
 from dh import SKIP_DIRS, WORKERS, atomic_write
 
@@ -19,10 +19,10 @@ try:
     import tomllib
 except ModuleNotFoundError:
     import tomli as tomllib
-COLUMN_WIDTH = 80
-INDENT = "  "
-ALLOWED_BLANK_LINES = 2
-CHUNK_MAX = 32
+COLUMN_WIDTH: int = 80
+INDENT: str = "  "
+ALLOWED_BLANK_LINES: int = 2
+CHUNK_MAX: int = 32
 WS_RE = re.compile(r"[ \t]*")
 BARE_KEY_RE = re.compile(r"[A-Za-z0-9_-]+")
 BASIC_STRING_RE = re.compile(r'"(?:[^"\\\n]|\\.)*"')
@@ -94,7 +94,7 @@ class Parser:
         self.i = 0
         self.comments: list[str] = []
 
-    def error(self, message: str):
+    def error(self, message: str) -> None:
         line = self.s.count("\n", 0, self.i) + 1
         msg = f"line {line}: {message}"
         raise ParseError(msg)
@@ -455,7 +455,7 @@ def render(items: list) -> str:
     return "\n".join(align_comments(lines)) + "\n"
 
 
-def same_data(a, b) -> bool:
+def same_data(a: dict[str, Any], b: int) -> bool:
     if type(a) is not type(b):
         return False
     if isinstance(a, dict):

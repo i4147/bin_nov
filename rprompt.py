@@ -38,14 +38,14 @@ def remove_comments_and_docstrings(source_code: str) -> str:
     return out
 
 
-def shorten_variable_name(name):
+def shorten_variable_name(name: str):
     if not name or name.startswith("_"):
         return name
     vowels = "aeiouAEIOU"
     return "".join([char for char in name if char not in vowels])
 
 
-def process_file(path) -> None:
+def process_file(path: Path) -> None:
     path = Path(path)
     content = path.read_text(encoding="utf-8")
     content_no_comments = remove_comments_and_docstrings(content)
@@ -56,7 +56,7 @@ def process_file(path) -> None:
 
     keywords = set(keyword.kwlist)
 
-    def replacer(match):
+    def replacer(match: re.Match[str]):
         name = match.group(0)
         if name in keywords:
             return name

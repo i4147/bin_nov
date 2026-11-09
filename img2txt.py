@@ -8,13 +8,13 @@ from collections import deque
 from collections.abc import Callable
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 from PIL import Image
 from pytesseract import image_to_string
 
 
-def mpf(process_function: Callable, files: list[Path], **kwargs):
+def mpf(process_function: Callable, files: list[Path], **kwargs: Any):
     from joblib import Parallel, delayed
 
     file_strings = [str(f) for f in files]

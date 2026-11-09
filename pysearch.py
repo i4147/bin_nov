@@ -22,7 +22,7 @@ import subprocess
 import sys
 import tarfile
 import threading
-from typing import Iterator, Optional, Sequence
+from typing import Any, Iterable, Iterator, Optional, Sequence
 import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS
@@ -70,9 +70,9 @@ ARCHIVE_SUFFIXES: tuple[str, ...] = (
     ".whl",
     ".apk",
 )
-RESET = "\x1b[0m"
-CYAN = "\x1b[5;96m"
-RED = "\x1b[91m"
+RESET: str = "\x1b[0m"
+CYAN: str = "\x1b[5;96m"
+RED: str = "\x1b[91m"
 
 
 def is_binary(path: Path, sample: int = 1024) -> bool:
@@ -250,7 +250,7 @@ def _install_pause_hotkey() -> bool:
     _pause_event = threading.Event()
     _pause_event.set()
 
-    def handler(ev):
+    def handler(ev: Any) -> None:
         if ev.name in {"space", "p"} and _pause_event.is_set():
             _pause_event.clear()
             print("PAUSED - press 'c' to continue...")

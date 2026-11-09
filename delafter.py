@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 
-def read_lines(path):
+def read_lines(path: Path) -> list[str]:
     return path.read_text(encoding="utf-8").splitlines(keepends=True)
 
 

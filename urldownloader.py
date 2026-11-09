@@ -14,8 +14,8 @@ from typing import Any, Callable, Optional
 from requests import Response, get
 
 
-__all__ = ["SaveToDisk", "get_resource", "save_file"]
-__version__ = "1.0.5"
+__all__: list[str] = ["SaveToDisk", "get_resource", "save_file"]
+__version__: str = "1.0.5"
 
 
 class SaveToDisk:

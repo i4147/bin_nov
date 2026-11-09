@@ -17,7 +17,7 @@ def run_command(command: list[str]) -> subprocess.CompletedProcess:
     return subprocess.run(command, capture_output=True, text=True, check=True)
 
 
-def auto_git_workflow():
+def auto_git_workflow() -> None:
     repo_path = os.getcwd()
     repo_name = Path(repo_path).name
 

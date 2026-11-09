@@ -30,12 +30,12 @@ from loguru import logger
 
 
 SUPPORTED_EXTENSIONS = frozenset({".py", ".pyw"})
-IGNORE_FILENAME = ".ignore"
+IGNORE_FILENAME: str = ".ignore"
 DEFAULT_IGNORES = frozenset({"__pycache__", ".git"})
 TYPING_MODULES = frozenset({"typing", "typing_extensions"})
-PYTHON_VERSION = (3, 12)
+PYTHON_VERSION: tuple[int, int] = (3, 12)
 COMMENT_REGEX = re.compile(r"^#(?:!|\s*(?:type|fmt):)")
-BLOCK_COMMENT_FIELDS = ("leading_lines", "lines_after_decorators", "footer", "header", "empty_lines")
+BLOCK_COMMENT_FIELDS: tuple[str, ...] = ("leading_lines", "lines_after_decorators", "footer", "header", "empty_lines")
 
 
 @dataclass(frozen=True, slots=True)
@@ -109,7 +109,7 @@ class BaseTransformer(cst.CSTTransformer):
 
 
 class CodeCleaner(BaseTransformer):
-    def __init__(self, config: Config):
+    def __init__(self, config: Config) -> None:
         super().__init__()
         self.config = config
         self.comments_removed = 0
@@ -272,7 +272,7 @@ class CodeCleaner(BaseTransformer):
 
 
 class UsageVisitor(cst.CSTVisitor):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.used: set[str] = set()
 
@@ -288,7 +288,7 @@ class UsageVisitor(cst.CSTVisitor):
 
 
 class TypingImportCleaner(BaseTransformer):
-    def __init__(self, used_names: set[str]):
+    def __init__(self, used_names: set[str]) -> None:
         super().__init__()
         self.used = used_names
 
@@ -419,7 +419,7 @@ def get_diff(path: str, original: str, modified: str) -> str:
 
 
 class WorkerContext:
-    def __init__(self, config: Config, run_options: RunOptions):
+    def __init__(self, config: Config, run_options: RunOptions) -> None:
         self.config = config
         self.run = run_options
 
@@ -493,14 +493,14 @@ def process_file(path_str: str) -> FileResult:
 
 
 class IgnoreRule:
-    def __init__(self, pattern: str, dir_only: bool, anchored: bool):
+    def __init__(self, pattern: str, dir_only: bool, anchored: bool) -> None:
         self.pattern = pattern
         self.dir_only = dir_only
         self.anchored = anchored
 
 
 class IgnoreMatcher:
-    def __init__(self, lines: Iterable[str]):
+    def __init__(self, lines: Iterable[str]) -> None:
         self._rules: list[IgnoreRule] = []
         for line in lines:
             text = line.strip()
@@ -538,7 +538,7 @@ def find_files(paths: Sequence[Path], extra_ignore: Sequence[str], ignore_file_p
     seen: set[Path] = set()
     collected: list[str] = []
 
-    def add_path(p: Path):
+    def add_path(p: Path) -> None:
         resolved = p.resolve()
         if resolved not in seen:
             seen.add(resolved)
@@ -571,7 +571,7 @@ def find_files(paths: Sequence[Path], extra_ignore: Sequence[str], ignore_file_p
 
 
 class PoolExecutor:
-    def __init__(self, method: str, config: Config, run_options: RunOptions):
+    def __init__(self, method: str, config: Config, run_options: RunOptions) -> None:
         self.method = method
         self.config = config
         self.run = run_options

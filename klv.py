@@ -11,7 +11,7 @@ from pathlib import Path
 import re
 import shutil
 import sys
-from typing import Any, Optional, Sequence
+from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -22,8 +22,8 @@ LINUX_RE = re.compile(r"/([^/]+)-(\d+\.\d+\.\d+(?:\.\d+)?)-cp\d+-cp\d+-linux_([^
 PY_RE = re.compile(r"python3\.(\d+)")
 METADATA_RE = re.compile(r"^(.+?)-(\d[\d._]*[a-zA-Z]*[\d]*)$")
 NORMALIZE_RE = re.compile(r"[-_.]+")
-DEFAULT_ARM_KEYWORDS = ["armeabi_v7a", "armv7l", "linux_arm", "arm"]
-DEFAULT_BATCH_SIZE = 100
+DEFAULT_ARM_KEYWORDS: list[str] = ["armeabi_v7a", "armv7l", "linux_arm", "arm"]
+DEFAULT_BATCH_SIZE: int = 100
 
 
 def fallback_version_key(v: str) -> tuple[Any, ...]:

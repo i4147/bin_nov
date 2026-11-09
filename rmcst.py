@@ -12,13 +12,13 @@ from pathlib import Path
 import sys
 import tempfile
 import tokenize
-from typing import Iterable, Iterator
+from typing import Any, Iterable, Iterator, Sequence
 
 from dh import NUM_WORKERS, SKIP_DIRS
 import libcst as cst
 
 
-CHUNKSIZE = 4
+CHUNKSIZE: int = 4
 
 
 class InlineCommentRemover(cst.CSTTransformer):

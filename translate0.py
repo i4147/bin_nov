@@ -10,7 +10,7 @@ import re
 import sqlite3
 import threading
 import time
-from typing import Final
+from typing import Any, Callable, Final, Sequence
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS
@@ -51,7 +51,7 @@ def create_chunks(lines: list[str], max_chunk_size: int) -> list[list[str]]:
 
 
 class TranslationCache:
-    def __init__(self, db_path: Path):
+    def __init__(self, db_path: Path) -> None:
         self.db_path = db_path.expanduser()
         parent = Path(self.db_path).parent
         parent.mkdir(parents=True, exist_ok=True)
@@ -124,7 +124,7 @@ class TranslationCache:
             self.conn.close()
 
 
-def translate_chunk_factory(source_lang: str, target_lang: str):
+def translate_chunk_factory(source_lang: str, target_lang: str) -> Callable[..., Any]:
     def translate_chunk(chunk: list[str]) -> tuple[list[str], str | None]:
         chunk_text = "\n".join(chunk)
         translator = GoogleTranslator(source=source_lang, target=target_lang)

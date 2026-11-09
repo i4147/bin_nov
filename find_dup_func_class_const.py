@@ -68,7 +68,7 @@ def modify_affected_file(path_str: str, obj_name: str, obj_type: str, raw_obj_co
     return modified_source
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Recursively find and consolidate duplicate functions, classes, and constants."
     )

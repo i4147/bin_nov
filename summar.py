@@ -9,7 +9,7 @@ import sys
 from summa import summarizer
 
 
-def summarize_with_summa(text):
+def summarize_with_summa(text: str):
     return summarizer.summarize(text=text, ratio=0.7)
 
 

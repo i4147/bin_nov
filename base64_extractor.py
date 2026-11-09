@@ -27,7 +27,7 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import Iterable, Iterator, Optional
+from typing import Any, Iterable, Iterator, Optional
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
@@ -61,7 +61,7 @@ MIME2EXT: dict[str, str] = {
     "application/pdf": ".pdf",
     "application/octet-stream": ".bin",
 }
-TEXTY_EXT = {
+TEXTY_EXT: set[str] = {
     ".css",
     ".js",
     ".jsx",
@@ -84,7 +84,7 @@ TEXTY_EXT = {
     ".sass",
     ".less",
 }
-_B64 = r"[A-Za-z0-9+/=\s]+"
+_B64: str = r"[A-Za-z0-9+/=\s]+"
 DATA_URI_RE = re.compile(
     r"data:(?P<mime>[^;,)\s\"']+)(?:;[^,)\"']*)?;base64\s*,\s*(?P<data>" + _B64 + r")",
     re.IGNORECASE,
@@ -397,7 +397,7 @@ def cmd_extract_css(args: argparse.Namespace) -> int:
     return 0
 
 
-_ASSET_PATTERNS = {
+_ASSET_PATTERNS: dict[str, re.Pattern[str]] = {
     "url": re.compile(
         r"""url\(\s*["']?data:(?P<mime>[^;,)\s"']+)(?:;[^,)]*)?;base64\s*,\s*(?P<data>""" + _B64 + r""")["']?\s*\)""",
         re.IGNORECASE | re.VERBOSE,

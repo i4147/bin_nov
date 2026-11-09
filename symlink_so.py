@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 
 
-def should_skip(so_path):
+def should_skip(so_path: Path) -> bool:
     if so_path.is_symlink():
         return True
     name = so_path.name
@@ -18,7 +18,7 @@ def should_skip(so_path):
     return bool(re.search(r"\.so\.\d+(\.\d+)+$", name))
 
 
-def get_base_name(so_path):
+def get_base_name(so_path: Path):
     name = so_path.name
     match = re.match(r"(.+\.so)(?:\.\d+)*$", name)
     if match:
@@ -26,7 +26,7 @@ def get_base_name(so_path):
     return name
 
 
-def create_symlinks():
+def create_symlinks() -> None:
     lib_dir = Path.home() / ".local" / "lib"
     if not lib_dir.exists():
         print(f"Error: {lib_dir} does not exist")

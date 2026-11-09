@@ -6,14 +6,14 @@ Usage: python scolor.py Examples: $ python scolor.py Runs its loop at import tim
 from secrets import randbelow
 
 
-RESET = "\033[0m;"
+RESET: str = "\033[0m;"
 
 
 def _bg(r: int, g: int, b: int) -> str:
     return f"\x1b[48;2;{r};{g};{b}m"
 
 
-def showcolor(n=998) -> int:
+def showcolor(n = 998) -> int:
     for _ in range(1, n):
         r = randbelow(256)
         g = randbelow(256)

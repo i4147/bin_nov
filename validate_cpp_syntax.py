@@ -11,14 +11,14 @@ import sys
 from dh import NUM_WORKERS
 
 
-CPP_EXTS = {".cpp", ".cc", ".cxx"}
-C_EXTS = {".c"}
-HEADER_CPP_EXTS = {".hpp", ".hh", ".hxx"}
-HEADER_C_EXTS = {".h"}
+CPP_EXTS: set[str] = {".cpp", ".cc", ".cxx"}
+C_EXTS: set[str] = {".c"}
+HEADER_CPP_EXTS: set[str] = {".hpp", ".hh", ".hxx"}
+HEADER_C_EXTS: set[str] = {".h"}
 ALL_EXTS = CPP_EXTS | C_EXTS | HEADER_CPP_EXTS | HEADER_C_EXTS
 
 
-def run(cmd, input_bytes=None):
+def run(cmd: str, input_bytes = None):
     try:
         proc = subprocess.run(
             cmd,
@@ -60,7 +60,7 @@ def check_file(path: Path):
     return path, rc == 0, out
 
 
-def gather_files(paths):
+def gather_files(paths: list[Path]):
     files = []
     if not paths:
         cwd = Path.cwd()
@@ -81,7 +81,7 @@ def gather_files(paths):
     return files
 
 
-def main():
+def main() -> int:
     args = sys.argv[1:]
     files = gather_files(args)
     if not files:

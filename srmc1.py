@@ -13,7 +13,7 @@ import re
 import stat
 import sys
 import textwrap
-from typing import ClassVar, Iterable, Iterator, Literal, Sequence
+from typing import Any, ClassVar, Iterable, Iterator, Literal, Sequence
 
 from dh import MAX_WORKERS, atomic_write
 import libcst as cst
@@ -21,8 +21,8 @@ from libcst.metadata import MetadataWrapper, PositionProvider
 from loguru import logger
 
 
-VERSION = "1.0.0"
-UTF8_BOM = b"\xef\xbb\xbf"
+VERSION: str = "1.0.0"
+UTF8_BOM: bytes = b"\xef\xbb\xbf"
 CODING_PATTERN = re.compile(r"^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)")
 FULL_COMMENT_PATTERN = re.compile(r"^([ \t\f]*)#(.*)$")
 COMMENT_DIRECTIVE_PATTERN = re.compile(r"^\s*#\s*(?:type|fmt)\s*:", re.IGNORECASE)

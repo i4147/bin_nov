@@ -26,7 +26,7 @@ import tempfile
 from time import perf_counter
 import tokenize
 import traceback
-from typing import Iterator
+from typing import Any, Iterable, Iterator, Sequence
 
 from atomicio import atomic_write
 from codeutils import ASTStripper, CSTStripper, TSStripper
@@ -102,7 +102,7 @@ def remove_blank_lines(source: str) -> str:
 
 def _process_file(
     path: Path,
-    stripper,
+    stripper: str,
     *,
     dryrun: bool = False,
     backup: bool = False,
@@ -523,7 +523,7 @@ def main() -> int:
         avail_for_name = term_w - prefix_w - 4 - bytes_w
         name_w = min(longest_name, max(10, avail_for_name))
 
-        def format_line(idx: int, name: str, value) -> str:
+        def format_line(idx: int, name: str, value: str) -> str:
             idx_part = f"[{idx:>{num_w}}/{total}]"
             if len(name) > name_w:
                 name = ("..." + name[-(name_w - 3) :]) if name_w > 3 else name[:name_w]

@@ -6,6 +6,7 @@ import argparse
 from fnmatch import fnmatch
 import importlib.metadata
 from pathlib import Path
+from typing import Any, Iterable
 
 from loguru import logger
 
@@ -29,7 +30,7 @@ def should_ignore_file(path: Path, ignore_patterns: list[str]) -> bool:
     return any(fnmatch(name, pattern) for pattern in ignore_patterns)
 
 
-def check_package_files(dist, ignore_patterns: list[str]) -> list[str]:
+def check_package_files(dist: Any, ignore_patterns: list[str]) -> list[str]:
     missing_files = []
     if dist.files is None:
         return missing_files
@@ -42,7 +43,7 @@ def check_package_files(dist, ignore_patterns: list[str]) -> list[str]:
     return missing_files
 
 
-def check_package_dependencies(dist, installed_map: dict[str, str]) -> tuple[list[str], list[str]]:
+def check_package_dependencies(dist: Any, installed_map: dict[str, str]) -> tuple[list[str], list[str]]:
     broken_deps = []
     clean_reqs_for_file = []
     if dist.requires is None:
@@ -64,7 +65,7 @@ def check_package_dependencies(dist, installed_map: dict[str, str]) -> tuple[lis
     return broken_deps, clean_reqs_for_file
 
 
-def main():
+def main() -> None:
     args = parse_arguments()
     logger.info("Starting Termux site-packages verification scan...\n")
     distributions = list(importlib.metadata.distributions())

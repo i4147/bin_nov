@@ -5,9 +5,10 @@ Usage: obf SCRIPT.sh Examples: $ obf install.sh > obfuscated.sh Runs as a script
 
 import string
 import sys
+from typing import Iterator
 
 
-def varnames():
+def varnames() -> Iterator[str]:
     letters = string.ascii_letters
     for c in letters:
         yield c

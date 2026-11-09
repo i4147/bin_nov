@@ -11,7 +11,7 @@ import shutil
 import signal
 import sys
 import time
-from typing import Any, Iterator, Sequence
+from typing import Any, Iterable, Iterator, Sequence
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
@@ -48,10 +48,10 @@ EXCLUDE_DIRS: frozenset[str] = frozenset({
 })
 NON_ASCII = re.compile(r"[^\x00-\x7F]")
 CHINESE_RUN = re.compile(r"[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]+")
-DEFAULT_CHUNK_SIZE = 32768
-DEFAULT_TARGET = "en"
-DEFAULT_RETRIES = 3
-DEFAULT_DELAY = 0.5
+DEFAULT_CHUNK_SIZE: int = 32768
+DEFAULT_TARGET: str = "en"
+DEFAULT_RETRIES: int = 3
+DEFAULT_DELAY: float = 0.5
 log = logger
 
 
@@ -277,7 +277,7 @@ def _marked_process_one(path: Path, opts: dict[str, Any]) -> str:
 
 
 def _run_workers(
-    worker,
+    worker: Any,
     tasks: list[tuple],
     workers: int,
 ) -> list[Any]:
@@ -574,10 +574,10 @@ def _segment_one(path: Path, args: argparse.Namespace, pattern: re.Pattern[str])
     print(f"✓ {path}")
 
 
-_shutdown = False
+_shutdown: bool = False
 
 
-def _handle_signal(signum: int, _frame) -> None:
+def _handle_signal(signum: int, _frame: Any) -> None:
     global _shutdown
     log.warning("Received signal {} — finishing current work and saving…", signum)
     _shutdown = True

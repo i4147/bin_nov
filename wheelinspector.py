@@ -8,16 +8,16 @@ import shutil
 import subprocess
 import sys
 import sysconfig
-from typing import Optional
+from typing import Any, Optional
 import zipfile
 
 
 WheelInfo = dict[str, object]
 PackageInfo = dict[str, str]
-DEFAULT_DEST = "empty_wheels"
-DEFAULT_METHOD = "basic"
-VALID_METHODS = {"basic", "record", "ext"}
-CODE_EXTENSIONS = {".py", ".so", ".pyi", ".pyd", ".pyx"}
+DEFAULT_DEST: str = "empty_wheels"
+DEFAULT_METHOD: str = "basic"
+VALID_METHODS: set[str] = {"basic", "record", "ext"}
+CODE_EXTENSIONS: set[str] = {".py", ".so", ".pyi", ".pyd", ".pyx"}
 
 
 def is_empty_wheel_basic(wheel_path: Path) -> bool:

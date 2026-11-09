@@ -15,18 +15,18 @@ import shutil
 import sys
 import threading
 import time
-from typing import Iterator, Optional, Self
+from typing import Any, Iterable, Iterator, Optional, Self, Sequence
 import urllib.parse
 import urllib.request
 
 from dh import MAX_WORKERS
 
 
-__version__ = "2.0.0"
-CHUNK = 64 * 1024
-BIG_FILE = 50 * 1024 * 1024
-CHUNK_PARTS = 4
-UA = f"dl/{__version__} (pip-style download manager)"
+__version__: str = "2.0.0"
+CHUNK: int = 64 * 1024
+BIG_FILE: int = 50 * 1024 * 1024
+CHUNK_PARTS: int = 4
+UA: str = f"dl/{__version__} (pip-style download manager)"
 FULL, HEAD, EMPTY = "━", "╸", " "
 STOP = threading.Event()
 
@@ -80,7 +80,7 @@ def shorten(url: str, n: int = 42) -> str:
 
 
 class Bar:
-    def __init__(self, label: str, total: int | None = None):
+    def __init__(self, label: str, total: int | None = None) -> None:
         self.label = label
         self.total = total
         self.done = 0
@@ -143,7 +143,7 @@ class Bar:
 
 
 class Progress:
-    def __init__(self, stream=None, enabled: bool | None = None, final: bool = True):
+    def __init__(self, stream = None, enabled: bool | None = None, final: bool = True) -> None:
         self.stream = stream if stream is not None else sys.stdout
         if enabled is None:
             enabled = bool(getattr(self.stream, "isatty", lambda: False)())
@@ -165,7 +165,7 @@ class Progress:
             self._thread.start()
         return self
 
-    def __exit__(self, *exc) -> bool:
+    def __exit__(self, *exc: Any) -> bool:
         self.close()
         return False
 
@@ -240,7 +240,7 @@ class Backend:
 
 
 class _UrllibStream(StreamResponse):
-    def __init__(self, resp):
+    def __init__(self, resp: Any) -> None:
         self._resp = resp
         self.status = getattr(resp, "status", 200) or 200
         self.headers = {k.lower(): v for k, v in resp.headers.items()}
@@ -252,7 +252,7 @@ class _UrllibStream(StreamResponse):
                 return
             yield data
 
-    def close(self):
+    def close(self) -> None:
         with contextlib.suppress(Exception):
             self._resp.close()
 
@@ -260,7 +260,7 @@ class _UrllibStream(StreamResponse):
 class PureBackend(Backend):
     name = "pure"
 
-    def open(self, url, start=None, end=None, timeout=30.0):
+    def open(self, url: str, start = None, end = None, timeout = 30.0) -> _UrllibStream:
         headers = {"User-Agent": UA, "Accept-Encoding": "identity"}
         if start is not None or end is not None:
             rng = f"bytes={start or 0}-"
@@ -273,7 +273,7 @@ class PureBackend(Backend):
 
 
 class _RequestsStream(StreamResponse):
-    def __init__(self, r):
+    def __init__(self, r: int) -> None:
         self._r = r
         self.status = r.status_code
         self.headers = {k.lower(): v for k, v in r.headers.items()}
@@ -283,7 +283,7 @@ class _RequestsStream(StreamResponse):
             if data:
                 yield data
 
-    def close(self):
+    def close(self) -> None:
         with contextlib.suppress(Exception):
             self._r.close()
 
@@ -291,12 +291,12 @@ class _RequestsStream(StreamResponse):
 class RequestsBackend(Backend):
     name = "requests"
 
-    def __init__(self):
+    def __init__(self) -> None:
         import requests
 
         self._requests = requests
 
-    def open(self, url, start=None, end=None, timeout=30.0):
+    def open(self, url: str, start = None, end = None, timeout = 30.0) -> _RequestsStream:
         headers = {"User-Agent": UA, "Accept-Encoding": "identity"}
         if start is not None or end is not None:
             rng = f"bytes={start or 0}-"
@@ -308,7 +308,7 @@ class RequestsBackend(Backend):
 
 
 class _PycurlStream(StreamResponse):
-    def __init__(self, pycurl_mod, url, start, end, timeout):
+    def __init__(self, pycurl_mod: Any, url: str, start: int, end: int, timeout: float) -> None:
         self._pycurl = pycurl_mod
         self.status: int | None = None
         self.headers: dict = {}
@@ -360,7 +360,7 @@ class _PycurlStream(StreamResponse):
                 k, v = line.split(":", 1)
                 self.headers[k.strip().lower()] = v.strip()
 
-    def _run(self, url, start, end, timeout):
+    def _run(self, url: str, start: int, end: int, timeout: float) -> None:
         c = self._pycurl.Curl()
         try:
             c.setopt(c.URL, url)
@@ -423,12 +423,12 @@ class _PycurlStream(StreamResponse):
 class PycurlBackend(Backend):
     name = "pycurl"
 
-    def __init__(self):
+    def __init__(self) -> None:
         import pycurl
 
         self._pycurl = pycurl
 
-    def open(self, url, start=None, end=None, timeout=30.0):
+    def open(self, url: str, start = None, end = None, timeout = 30.0) -> _PycurlStream:
         return _PycurlStream(self._pycurl, url, start, end, timeout)
 
 
@@ -469,7 +469,7 @@ def guess_filename(url: str, headers: dict) -> str:
 class Probe:
     __slots__ = ("filename", "headers", "size", "supports_range")
 
-    def __init__(self, size, filename, supports_range, headers):
+    def __init__(self, size: int, filename: str, supports_range: Any, headers: Any) -> None:
         self.size = size
         self.filename = filename
         self.supports_range = supports_range
@@ -681,7 +681,7 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def main(argv=None) -> int:
+def main(argv = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     urls = list(args.urls)

@@ -4,13 +4,13 @@ A click CLI that removes the tags by bundle (``hs`` for the headings, ``metadata
 Usage: striptags [options] FILE.html Examples: $ striptags page.html --remove hs $ striptags --help Runs as a script (``python striptags.py``) in the directory it should act on; the module can also be imported."""
 
 import re
-from typing import Iterable, Optional
+from typing import Any, Iterable, Optional, TextIO
 
 from bs4 import BeautifulSoup, Comment, NavigableString
 import click
 
 
-NEWLINE_ELEMENTS = (
+NEWLINE_ELEMENTS: tuple[str, ...] = (
     "address",
     "article",
     "aside",
@@ -50,7 +50,7 @@ NEWLINE_ELEMENTS = (
     "xmp",
     "li",
 )
-DISPLAY_NONE_SELECTORS = [
+DISPLAY_NONE_SELECTORS: list[str] = [
     "[hidden]",
     "area",
     "base",
@@ -72,7 +72,7 @@ DISPLAY_NONE_SELECTORS = [
     "track",
     "title",
 ]
-SELF_CLOSING_TAGS = {
+SELF_CLOSING_TAGS: set[str] = {
     "area",
     "base",
     "br",
@@ -90,7 +90,7 @@ SELF_CLOSING_TAGS = {
     "track",
     "wbr",
 }
-BUNDLES = {
+BUNDLES: dict[str, tuple[Any, ...]] = {
     "hs": ("h1", "h2", "h3", "h4", "h5", "h6"),
     "metadata": ("title", "meta"),
     "structure": ("header", "nav", "main", "article", "section", "aside", "footer"),
@@ -108,7 +108,7 @@ BUNDLES = {
     ),
     "lists": ("ul", "ol", "li", "dl", "dd", "dt"),
 }
-ATTRS_TO_KEEP = {
+ATTRS_TO_KEEP: dict[str, set[str]] = {
     "a": {"href"},
     "img": {"alt"},
     "meta": {"name", "value", "property", "content"},
@@ -116,7 +116,7 @@ ATTRS_TO_KEEP = {
 _whitespace_re = re.compile(r"\s+")
 
 
-def repl(m):
+def repl(m: re.Match[str]) -> str:
     newline_count = m.group(0).count("\n")
     if newline_count >= 2:
         return "\n\n"
@@ -126,7 +126,7 @@ def repl(m):
         return " "
 
 
-def tag_with_attributes(node, content, all_attrs=False):
+def tag_with_attributes(node: Any, content: str, all_attrs = False) -> str:
     to_keep = {"id", "class"}
     to_keep.update(ATTRS_TO_KEEP.get(node.name) or [])
     bits = [f"<{node.name}"]
@@ -139,7 +139,7 @@ def tag_with_attributes(node, content, all_attrs=False):
     return output
 
 
-def process_node(node, minify, keep_tags, all_attrs=False):
+def process_node(node: Any, minify: Any, keep_tags: str, all_attrs = False):
     if isinstance(node, Comment):
         return ""
     if isinstance(node, NavigableString):
@@ -193,7 +193,7 @@ def strip_tags(
                 expanded_keep_tags.append(tag)
         keep_tags = expanded_keep_tags
 
-    def should_keep(element):
+    def should_keep(element: Any) -> bool:
         if element.name in keep_tags:
             return True
         return any(element.find(tag_name) for tag_name in keep_tags)
@@ -240,7 +240,7 @@ def strip_tags(
 @click.option("keep_tags", "-t", "--keep-tag", multiple=True, help="Keep these <tags>")
 @click.option("--all-attrs", is_flag=True, help="Include all attributes on kept tags")
 @click.option("--first", is_flag=True, help="First element matching the selectors")
-def cli(selectors, removes, input, minify, keep_tags, all_attrs, first):
+def cli(selectors: Any, removes: Any, input: TextIO, minify: Any, keep_tags: Any, all_attrs: list[Any], first: Any) -> None:
     input_text = input.read()
     if isinstance(input_text, bytes):
         input_text = input_text.decode("utf-8")

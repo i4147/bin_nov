@@ -21,7 +21,7 @@ import shutil
 import subprocess
 import sys
 import time
-from typing import Any, Iterable, Optional, Self, Sequence
+from typing import Any, Iterable, Optional, Self, Sequence, TextIO
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -180,7 +180,7 @@ def translate_cli(
     return f"__ERROR__: {last_err}"
 
 
-_BACKENDS = {
+_BACKENDS: dict[str, Any] = {
     "deep-translator": translate_google,
     "translate-package": translate_pypackage,
     "translate-cli": translate_cli,

@@ -15,7 +15,7 @@ import multiprocessing
 from pathlib import Path
 import subprocess
 import sys
-from typing import Callable, Sequence
+from typing import Any, Callable, Iterable, Sequence
 
 from dh import MAX_WORKERS
 
@@ -80,7 +80,7 @@ def run_parallel(
     func: Callable,
     items: list,
     workers: int,
-    *args,
+    *args: Any,
 ) -> list:
     if workers <= 1 or len(items) <= 1:
         return [func(item, *args) for item in items]

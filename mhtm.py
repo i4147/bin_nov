@@ -14,7 +14,7 @@ from html.parser import HTMLParser
 import multiprocessing as mp
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 from dh import MAX_WORKERS
 import minify_html as mh
@@ -42,11 +42,11 @@ class _HTMLValidator(HTMLParser):
             "wbr",
         }
 
-    def handle_starttag(self, tag: str, attrs) -> None:
+    def handle_starttag(self, tag: str, attrs: Any) -> None:
         if tag not in self._void:
             self._stack.append(tag)
 
-    def handle_startendtag(self, tag: str, attrs) -> None:
+    def handle_startendtag(self, tag: str, attrs: Any) -> None:
         pass
 
     def handle_endtag(self, tag: str) -> None:

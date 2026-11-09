@@ -5,16 +5,17 @@ Usage: quickview Examples: $ quickview Runs as a script (``python quickview.py``
 
 import curses
 from pathlib import Path
+from typing import Any
 
 
-LINES_PER_FILE = 20
+LINES_PER_FILE: int = 20
 
 
 def list_files() -> list[Path]:
     return sorted([p for p in Path().iterdir() if p.is_file()], key=lambda p: p.name.lower())
 
 
-def head_lines(path, n: int):
+def head_lines(path: Path, n: int) -> list[str]:
     lines = []
     try:
         with Path(path).open(encoding="utf-8", errors="replace") as f:
@@ -37,7 +38,7 @@ def init_colors() -> None:
     curses.init_pair(4, curses.COLOR_RED, -1)
 
 
-def draw(stdscr, files: list[Path], idx: int) -> None:
+def draw(stdscr: Any, files: list[Path], idx: int) -> None:
     stdscr.clear()
     h, w = stdscr.getmaxyx()
     header = f"File {idx + 1}/{len(files)}: {files[idx].name}"
@@ -63,7 +64,7 @@ def draw(stdscr, files: list[Path], idx: int) -> None:
     stdscr.refresh()
 
 
-def main(stdscr) -> None:
+def main(stdscr: Any) -> None:
     curses.curs_set(0)
     stdscr.keypad(True)
     init_colors()

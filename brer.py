@@ -29,7 +29,7 @@ import mmap
 from pathlib import Path
 import shutil
 import tarfile
-from typing import Sequence
+from typing import Any, Sequence
 
 import brotli
 from dh import MAX_WORKERS
@@ -140,14 +140,14 @@ def _untar(tar_path: Path, dest: Path) -> bool:
         return False
 
 
-def _compress_to(src: Path, dst: Path, args) -> bool:
+def _compress_to(src: Path, dst: Path, args: list[Any]) -> bool:
     size = src.stat().st_size
     if args.chunk_threshold > 0 and size >= args.chunk_threshold:
         return _chunked_compress(src, dst, size, args.chunk_size, args.quality, args.lgwin, MAX_WORKERS)
     return _stream_compress(src, dst, args.buffer_size, args.quality, args.lgwin)
 
 
-def _finish_compress(src: Path, dst: Path, args, label: str) -> bool:
+def _finish_compress(src: Path, dst: Path, args: list[Any], label: str) -> bool:
     if not dst.exists() or dst.stat().st_size == 0:
         dst.unlink(missing_ok=True)
         return False
@@ -167,7 +167,7 @@ def _finish_compress(src: Path, dst: Path, args, label: str) -> bool:
     return False
 
 
-def compress_file(src: Path, args) -> bool:
+def compress_file(src: Path, args: list[Any]) -> bool:
     if src.stat().st_size < args.min_size:
         return False
     dst = src.with_name(f"{src.name}.br")
@@ -179,7 +179,7 @@ def compress_file(src: Path, args) -> bool:
     return _finish_compress(src, dst, args, src.name)
 
 
-def compress_dir(src_dir: Path, args) -> bool:
+def compress_dir(src_dir: Path, args: list[Any]) -> bool:
     tmp_tar = src_dir.with_name(f"{src_dir.name}.tar")
     dst = src_dir.with_name(f"{src_dir.name}.tar.br")
     if not _tar(src_dir, tmp_tar):
@@ -205,7 +205,7 @@ def compress_dir(src_dir: Path, args) -> bool:
     return True
 
 
-def decompress_br(src: Path, args) -> bool:
+def decompress_br(src: Path, args: list[Any]) -> bool:
     if src.name.endswith(".tar.br"):
         return False
     dst = src.with_suffix("")
@@ -221,7 +221,7 @@ def decompress_br(src: Path, args) -> bool:
     return True
 
 
-def decompress_tar_br(src: Path, args) -> bool:
+def decompress_tar_br(src: Path, args: list[Any]) -> bool:
     dst_dir = src.with_name(src.name[: -len(".tar.br")])
     tmp_tar = src.with_name(src.name[: -len(".br")])
     if not _stream_decompress(src, tmp_tar, args.buffer_size):
@@ -265,7 +265,7 @@ def _iter_archives(root: Path) -> list[Path]:
     ]
 
 
-def cmd_compress(args) -> int:
+def cmd_compress(args: list[Any]) -> int:
     root = Path.cwd()
     self_name = Path(__file__).name
     skip_ext = tuple(args.skip_ext.split(",")) if args.skip_ext else ()
@@ -289,7 +289,7 @@ def cmd_compress(args) -> int:
     return 0
 
 
-def cmd_decompress(args) -> int:
+def cmd_decompress(args: list[Any]) -> int:
     root = Path.cwd()
     archives = _iter_archives(root)
     if not archives:

@@ -8,28 +8,29 @@ import hashlib
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterator
 
 from dh import MIME2EXT, get_nobinary
 
 
-OUTPUT_DIR = Path("extracted_base64")
+OUTPUT_DIR: Path = Path("extracted_base64")
 DATA_URL_RE = re.compile(r"data:(?P<mime>[-\w.+/]+);base64,(?P<data>[A-Za-z0-9+/=\s]+)", re.IGNORECASE)
 
 
-def infer_extension(mime):
+def infer_extension(mime: str) -> str:
     return MIME2EXT.get(mime.lower(), mime.rsplit("/", maxsplit=1)[-1])[0]
 
 
-def decode_base64(data):
+def decode_base64(data: str):
     cleaned = "".join(data.split())
     return base64.b64decode(cleaned, validate=False)
 
 
-def content_hash(data):
+def content_hash(data: Any) -> str:
     return hashlib.sha256(data).hexdigest()[:15]
 
 
-def extract_from_html(html):
+def extract_from_html(html: str) -> Iterator[tuple[Any, ...]]:
     for matchz in DATA_URL_RE.finditer(html):
         mime = matchz.group("mime")
         raw_data = matchz.group("data")
@@ -40,7 +41,7 @@ def extract_from_html(html):
         yield (mime, decoded)
 
 
-def save_asset(mime, data):
+def save_asset(mime: Any, data: Any):
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     ext = infer_extension(mime)
     digest = content_hash(data)
@@ -51,7 +52,7 @@ def save_asset(mime, data):
     return path
 
 
-def main():
+def main() -> None:
     cwd = Path.cwd()
     seen_hashes = set()
     extracted_count = 0

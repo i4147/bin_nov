@@ -8,6 +8,7 @@ import concurrent.futures
 import pathlib
 import site
 import sys
+from typing import Any, Iterable
 
 
 def get_site_directories() -> tuple[list[pathlib.Path], list[pathlib.Path]]:
@@ -126,7 +127,7 @@ def analyze_package_versions(
     return versions
 
 
-def main():
+def main() -> None:
     print("Python Package Duplicate Checker")
     print("-" * 40)
     try:

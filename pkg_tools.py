@@ -41,7 +41,7 @@ import shutil
 import subprocess
 import sys
 import time
-from typing import Any, Callable, Optional, Sequence
+from typing import Any, Callable, Iterable, Optional, Sequence
 import urllib.error
 import urllib.request
 import zipfile
@@ -63,7 +63,7 @@ try:
 except ImportError:
     parse_wheel_filename = None
     Version = None
-_ANSI = {
+_ANSI: dict[str, str] = {
     "red": "\033[31m",
     "green": "\033[32m",
     "yellow": "\033[33m",
@@ -296,8 +296,8 @@ def cmd_apt_reinstall(args: argparse.Namespace) -> int:
     return 0 if fail == 0 else 1
 
 
-_PLATFORM_EXTS = (".so", ".pyd", ".dll", ".dylib")
-_WHEEL_META_SUFFIXES = (".dist-info/WHEEL", ".dist-info/METADATA")
+_PLATFORM_EXTS: tuple[str, str, str, str] = (".so", ".pyd", ".dll", ".dylib")
+_WHEEL_META_SUFFIXES: tuple[str, str] = (".dist-info/WHEEL", ".dist-info/METADATA")
 
 
 def is_pure_wheel(path: Path) -> bool:
@@ -537,7 +537,7 @@ def cmd_pip_uninstall(args: argparse.Namespace) -> int:
     return 0
 
 
-_FLAKE8_GROUPS = ("flake8.extension", "flake8.report")
+_FLAKE8_GROUPS: tuple[str, str] = ("flake8.extension", "flake8.report")
 _FLAKE8_NAME_RX = re.compile(r"^flake8-", re.IGNORECASE)
 
 

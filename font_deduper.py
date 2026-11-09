@@ -3,17 +3,19 @@
 Groups the ``.ttf``/``.woff``/``.woff2`` files below the current directory by the PostScript name read from their ``name`` table with fontTools and reports (or with ``DRY_RUN = False`` deletes) the duplicates.
 Usage: font_deduper Examples: $ font_deduper Runs as a script (``python font_deduper.py``) in the directory it should act on; the module can also be imported."""
 
+from __future__ import annotations
+
 import os
 from pathlib import Path
 
 from fontTools.ttLib import TTFont
 
 
-DRY_RUN = False
-FONT_EXTENSIONS = (".ttf", ".woff2", ".woff")
+DRY_RUN: bool = False
+FONT_EXTENSIONS: tuple[str, str, str] = (".ttf", ".woff2", ".woff")
 
 
-def get_font_ps_name(file_path):
+def get_font_ps_name(file_path: Path) -> str | None:
     try:
         font = TTFont(file_path, fontNumber=0, lazy=True)
         name_table = font["name"]
@@ -26,7 +28,7 @@ def get_font_ps_name(file_path):
         return None
 
 
-def main():
+def main() -> None:
     seen_fonts = {}
     duplicates = []
     print("Scanning directories recursively...")

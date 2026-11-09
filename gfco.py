@@ -17,7 +17,7 @@ import concurrent.futures
 import multiprocessing as mp
 from pathlib import Path
 import sys
-from typing import Optional
+from typing import Any, Optional
 
 
 try:
@@ -29,7 +29,7 @@ try:
     from concurrent.futures import InterpreterPoolExecutor
 except ImportError:
     InterpreterPoolExecutor = None
-SUPPORTED_EXTENSIONS = {".ttf", ".otf", ".woff", ".woff2", ".eot"}
+SUPPORTED_EXTENSIONS: set[str] = {".ttf", ".otf", ".woff", ".woff2", ".eot"}
 
 
 def convert_font(

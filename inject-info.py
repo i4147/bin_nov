@@ -12,12 +12,13 @@ import os
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterable
 
 from dh import SKIP_DIRS
 
 
 DEFAULT_INFO = Path.home() / ".myinfo"
-TARGET_FILENAMES = {
+TARGET_FILENAMES: set[str] = {
     "setup.py",
     "setup.cfg",
     "pyproject.toml",
@@ -25,7 +26,7 @@ TARGET_FILENAMES = {
     "tox.ini",
     "Pipfile",
 }
-REQUIRED_KEYS = ("name", "email", "github_username")
+REQUIRED_KEYS: tuple[str, str, str] = ("name", "email", "github_username")
 
 
 def load_info(path: Path) -> dict:
@@ -48,13 +49,13 @@ def build_transformations(info: dict) -> dict:
     email = info["email"]
     gh_user = info["github_username"]
 
-    def lit(value):
+    def lit(value: Any):
         return lambda m: f"{m.group(1)}{m.group(2)}{value}{m.group(2)}"
 
-    def _gh_user(m):
+    def _gh_user(m: re.Match[str]) -> str:
         return m.group(0) if m.group(2) == gh_user else f"{m.group(1)}{gh_user}/"
 
-    def _gh_io(m):
+    def _gh_io(m: re.Match[str]) -> str:
         return m.group(0) if m.group(1) == gh_user else f"{gh_user}.github.io"
 
     common = [
@@ -69,7 +70,7 @@ def build_transformations(info: dict) -> dict:
         (re.compile(r'(?<![.\w])(maintainer_email[ \t]*=[ \t]*)(["\'])(?:[^"\'\\]|\\.)*\2'), lit(email)),
     ]
 
-    def _cfg(value):
+    def _cfg(value: Any):
         return lambda m: f"{m.group(1)}{value}"
 
     cfg = [
@@ -79,7 +80,7 @@ def build_transformations(info: dict) -> dict:
         (re.compile(r'(?m)^([ \t]*maintainer_email[ \t]*=[ \t]*)(?![ "\']).*$'), _cfg(email)),
     ]
 
-    def _poetry_author(m):
+    def _poetry_author(m: re.Match[str]):
         inner = m.group(2)
         if not inner.strip():
             return m.group(0)
@@ -113,7 +114,7 @@ def find_target_files(root: Path):
                 yield Path(dirpath) / fname
 
 
-def process_file(path: Path, transforms, *, dry_run: bool, show_diff: bool) -> bool:
+def process_file(path: Path, transforms: Iterable[Any], *, dry_run: bool, show_diff: bool) -> bool:
     try:
         original = path.read_text(encoding="utf-8")
     except (UnicodeDecodeError, OSError) as e:
@@ -139,7 +140,7 @@ def process_file(path: Path, transforms, *, dry_run: bool, show_diff: bool) -> b
     return True
 
 
-def main(argv=None) -> int:
+def main(argv = None) -> int:
     parser = argparse.ArgumentParser(description="Inject personal info from ~/.myinfo into a project.")
     parser.add_argument("project_dir", type=Path, help="Project directory to update")
     parser.add_argument("--dry-run", action="store_true", help="Do not write any files, just report")

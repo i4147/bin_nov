@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+from typing import Any
 
 from dotenv import load_dotenv
 import requests
@@ -22,8 +23,8 @@ if env_path.exists():
     print(f"✅ Loaded environment from {env_path}")
 else:
     print("⚠️  ~/.env not found, using system environment variables")
-SIZE_CACHE_FILE = "repo_sizes.json"
-CACHE_EXPIRY_DAYS = 7
+SIZE_CACHE_FILE: str = "repo_sizes.json"
+CACHE_EXPIRY_DAYS: int = 7
 
 
 def get_github_token():
@@ -56,7 +57,7 @@ def load_size_cache():
     return {}
 
 
-def save_size_cache(cache_data):
+def save_size_cache(cache_data: dict[str, Any]) -> None:
     cache_data["_cache_date"] = datetime.now().isoformat()
     cache_data["_cache_version"] = "1.0"
     try:
@@ -67,7 +68,7 @@ def save_size_cache(cache_data):
         print(f"⚠️  Error saving cache: {e}")
 
 
-def get_repo_size(repo, token=None, cache_data=None):
+def get_repo_size(repo: Path, token = None, cache_data = None):
     if cache_data and repo in cache_data:
         cached_size = cache_data[repo].get("size_mb")
         cached_date = cache_data[repo].get("fetched_at", "")
@@ -106,7 +107,7 @@ def get_repo_size(repo, token=None, cache_data=None):
         return None
 
 
-def clone_repo(repo):
+def clone_repo(repo: Path) -> bool:
     clone_url = f"https://github.com/{repo}.git"
     repo_name = repo.split("/")[-1]
     if Path(repo_name).exists():
@@ -134,7 +135,7 @@ def clone_repo(repo):
         return False
 
 
-def display_cached_stats(cache_data):
+def display_cached_stats(cache_data: dict[str, Any]) -> None:
     if not cache_data or len(cache_data) <= 1:
         return
     repos = {k: v for k, v in cache_data.items() if k not in ["_cache_date", "_cache_version"]}
@@ -154,7 +155,7 @@ def display_cached_stats(cache_data):
     print(f"  📅 Cached on: {cache_data.get('_cache_date', 'Unknown')}")
 
 
-def main():
+def main() -> None:
     fn = sys.argv[1]
     repos_file = Path(fn)
     if not repos_file.exists():

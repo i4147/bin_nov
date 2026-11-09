@@ -11,16 +11,17 @@ import multiprocessing as mp
 from pathlib import Path
 import sys
 import tokenize as _tokenize
+from typing import Any, Iterable, Iterator
 
 from atomicio import atomic_replace
 from dh import DOC_TH1, DOC_TH2, SKIP_DIRS
 import libcst as cst
 
 
-POOL_PROCESSES = 8
-CHUNK_SIZE = 4
-PY_SUFFIXES = (".py", ".pyi")
-PROTECTED_COMMENT_PREFIXES = (
+POOL_PROCESSES: int = 8
+CHUNK_SIZE: int = 4
+PY_SUFFIXES: tuple[str, str] = (".py", ".pyi")
+PROTECTED_COMMENT_PREFIXES: tuple[str, ...] = (
     "#!",
     "#-*-",
     "# coding",
@@ -34,9 +35,9 @@ PROTECTED_COMMENT_PREFIXES = (
     "# pyright",
     "# pragma",
 )
-GREEN = "\x1b[32m"
-RESET = "\x1b[0m"
-BACKUP_SUFFIX = ".pystripbak"
+GREEN: str = "\x1b[32m"
+RESET: str = "\x1b[0m"
+BACKUP_SUFFIX: str = ".pystripbak"
 
 
 def has_no_strippable_content(source: str) -> bool:
@@ -202,12 +203,12 @@ class CommentDocstringStripper(cst.CSTTransformer):
     def __init__(
         self,
         *,
-        remove_all,
-        remove_all_comments,
-        remove_docstrings,
-        remove_type_annotations,
-        protected_code_lines,
-    ):
+        remove_all: Any,
+        remove_all_comments: Any,
+        remove_docstrings: Any,
+        remove_type_annotations: Any,
+        protected_code_lines: Any,
+    ) -> None:
         super().__init__()
         self.remove_all = remove_all
         self.remove_all_comments = remove_all_comments or remove_all
@@ -232,7 +233,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return True
         return not self._is_protected_comment(comment_node.value)
 
-    def leave_TrailingWhitespace(self, original_node, updated_node):
+    def leave_TrailingWhitespace(self, original_node: cst.TrailingWhitespace, updated_node: cst.TrailingWhitespace) -> cst.CSTNode:
         del original_node
         if updated_node.comment is None:
             return updated_node
@@ -240,7 +241,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(whitespace=cst.SimpleWhitespace(""), comment=None)
 
-    def leave_EmptyLine(self, original_node, updated_node):
+    def leave_EmptyLine(self, original_node: cst.EmptyLine, updated_node: cst.EmptyLine) -> cst.CSTNode:
         del original_node
         if not self.remove_all_comments:
             return updated_node
@@ -250,7 +251,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(comment=None)
 
-    def leave_FunctionDef(self, original_node, updated_node):
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.CSTNode:
         del original_node
         if self.remove_docstrings:
             new_body, changed = strip_suite_docstring(updated_node.body)
@@ -260,7 +261,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             updated_node = updated_node.with_changes(returns=None, type_comment=None)
         return updated_node
 
-    def leave_ClassDef(self, original_node, updated_node):
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.CSTNode:
         del original_node
         if not self.remove_docstrings:
             return updated_node
@@ -269,7 +270,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node.with_changes(body=new_body)
         return updated_node
 
-    def leave_Param(self, original_node, updated_node):
+    def leave_Param(self, original_node: cst.Param, updated_node: cst.Param) -> cst.CSTNode:
         del original_node
         if not self.remove_type_annotations:
             return updated_node
@@ -277,7 +278,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(annotation=None, type_comment=None)
 
-    def leave_AnnAssign(self, original_node, updated_node):
+    def leave_AnnAssign(self, original_node: cst.AnnAssign, updated_node: cst.AnnAssign) -> cst.CSTNode:
         del original_node
         if not self.remove_type_annotations:
             return updated_node
@@ -288,7 +289,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             value=updated_node.value,
         )
 
-    def leave_Assign(self, original_node, updated_node):
+    def leave_Assign(self, original_node: cst.Assign, updated_node: cst.Assign) -> cst.CSTNode:
         del original_node
         if not self.remove_type_annotations:
             return updated_node
@@ -297,7 +298,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(type_comment=None)
 
-    def leave_For(self, original_node, updated_node):
+    def leave_For(self, original_node: cst.For, updated_node: cst.For) -> cst.CSTNode:
         del original_node
         if not self.remove_type_annotations:
             return updated_node
@@ -306,7 +307,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(type_comment=None)
 
-    def leave_With(self, original_node, updated_node):
+    def leave_With(self, original_node: cst.With, updated_node: cst.With) -> cst.CSTNode:
         del original_node
         if not self.remove_type_annotations:
             return updated_node
@@ -387,11 +388,11 @@ def restore_from_backup(path: Path) -> tuple[Path, bool, str | None]:
 def process_file(
     path: Path,
     *,
-    remove_all,
-    remove_all_comments,
-    remove_docstrings,
-    remove_type_annotations,
-    make_backup,
+    remove_all: Any,
+    remove_all_comments: Any,
+    remove_docstrings: Any,
+    remove_type_annotations: Any,
+    make_backup: Any,
 ):
     try:
         original_bytes = path.read_bytes()
@@ -447,10 +448,10 @@ def process_file(
     return path, bytes_reduced, True, None
 
 
-def iter_python_files(paths):
+def iter_python_files(paths: list[Path]):
     seen = set()
 
-    def on_walk_error(exc):
+    def on_walk_error(exc: str) -> None:
         print(f"warning: {exc}", file=sys.stderr)
 
     for given_path in paths:
@@ -485,10 +486,10 @@ def iter_python_files(paths):
             print(f"warning: cannot access {given_path}: {exc}", file=sys.stderr)
 
 
-def iter_backup_files(paths):
+def iter_backup_files(paths: list[Path]) -> Iterator[Path]:
     seen = set()
 
-    def on_walk_error(exc):
+    def on_walk_error(exc: str) -> None:
         print(f"warning: {exc}", file=sys.stderr)
 
     for given_path in paths:
@@ -596,7 +597,7 @@ def build_arg_parser():
     return parser
 
 
-def run_reverse(paths):
+def run_reverse(paths: list[Path]) -> int:
     targets = list(iter_backup_files(paths))
     if not targets:
         print("No backup files found to restore.", file=sys.stderr)
@@ -616,7 +617,7 @@ def run_reverse(paths):
     return 2 if error_count else 0
 
 
-def main(argv=None):
+def main(argv = None):
     args = build_arg_parser().parse_args(argv)
     paths = args.paths or [Path.cwd()]
     if args.reverse:

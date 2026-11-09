@@ -13,6 +13,7 @@ import subprocess
 import sys
 from traceback import print_exc
 from urllib.parse import urljoin
+from typing import Any, Iterator
 
 from PIL import Image, ImageGrab
 from pyperclip import copy as copy2clipboard
@@ -21,12 +22,12 @@ import upyun
 
 SYSTEM = platform.system()
 CONFIG_PATH = Path(Path("~").expanduser()).joinpath(".upimg_config.pkl")
-CONFIG_FIELDS = ["service", "username", "password", "upload_path", "url_base"]
-CONFIG_DEFAULTS = ["", "", "", "/", "https://test.upimg.com"]
+CONFIG_FIELDS: list[str] = ["service", "username", "password", "upload_path", "url_base"]
+CONFIG_DEFAULTS: list[str] = ["", "", "", "/", "https://test.upimg.com"]
 ConfigTuple = namedtuple("ConfigTuple", CONFIG_FIELDS)
 
 
-def send_notify(title="UpImg", message=""):
+def send_notify(title = "UpImg", message = "") -> bool:
     try:
         if SYSTEM == "Darwin":
             cmd = f'display notification "{message}" with title "{title}"'
@@ -97,7 +98,7 @@ class ClipboardFile:
             yield image_bytes_io, ".png"
 
 
-def set_config():
+def set_config() -> None:
     args = {}
     print("--- UpImg Configuration Setup ---")
     for field, default in zip(CONFIG_FIELDS, CONFIG_DEFAULTS):
@@ -142,7 +143,7 @@ def get_config():
 
 
 class UpImage:
-    def __init__(self, config):
+    def __init__(self, config: dict[str, Any]) -> None:
         self.upyun = upyun.UpYun(config.service, config.username, config.password)
         self.upload_path = config.upload_path
 
@@ -163,7 +164,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     args = parse_args()
     if args.config:
         try:

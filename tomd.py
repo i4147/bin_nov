@@ -12,10 +12,10 @@ from markdownify import markdownify as md
 from readability import Document
 
 
-remove_orig = True
+remove_orig: bool = True
 
 
-def process_file(path) -> tuple[Path, bool]:
+def process_file(path: Path) -> tuple[Path, bool]:
     path = Path(path)
     md_file = path.with_suffix(".md")
     if md_file.exists():

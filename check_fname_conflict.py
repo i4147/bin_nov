@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 
-PIP_LIST = Path("/sdcard/data/pip.txt")
+PIP_LIST: Path = Path("/sdcard/data/pip.txt")
 TARGET_DIR = Path.cwd()
 
 

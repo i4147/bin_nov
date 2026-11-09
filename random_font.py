@@ -7,7 +7,7 @@ from pathlib import Path
 import secrets
 
 
-def convert_with_fonttools(src, dst):
+def convert_with_fonttools(src: Path, dst: Path) -> None:
     from fontTools.ttLib import woff2
 
     try:
@@ -16,7 +16,7 @@ def convert_with_fonttools(src, dst):
         return
 
 
-def main():
+def main() -> None:
     source_dir = Path("/sdcard/font")
     dst = Path.home() / ".termux" / "font.ttf"
     if dst.exists():

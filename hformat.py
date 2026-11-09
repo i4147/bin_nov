@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from dh import get_files, mpf
 
 
-def process_file(path) -> bool:
+def process_file(path: Path) -> bool:
     try:
         with open(path, encoding="utf-8") as file:
             content = file.read()

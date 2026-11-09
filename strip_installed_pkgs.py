@@ -9,7 +9,7 @@ import sys
 from dh import STDLIB, get_installed_pkgs
 
 
-def read_requirements(filename) -> list[str]:
+def read_requirements(filename: str) -> list[str]:
     req_file = Path(filename)
     with req_file.open(encoding="utf-8") as f:
         return [line.strip().replace("-", "_").lower() for line in f if line.strip() and not line.startswith("#")]

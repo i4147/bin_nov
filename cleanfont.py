@@ -10,12 +10,13 @@ import os
 import shutil
 import sys
 import tempfile
+from typing import Any
 
 from fontTools import subset
 
 
 # Unicode blocks that carry Chinese (and CJK-shared) glyphs.
-CJK_BLOCKS = [
+CJK_BLOCKS: list[tuple[Any, ...]] = [
     (0x2E80, 0x2EFF),  # CJK Radicals Supplement
     (0x2F00, 0x2FDF),  # Kangxi Radicals
     (0x3000, 0x303F),  # CJK Symbols and Punctuation
@@ -35,10 +36,10 @@ CJK_BLOCKS = [
 # Add these if you also want Japanese/Korean out:
 # (0x3040,0x30FF) kana, (0x3100,0x312F) bopomofo, (0xAC00,0xD7AF) hangul
 
-FONT_EXTS = {".ttf", ".otf", ".woff", ".woff2"}
+FONT_EXTS: set[str] = {".ttf", ".otf", ".woff", ".woff2"}
 
 
-def is_cjk(cp):
+def is_cjk(cp: Any) -> bool:
     return any(lo <= cp <= hi for lo, hi in CJK_BLOCKS)
 
 
@@ -53,7 +54,7 @@ def make_options():
     return opts
 
 
-def subset_inplace(path):
+def subset_inplace(path: str) -> None:
     opts = make_options()
     font = subset.load_font(path, opts)
     tmp = None
@@ -90,7 +91,7 @@ def subset_inplace(path):
                 os.unlink(tmp)
 
 
-def collect_targets(args):
+def collect_targets(args: list[Any]):
     if not args:
         args = ["."]
     seen, out = set(), []
@@ -112,7 +113,7 @@ def collect_targets(args):
     return out
 
 
-def main(argv):
+def main(argv: list[Any]) -> int:
     files = collect_targets(argv)
     if not files:
         print("no font files found", file=sys.stderr)

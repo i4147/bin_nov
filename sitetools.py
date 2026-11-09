@@ -14,6 +14,7 @@ import re
 import shutil
 import sys
 import tarfile
+from typing import Any, Iterable, Iterator
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -52,7 +53,7 @@ def unique_path(path: Path) -> Path:
         counter += 1
 
 
-def get_files(path: Path, ext=None):
+def get_files(path: Path, ext = None) -> Iterator[Path]:
     if path.is_file():
         yield path
         return
@@ -61,7 +62,7 @@ def get_files(path: Path, ext=None):
             yield p
 
 
-def cmd_clean_meta(args):
+def cmd_clean_meta(args: list[Any]) -> None:
     img_regex = re.compile(r"^\s*(\.\.\s+image::|:target:|:alt:)", re.IGNORECASE)
     paths = [Path(p) for p in args.paths] if args.paths else []
     target_dir = Path.cwd()
@@ -122,7 +123,7 @@ def cmd_clean_meta(args):
     print(f"space saved : {fsz(initial_sz - final_sz)}")
 
 
-def cmd_clean_record(args):
+def cmd_clean_record(args: list[Any]) -> None:
     allowed = {"METADATA", "RECORD", "WHEEL", "entry_points.txt", "top_level.txt"}
     for e in Path().glob("*.dist-info"):
         d_file = e / "RECORD"
@@ -144,7 +145,7 @@ def cmd_clean_record(args):
             print(f"record file in {d_file.parent.name} cleaned.")
 
 
-def cmd_clean_distinfo(args):
+def cmd_clean_distinfo(args: list[Any]) -> None:
     py_ver = f"{sys.version_info.major}.{sys.version_info.minor}"
     default_sp = Path(f"/data/data/com.termux/files/usr/lib/python{py_ver}/site-packages")
     sp = Path(args.site_dir) if args.site_dir else default_sp
@@ -159,7 +160,7 @@ def cmd_clean_distinfo(args):
                     shutil.rmtree(h)
 
 
-def cmd_fix_targz(args):
+def cmd_fix_targz(args: list[Any]) -> None:
     target_dir = Path(args.directory)
     for l in target_dir.glob("*.tar.gz"):
         u, q = _extract_targz_meta(l)
@@ -176,7 +177,7 @@ def cmd_fix_targz(args):
             print(f"ERROR: Could not determine name/version for {l.name}")
 
 
-def _extract_targz_meta(l):
+def _extract_targz_meta(l: Any):
     with tarfile.open(l, "r:gz") as w:
         members = w.getmembers()
         if not members:
@@ -210,7 +211,7 @@ def _extract_targz_meta(l):
     return None, None
 
 
-def cmd_rename_json(args):
+def cmd_rename_json(args: list[Any]) -> None:
     for b in [f for f in os.listdir(".") if f.endswith(".json")]:
         try:
             with Path(b).open(encoding="utf-8") as f:
@@ -236,7 +237,7 @@ def cmd_rename_json(args):
             print(f"An error occurred with {b}:{e}")
 
 
-def cmd_rename_meta(args):
+def cmd_rename_meta(args: list[Any]) -> None:
     target_c = Path(args.target_dir)
     target_c.mkdir(parents=True, exist_ok=True)
     p_path = Path.cwd()
@@ -245,7 +246,7 @@ def cmd_rename_meta(args):
             _process_meta_file(o_file, target_c)
 
 
-def _process_meta_file(o, c):
+def _process_meta_file(o: Path, c: Any) -> None:
     if not o.exists():
         return
     f_text = o.read_text(encoding="utf-8")
@@ -281,7 +282,7 @@ def _process_meta_file(o, c):
             input("what u wanna do?")
 
 
-def cmd_clean_pyc_record(args):
+def cmd_clean_pyc_record(args: list[Any]) -> None:
     import sysconfig
 
     lib_path = Path(sysconfig.get_paths()["purelib"])
@@ -292,7 +293,7 @@ def cmd_clean_pyc_record(args):
     print("Removed .pyc references from all RECORD files.")
 
 
-def _clean_record_pyc_file(d):
+def _clean_record_pyc_file(d: Path) -> None:
     i_lines = d.read_text(encoding="utf-8").splitlines()
     g_list = [k for k in i_lines if ".pyc" not in k]
     g_list = [k for k in g_list if "licenses" not in k]
@@ -302,7 +303,7 @@ def _clean_record_pyc_file(d):
     print(f"{d.name} in {d.parent.name} cleaned")
 
 
-def cmd_update_record(args):
+def cmd_update_record(args: list[Any]) -> None:
     m_path = Path.cwd()
     h_dirs = sorted(m_path.glob("*.dist-info"))
     if not h_dirs:
@@ -417,7 +418,7 @@ def _update_single_record(i_dir: Path) -> bool:
     return True
 
 
-def cmd_clean_urecord(args):
+def cmd_clean_urecord(args: list[Any]) -> None:
     site_dirs = args.site_dir or _get_default_site_packages()
     if not site_dirs:
         print("Error: Could not find site-packages directory", file=sys.stderr)
@@ -431,7 +432,7 @@ def cmd_clean_urecord(args):
     print(f"  Files that would be/are updated: {total_updated}")
 
 
-def _get_default_site_packages():
+def _get_default_site_packages() -> list[Path]:
     import site
 
     try:
@@ -471,7 +472,7 @@ def _clean_single_urecord_file(k_path: Path, verbose: bool) -> bool:
         return False
 
 
-def _scan_and_clean_urecord(site_dirs, verbose):
+def _scan_and_clean_urecord(site_dirs: Iterable[Any], verbose: bool) -> tuple[int, int]:
     total_found = 0
     total_updated = 0
     for r in site_dirs:
@@ -488,7 +489,7 @@ def _scan_and_clean_urecord(site_dirs, verbose):
     return total_found, total_updated
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Unified Python Package and Metadata Manager")
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("clean-meta", help="Clean metadata and markdown files")

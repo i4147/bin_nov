@@ -31,7 +31,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from typing import TYPE_CHECKING, Optional
+from typing import Any, Optional, TYPE_CHECKING
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
@@ -181,7 +181,7 @@ class HtmlTagFormatter:
             LOG.error("Error formatting HTML: {}", exc)
             return src, 0
 
-    def _collect_edits(self, root, src: str) -> list[tuple[int, str, int]]:
+    def _collect_edits(self, root: Path, src: str) -> list[tuple[int, str, int]]:
         edits: list[tuple[int, str, int]] = []
         stack = [root]
         while stack:
@@ -205,7 +205,7 @@ class HtmlTagFormatter:
         return edits
 
     @staticmethod
-    def _tag_name(element_node, src: str) -> Optional[str]:
+    def _tag_name(element_node: Any, src: str) -> Optional[str]:
         for child in element_node.children:
             if child.type == "start_tag":
                 for sub in child.children:

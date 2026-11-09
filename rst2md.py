@@ -30,7 +30,7 @@ def rst_to_html(content: str) -> str:
         raise
 
 
-def process_file(path):
+def process_file(path: Path) -> None:
     path = Path(path)
     content = path.read_text(encoding="utf-8")
     html_content = rst_to_html(content)

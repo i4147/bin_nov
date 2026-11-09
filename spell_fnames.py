@@ -6,11 +6,12 @@ import argparse
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterable
 
 import hunspell
 
 
-DICT_PATHS = [
+DICT_PATHS: list[tuple[Any, ...]] = [
     (
         "/data/data/com.termux/files/usr/share/hunspell/en_US.dic",
         "/data/data/com.termux/files/usr/share/hunspell/en_US.aff",
@@ -47,7 +48,7 @@ def split_words(stem: str):
     return words
 
 
-def find_misspelled(words, checker):
+def find_misspelled(words: list[Any], checker: Any):
     misspelled = []
     for w in words:
         if len(w) <= 2 or w.isdigit():
@@ -57,7 +58,7 @@ def find_misspelled(words, checker):
     return misspelled
 
 
-def suggest_fix(stem: str, misspelled_words, checker):
+def suggest_fix(stem: str, misspelled_words: Iterable[Any], checker: Any) -> str:
     new_stem = stem
     for w in misspelled_words:
         suggestions = checker.suggest(w)
@@ -71,7 +72,7 @@ def suggest_fix(stem: str, misspelled_words, checker):
     return new_stem
 
 
-def scan(root: Path, checker, autofix: bool):
+def scan(root: Path, checker: Any, autofix: bool) -> None:
     found_any = False
     for path in sorted(root.rglob("*")):
         if not path.is_file():
@@ -98,7 +99,7 @@ def scan(root: Path, checker, autofix: bool):
         print("No misspelled filenames found.")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Detect misspelled words in filenames recursively.")
     parser.add_argument(
         "path",

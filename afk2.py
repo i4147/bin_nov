@@ -25,6 +25,7 @@ import re
 import sys
 import tarfile
 import zipfile
+from typing import Any, Iterable
 
 from dh import MAX_WORKERS
 
@@ -52,7 +53,7 @@ class FileReport:
     error: str | None = None
 
 
-_USE_COLOR = True
+_USE_COLOR: bool = True
 
 
 def _c(code: str, text: str) -> str:

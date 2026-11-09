@@ -16,16 +16,17 @@ from pathlib import Path
 import shutil
 import sys
 import tarfile
+from typing import Any
 
 from dh import MAX_WORKERS
 import lz4.frame
 
 
-DEFAULT_SKIP_EXT = {".gz", ".br", ".xz", ".zst", ".bz2", ".zip", ".whl", ".lz4", ".7z", ".rar"}
-DEFAULT_MIN_SIZE = 1024
-DEFAULT_CHUNK_SIZE = 32768
-DEFAULT_CHUNK_THRESHOLD = 524288
-DEFAULT_LEVEL = 3
+DEFAULT_SKIP_EXT: set[str] = {".gz", ".br", ".xz", ".zst", ".bz2", ".zip", ".whl", ".lz4", ".7z", ".rar"}
+DEFAULT_MIN_SIZE: int = 1024
+DEFAULT_CHUNK_SIZE: int = 32768
+DEFAULT_CHUNK_THRESHOLD: int = 524288
+DEFAULT_LEVEL: int = 3
 BLOCK_SIZE_MAX = lz4.frame.BLOCKSIZE_MAX
 
 
@@ -49,7 +50,7 @@ def _compress_bytes(data: bytes, level: int, block_size: int, checksum: bool) ->
     )
 
 
-def _chunk_worker(args):
+def _chunk_worker(args: list[Any]):
     data, level, block_size, checksum = args
     return _compress_bytes(data, level, block_size, checksum)
 
@@ -161,7 +162,7 @@ def _should_skip_file(p: Path, skip_ext: set, min_size: int) -> bool:
         return True
 
 
-def cmd_compress(args) -> int:
+def cmd_compress(args: list[Any]) -> int:
     skip_ext = {e.lower() for e in (args.skip_ext or DEFAULT_SKIP_EXT)}
     checksum = not args.no_checksum
     block_size = BLOCK_SIZE_MAX
@@ -252,7 +253,7 @@ def cmd_compress(args) -> int:
     return 0 if stats["err"] == 0 else 1
 
 
-def cmd_decompress(args) -> int:
+def cmd_decompress(args: list[Any]) -> int:
     stats = {"ok": 0, "skip": 0, "err": 0}
     for root_str in args.paths:
         root = Path(root_str).resolve()
@@ -331,7 +332,7 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def main(argv=None) -> int:
+def main(argv = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         return args.func(args)

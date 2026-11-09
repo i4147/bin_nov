@@ -9,10 +9,10 @@ import random
 from shutil import get_terminal_size
 
 
-FILE_NAME = "/sdcard/data/quotes/quotes.json"
+FILE_NAME: str = "/sdcard/data/quotes/quotes.json"
 
 
-def display_random_quote():
+def display_random_quote() -> None:
     if not Path(FILE_NAME).exists():
         return
     with open(FILE_NAME, "r", encoding="utf-8") as f:

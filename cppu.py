@@ -9,7 +9,7 @@ import sys
 from dh import cprint, fsz, get_files, gsz, mpf, rrs, runcmd
 
 
-EXT = [
+EXT: list[str] = [
     ".java",
     ".c",
     ".cpp",
@@ -24,7 +24,7 @@ EXT = [
 ]
 
 
-def process_file(path):
+def process_file(path: Path) -> None:
     path = Path(path)
     before = gsz(path)
     try:

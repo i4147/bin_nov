@@ -26,7 +26,7 @@ The module is importable as well."""
 import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
-from typing import Iterable, Optional, Sequence
+from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
@@ -201,7 +201,7 @@ def human_size(n: int) -> str:
 
 
 def _run_parallel(
-    worker,
+    worker: Any,
     tasks: list,
     workers: int,
 ) -> list:
@@ -291,7 +291,7 @@ def save_png(src: Path, dst: Path, backend: str = "auto", preserve_alpha: bool =
         im.save(dst, "PNG")
 
 
-def _worker_jpg(task):
+def _worker_jpg(task: Any):
     src, dst, quality, backend, delete_source = task
     try:
         save_jpeg(src, dst, quality=quality, backend=backend)
@@ -309,7 +309,7 @@ def _worker_jpg(task):
     return (str(src), True, f"{src.name} -> {dst.name}")
 
 
-def _worker_png(task):
+def _worker_png(task: Any):
     src, dst, backend, delete_source, preserve_alpha = task
     try:
         save_png(src, dst, backend=backend, preserve_alpha=preserve_alpha)
@@ -327,7 +327,7 @@ def _worker_png(task):
     return (str(src), True, f"{src.name} -> {dst.name}")
 
 
-def _worker_invert(task):
+def _worker_invert(task: Any):
     src, dry_run = task
     if dry_run:
         return (str(src), True, f"[DRY RUN] would invert {src}")
@@ -349,7 +349,7 @@ def _extract_gif_frames(path: Path, dup_mean: float, dup_frac: float) -> list["n
         msg = "Pillow + numpy are required for GIF extraction"
         raise RuntimeError(msg)
 
-    def is_dup(a, b) -> bool:
+    def is_dup(a: Any, b: int) -> bool:
         if a.shape != b.shape:
             return False
         diff = np.abs(a.astype(np.int16) - b.astype(np.int16))
@@ -389,7 +389,7 @@ def _extract_gif_frames(path: Path, dup_mean: float, dup_frac: float) -> list["n
     return frames
 
 
-def _worker_gif(task):
+def _worker_gif(task: Any):
     src, quality, dup_mean, dup_frac, overwrite = task
     try:
         frames = _extract_gif_frames(src, dup_mean, dup_frac)

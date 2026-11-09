@@ -10,7 +10,7 @@ import sys
 from dh import fsz, get_files, gsz, mpf, runcmd
 
 
-def process_file(path):
+def process_file(path: Path) -> None:
     path = Path(path)
     temp_gs = path.with_name(f"temp_gs_{path.name}")
     size_before = path.stat().st_size
@@ -54,7 +54,7 @@ def process_file(path):
                 temp_gs.unlink(missing_ok=True)
 
 
-def main():
+def main() -> None:
     cwd = Path.cwd()
     before = gsz(cwd)
     args = sys.argv[1:]

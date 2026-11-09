@@ -4,14 +4,17 @@ Removes every line that contains the given substring (the last argument; the pre
 Work is spread over a process pool.
 Usage: remove_lines_containing_str_from_files [files ...] STRING Examples: $ remove_lines_containing_str_from_files src/ 'DEBUG' Runs as a script (``python remove_lines_containing_str_from_files.py``) in the directory it should act on; the module can also be imported."""
 
+from __future__ import annotations
+
 from multiprocessing import Pool
 from pathlib import Path
 import sys
+from typing import Any, Iterable
 
 from dh import fsz, get_nobinary, gsz
 
 
-def clean_text(text, strtofind):
+def clean_text(text: str, strtofind: Iterable[Any]) -> tuple[str, int]:
     kept = []
     removed = 0
     for line in text.splitlines():
@@ -22,7 +25,7 @@ def clean_text(text, strtofind):
     return "\n".join(kept), removed
 
 
-def clean_file(path, strtofind):
+def clean_file(path: Path, strtofind: Any):
     try:
         original = Path(path).read_text(encoding="utf-8", errors="ignore")
     except Exception:
@@ -33,7 +36,7 @@ def clean_file(path, strtofind):
     return path, removed, len(original) - len(cleaned)
 
 
-def main():
+def main() -> int | None:
     args = sys.argv[1:]
     if not args:
         print(f"usage: {sys.argv[0]} [file ...] <search_string>")

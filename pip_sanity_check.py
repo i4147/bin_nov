@@ -10,12 +10,12 @@ import sys
 from dh import PKG_MAPPING as pkg_mapping
 
 
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
-RESET = "\033[0m"
+GREEN: str = "\033[32m"
+YELLOW: str = "\033[33m"
+RESET: str = "\033[0m"
 
 
-def sanity_check_packages():
+def sanity_check_packages() -> None:
     print(f"Python Version: {sys.version.split()[0]}")
     print("Starting system site-packages sanity check in Termux...\n")
     installed_dists = sorted(importlib.metadata.distributions(), key=lambda d: d.name.lower())

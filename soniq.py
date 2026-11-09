@@ -8,11 +8,12 @@ import mmap
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
 import sys
+from typing import Any, Iterable
 
 from dh import is_binary
 
 
-THRESHOLD = 1024 * 1024
+THRESHOLD: int = 1024 * 1024
 
 
 def _process_chunk(chunk: list[str]) -> list[str]:

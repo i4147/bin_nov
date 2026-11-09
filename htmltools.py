@@ -45,7 +45,7 @@ try:
     import pycurl
 except ImportError:
     pycurl = None
-IMAGE_EXTS = {
+IMAGE_EXTS: set[str] = {
     ".png",
     ".jpg",
     ".jpeg",
@@ -58,7 +58,7 @@ IMAGE_EXTS = {
     ".tiff",
     ".apng",
 }
-HTML_EXTS = {".html", ".htm"}
+HTML_EXTS: set[str] = {".html", ".htm"}
 CSS_URL_RE = re.compile(r'url\((["\']?)([^)"\']+)\1\)')
 CSS_IMPORT_RE = re.compile(
     r'@import\s+(?:url\(\s*)?["\']?([^"\')\s;]+)["\']?\s*\)?',
@@ -464,7 +464,7 @@ def cmd_inline(args: argparse.Namespace) -> int:
 
 
 class _Isolator:
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False) -> None:
         self.verbose = verbose
         self.embedded = 0
         self.warnings = 0

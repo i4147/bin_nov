@@ -15,6 +15,7 @@ import multiprocessing
 import os
 from pathlib import Path
 import sys
+from typing import Any, TextIO
 
 
 try:
@@ -25,7 +26,7 @@ except ImportError:
     sys.exit(1)
 
 
-def get_py_files(directory):
+def get_py_files(directory: Path):
     py_files = []
     for root, _, files in os.walk(directory):
         for f in files:
@@ -34,7 +35,7 @@ def get_py_files(directory):
     return py_files
 
 
-def extract_objects(path):
+def extract_objects(path: Path):
     try:
         with open(path, "r", encoding="utf-8") as f:
             source = f.read()
@@ -75,13 +76,13 @@ def extract_objects(path):
     return objects
 
 
-def process_file(path):
+def process_file(path: Path):
     return extract_objects(path)
 
 
 def save_exact_duplicates(
-    all_objects,
-    output_file="exact_duplicates.json",
+    all_objects: list[Any],
+    output_file = "exact_duplicates.json",
 ):
     hash_groups = defaultdict(list)
     for obj in all_objects:
@@ -129,7 +130,7 @@ def save_exact_duplicates(
     return hash_groups
 
 
-def refactor_duplicates(hash_groups):
+def refactor_duplicates(hash_groups: dict[str, Any]) -> None:
     utils_path = "utils.py"
     utils_content = ""
     if Path(utils_path).exists():
@@ -170,7 +171,7 @@ def refactor_duplicates(hash_groups):
     print(f"[+] Refactored {len(file_imports)} files.")
 
 
-def generate_fuzzy_report(all_objects, output_file="fuzzy_duplicates.json"):
+def generate_fuzzy_report(all_objects: list[Any], output_file = "fuzzy_duplicates.json") -> None:
     report = []
     n = len(all_objects)
     print("[*] Calculating fuzzy similarities (this may take a while for large codebases)...")
@@ -205,7 +206,7 @@ def generate_fuzzy_report(all_objects, output_file="fuzzy_duplicates.json"):
     print(f"[+] Saved {len(report)} fuzzy duplicate pairs to {output_file}")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Detect and refactor duplicate Python objects.")
     parser.add_argument(
         "-r",

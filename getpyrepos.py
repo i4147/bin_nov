@@ -7,6 +7,7 @@ Usage: getpyrepos [USERNAME] Examples: $ getpyrepos psf Runs as a script (``pyth
 from datetime import datetime, timedelta
 import json
 import sys
+from typing import TextIO
 
 import requests
 
@@ -85,7 +86,7 @@ def save_to_json(data: any, filename: str = "github_repos.json") -> None:
     print(f"Data saved to {filename}")
 
 
-def main():
+def main() -> None:
     if len(sys.argv) > 1:
         username = sys.argv[1]
         print(f"Fetching Python repositories for user: {username}")

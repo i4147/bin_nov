@@ -15,9 +15,9 @@ import sys
 import tempfile
 
 
-THRESHOLD = 500 * 1024
-CHUNK_SIZE = 1024 * 1024
-ARCHIVE_SUFFIXES = {
+THRESHOLD: int = 500 * 1024
+CHUNK_SIZE: int = 1024 * 1024
+ARCHIVE_SUFFIXES: dict[str, str] = {
     ".xz": "",
     ".gz": "",
     ".bz2": "",
@@ -222,7 +222,7 @@ def decompress_tree(root: Path) -> None:
     print(f"\nDecompressed {processed} file(s); net space freed: {freed:,} bytes")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Recursively compress or decompress files under the current folder.")
     parser.add_argument(
         "-b",

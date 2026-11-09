@@ -20,15 +20,16 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Callable, Iterable, Optional, Sequence
+from typing import Any, Callable, Iterable, Optional, Sequence
+import re
 
 from dh import SKIP_DIRS
 
 
-UNIT_SEP = "\x1f"
-DIFF_FILTER = "AD"
-RESET = "\033[0m"
-STYLES = {
+UNIT_SEP: str = "\x1f"
+DIFF_FILTER: str = "AD"
+RESET: str = "\033[0m"
+STYLES: dict[str, str] = {
     "bold": "\033[1m",
     "dim": "\033[2m",
     "green": "\033[32m",
@@ -36,7 +37,7 @@ STYLES = {
     "amber": "\033[33m",
     "teal": "\033[36m",
 }
-EXAMPLES = """
+EXAMPLES: str = """
 examples:
   python addel.py                              ledger for the repo you are in
   python addel.py ~/code/api --json out.json   one machine readable report

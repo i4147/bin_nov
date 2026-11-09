@@ -14,6 +14,7 @@ from pathlib import Path
 import re
 import sys
 import urllib.parse
+from typing import Any, Iterable, Sequence
 
 
 try:
@@ -33,7 +34,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
 
-def validDir(userDir):
+def validDir(userDir: Path):
     if userDir and Path(userDir).exists():
         return userDir
     elif not userDir:
@@ -41,7 +42,7 @@ def validDir(userDir):
     return userDir
 
 
-def validSize(size):
+def validSize(size: int):
     valid = re.search(r"^[0-9]+\*[0-9]+$", size)
     if valid:
         dimensions = re.findall(r"[0-9]+", size)
@@ -50,7 +51,7 @@ def validSize(size):
     raise argparse.ArgumentTypeError(msg)
 
 
-def getParams(sysArgs):
+def getParams(sysArgs: Any):
     parser = argparse.ArgumentParser(description="Get arguments for searching and downloading Google images")
     parser.add_argument("-q", "--query", help="Query to search for", type=str, required=True, nargs="+")
     parser.add_argument("-l", "--limit", help="Max images to download (default: 3)", type=int, default=3)
@@ -195,7 +196,7 @@ def getParams(sysArgs):
     return params
 
 
-def compileParams(params):
+def compileParams(params: dict[str, Any]):
     imgQuery = params["query"]
     compiled = {}
     for key, value in params.items():
@@ -203,7 +204,7 @@ def compileParams(params):
     return compiled
 
 
-def getParamValue(k, v, imgQuery):
+def getParamValue(k: str, v: Sequence[Any], imgQuery: str):
     if v:
         if k == "size":
             sizeSwitcher = {
@@ -261,7 +262,7 @@ def getParamValue(k, v, imgQuery):
         return ""
 
 
-def getSearchUrl(params):
+def getSearchUrl(params: dict[str, Any]) -> str:
     searchUrl = (
         f"https://www.google.com/search?as_st=y&tbm=isch"
         f"&as_q={urllib.parse.quote(params['query'] or '')}{params.get('customSize', '')}"
@@ -280,7 +281,7 @@ def getSearchUrl(params):
     return searchUrl
 
 
-def getImageUrls(params, url):
+def getImageUrls(params: dict[str, Any], url: str):
     resultsIndex = 0
     imageUrls = []
     maxImages = params["limit"]
@@ -305,7 +306,7 @@ def getImageUrls(params, url):
     driver.set_window_size(1024, 768)
     driver.get(url)
 
-    def scroll(drv):
+    def scroll(drv: Any) -> None:
         drv.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
     try:
@@ -343,7 +344,7 @@ def getImageUrls(params, url):
     return imageUrls
 
 
-def download_with_requests(url, timeout=10, headers=None):
+def download_with_requests(url: str, timeout = 10, headers = None) -> tuple[str,]:
     if requests is None:
         msg = "The 'requests' library is not installed (`pip install requests`)."
         raise ImportError(msg)
@@ -353,7 +354,7 @@ def download_with_requests(url, timeout=10, headers=None):
     return resp.content, content_type
 
 
-def download_with_httpx(url, timeout=10, headers=None):
+def download_with_httpx(url: str, timeout = 10, headers = None) -> tuple[str,]:
     if httpx is None:
         msg = "The 'httpx' library is not installed (`pip install httpx`)."
         raise ImportError(msg)
@@ -364,7 +365,7 @@ def download_with_httpx(url, timeout=10, headers=None):
         return resp.content, content_type
 
 
-def download_with_pycurl(url, timeout=10, headers=None):
+def download_with_pycurl(url: str, timeout = 10, headers = None) -> tuple[str,]:
     if pycurl is None:
         msg = "The 'pycurl' library is not installed (`pip install pycurl`)."
         raise ImportError(msg)
@@ -392,7 +393,7 @@ def download_with_pycurl(url, timeout=10, headers=None):
     return buffer.getvalue(), content_type
 
 
-def get_extension_from_content_type(content_type, default=".jpg"):
+def get_extension_from_content_type(content_type: str, default = ".jpg"):
     if "image/png" in content_type:
         return ".png"
     elif "image/gif" in content_type:
@@ -410,7 +411,7 @@ def get_extension_from_content_type(content_type, default=".jpg"):
     return default
 
 
-def single_download_worker(index, url, backend, output_dir, headers):
+def single_download_worker(index: dict[str, Any], url: str, backend: Any, output_dir: Path, headers: Any) -> bool:
     backend = backend.lower()
     try:
         if backend == "requests":
@@ -434,7 +435,7 @@ def single_download_worker(index, url, backend, output_dir, headers):
         return False
 
 
-def downloadImages(params, imageUrls):
+def downloadImages(params: dict[str, Any], imageUrls: Iterable[Any]) -> None:
     backend = params.get("backend", "requests")
     picDir = params["outputDir"]
     thread_count = params.get("threads", 4)
@@ -458,7 +459,7 @@ def downloadImages(params, imageUrls):
     print(f"\nFinished: {success_count}/{len(imageUrls)} images successfully saved.")
 
 
-def main(args):
+def main(args: list[Any]) -> None:
     params = getParams(args)
     params = compileParams(params)
     url = getSearchUrl(params)

@@ -12,7 +12,7 @@ import difflib
 from pathlib import Path
 import shutil
 import sys
-from typing import Optional
+from typing import Any, Optional
 
 import libcst as cst
 from libcst.codemod import CodemodContext
@@ -219,7 +219,7 @@ class AnnotateTransformer(cst.CSTTransformer):
                 self.stats["returns"] += 1
         return updated
 
-    def _annotate_params(self, params, skip_self: bool, first_group: bool = False):
+    def _annotate_params(self, params: dict[str, Any], skip_self: bool, first_group: bool = False):
         out = []
         for i, p in enumerate(params):
             if p.annotation is None and not (skip_self and i == 0 and p.name.value in ("self", "cls")):

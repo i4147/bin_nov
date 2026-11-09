@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 
-def read_lines(path):
+def read_lines(path: Path):
     with path.open(encoding="utf-8") as f:
         for line in f:
             yield line

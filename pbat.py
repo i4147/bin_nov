@@ -17,6 +17,7 @@ import re
 import shutil
 import subprocess
 import sys
+from typing import Any
 
 from pygments import highlight as pyg_highlight
 from pygments.formatters import Terminal256Formatter, TerminalTrueColorFormatter
@@ -25,14 +26,14 @@ from pygments.styles import get_all_styles, get_style_by_name
 from pygments.util import ClassNotFound
 
 
-RESET = "\x1b[0m"
-GRID_COLOR = "\x1b[38;5;238m"
-HEADER_COLOR = "\x1b[38;5;81m"
-LINE_NUM_COLOR = "\x1b[38;5;244m"
-ADDED_COLOR = "\x1b[38;5;150m"
-MODIFIED_COLOR = "\x1b[38;5;222m"
-REMOVED_COLOR = "\x1b[38;5;203m"
-HIGHLIGHT_BG = "\x1b[48;5;236m"
+RESET: str = "\x1b[0m"
+GRID_COLOR: str = "\x1b[38;5;238m"
+HEADER_COLOR: str = "\x1b[38;5;81m"
+LINE_NUM_COLOR: str = "\x1b[38;5;244m"
+ADDED_COLOR: str = "\x1b[38;5;150m"
+MODIFIED_COLOR: str = "\x1b[38;5;222m"
+REMOVED_COLOR: str = "\x1b[38;5;203m"
+HIGHLIGHT_BG: str = "\x1b[48;5;236m"
 BOX_H, BOX_V = "─", "│"
 BOX_TL, BOX_TR, BOX_BL, BOX_BR = "╭", "╮", "╰", "╯"
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
@@ -54,7 +55,7 @@ class BatConfig:
     tab_width: int = 4
     color: str = "auto"
 
-    def apply_plain(self):
+    def apply_plain(self) -> None:
         if self.plain:
             self.show_numbers = False
             self.show_grid = False
@@ -63,14 +64,14 @@ class BatConfig:
 
 
 class GitDiffCalculator:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path) -> None:
         self.path = path
         self.added: set = set()
         self.modified: set = set()
         self.removed_before: dict = {}
         self._compute()
 
-    def _compute(self):
+    def _compute(self) -> None:
         if not shutil.which("git"):
             return
         try:
@@ -108,7 +109,7 @@ class GitDiffCalculator:
         except Exception:
             pass
 
-    def _parse_hunks(self, diff_text: str):
+    def _parse_hunks(self, diff_text: str) -> None:
         for line in diff_text.splitlines():
             if not line.startswith("@@"):
                 continue
@@ -144,7 +145,7 @@ class GitDiffCalculator:
 
 
 class Printer:
-    def __init__(self, config: BatConfig):
+    def __init__(self, config: BatConfig) -> None:
         self.config = config
 
     def print_file(self, path: Path | None, content: str) -> str:
@@ -169,7 +170,7 @@ class Printer:
             out.write(f"{GRID_COLOR}{BOX_H * width}{RESET}\n")
         return out.getvalue()
 
-    def _get_lexer(self, path, content):
+    def _get_lexer(self, path: Path, content: str):
         if self.config.language:
             try:
                 return get_lexer_by_name(self.config.language, stripnl=False, tabsize=self.config.tab_width)
@@ -196,7 +197,7 @@ class Printer:
             return TerminalTrueColorFormatter(style=style)
         return Terminal256Formatter(style=style)
 
-    def _highlight_lines(self, lines, lexer, formatter):
+    def _highlight_lines(self, lines: list[Any], lexer: Any, formatter: Any):
         if self.config.plain or formatter is None:
             return lines
         code = "\n".join(lines) + "\n"
@@ -205,21 +206,21 @@ class Printer:
             highlighted.pop()
         return highlighted
 
-    def _resolve_range(self, total):
+    def _resolve_range(self, total: Any):
         if self.config.line_range:
             s, e = self.config.line_range
             e = e if e is not None else total
             return max(1, s), min(total, e)
         return 1, total
 
-    def _print_header(self, out, path, width):
+    def _print_header(self, out: Path, path: Path, width: int) -> None:
         name = str(path) if path else "STDIN"
         title = f" {name} "
         left = BOX_H * 2
         right = BOX_H * max(width - len(left) - len(title) - 2, 0)
         out.write(f"{GRID_COLOR}{BOX_TL}{left}{RESET}{HEADER_COLOR}{title}{RESET}{GRID_COLOR}{right}{BOX_TR}{RESET}\n")
 
-    def _print_line(self, out, line_no, text, git):
+    def _print_line(self, out: Path, line_no: int, text: str, git: Any) -> None:
         prefix_parts = []
         if self.config.show_changes:
             marker, color = " ", ""
@@ -271,12 +272,12 @@ def read_input(path: str):
         return p, data.decode("utf-8", errors="replace")
 
 
-def list_languages():
+def list_languages() -> None:
     for name, aliases, _, _ in sorted(get_all_lexers(), key=lambda x: x[0].lower()):
         print(f"{name:30} {', '.join(aliases)}")
 
 
-def list_themes():
+def list_themes() -> None:
     for style in sorted(get_all_styles()):
         print(style)
 
@@ -322,7 +323,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return p
 
 
-def config_from_args(args) -> BatConfig:
+def config_from_args(args: list[Any]) -> BatConfig:
     cfg = BatConfig(
         files=args.files,
         language=args.language,
@@ -361,7 +362,7 @@ def should_page(cfg: BatConfig, line_count: int) -> bool:
     return line_count > shutil.get_terminal_size((100, 24)).lines
 
 
-def page_output(text: str):
+def page_output(text: str) -> None:
     pager = os.environ.get("PAGER", "less")
     try:
         proc = subprocess.Popen([pager, "-R"], stdin=subprocess.PIPE)
@@ -370,7 +371,7 @@ def page_output(text: str):
         sys.stdout.write(text)
 
 
-def main(argv=None) -> int:
+def main(argv = None) -> int:
     args = build_arg_parser().parse_args(argv)
     if args.list_languages:
         list_languages()

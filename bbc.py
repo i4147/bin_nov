@@ -7,10 +7,10 @@ from pathlib import Path
 import shutil
 
 
-L1 = "[egg_info]"
-L2 = "tag_build = "
-L3 = "tag_date = 0"
-SETUPCFG = """[egg_info]
+L1: str = "[egg_info]"
+L2: str = "tag_build = "
+L3: str = "tag_date = 0"
+SETUPCFG: str = """[egg_info]
 tag_build =
 tag_date = 0
 """

@@ -4,11 +4,13 @@ Looks for a wheel in the sub-directory or its ``dist/`` folder, moves it up when
 Sub-directories without a wheel are skipped.
 Usage: justwhl Examples: $ justwhl Deletes the build leftovers of each sub-directory, so review the tree before running it."""
 
+from __future__ import annotations
+
 from pathlib import Path
 import shutil
 
 
-def find_whl(subdir: Path):
+def find_whl(subdir: Path) -> Path | None:
     for location in (subdir, subdir / "dist"):
         if location.is_dir():
             for whl in location.glob("*.whl"):

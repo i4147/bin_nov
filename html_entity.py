@@ -11,7 +11,7 @@ import sys
 from dh import get_nobinary
 
 
-HTML_ENTITIES = {
+HTML_ENTITIES: dict[str, str] = {
     "&lt;": "<",
     "&gt;": ">",
     "&amp;": "&",
@@ -40,7 +40,7 @@ ENTITY_PATTERN = re.compile("|".join(re.escape(k) for k in HTML_ENTITIES))
 
 
 def replace_entities(text: str) -> str:
-    def replacer(match) -> str:
+    def replacer(match: re.Match[str]) -> str:
         return HTML_ENTITIES[match.group(0)]
 
     return ENTITY_PATTERN.sub(replacer, text)

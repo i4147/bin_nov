@@ -11,10 +11,10 @@ import sys
 from dh import fsz, get_files, gsz
 
 
-MAX_QUEUE = 16
+MAX_QUEUE: int = 16
 
 
-def process_file(path) -> None:
+def process_file(path: Path) -> None:
     path = Path(path)
     try:
         content = path.read_text(encoding="utf-8")

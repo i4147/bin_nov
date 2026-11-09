@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 
 
-EXTENSION_MAP = {
+EXTENSION_MAP: dict[str, str] = {
     "python": ".py",
     "py": ".py",
     "javascript": ".js",

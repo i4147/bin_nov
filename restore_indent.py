@@ -48,7 +48,7 @@ def restore_indentation(source_code: str, indent_size: int = 4) -> str:
     return "\n".join(output_lines) + "\n"
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Restore indentation to unindented Python files.")
     parser.add_argument("input", type=Path, help="Input Python file with lost indentation")
     parser.add_argument("-o", "--output", type=Path, default=None, help="Output file (default: print to stdout)")

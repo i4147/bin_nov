@@ -8,7 +8,7 @@ from multiprocessing import Pool
 from pathlib import Path
 import re
 import sys
-from typing import Iterable, Iterator, Sequence
+from typing import Any, Iterable, Iterator, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -562,7 +562,7 @@ class HtmlCodeExtractor:
         blocks.extend(self._from_script_json(soup, source))
         return blocks
 
-    def _from_pre_code(self, soup, source: str) -> list[CodeBlock]:
+    def _from_pre_code(self, soup: Any, source: str) -> list[CodeBlock]:
         out: list[CodeBlock] = []
         for idx, pre in enumerate(soup.find_all("pre")):
             code = pre.find("code")
@@ -581,7 +581,7 @@ class HtmlCodeExtractor:
                 )
         return out
 
-    def _from_code_tags(self, soup, source: str) -> list[CodeBlock]:
+    def _from_code_tags(self, soup: Any, source: str) -> list[CodeBlock]:
         out: list[CodeBlock] = []
         offset = len(soup.find_all("pre"))
         for idx, code in enumerate(soup.find_all("code")):
@@ -601,7 +601,7 @@ class HtmlCodeExtractor:
                 )
         return out
 
-    def _from_script_json(self, soup, source: str) -> list[CodeBlock]:
+    def _from_script_json(self, soup: Any, source: str) -> list[CodeBlock]:
         out: list[CodeBlock] = []
         offset = len(soup.find_all("pre")) + len(soup.find_all("code"))
         for idx, script in enumerate(soup.find_all("script")):
@@ -629,7 +629,7 @@ class HtmlCodeExtractor:
                     )
         return out
 
-    def _walk_json(self, obj, depth: int = 0, max_depth: int = 5) -> list[str]:
+    def _walk_json(self, obj: Iterable[Any], depth: int = 0, max_depth: int = 5) -> list[str]:
         if depth > max_depth:
             return []
         found: list[str] = []

@@ -4,6 +4,8 @@ Hashes every function, class and constant (ast or tree-sitter, archives included
 Usage: dduper [-m|-c] [paths ...] Options: -m, --move Move duplicate objects to utils.py and add imports -c, --copy Copy duplicate objects to utils.py without changing source files Examples: $ dduper -m src/ Command-line script: run ``python dduper.py`` or the ``dduper`` command.
 The module is importable as well."""
 
+from __future__ import annotations
+
 import argparse
 import ast
 import bz2
@@ -17,6 +19,7 @@ import sys
 import tarfile
 import tempfile
 import zipfile
+from typing import Any, Iterable
 
 import brotli
 from dh import MAX_WORKERS
@@ -26,8 +29,8 @@ import tree_sitter_python
 import zstandard as zstd
 
 
-TREE_SITTER_AVAILABLE = True
-SUPPORTED_ARCHIVES = (
+TREE_SITTER_AVAILABLE: bool = True
+SUPPORTED_ARCHIVES: tuple[str, ...] = (
     ".zip",
     ".tar",
     ".tar.gz",
@@ -239,10 +242,10 @@ def should_skip_dir(path: Path) -> bool:
     return path.name in skip_names
 
 
-def collect_python_files(base: Path):
+def collect_python_files(base: Path) -> list[Any] | None:
     files = []
 
-    def walk(p: Path):
+    def walk(p: Path) -> None:
         if should_skip_dir(p):
             return
         try:
@@ -301,12 +304,12 @@ def get_utils_path(base: Path) -> Path:
         i += 1
 
 
-def build_import_line(utils_module_name: str, names) -> str:
+def build_import_line(utils_module_name: str, names: list[Any]) -> str:
     names = sorted(set(names))
     return f"from {utils_module_name} import ({', '.join(names)})\n"
 
 
-def write_utils_file(path: Path, objects) -> bool:
+def write_utils_file(path: Path, objects: Iterable[Any]) -> bool:
     content = "\n\n".join(obj["snippet"].rstrip() for obj in objects).rstrip() + "\n"
     return safe_write_text(path, content)
 
@@ -325,7 +328,7 @@ def insert_import_after_shebang(code: str, import_line: str) -> str:
     return "".join(lines)
 
 
-def remove_snippets_from_code(code: str, objects) -> str:
+def remove_snippets_from_code(code: str, objects: Iterable[Any]) -> str:
     lines = code.splitlines(keepends=True)
     ranges = []
     for o in objects:
@@ -340,7 +343,7 @@ def remove_snippets_from_code(code: str, objects) -> str:
     return "".join(lines)
 
 
-def update_file_for_move(path: Path, objects_to_remove, utils_module_name: str) -> bool:
+def update_file_for_move(path: Path, objects_to_remove: Iterable[Any], utils_module_name: str) -> bool:
     code = safe_read_text(path)
     if code is None:
         return False

@@ -7,6 +7,8 @@ plus 5 more; run ``imports4 --help`` for the full list.
 Examples: $ imports4 -p ~/project --pin $ imports4 --stdout > requirements.txt Command-line script: run ``python imports4.py`` or the ``imports4`` command.
 The module is importable as well."""
 
+from __future__ import annotations
+
 import argparse
 import ast
 import concurrent.futures
@@ -20,6 +22,7 @@ import re
 import subprocess
 import sys
 import time
+from typing import Any, Iterable
 
 from dh import PKG_MAPPING, SKIP_DIRS, STDLIB
 import requests
@@ -27,29 +30,29 @@ from yarg import json2package
 from yarg.exceptions import HTTPError
 
 
-PYPI_INDEX_PATH = "/sdcard/data/pip.json"
+PYPI_INDEX_PATH: str = "/sdcard/data/pip.json"
 CACHE_DIR = Path.home() / ".cache" / "piplist"
-CACHE_TTL = 86400
-OPTIONAL_EXC = ("ImportError", "ModuleNotFoundError")
+CACHE_TTL: int = 86400
+OPTIONAL_EXC: tuple[str, str] = ("ImportError", "ModuleNotFoundError")
 log = logging.getLogger("piplist")
 _MISSING = object()
 
 
-def normalize(name):
+def normalize(name: str) -> str:
     return re.sub(r"[-_.]+", "-", name).lower()
 
 
-IMPORT_TO_PKG = {}
+IMPORT_TO_PKG: dict[str, Any] = {}
 for _pkg, _imp in PKG_MAPPING.items():
     IMPORT_TO_PKG.setdefault(_imp, _pkg)
-STDLIB_SET = set(STDLIB) if not isinstance(STDLIB, set) else STDLIB
+STDLIB_SET: set[Any] = set(STDLIB) if not isinstance(STDLIB, set) else STDLIB
 
 
-def cache_key(module):
+def cache_key(module: str) -> str:
     return hashlib.sha256(module.encode("utf-8")).hexdigest()[:16]
 
 
-def read_cache(module):
+def read_cache(module: str) -> object:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     p = CACHE_DIR / (cache_key(module) + ".json")
     if not p.exists():
@@ -63,14 +66,14 @@ def read_cache(module):
     return data.get("value", _MISSING)
 
 
-def write_cache(module, value):
+def write_cache(module: str, value: Any) -> None:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     p = CACHE_DIR / (cache_key(module) + ".json")
     with contextlib.suppress(Exception):
         p.write_text(json.dumps({"ts": time.time(), "value": value}))
 
 
-def load_pypi_index(path=PYPI_INDEX_PATH):
+def load_pypi_index(path = PYPI_INDEX_PATH):
     try:
         data = json.loads(Path(path).read_text())
     except Exception as e:
@@ -80,7 +83,7 @@ def load_pypi_index(path=PYPI_INDEX_PATH):
     return {normalize(k) for k in keys}
 
 
-def get_installed_packages(python=None):
+def get_installed_packages(python = None):
     python = python or sys.executable
     cmd = [python, "-m", "pip", "freeze"]
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -98,7 +101,7 @@ def get_installed_packages(python=None):
     return result
 
 
-def get_imports_info(module, pypi_server="https://pypi.python.org/pypi/", proxy=None):
+def get_imports_info(module: str, pypi_server = "https://pypi.python.org/pypi/", proxy = None) -> str | None:
     try:
         response = requests.get("{0}{1}/json".format(pypi_server, module), proxies=proxy, timeout=15)
         if response.status_code == 200:
@@ -116,7 +119,7 @@ def get_imports_info(module, pypi_server="https://pypi.python.org/pypi/", proxy=
     return str(module) + "==" + str(data.latest_release_id)
 
 
-def get_imports_info_cached(module, proxy=None):
+def get_imports_info_cached(module: str, proxy = None):
     cached = read_cache(module)
     if cached is not _MISSING:
         return cached
@@ -125,7 +128,7 @@ def get_imports_info_cached(module, proxy=None):
     return result
 
 
-def extract_imports_from_source(source, include_optional=False):
+def extract_imports_from_source(source: str, include_optional = False):
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -160,7 +163,7 @@ def extract_imports_from_source(source, include_optional=False):
     return found
 
 
-def extract_imports_from_notebook(path, include_optional=False):
+def extract_imports_from_notebook(path: Path, include_optional = False):
     try:
         nb = json.loads(Path(path).read_text(encoding="utf-8", errors="ignore"))
     except Exception:
@@ -176,7 +179,7 @@ def extract_imports_from_notebook(path, include_optional=False):
     return found
 
 
-def get_project_imports(directory, ignore_dirs, include_optional=False):
+def get_project_imports(directory: Path, ignore_dirs: Iterable[Any], include_optional = False):
     results = []
     ignore = set(ignore_dirs)
     for path, subdirs, files in os.walk(directory):
@@ -196,7 +199,7 @@ def get_project_imports(directory, ignore_dirs, include_optional=False):
     return results
 
 
-def is_local_module(name, source_file):
+def is_local_module(name: str, source_file: Path) -> bool:
     d = os.path.dirname(os.path.abspath(source_file))
     if os.path.exists(os.path.join(d, name + ".py")):
         return True
@@ -213,7 +216,7 @@ def is_local_module(name, source_file):
     return False
 
 
-def apply_pin(name, version, style):
+def apply_pin(name: str, version: str, style: str):
     if style == "none" or not version:
         return name
     if style == "exact":
@@ -225,13 +228,13 @@ def apply_pin(name, version, style):
     return name
 
 
-def resolve_online(pkg, index, proxy):
+def resolve_online(pkg: Any, index: dict[str, Any], proxy: Any):
     if index and normalize(pkg) not in index:
         return None
     return get_imports_info_cached(pkg, proxy=proxy)
 
 
-def read_ignores(path):
+def read_ignores(path: Path):
     out = set()
     try:
         for line in Path(path).read_text().splitlines():
@@ -243,7 +246,7 @@ def read_ignores(path):
     return out
 
 
-def init(args):
+def init(args: list[Any]) -> int:
     level = logging.WARNING if args["quiet"] else (logging.DEBUG if args["verbose"] else logging.INFO)
     logging.basicConfig(level=level, format="%(message)s")
     root = args["path"] or os.curdir
@@ -323,7 +326,7 @@ def init(args):
     return 0
 
 
-def main():
+def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("-p", "--path", type=str, help="Path to target directory")
     ap.add_argument("--python", type=str, help="Python interpreter to query pip from")

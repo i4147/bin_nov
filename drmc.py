@@ -31,7 +31,7 @@ import sys
 import tempfile
 import time
 import tokenize
-from typing import Callable, Iterable, Iterator
+from typing import Any, Callable, Iterable, Iterator, Sequence
 import zipfile
 
 from atomicio import atomic_write
@@ -41,9 +41,9 @@ from loguru import logger
 
 SKIP_DIR_GLOBS: tuple[str, ...] = ("*.dist-info",)
 ENCODINGS: tuple[str, ...] = ("utf-8", "utf-8-sig", "latin-1")
-GREEN = "\033[32m"
-GRAY = "\033[90m"
-RESET = "\033[0m"
+GREEN: str = "\033[32m"
+GRAY: str = "\033[90m"
+RESET: str = "\033[0m"
 MP_METHODS: tuple[str, ...] = ("starmap", "map", "imap_unordered", "apply", "apply_async", "joblib", "none")
 
 

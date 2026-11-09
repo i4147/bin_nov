@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import sys
 import unicodedata
+from typing import Any
 
 from dh import SKIP_DIRS
 
@@ -25,11 +26,11 @@ try:
     from unidecode import unidecode
 except ImportError:
     unidecode = None
-MAX_NAME = 255
+MAX_NAME: int = 255
 KANA = re.compile(r"[\u3040-\u30ff\u31f0-\u31ff]")
 HAN = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\U00020000-\U0002ebef]+")
 FA_MARKS = re.compile(r"[\u064b-\u065f\u0670\u06d6-\u06ed]")
-_RU = {
+_RU: dict[str, str] = {
     "а": "a",
     "б": "b",
     "в": "v",
@@ -69,11 +70,11 @@ _RU = {
     "ґ": "g",
     "ў": "u",
 }
-RU_TABLE = {}
+RU_TABLE: dict[str, Any] = {}
 for _k, _v in _RU.items():
     RU_TABLE[ord(_k)] = _v
     RU_TABLE[ord(_k.upper())] = _v.capitalize()
-_FA = {
+_FA: dict[str, str] = {
     "ا": "a",
     "آ": "a",
     "أ": "a",
@@ -126,9 +127,9 @@ _FA = {
 for _i in range(10):
     _FA[chr(0x06F0 + _i)] = str(_i)
     _FA[chr(0x0660 + _i)] = str(_i)
-FA_TABLE = {ord(k): v for k, v in _FA.items()}
+FA_TABLE: dict[int, Any] = {ord(k): v for k, v in _FA.items()}
 BAD_CHARS = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
-RESERVED = {
+RESERVED: set[Any] = {
     "CON",
     "PRN",
     "AUX",

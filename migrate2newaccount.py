@@ -8,11 +8,11 @@ from pathlib import Path
 import subprocess
 
 
-NEW_USER = "i4147"
-IGNORE = {"cpython", "neovim-source", ".git"}
+NEW_USER: str = "i4147"
+IGNORE: set[str] = {"cpython", "neovim-source", ".git"}
 
 
-def migrate():
+def migrate() -> None:
     for repo in [d for d in os.listdir(".") if Path(d).is_dir() and d not in IGNORE]:
         os.chdir(repo)
         if not Path(".git").exists():

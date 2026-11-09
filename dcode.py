@@ -14,13 +14,13 @@ import lzma
 from pathlib import Path
 import re
 import sys
-from typing import Callable
+from typing import Any, Callable, Iterable
 import urllib.parse
 import urllib.request
 import zlib
 
 
-ENGLISH_FREQS = {
+ENGLISH_FREQS: dict[str, float] = {
     "E": 12.02,
     "T": 9.10,
     "A": 8.12,
@@ -67,7 +67,7 @@ def calculate_score(text: str) -> float:
 
 
 class DecodeNode:
-    def __init__(self, text: str, method: str, depth: int, score: float, path: list[str]):
+    def __init__(self, text: str, method: str, depth: int, score: float, path: list[str]) -> None:
         self.text = text
         self.method = method
         self.depth = depth
@@ -78,8 +78,8 @@ class DecodeNode:
 DECODERS: list[tuple[str, Callable[[str], list[str]]]] = []
 
 
-def register_decoder(name: str):
-    def decorator(func: Callable[[str], list[str]]):
+def register_decoder(name: str) -> Callable[..., Any]:
+    def decorator(func: Callable[[str], list[str]]) -> Callable[[str], list[str]]:
         DECODERS.append((name, func))
         return func
 
@@ -332,7 +332,7 @@ def search_pipeline(initial_string: str, max_depth: int, quiet: bool, no_color: 
     return results
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("string", nargs="?", help="String to be decoded")
     parser.add_argument("-i", "--input", help="Read input from file")

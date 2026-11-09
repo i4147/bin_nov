@@ -41,7 +41,7 @@ try:
     HAS_SNAPPY = True
 except ImportError:
     HAS_SNAPPY = False
-CLI_ART_INTEGRITY = r"""
+CLI_ART_INTEGRITY: str = r"""
     ___               __     _             _____
    /   |  _____ _____/ /_   (_)_  _____   / ___/_________ _____
   / /| | / ___/ ___/ __ \ / / | / / _ \  \__ \/ ___/ __ `/ __ \
@@ -49,7 +49,7 @@ CLI_ART_INTEGRITY = r"""
 /_/  |_/_/   \___/_/ /_//_/ |___/\___/ /____/\___/\__,_/_/ /_/
   [ INTEGRITY VALIDATION & EXTRACTED SIZE SCANNER v1.4.2 ]
 """
-SUPPORTED_EXTENSIONS = (
+SUPPORTED_EXTENSIONS: tuple[str, ...] = (
     ".tar",
     ".tar.gz",
     ".tgz",
@@ -76,7 +76,7 @@ SUPPORTED_EXTENSIONS = (
     ".br",
     ".lz4",
 )
-ARCHIVE_TYPES = {
+ARCHIVE_TYPES: dict[str, str] = {
     ".tar": "TAR Archive (.tar)",
     ".tar.gz": "GZip Tarball (.tar.gz)",
     ".tgz": "GZip Tarball (.tgz)",
@@ -105,7 +105,7 @@ ARCHIVE_TYPES = {
 }
 
 
-def get_archive_type_info(path):
+def get_archive_type_info(path: Path):
     fname = str(path).lower()
     for ext in sorted(SUPPORTED_EXTENSIONS, key=len, reverse=True):
         if fname.endswith(ext):
@@ -114,7 +114,7 @@ def get_archive_type_info(path):
     return None, None
 
 
-def analyze_gz_uncompressed_size(path):
+def analyze_gz_uncompressed_size(path: Path):
     try:
         with open(path, "rb") as f:
             f.seek(-4, os.SEEK_END)
@@ -124,7 +124,7 @@ def analyze_gz_uncompressed_size(path):
         return int(path.stat().st_size * 2.8)
 
 
-def analyze_snappy_size(path):
+def analyze_snappy_size(path: Path):
     try:
         with open(path, "rb") as f:
             header = f.read(16)
@@ -135,7 +135,7 @@ def analyze_snappy_size(path):
     return int(path.stat().st_size * 2.5)
 
 
-def analyze_zstd_size(path):
+def analyze_zstd_size(path: Path):
     if HAS_ZSTD:
         try:
             with open(path, "rb") as f:
@@ -148,7 +148,7 @@ def analyze_zstd_size(path):
     return int(path.stat().st_size * 3.2)
 
 
-def analyze_archive(path):
+def analyze_archive(path: Path):
     path = Path(path)
     ext, archive_type = get_archive_type_info(path)
     comp_size = path.stat().st_size
@@ -250,7 +250,7 @@ def analyze_archive(path):
     }
 
 
-def _copy_file_buffered(src_path, dst_path, buffer_size=65536):
+def _copy_file_buffered(src_path: Path, dst_path: Path, buffer_size = 65536) -> None:
     with open(src_path, "rb") as src, open(dst_path, "wb") as dst:
         while True:
             chunk = src.read(buffer_size)
@@ -259,7 +259,7 @@ def _copy_file_buffered(src_path, dst_path, buffer_size=65536):
             dst.write(chunk)
 
 
-def extract_archive(path, out_dir):
+def extract_archive(path: Path, out_dir: Path):
     path = Path(path)
     out_dir = Path(out_dir)
     ext, _ = get_archive_type_info(path)
@@ -291,7 +291,7 @@ def extract_archive(path, out_dir):
         return False, str(e)
 
 
-def scan_directory(target_dir, auto_extract=False, test_integrity=False, verbose=False):
+def scan_directory(target_dir: Path, auto_extract = False, test_integrity = False, verbose = False):
     target = Path(target_dir).resolve()
     print(f"\033[38;5;39mScanning directory recursively:\033[0m {target}")
     if test_integrity:
@@ -349,7 +349,7 @@ def scan_directory(target_dir, auto_extract=False, test_integrity=False, verbose
     return found_archives
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="ArchiveScan CLI v1.4.2")
     parser.add_argument("directory", nargs="?", default=".", help="Directory to scan")
     parser.add_argument("-a", "--auto-extract-all", action="store_true")

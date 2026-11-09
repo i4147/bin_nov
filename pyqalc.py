@@ -9,6 +9,7 @@ import argparse
 from decimal import getcontext
 import math
 import re
+from typing import Any
 
 
 getcontext().prec = 28
@@ -116,7 +117,7 @@ class UnitConverter:
 
 
 class Calculator:
-    def __init__(self):
+    def __init__(self) -> None:
         self.constants = {
             "pi": math.pi,
             "π": math.pi,
@@ -289,7 +290,7 @@ def format_result_with_options(result: float | str, format_type: str = "auto") -
     return result
 
 
-def main():
+def main() -> None:
     parser = create_parser()
     args = parser.parse_args()
     calculator = Calculator()

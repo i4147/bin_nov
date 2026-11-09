@@ -16,7 +16,7 @@ import io
 from pathlib import Path
 import re
 import sys
-from typing import Optional, Sequence
+from typing import Any, Optional, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -30,11 +30,11 @@ except ImportError:
     cst = None
     HAS_LIBCST = False
 LOG = logger
-DEFAULT_TOP_LINES = 5
-GREEN = "\x1b[92m"
-WHITE = "\x1b[97m"
-YELLOW = "\x1b[93m"
-RESET = "\x1b[0m"
+DEFAULT_TOP_LINES: int = 5
+GREEN: str = "\x1b[92m"
+WHITE: str = "\x1b[97m"
+YELLOW: str = "\x1b[93m"
+RESET: str = "\x1b[0m"
 
 
 def _is_docstring_node(node: ast.AST) -> bool:
@@ -265,7 +265,7 @@ def _tidy(source: str) -> str:
     return "\n".join(line.rstrip() for line in source.split("\n"))
 
 
-def _libcst_is_docstring_line(node) -> bool:
+def _libcst_is_docstring_line(node: ast.AST) -> bool:
     if not isinstance(node, cst.SimpleStatementLine):
         return False
     if len(node.body) != 1:
@@ -296,14 +296,14 @@ class _LibCSTStripper(cst.CSTTransformer):
             return False
         return text.lstrip().startswith(("#!", "# fmt", "# type"))
 
-    def leave_EmptyLine(self, orig, updated):
+    def leave_EmptyLine(self, orig: Any, updated: Any) -> cst.CSTNode:
         if self.remove_comments and updated.comment is not None:
             if not self._keep_comment(updated.comment.value):
                 self.comments_removed += 1
                 return updated.with_changes(comment=None)
         return updated
 
-    def leave_TrailingWhitespace(self, orig, updated):
+    def leave_TrailingWhitespace(self, orig: Any, updated: Any) -> cst.CSTNode:
         if self.remove_comments and updated.comment is not None:
             if not self._keep_comment(updated.comment.value):
                 self.comments_removed += 1
@@ -311,12 +311,12 @@ class _LibCSTStripper(cst.CSTTransformer):
         return updated
 
     @staticmethod
-    def _fix_empty(body):
+    def _fix_empty(body: ast.Module):
         if not body:
             return (cst.SimpleStatementLine(body=[cst.Pass()]),)
         return body
 
-    def leave_Module(self, orig, updated):
+    def leave_Module(self, orig: Any, updated: Any) -> cst.CSTNode:
         if not self.preserve_module_docstring and updated.body and _libcst_is_docstring_line(updated.body[0]):
             self.docstrings_removed += 1
             return updated.with_changes(body=updated.body[1:])
@@ -329,7 +329,7 @@ class _LibCSTStripper(cst.CSTTransformer):
             return indented_block.with_changes(body=new_body)
         return indented_block
 
-    def leave_FunctionDef(self, orig, updated):
+    def leave_FunctionDef(self, orig: Any, updated: Any) -> cst.CSTNode:
         if isinstance(updated.body, cst.IndentedBlock):
             new_block = self._strip_suite(updated.body)
             if new_block is not updated.body:
@@ -338,7 +338,7 @@ class _LibCSTStripper(cst.CSTTransformer):
 
     leave_AsyncFunctionDef = leave_FunctionDef
 
-    def leave_ClassDef(self, orig, updated):
+    def leave_ClassDef(self, orig: Any, updated: Any) -> cst.CSTNode:
         if isinstance(updated.body, cst.IndentedBlock):
             new_block = self._strip_suite(updated.body)
             if new_block is not updated.body:

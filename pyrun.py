@@ -15,13 +15,14 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+from typing import Any
 
 from dh import MAX_WORKERS
 from loguru import logger
 
 
-DEFAULT_TIMEOUT = 30.0
-MAX_ERROR_MSG_LEN = 200
+DEFAULT_TIMEOUT: float = 30.0
+MAX_ERROR_MSG_LEN: int = 200
 
 
 class Outcome(str, Enum):

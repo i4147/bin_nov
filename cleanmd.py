@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import re
 import sys
-from typing import Optional, Sequence
+from typing import Any, Optional, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -24,7 +24,7 @@ try:
 except ImportError:
     _HAS_BS4 = False
 log = logger
-_REMOTE_PREFIXES = ("http://", "https://", "//")
+_REMOTE_PREFIXES: tuple[str, str, str] = ("http://", "https://", "//")
 _BADGE_PATTERNS = tuple(
     re.compile(p, re.IGNORECASE)
     for p in (
@@ -54,7 +54,7 @@ _BADGE_PATTERNS = tuple(
         r"patreon\.com",
     )
 )
-_IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".webp", ".bmp")
+_IMAGE_EXTS: tuple[str, ...] = (".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".webp", ".bmp")
 RE_MD_BADGE = re.compile(r"\[!\[[^\]]*\]\(([^\)]+)\)\]\(([^\)]+)\)")
 RE_MD_INLINE = re.compile(r"!\[([^\[\]]*)\]\(([^\)]+)\)")
 RE_MD_REF_IMG = re.compile(r"!\[([^\[\]]*)\]\[([^\[\]]+)\]")
@@ -73,7 +73,7 @@ RE_RST_SUBST_REPLACE = re.compile(
     r"^\s*\.\.\s+\|[^|]+\|\s+replace::\s+(\S+\.(?:png|jpg|jpeg|gif|svg|ico|webp|bmp))",
     re.IGNORECASE,
 )
-_RST_PATTERNS = (RE_RST_IMAGE, RE_RST_FIGURE, RE_RST_SUBST_IMAGE, RE_RST_SUBST_REPLACE)
+_RST_PATTERNS: tuple[re.Pattern[str], re.Pattern[str], re.Pattern[str], re.Pattern[str]] = (RE_RST_IMAGE, RE_RST_FIGURE, RE_RST_SUBST_IMAGE, RE_RST_SUBST_REPLACE)
 _RE_BLANKLINES = re.compile(r"\n{3,}")
 
 

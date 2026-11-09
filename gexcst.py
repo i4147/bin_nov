@@ -17,8 +17,8 @@ import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
 
 
-OUTPUT_DIR = Path("output")
-ARCHIVE_EXTENSIONS = (
+OUTPUT_DIR: Path = Path("output")
+ARCHIVE_EXTENSIONS: tuple[str, ...] = (
     ".whl",
     ".zip",
     ".tar.gz",
@@ -28,13 +28,13 @@ ARCHIVE_EXTENSIONS = (
     ".tar",
     ".zst",
 )
-ALLOWED_PYTHON_EXTENSIONS = (".py", "")
+ALLOWED_PYTHON_EXTENSIONS: tuple[str, str] = (".py", "")
 
 
 class EntityExtractor(cst.CSTVisitor):
     METADATA_DEPENDENCIES = (PositionProvider,)
 
-    def __init__(self, source_content: str, original_path: Path):
+    def __init__(self, source_content: str, original_path: Path) -> None:
         self.entities: list[dict[str, Any]] = []
         self.source_lines = source_content.splitlines(keepends=True)
         self.original_path = original_path
@@ -67,7 +67,7 @@ class EntityExtractor(cst.CSTVisitor):
                 )
             return ""
 
-    def _extract_and_save(self, node: cst.CSTNode, entity_type: str, name: str):
+    def _extract_and_save(self, node: cst.CSTNode, entity_type: str, name: str) -> None:
         entity_code = self._get_source_slice(node)
         self.entities.append({
             "name": name,

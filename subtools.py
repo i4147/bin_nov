@@ -8,12 +8,12 @@ import os
 from pathlib import Path
 import re
 import time
-from typing import Iterable, Optional
+from typing import Any, Iterable, Optional
 
 from dh import MAX_WORKERS
 
 
-_ANSI = {
+_ANSI: dict[str, str] = {
     "red": "\033[31m",
     "green": "\033[32m",
     "yellow": "\033[33m",
@@ -35,7 +35,7 @@ def colored(text: str, color: Optional[str] = None, attrs: Optional[Iterable[str
     return f"{prefix}{text}{_ANSI['reset']}"
 
 
-SRT_EXT = {".srt"}
+SRT_EXT: set[str] = {".srt"}
 TIMESTAMP_RE = re.compile(r"\d{2}:\d{2}:\d{2},\d{3}\s*-->\s*\d{2}:\d{2}:\d{2},\d{3}")
 TAG_RE = re.compile(r"<[^>]+>|{\w+}")
 
@@ -60,7 +60,7 @@ def read_srt_dialogue(path: Path) -> tuple[list[str], int]:
     return lines, skipped
 
 
-_EPISODE_PATTERNS = [
+_EPISODE_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"S\d{2}E(\d{2})", re.IGNORECASE),
     re.compile(r"(\d{1,2})x(\d{2})", re.IGNORECASE),
 ]
@@ -132,7 +132,7 @@ def _lingua_detect_batch(texts: list[str]) -> list[tuple[str, Optional[str], Opt
     return out
 
 
-def _folderize_lingua(path: Path, pool, batch_size: int) -> Optional[tuple[str, str]]:
+def _folderize_lingua(path: Path, pool: Any, batch_size: int) -> Optional[tuple[str, str]]:
     try:
         lines, skipped = read_srt_dialogue(path)
         if not lines:

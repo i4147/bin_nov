@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 
-def main():
+def main() -> None:
     fn = Path(sys.argv[1])
     content = fn.read_text(encoding="utf-8")
     lower_content = content.lower()

@@ -4,12 +4,15 @@ Detects the ``.whl`` files without code members, extracts their name and version
 Usage: ewhl2 [directory] [-d DEST] [--auto-move-all] Positional arguments: directory Directory containing .whl files (default: current directory) Options: -d, --dest Destination subdirectory name (default: 'empty_wheels') --no-install-check Skip checking installed packages --auto-move-all Automatically move all empty wheels without prompting Examples: $ ewhl2 ~/wheels --auto-move-all Command-line script: run ``python ewhl2.py`` or the ``ewhl2`` command.
 The module is importable as well."""
 
+from __future__ import annotations
+
 import argparse
 from pathlib import Path
 import shutil
 import subprocess
 import sys
 import zipfile
+from typing import Any
 
 
 def is_empty_wheel(wheel_path: Path) -> bool:
@@ -59,7 +62,7 @@ def get_installed_packages():
         return {}
 
 
-def check_pip_show(package_name):
+def check_pip_show(package_name: str) -> dict[str, Any] | None:
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pip", "show", package_name],
@@ -104,7 +107,7 @@ def check_package_location(
     return None, False
 
 
-def analyze_wheels(source_dir, dest_dir_name: str = "empty_wheels", check_installed=True) -> None:
+def analyze_wheels(source_dir: Path, dest_dir_name: str = "empty_wheels", check_installed = True) -> None:
     source_path = Path(source_dir)
     dest_path = source_path / dest_dir_name
     installed_packages = get_installed_packages() if check_installed else {}

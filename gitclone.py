@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+from typing import Any
 
 
 def _default_branch(url: str) -> str | None:
@@ -32,7 +33,7 @@ def _has_submodules(repo_dir: Path) -> bool:
     return rc == 0
 
 
-def git_clone2(*args):
+def git_clone2(*args: Any) -> int:
     if not args:
         print("Usage: g2 <repo-url> [target-dir]")
         return 1

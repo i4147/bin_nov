@@ -11,9 +11,9 @@ import sys
 from rignore import walk as _walk
 
 
-JUNK_FILE = Path("/sdcard/data/junk")
+JUNK_FILE: Path = Path("/sdcard/data/junk")
 
-JUNK_SUFFIXES = (
+JUNK_SUFFIXES: tuple[str, ...] = (
     ".pyc",
     ".tmp",
     ".log",
