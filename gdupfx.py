@@ -31,8 +31,8 @@ except ImportError:
         file=sys.stderr,
     )
     sys.exit(1)
-CHUNK_SIZE = 128 * 1024
-PARTIAL_SIZE = 8 * 1024
+CHUNK_SIZE: int = 128 * 1024
+PARTIAL_SIZE: int = 8 * 1024
 
 
 def format_size(size_bytes: int) -> str:
@@ -250,7 +250,7 @@ class Finder:
         print(f"  Result: xxHash was {speedup:.2f}x faster than hashlib MD5\n")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Fast duplicate file finder powered by xxHash (Parallel I/O, Dry-Run default)."
     )

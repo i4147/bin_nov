@@ -12,11 +12,12 @@ from pathlib import Path
 import re
 import shutil
 import sys
+from typing import Any, Iterable, Sequence
 
 from dh import PY_KEYWORDS
 
 
-COMMON_SUBSTITUTIONS = {
+COMMON_SUBSTITUTIONS: dict[str, str] = {
     "0": "p",
     "1": "q",
     "2": "w",
@@ -38,7 +39,7 @@ COMMON_SUBSTITUTIONS = {
     "u": "i",
     "z": "x",
 }
-QWERTY_ADJACENT = {
+QWERTY_ADJACENT: dict[str, str] = {
     "q": "w",
     "w": "qe",
     "e": "wr",
@@ -270,7 +271,7 @@ class TypoFixerWithLearning:
         for line_num, line in enumerate(lines, 1):
             fixed_line = line
 
-            def replace_word(match):
+            def replace_word(match: re.Match[str]):
                 nonlocal changes
                 word = match.group(1)
                 if len(word) <= 2 or word.isupper():

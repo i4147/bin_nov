@@ -9,7 +9,7 @@ import sys
 from dh import cprint, fsz, get_files, gsz, mpf, runcmd
 
 
-def process_file(path) -> bool:
+def process_file(path: Path) -> bool:
     path = Path(path)
     before = gsz(path)
     if not path.exists():

@@ -12,6 +12,7 @@ import shutil
 import sys
 import tempfile
 import zipfile
+from typing import Any, Iterable, Sequence
 
 from dh import MAX_WORKERS
 
@@ -19,12 +20,12 @@ from dh import MAX_WORKERS
 class WheelBuilder:
     def __init__(
         self,
-        site_packages,
-        output_dir,
-        force_all=False,
-        parallel=True,
-        max_workers=None,
-    ):
+        site_packages: Path,
+        output_dir: Path,
+        force_all = False,
+        parallel = True,
+        max_workers = None,
+    ) -> None:
         self.site_packages = site_packages.resolve()
         self.output_dir = output_dir.resolve()
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -57,7 +58,7 @@ class WheelBuilder:
                 return d
         return None
 
-    def _compute_hash(self, path):
+    def _compute_hash(self, path: Path) -> str:
         h = hashlib.sha256()
         with path.open("rb") as f:
             for chunk in iter(lambda: f.read(8192), b""):
@@ -65,7 +66,7 @@ class WheelBuilder:
         digest = h.digest()
         return f"sha256={base64.urlsafe_b64encode(digest).decode().rstrip('=')} "
 
-    def _read_record(self, dist_info):
+    def _read_record(self, dist_info: str):
         record_file = dist_info / "RECORD"
         if not record_file.exists():
             return {}
@@ -82,7 +83,7 @@ class WheelBuilder:
                 }
         return records
 
-    def _find_scripts_for_package(self, records):
+    def _find_scripts_for_package(self, records: dict[str, Any]):
         if not self.bin_dir or not self.bin_dir.exists():
             return []
         scripts = []
@@ -112,7 +113,7 @@ class WheelBuilder:
                         break
         return scripts
 
-    def _find_data_for_package(self, package_name):
+    def _find_data_for_package(self, package_name: str):
         if not self.share_dir or not self.share_dir.exists():
             return []
         data_files = []
@@ -145,10 +146,10 @@ class WheelBuilder:
             platform_tag = f"{plat}_{machine}"
             return (python_tag, abi_tag, platform_tag)
 
-    def _detect_purity(self, records):
+    def _detect_purity(self, records: dict[str, Any]) -> bool:
         return all(not path.endswith((".so", ".pyd", ".dll")) for path in records)
 
-    def build_wheel(self, dist_info_dir):
+    def build_wheel(self, dist_info_dir: Path):
         if not dist_info_dir.is_dir():
             return None
         parts = dist_info_dir.stem.split("-")
@@ -258,7 +259,7 @@ class WheelBuilder:
             print(f"  ❌ Failed to build {pkg_name}: {e}")
             return None
 
-    def _build_wheel_worker(self, dist_info):
+    def _build_wheel_worker(self, dist_info: Any):
         try:
             result = self.build_wheel(dist_info)
             return (dist_info.name, result)
@@ -266,7 +267,7 @@ class WheelBuilder:
             print(f"❌ Worker failed for {dist_info.name}: {e}")
             return (dist_info.name, None)
 
-    def build_all(self):
+    def build_all(self) -> int:
         dist_infos = sorted(self.site_packages.glob("*.dist-info"))
         if not dist_infos:
             print(f"❌ No packages found in {self.site_packages}")
@@ -282,7 +283,7 @@ class WheelBuilder:
                 print("📝 Using serial processing")
             return self._build_serial(dist_infos)
 
-    def _build_serial(self, dist_infos):
+    def _build_serial(self, dist_infos: Iterable[Any]) -> int:
         built = 0
         for dist_info in dist_infos:
             try:
@@ -293,7 +294,7 @@ class WheelBuilder:
         print(f"\n✅ Built {built}/{len(dist_infos)} wheels in {self.output_dir}")
         return built
 
-    def _build_parallel(self, dist_infos):
+    def _build_parallel(self, dist_infos: Sequence[Any]):
         self.processed_packages.clear()
         from multiprocessing import get_context
 
@@ -306,7 +307,7 @@ class WheelBuilder:
         return built
 
 
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser(
         description="Build proper wheel files from installed packages (run from site-packages)",
         formatter_class=argparse.RawDescriptionHelpFormatter,

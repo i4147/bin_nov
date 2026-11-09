@@ -8,6 +8,7 @@ import glob
 import os
 from pathlib import Path
 import sys
+from typing import Any
 
 
 try:
@@ -21,7 +22,7 @@ except ImportError:
     genai = None
 
 
-def load_env_file(env_path):
+def load_env_file(env_path: Path) -> None:
     if not env_path.exists():
         return
     with open(env_path, "r", encoding="utf-8") as f:
@@ -36,7 +37,7 @@ def load_env_file(env_path):
 
 
 class UniversalTranslator:
-    def __init__(self):
+    def __init__(self) -> None:
         home_env = Path.home() / ".env"
         load_env_file(home_env)
         self.openai_key = os.getenv("OPENAI_API_KEY")
@@ -48,10 +49,10 @@ class UniversalTranslator:
         elif self.gemini_key and genai:
             self.gemini_client = genai.Client(api_key=self.gemini_key)
 
-    def is_configured(self):
+    def is_configured(self) -> bool:
         return self.openai_client is not None or self.gemini_client is not None
 
-    def translate_text(self, text, target_lang="English"):
+    def translate_text(self, text: str, target_lang = "English"):
         if not text.strip():
             return text
         prompt = (
@@ -96,7 +97,7 @@ class UniversalTranslator:
         raise RuntimeError(msg)
 
 
-def process_file(file_path, translator, target_lang):
+def process_file(file_path: Path, translator: Any, target_lang: str) -> None:
     print(f"📄 Processing: {file_path}...")
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -112,7 +113,7 @@ def process_file(file_path, translator, target_lang):
         print(f"   ❌ Error processing {file_path}: {e}", file=sys.stderr)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Inplace file translator using ChatGPT (with Gemini fallback).")
     parser.add_argument(
         "-e",

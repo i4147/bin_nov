@@ -23,7 +23,7 @@ import argparse
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from pathlib import Path
 import sys
-from typing import Sequence
+from typing import Any, Iterable, Sequence
 
 from dh import MAX_WORKERS
 
@@ -143,14 +143,14 @@ def _extract_pdfminer(pdf_path: str, page_indices: Sequence[int], opts: dict) ->
     return out
 
 
-_BACKENDS = {
+_BACKENDS: dict[str, Any] = {
     "plumber": _extract_plumber,
     "fitz": _extract_fitz,
     "pypdf": _extract_pypdf,
     "pypdf2": _extract_pypdf2,
     "pdfminer": _extract_pdfminer,
 }
-_THREAD_BACKENDS = {"fitz", "plumber"}
+_THREAD_BACKENDS: set[str] = {"fitz", "plumber"}
 
 
 def _extract_chunk(pdf_path: str, page_indices: Sequence[int], backend: str, opts: dict) -> list[tuple[int, str]]:

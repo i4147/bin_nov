@@ -12,6 +12,7 @@ import multiprocessing as mp
 import os
 from pathlib import Path
 import re
+from typing import Any, Callable, Iterable, Iterator
 
 from atomicio import atomic_write_text
 from dh import SKIP_DIRS
@@ -20,7 +21,7 @@ from dh import SKIP_DIRS
 CWD = Path.cwd()
 DICT_PATH = Path.home() / ".personal_dict"
 JSON_PATH = CWD / "word_freq.json"
-BINARY_EXT = {
+BINARY_EXT: set[str] = {
     ".png",
     ".jpg",
     ".jpeg",
@@ -79,12 +80,12 @@ BINARY_EXT = {
     ".parquet",
     ".lock",
 }
-MAX_BYTES = 5 * 1024 * 1024
+MAX_BYTES: int = 5 * 1024 * 1024
 WORD_RE = re.compile(r"[A-Za-z]{2,}")
 _TOKENIZER = None
 
 
-def _ensure_punkt():
+def _ensure_punkt() -> None:
     import nltk
 
     for res in ("tokenizers/punkt", "tokenizers/punkt_tab"):
@@ -95,19 +96,19 @@ def _ensure_punkt():
                 nltk.download(res.split("/")[-1], quiet=True)
 
 
-def _make_regex():
-    def tok(text):
+def _make_regex() -> Callable[..., Any]:
+    def tok(text: str) -> list[str]:
         return [m.group().lower() for m in WORD_RE.finditer(text)]
 
     return tok
 
 
-def _make_nltk():
+def _make_nltk() -> Callable[..., Any]:
     from nltk.tokenize import word_tokenize
 
     _ensure_punkt()
 
-    def tok(text):
+    def tok(text: str) -> list[str]:
         try:
             return [t.lower() for t in word_tokenize(text) if t.isalpha() and len(t) > 1]
         except Exception:
@@ -116,10 +117,10 @@ def _make_nltk():
     return tok
 
 
-def _make_blingfire():
+def _make_blingfire() -> Callable[..., Any]:
     import blingfire
 
-    def tok(text):
+    def tok(text: str) -> list[str]:
         try:
             raw = blingfire.text_to_words(text)
         except Exception:
@@ -129,12 +130,12 @@ def _make_blingfire():
     return tok
 
 
-def _make_sacremoses():
+def _make_sacremoses() -> Callable[..., Any]:
     from sacremoses import MosesTokenizer
 
     mt = MosesTokenizer(lang="en")
 
-    def tok(text):
+    def tok(text: str) -> list[str]:
         try:
             toks = mt.tokenize(text, return_str=False)
         except Exception:
@@ -144,7 +145,7 @@ def _make_sacremoses():
     return tok
 
 
-def _make_spacy():
+def _make_spacy() -> Callable[..., Any]:
     import spacy
 
     try:
@@ -155,7 +156,7 @@ def _make_spacy():
     except OSError:
         nlp = spacy.blank("en")
 
-    def tok(text):
+    def tok(text: str) -> list[str]:
         try:
             doc = nlp(text)
         except Exception:
@@ -165,12 +166,12 @@ def _make_spacy():
     return tok
 
 
-def _make_pyonmttok():
+def _make_pyonmttok() -> Callable[..., Any]:
     import pyonmttok
 
     tokenizer = pyonmttok.Tokenizer("conservative", joiner_annotate=False)
 
-    def tok(text):
+    def tok(text: str) -> list[str]:
         try:
             tokens, _ = tokenizer.tokenize(text)
         except Exception:
@@ -180,7 +181,7 @@ def _make_pyonmttok():
     return tok
 
 
-TOKENIZER_FACTORIES = {
+TOKENIZER_FACTORIES: dict[str, Any] = {
     "regex": _make_regex,
     "nltk": _make_nltk,
     "blingfire": _make_blingfire,
@@ -190,12 +191,12 @@ TOKENIZER_FACTORIES = {
 }
 
 
-def _init_worker(mode):
+def _init_worker(mode: str) -> None:
     global _TOKENIZER
     _TOKENIZER = TOKENIZER_FACTORIES[mode]()
 
 
-def decode_bytes(data):
+def decode_bytes(data: bytes) -> str:
     for enc in ("utf-8-sig", "utf-8", "cp1252", "latin-1"):
         try:
             return data.decode(enc)
@@ -204,7 +205,7 @@ def decode_bytes(data):
     return ""
 
 
-def walk(root):
+def walk(root: Path) -> Iterator[Path]:
     stack = [root]
     while stack:
         d = stack.pop()
@@ -224,7 +225,7 @@ def walk(root):
             continue
 
 
-def process_file(path_str):
+def process_file(path_str: str):
     try:
         data = Path(path_str).read_bytes()
     except OSError:
@@ -237,7 +238,7 @@ def process_file(path_str):
     return Counter(_TOKENIZER(text))
 
 
-def write_json_stream(path, pairs):
+def write_json_stream(path: Path, pairs: Iterable[Any]) -> None:
     tmp = path.with_name(path.name + ".tmp")
     n = len(pairs)
     with tmp.open("w", encoding="utf-8") as f:
@@ -252,7 +253,7 @@ def write_json_stream(path, pairs):
     os.replace(tmp, path)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-t",

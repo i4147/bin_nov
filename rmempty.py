@@ -9,10 +9,10 @@ import sys
 from dh import cprint, get_files
 
 
-TIMEOUT = 0
+TIMEOUT: int = 0
 
 
-def wait_for_keypress(timeout):
+def wait_for_keypress(timeout: float) -> bool:
     if timeout <= 0:
         return False
     import select
@@ -25,7 +25,7 @@ def wait_for_keypress(timeout):
     return False
 
 
-def main():
+def main() -> int:
     cwd = Path.cwd()
     files = get_files(cwd)
     empty_files = [p for p in files if p.stat().st_size == 0 and p.name != "__init__.py"]

@@ -23,12 +23,12 @@ from urllib3.util.retry import Retry
 
 
 ENV_FILE = Path.home() / ".env"
-GITHUB_API_BASE = "https://api.github.com"
-GIT_LOCAL_TIMEOUT = 30
-GIT_NETWORK_TIMEOUT = 600
-HTTP_TIMEOUT = 15
-DEFAULT_BRANCH = "main"
-DEFAULT_COMMIT_MSG = "Initial commit"
+GITHUB_API_BASE: str = "https://api.github.com"
+GIT_LOCAL_TIMEOUT: int = 30
+GIT_NETWORK_TIMEOUT: int = 600
+HTTP_TIMEOUT: int = 15
+DEFAULT_BRANCH: str = "main"
+DEFAULT_COMMIT_MSG: str = "Initial commit"
 logger.remove()
 logger.add(
     sys.stderr,

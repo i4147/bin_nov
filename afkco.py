@@ -14,6 +14,7 @@ import re
 import sys
 import tarfile
 import zipfile
+from typing import Any, Iterable
 
 from dh import MAX_WORKERS
 
@@ -52,14 +53,14 @@ class Colors:
     RESET = "\x1b[0m"
 
     @classmethod
-    def disable(cls):
+    def disable(cls) -> None:
         for attr in dir(cls):
             if not attr.startswith("_") and attr != "disable":
                 setattr(cls, attr, "")
 
 
 class ImportVisitor(ast.NodeVisitor):
-    def __init__(self):
+    def __init__(self) -> None:
         self.imports = {}
         self.type_checking_imports = set()
         self.future_imports = set()
@@ -67,7 +68,7 @@ class ImportVisitor(ast.NodeVisitor):
         self.star_imports = set()
         self._type_checking_depth = 0
 
-    def visit_If(self, node):
+    def visit_If(self, node: ast.AST) -> None:
         type_checking = isinstance(node.test, ast.Name) and node.test.id == "TYPE_CHECKING"
         type_checking = type_checking or (
             isinstance(node.test, ast.Attribute)
@@ -88,7 +89,7 @@ class ImportVisitor(ast.NodeVisitor):
         for child in node.orelse:
             self.visit(child)
 
-    def visit_ImportFrom(self, node):
+    def visit_ImportFrom(self, node: ast.AST) -> None:
         if node.module == "__future__":
             for alias in node.names:
                 self.future_imports.add(alias.asname or alias.name)
@@ -108,7 +109,7 @@ class ImportVisitor(ast.NodeVisitor):
                 self.imports[name] = (node.lineno, node.col_offset, statement)
         self.generic_visit(node)
 
-    def visit_Import(self, node):
+    def visit_Import(self, node: ast.AST) -> None:
         statement = self._build_import_statement(node)
         for alias in node.names:
             name = alias.asname or alias.name.split(".")[0]
@@ -118,7 +119,7 @@ class ImportVisitor(ast.NodeVisitor):
                 self.imports[name] = (node.lineno, node.col_offset, statement)
         self.generic_visit(node)
 
-    def visit_Assign(self, node):
+    def visit_Assign(self, node: ast.AST) -> None:
         for target in node.targets:
             if isinstance(target, ast.Name) and target.id == "__all__" and isinstance(node.value, ast.List):
                 for elt in node.value.elts:
@@ -127,7 +128,7 @@ class ImportVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
     @staticmethod
-    def _build_import_statement(node):
+    def _build_import_statement(node: ast.AST):
         try:
             return ast.unparse(node)
         except Exception:
@@ -135,27 +136,27 @@ class ImportVisitor(ast.NodeVisitor):
 
 
 class NameVisitor(ast.NodeVisitor):
-    def __init__(self):
+    def __init__(self) -> None:
         self.used_names = set()
         self.in_annotation = False
 
-    def visit_Name(self, node):
+    def visit_Name(self, node: ast.AST) -> None:
         self.used_names.add(node.id)
         self.generic_visit(node)
 
-    def visit_Attribute(self, node):
+    def visit_Attribute(self, node: ast.AST) -> None:
         if isinstance(node.value, ast.Name):
             self.used_names.add(node.value.id)
         self.generic_visit(node)
 
-    def visit_Constant(self, node):
+    def visit_Constant(self, node: ast.AST) -> None:
         if isinstance(node.value, str):
             identifiers = re.findall(r"\b[a-zA-Z_][a-zA-Z0-9_]*\b", node.value)
             self.used_names.update(identifiers)
         self.generic_visit(node)
 
 
-def analyze_imports(source, path=""):
+def analyze_imports(source: str, path = ""):
     try:
         tree = ast.parse(source)
     except SyntaxError as e:
@@ -200,7 +201,7 @@ def analyze_imports(source, path=""):
     return (unused, None)
 
 
-def process_py_file(path):
+def process_py_file(path: Path) -> FileReport:
     path_obj = Path(path)
     try:
         with open(path, "r", encoding="utf-8", errors="replace") as f:
@@ -214,7 +215,7 @@ def process_py_file(path):
     return FileReport(path=str(path_obj), unused_imports=unused, error=error, file_size=file_size)
 
 
-def extract_py_files_from_wheel(wheel_path):
+def extract_py_files_from_wheel(wheel_path: Path):
     result = {}
     try:
         with zipfile.ZipFile(wheel_path, "r") as whl:
@@ -231,7 +232,7 @@ def extract_py_files_from_wheel(wheel_path):
     return result
 
 
-def extract_py_files_from_tar_zst(archive_path):
+def extract_py_files_from_tar_zst(archive_path: Path):
     result = {}
     try:
         if HAS_ZSTD:
@@ -271,7 +272,7 @@ def extract_py_files_from_tar_zst(archive_path):
     return result
 
 
-def process_archive_member(virtual_path, source):
+def process_archive_member(virtual_path: Path, source: str) -> FileReport:
     unused, error = analyze_imports(source, virtual_path)
     return FileReport(
         path=virtual_path,
@@ -281,21 +282,21 @@ def process_archive_member(virtual_path, source):
     )
 
 
-def _process_py_file_worker(path):
+def _process_py_file_worker(path: Path):
     return process_py_file(path)
 
 
-def _process_archive_worker(args):
+def _process_archive_worker(args: list[Any]):
     virtual_path, source = args
     return process_archive_member(virtual_path, source)
 
 
-def discover_files(paths, exclude_patterns):
+def discover_files(paths: list[Path], exclude_patterns: Iterable[Any]):
     py_files = []
     archive_members = []
     exclude_regexes = [re.compile(p) for p in exclude_patterns]
 
-    def should_exclude(path):
+    def should_exclude(path: Path) -> bool:
         return any(regex.search(path) for regex in exclude_regexes)
 
     for path_str in paths:
@@ -334,7 +335,7 @@ def discover_files(paths, exclude_patterns):
     return (py_files, archive_members)
 
 
-def remove_unused_imports(source, unused):
+def remove_unused_imports(source: str, unused: Iterable[Any]):
     lines = source.split("\n")
     unused_by_line = {}
     for u in unused:
@@ -370,7 +371,7 @@ def remove_unused_imports(source, unused):
     return (result, True)
 
 
-def _reconstruct_import_line(node, unused_names, original_line):
+def _reconstruct_import_line(node: ast.AST, unused_names: Any, original_line: Any):
     if isinstance(node, ast.Import):
         names_to_keep = []
         for alias in node.names:
@@ -406,7 +407,7 @@ def _reconstruct_import_line(node, unused_names, original_line):
     return original_line
 
 
-def autofix_file(path, unused, dry_run=False):
+def autofix_file(path: Path, unused: Any, dry_run = False):
     try:
         with open(path, "r", encoding="utf-8", errors="replace") as f:
             source = f.read()
@@ -426,12 +427,12 @@ def autofix_file(path, unused, dry_run=False):
 
 
 def print_report(
-    reports,
-    use_color=True,
-    verbose=False,
-    dry_run=False,
-    autofix=False,
-):
+    reports: Iterable[Any],
+    use_color = True,
+    verbose = False,
+    dry_run = False,
+    autofix = False,
+) -> None:
     if not use_color:
         Colors.disable()
     total_unused = 0
@@ -474,7 +475,7 @@ def print_report(
             print(f"Skipped {skipped_count} file(s).")
 
 
-def main():
+def main() -> int:
     parser = ArgumentParser(
         description="Detect and optionally remove unused imports from Python files.",
         formatter_class=RawDescriptionHelpFormatter,

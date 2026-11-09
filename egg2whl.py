@@ -10,7 +10,7 @@ import sys
 import tempfile
 
 
-def parse_pkg_info(egg_info_dir):
+def parse_pkg_info(egg_info_dir: Path):
     pkg_info_path = egg_info_dir / "PKG-INFO"
     metadata = {}
     if pkg_info_path.exists():
@@ -23,7 +23,7 @@ def parse_pkg_info(egg_info_dir):
     return metadata
 
 
-def create_setup_py(egg_root: Path, temp_dir: Path):
+def create_setup_py(egg_root: Path, temp_dir: Path) -> tuple[str, str]:
     egg_info_dir = egg_root / "EGG-INFO"
     egg_root / "setupmeta"
     metadata = parse_pkg_info(egg_info_dir)

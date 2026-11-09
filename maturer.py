@@ -14,7 +14,7 @@ import tomllib
 import zipfile
 
 
-def get_cargo_metadata():
+def get_cargo_metadata() -> tuple[str, str]:
     with open("Cargo.toml", "rb") as f:
         cargo_data = tomllib.load(f)
     package = cargo_data.get("package", {})
@@ -26,7 +26,7 @@ def get_cargo_metadata():
     return name, version
 
 
-def get_wheel_tags():
+def get_wheel_tags() -> tuple[str, str]:
     import sysconfig
 
     py_version = f"{sys.version_info.major}{sys.version_info.minor}"
@@ -39,7 +39,7 @@ def get_wheel_tags():
     return py_tag, abi_tag, platform
 
 
-def build_cargo():
+def build_cargo() -> None:
     print("[+] Compiling Rust crate via Cargo...")
     result = subprocess.run(["cargo", "build", "--release"], check=True)
     if result.returncode != 0:
@@ -47,7 +47,7 @@ def build_cargo():
         sys.exit(1)
 
 
-def create_wheel():
+def create_wheel() -> None:
     pkg_name, version = get_cargo_metadata()
     py_tag, abi_tag, plat_tag = get_wheel_tags()
     wheel_stem = f"{pkg_name}-{version}-{py_tag}-{abi_tag}-{plat_tag}"
@@ -82,7 +82,7 @@ def create_wheel():
     (dist_info_path / "METADATA").write_text(metadata_content)
     record_entries = []
 
-    def add_to_record(file_path: Path):
+    def add_to_record(file_path: Path) -> None:
         rel_path = file_path.relative_to(build_dir)
         content = file_path.read_bytes()
         digest = base64.urlsafe_b64encode(hashlib.sha256(content).digest()).decode("utf-8").rstrip("=")

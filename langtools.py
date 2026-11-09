@@ -28,7 +28,7 @@ from pathlib import Path
 import re
 import shutil
 import sys
-from typing import Iterator, Optional
+from typing import Any, Iterator, Optional, Sequence
 
 
 try:
@@ -39,7 +39,7 @@ try:
     import gcld3
 except ImportError:
     gcld3 = None
-CHINESE_RANGES = (
+CHINESE_RANGES: tuple[tuple[int, int], ...] = (
     (0x3400, 0x4DBF),
     (0x4E00, 0x9FFF),
     (0xF900, 0xFAFF),
@@ -49,8 +49,8 @@ CHINESE_RANGES = (
     (0x2B820, 0x2CEAF),
     (0x2CEB0, 0x2EBEF),
 )
-ENCODINGS = ("utf-8", "utf-8-sig", "gb18030", "gbk", "cp1252")
-TEXT_EXTENSIONS = {
+ENCODINGS: tuple[str, ...] = ("utf-8", "utf-8-sig", "gb18030", "gbk", "cp1252")
+TEXT_EXTENSIONS: set[str] = {
     ".txt",
     ".md",
     ".rst",
@@ -92,9 +92,9 @@ TEXT_EXTENSIONS = {
     ".lua",
     ".sql",
 }
-DEFAULT_MOVE_TARGET = "chinese_files"
-DEFAULT_NONENG_FILE = "noneng.txt"
-PROGRESS = True
+DEFAULT_MOVE_TARGET: str = "chinese_files"
+DEFAULT_NONENG_FILE: str = "noneng.txt"
+PROGRESS: bool = True
 
 
 def contains_chinese(text: str) -> bool:

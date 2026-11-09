@@ -10,9 +10,10 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from typing import Any
 
 
-def run(cmd, cwd=None, capture=False, check=True):
+def run(cmd: str, cwd = None, capture = False, check = True) -> subprocess.CompletedProcess[str]:
     if capture:
         res = subprocess.run(cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if check and res.returncode != 0:
@@ -25,7 +26,7 @@ def run(cmd, cwd=None, capture=False, check=True):
         return res
 
 
-def is_git_repo(path="."):
+def is_git_repo(path = ".") -> bool:
     try:
         run(["git", "rev-parse", "--git-dir"], cwd=path, capture=True)
         return True
@@ -34,46 +35,46 @@ def is_git_repo(path="."):
 
 
 class Backend:
-    def __init__(self, repo_path="."):
+    def __init__(self, repo_path = ".") -> None:
         self.repo_path = Path(repo_path).absolute()
         self.fallback = SubprocessBackend(self.repo_path)
 
-    def ensure_clean_worktree(self, force=False):
+    def ensure_clean_worktree(self, force = False) -> tuple[bool,]:
         return self.fallback.ensure_clean_worktree(force)
 
-    def get_head(self):
+    def get_head(self) -> str:
         return self.fallback.get_head()
 
-    def get_last_n_commits(self, n):
+    def get_last_n_commits(self, n: int):
         return self.fallback.get_last_n_commits(n)
 
-    def write_combined_diff(self, base_rev, head_rev, out_patch_path):
+    def write_combined_diff(self, base_rev: Any, head_rev: Any, out_patch_path: Path):
         return self.fallback.write_combined_diff(base_rev, head_rev, out_patch_path)
 
-    def write_commits_metadata(self, base_rev, head_rev, out_meta_path):
+    def write_commits_metadata(self, base_rev: Any, head_rev: Any, out_meta_path: Path):
         return self.fallback.write_commits_metadata(base_rev, head_rev, out_meta_path)
 
-    def reset_hard(self, rev):
+    def reset_hard(self, rev: str) -> bool:
         return self.fallback.reset_hard(rev)
 
-    def apply_patch_index(self, patch_path):
+    def apply_patch_index(self, patch_path: Path) -> bool:
         return self.fallback.apply_patch_index(patch_path)
 
     def add_all(self):
         return self.fallback.add_all()
 
-    def commit(self, message, allow_empty=False):
+    def commit(self, message: str, allow_empty = False):
         return self.fallback.commit(message, allow_empty)
 
-    def rev_parse(self, rev):
+    def rev_parse(self, rev: str) -> str:
         return self.fallback.rev_parse(rev)
 
 
 class SubprocessBackend(Backend):
-    def __init__(self, repo_path="."):
+    def __init__(self, repo_path = ".") -> None:
         self.repo_path = Path(repo_path).absolute()
 
-    def ensure_clean_worktree(self, force=False):
+    def ensure_clean_worktree(self, force = False) -> tuple[bool, bool]:
         st = run(["git", "status", "--porcelain"], cwd=self.repo_path, capture=True)
         dirty = bool(st.stdout.strip())
         stash_made = False
@@ -95,15 +96,15 @@ class SubprocessBackend(Backend):
             stash_made = True
         return (not dirty, stash_made)
 
-    def get_head(self):
+    def get_head(self) -> str:
         res = run(["git", "rev-parse", "HEAD"], cwd=self.repo_path, capture=True)
         return res.stdout.strip()
 
-    def rev_parse(self, rev):
+    def rev_parse(self, rev: str) -> str:
         res = run(["git", "rev-parse", rev], cwd=self.repo_path, capture=True)
         return res.stdout.strip()
 
-    def get_last_n_commits(self, n):
+    def get_last_n_commits(self, n: int) -> list[str]:
         if n <= 0:
             return []
         res = run(
@@ -117,7 +118,7 @@ class SubprocessBackend(Backend):
             raise RuntimeError(msg)
         return shas
 
-    def write_combined_diff(self, base_rev, head_rev, out_patch_path):
+    def write_combined_diff(self, base_rev: str, head_rev: str, out_patch_path: Path):
         with open(out_patch_path, "wb") as f:
             p = subprocess.Popen(
                 ["git", "diff", "--binary", f"{base_rev}..{head_rev}"],
@@ -132,7 +133,7 @@ class SubprocessBackend(Backend):
             f.write(out)
         return out_patch_path
 
-    def write_commits_metadata(self, base_rev, head_rev, out_meta_path):
+    def write_commits_metadata(self, base_rev: str, head_rev: str, out_meta_path: Path):
         git_log_fmt = "---%n%H|%an|%ae|%ad|%s"
         res = run(
             [
@@ -178,11 +179,11 @@ class SubprocessBackend(Backend):
             json.dump(meta, f, indent=2)
         return out_meta_path
 
-    def reset_hard(self, rev):
+    def reset_hard(self, rev: str) -> bool:
         run(["git", "reset", "--hard", rev], cwd=self.repo_path)
         return True
 
-    def apply_patch_index(self, patch_path):
+    def apply_patch_index(self, patch_path: Path) -> bool:
         res = run(
             ["git", "apply", "--index", patch_path],
             cwd=self.repo_path,
@@ -197,10 +198,10 @@ class SubprocessBackend(Backend):
         msg = f"Failed to apply patch: git apply failed. stdout:\n{res.stdout}\nstderr:\n{res.stderr}"
         raise RuntimeError(msg)
 
-    def add_all(self):
+    def add_all(self) -> None:
         run(["git", "add", "-A"], cwd=self.repo_path)
 
-    def commit(self, message, allow_empty=False):
+    def commit(self, message: str, allow_empty = False) -> None:
         cmd = ["git", "commit", "-m", message]
         if allow_empty:
             cmd.append("--allow-empty")
@@ -208,7 +209,7 @@ class SubprocessBackend(Backend):
 
 
 class GenericBackend(Backend):
-    def __init__(self, name, repo_path="."):
+    def __init__(self, name: str, repo_path = ".") -> None:
         super().__init__(repo_path)
         self.name = name
         self.repo_path = Path(repo_path).absolute()
@@ -243,12 +244,12 @@ class GenericBackend(Backend):
         elif name == "typer":
             self._available["typer"] = False
 
-    def _announce_fallback(self, op):
+    def _announce_fallback(self, op: str) -> None:
         print(
             f"[{self.name}] operation '{op}' not fully supported by this backend or module not installed; falling back to git CLI (subprocess)."
         )
 
-    def ensure_clean_worktree(self, force=False):
+    def ensure_clean_worktree(self, force = False):
         if not any(self._available.values()):
             self._announce_fallback("ensure_clean_worktree")
             return self.subprocess.ensure_clean_worktree(force)
@@ -264,10 +265,10 @@ class GenericBackend(Backend):
                 self._announce_fallback("get_head")
         return self.subprocess.get_head()
 
-    def rev_parse(self, rev):
+    def rev_parse(self, rev: str) -> str:
         return self.subprocess.rev_parse(rev)
 
-    def get_last_n_commits(self, n):
+    def get_last_n_commits(self, n: int):
         if self._available.get("gitpython"):
             try:
                 repo = self.gitpy.Repo(self.repo_path)
@@ -280,15 +281,15 @@ class GenericBackend(Backend):
                 self._announce_fallback("get_last_n_commits")
         return self.subprocess.get_last_n_commits(n)
 
-    def write_combined_diff(self, base_rev, head_rev, out_patch_path):
+    def write_combined_diff(self, base_rev: Any, head_rev: Any, out_patch_path: Path):
         self._announce_fallback("write_combined_diff")
         return self.subprocess.write_combined_diff(base_rev, head_rev, out_patch_path)
 
-    def write_commits_metadata(self, base_rev, head_rev, out_meta_path):
+    def write_commits_metadata(self, base_rev: Any, head_rev: Any, out_meta_path: Path):
         self._announce_fallback("write_commits_metadata")
         return self.subprocess.write_commits_metadata(base_rev, head_rev, out_meta_path)
 
-    def reset_hard(self, rev):
+    def reset_hard(self, rev: str) -> bool:
         if self._available.get("gitpython"):
             try:
                 repo = self.gitpy.Repo(self.repo_path)
@@ -298,7 +299,7 @@ class GenericBackend(Backend):
                 self._announce_fallback("reset_hard")
         return self.subprocess.reset_hard(rev)
 
-    def apply_patch_index(self, patch_path):
+    def apply_patch_index(self, patch_path: Path) -> bool:
         self._announce_fallback("apply_patch_index")
         return self.subprocess.apply_patch_index(patch_path)
 
@@ -306,12 +307,12 @@ class GenericBackend(Backend):
         self._announce_fallback("add_all")
         return self.subprocess.add_all()
 
-    def commit(self, message, allow_empty=False):
+    def commit(self, message: str, allow_empty = False):
         self._announce_fallback("commit")
         return self.subprocess.commit(message, allow_empty)
 
 
-def create_backend(name, repo_path="."):
+def create_backend(name: str, repo_path = "."):
     name = (name or "subprocess").lower()
     if name in ("subprocess", "git"):
         return SubprocessBackend(repo_path)
@@ -319,7 +320,7 @@ def create_backend(name, repo_path="."):
         return GenericBackend(name, repo_path)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Squash last N commits into one via saved patch + reset + apply.")
     parser.add_argument("N", type=int, help="Number of commits to squash (e.g., 3)")
     parser.add_argument(

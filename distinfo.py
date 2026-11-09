@@ -18,7 +18,7 @@ def get_site_packages_dirs():
     return list(dict.fromkeys(dirs))
 
 
-def parse_pkg_info(dirname):
+def parse_pkg_info(dirname: str):
     m = re.match(r"(.+)-(\d+.*?)(\.dist-info|\.egg-info)$", dirname)
     if m:
         return m.group(1).lower(), m.group(2)

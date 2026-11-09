@@ -14,12 +14,13 @@ from pathlib import Path
 import re
 import sys
 from urllib.parse import unquote, urljoin, urlparse
+from typing import Any
 
 import pycurl
 
 
-IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".svg", ".tif", ".tiff", ".ico", ".avif"}
-USER_AGENT = "Mozilla/5.0 (compatible; ImageCrawler/1.0)"
+IMAGE_EXTS: set[str] = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".svg", ".tif", ".tiff", ".ico", ".avif"}
+USER_AGENT: str = "Mozilla/5.0 (compatible; ImageCrawler/1.0)"
 SAFE_RE = re.compile(r"[^A-Za-z0-9._-]+")
 
 
@@ -30,7 +31,7 @@ class LinkParser(HTMLParser):
         self.images: list[str] = []
         self.base: str | None = None
 
-    def handle_starttag(self, tag, attrs):
+    def handle_starttag(self, tag: str, attrs: Any) -> None:
         a = dict(attrs)
         if tag == "base" and a.get("href"):
             self.base = a["href"]

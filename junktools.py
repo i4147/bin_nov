@@ -14,12 +14,12 @@ from pathlib import Path
 import select
 import shutil
 import sys
-from typing import Iterator, Optional, Sequence
+from typing import Any, Iterable, Iterator, Optional, Sequence
 
 
-_WIN_EXTS = {".exe", ".dll", ".bat", ".com", ".msi", ".vbs", ".ps1"}
-_MAC_EXTS = {".dmg", ".app", ".ds_store", ".plist", ".pkg"}
-_DARWIN_NAMES = {
+_WIN_EXTS: set[str] = {".exe", ".dll", ".bat", ".com", ".msi", ".vbs", ".ps1"}
+_MAC_EXTS: set[str] = {".dmg", ".app", ".ds_store", ".plist", ".pkg"}
+_DARWIN_NAMES: set[str] = {
     ".DS_Store",
     ".AppleDouble",
     ".LSOverride",
@@ -27,8 +27,8 @@ _DARWIN_NAMES = {
     ".Spotlight-V100",
     ".Trashes",
 }
-_DARWIN_WILDCARDS = ("._*", ".com.apple.*")
-_WIN_NAMES = (
+_DARWIN_WILDCARDS: tuple[str, str] = ("._*", ".com.apple.*")
+_WIN_NAMES: tuple[str, ...] = (
     "*.exe",
     "*.dll",
     "*.sys",
@@ -42,10 +42,10 @@ _WIN_NAMES = (
     "desktop.ini",
     "$RECYCLE.BIN",
 )
-_CACHE_SUFFIXES = (".pyc", ".log", ".bak")
-_CACHE_DIRS = {"__pycache__", ".ruff_cache", ".mypy_cache"}
-_PDMP_NAME_EXCLUDES = {"tmp", "cache", "bin", ".git", "etc", "config", "var"}
-_PDMP_PART_EXCLUDES = {".git", "tmp", "etc", "var", "config"}
+_CACHE_SUFFIXES: tuple[str, str, str] = (".pyc", ".log", ".bak")
+_CACHE_DIRS: set[str] = {"__pycache__", ".ruff_cache", ".mypy_cache"}
+_PDMP_NAME_EXCLUDES: set[str] = {"tmp", "cache", "bin", ".git", "etc", "config", "var"}
+_PDMP_PART_EXCLUDES: set[str] = {".git", "tmp", "etc", "var", "config"}
 
 
 def _human_size(num: float) -> str:

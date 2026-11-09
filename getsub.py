@@ -16,8 +16,8 @@ from loguru import logger
 
 
 LOGGER = logger
-DEFAULT_PROVIDERS = ["opensubtitles", "podnapisi", "addic7ed", "tvsubtitles"]
-DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+DEFAULT_PROVIDERS: list[str] = ["opensubtitles", "podnapisi", "addic7ed", "tvsubtitles"]
+DEFAULT_USER_AGENT: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 
 
 def normalize_extension(value: str) -> str:

@@ -19,7 +19,7 @@ def is_extensionless_python(file_path: Path) -> bool:
     return False
 
 
-def main():
+def main() -> None:
     args = sys.argv[1:]
     if not args or any(arg in args for arg in ("-h", "--help", "-V", "--version")):
         sys.exit(subprocess.run(["ruff"] + args).returncode)

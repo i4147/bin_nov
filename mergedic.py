@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterable
 
 from dh import get_random_filename
 from loguru import logger
@@ -79,13 +80,13 @@ def collect_inputs(argv: list[str]) -> list[Path]:
     return paths
 
 
-def normalize_value(value) -> list:
+def normalize_value(value: Iterable[Any]) -> list:
     if isinstance(value, list):
         return list(value)
     return [value]
 
 
-def main():
+def main() -> None:
     input_paths = collect_inputs(sys.argv[1:])
     merged: dict[str, list] = defaultdict(list)
     origin: dict[str, Path] = {}

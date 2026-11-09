@@ -4,6 +4,8 @@ Extracts the definitions with ast or tree-sitter (also from the zip, tar, gzip, 
 Usage: deduper [-m|-c] [--log-level LEVEL] Options: -m, --move Move duplicate objects to utils.py and add imports -c, --copy Copy duplicate objects to utils.py without modifying source files --log-level DEBUG, INFO, WARNING, ERROR Examples: $ deduper -m Command-line script: run ``python deduper.py`` or the ``deduper`` command.
 The module is importable as well."""
 
+from __future__ import annotations
+
 import argparse
 import ast
 from ast import Assign, AsyncFunctionDef, ClassDef, FunctionDef
@@ -19,6 +21,7 @@ import sys
 import tarfile
 import tempfile
 import zipfile
+from typing import Any, Iterable
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
@@ -39,7 +42,7 @@ try:
     import brotli
 except Exception:
     brotli = None
-SUPPORTED_ARCHIVES = (
+SUPPORTED_ARCHIVES: tuple[str, ...] = (
     ".zip",
     ".tar",
     ".tar.gz",
@@ -136,10 +139,10 @@ def extract_archive(path: Path) -> str:
     return tmpdir
 
 
-def collect_python_files(base: Path):
+def collect_python_files(base: Path) -> list[Any] | None:
     files = []
 
-    def walk(p: Path):
+    def walk(p: Path) -> None:
         if should_skip_dir(p.name):
             return
         try:
@@ -287,7 +290,7 @@ def get_utils_path(base: Path) -> Path:
         i += 1
 
 
-def write_utils_file(path: Path, objects) -> bool:
+def write_utils_file(path: Path, objects: Iterable[Any]) -> bool:
     names_seen = set()
     parts = []
     for obj in objects:
@@ -328,7 +331,7 @@ def find_import_insertion_index(code: str) -> int:
     return idx
 
 
-def add_import_line(code: str, module_name: str, names) -> str:
+def add_import_line(code: str, module_name: str, names: list[Any]) -> str:
     names = sorted(set(names))
     if not names:
         return code
@@ -341,7 +344,7 @@ def add_import_line(code: str, module_name: str, names) -> str:
     return "".join(lines)
 
 
-def merge_overlapping_ranges(ranges):
+def merge_overlapping_ranges(ranges: Iterable[Any]) -> list[tuple[Any]]:
     if not ranges:
         return []
     ranges = sorted(ranges)
@@ -355,7 +358,7 @@ def merge_overlapping_ranges(ranges):
     return [(s, e) for s, e in merged]
 
 
-def remove_line_ranges(code: str, ranges) -> str:
+def remove_line_ranges(code: str, ranges: Iterable[Any]) -> str:
     lines = code.splitlines(keepends=True)
     zero_based = [(s - 1, e - 1) for s, e in ranges]
     merged = merge_overlapping_ranges(zero_based)
@@ -378,7 +381,7 @@ def file_is_under_base(path: Path, base: Path) -> bool:
         return False
 
 
-def update_file_for_move(path: Path, objects_to_remove, utils_module_name: str) -> bool:
+def update_file_for_move(path: Path, objects_to_remove: Iterable[Any], utils_module_name: str) -> bool:
     code = safe_read_text(path)
     if code is None:
         return False

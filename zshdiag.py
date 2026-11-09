@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+from typing import Any, Iterable
 
 
 HOME = Path.home()
@@ -32,7 +33,7 @@ def config_files():
     return list(dict.fromkeys(files))
 
 
-def collect_definitions(files):
+def collect_definitions(files: list[Path]):
     aliases = defaultdict(list)
     functions = defaultdict(list)
     for path in files:
@@ -52,7 +53,7 @@ def collect_definitions(files):
     return aliases, functions
 
 
-def path_binaries():
+def path_binaries() -> tuple[list[Any],]:
     occurrences = defaultdict(list)
     path_dirs = []
     for entry in os.environ.get("PATH", "").split(os.pathsep):
@@ -71,11 +72,11 @@ def path_binaries():
     return occurrences, path_dirs
 
 
-def show_locations(locations):
+def show_locations(locations: Iterable[Any]) -> str:
     return ", ".join(f"{path}:{line}" for path, line in locations)
 
 
-def main():
+def main() -> None:
     files = config_files()
     aliases, functions = collect_definitions(files)
     binaries, _path_dirs = path_binaries()

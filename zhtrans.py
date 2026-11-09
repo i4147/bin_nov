@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 import sys
 import time
-from typing import Iterable, Optional, Sequence
+from typing import Any, Iterable, Optional, Sequence
 
 from deep_translator import GoogleTranslator, single_detection
 from dh import MAX_WORKERS
@@ -23,7 +23,7 @@ CHINESE_RE = re.compile(
     "\U0002b820-\U0002ceaf"
     "\uf900-\ufaff]"
 )
-DEFAULT_EXTENSIONS = (
+DEFAULT_EXTENSIONS: tuple[str, ...] = (
     ".txt",
     ".md",
     ".py",
@@ -114,7 +114,7 @@ def write_inplace(path: Path, original: Sequence[str], translations: dict) -> No
             fh.write(f"{translations.get(line, line)}\n")
 
 
-def _worker_chunked_chunk(task):
+def _worker_chunked_chunk(task: Any):
     chunk, retries, retry_delay, source, target = task
     text = "\n".join(chunk)
     translator = build_translator(source, target)
@@ -122,14 +122,14 @@ def _worker_chunked_chunk(task):
     return chunk, result
 
 
-def _worker_single_line(task):
+def _worker_single_line(task: Any):
     line, retries, retry_delay, source, target = task
     translator = build_translator(source, target)
     result = translate_with_retries(translator, line, retries, retry_delay)
     return line, result
 
 
-def _worker_walk_file(task):
+def _worker_walk_file(task: Any) -> dict[str, int]:
     (
         file_path,
         dry_run,

@@ -9,14 +9,15 @@ import heapq
 from pathlib import Path
 import sqlite3
 import sys
+from typing import Any
 
 
-DB_PATH = Path("/sdcard/data/pip.db")
-DEFAULT_LIMIT = 20
-TRIGRAM_MIN = 3
+DB_PATH: Path = Path("/sdcard/data/pip.db")
+DEFAULT_LIMIT: int = 20
+TRIGRAM_MIN: int = 3
 
 
-def get_table_info(con: sqlite3.Connection):
+def get_table_info(con: sqlite3.Connection) -> tuple[bool,]:
     cur = con.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")
     tables = [row[0] for row in cur.fetchall()]
     if not tables:

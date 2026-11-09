@@ -6,9 +6,10 @@ Usage: cppnew FILE.cpp Examples: $ cppnew a.cpp Runs as a script (``python cppne
 from pathlib import Path
 import subprocess
 import sys
+from typing import Any
 
 
-TEMPLATE = """\
+TEMPLATE: str = """\
 #include <bits/stdc++.h>
 using namespace std;
 int main() {
@@ -20,7 +21,7 @@ int main() {
 """
 
 
-def cppnew(*args):
+def cppnew(*args: Any) -> int:
     if not args:
         print("Usage: cppnew <filename.cpp>")
         return 1

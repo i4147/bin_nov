@@ -9,13 +9,14 @@ from pathlib import Path
 import shutil
 import sys
 import time
+from typing import Any
 
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 
 DEST_DIR = pathlib.Path("~/tmp/tgz").expanduser()
-ALLOWED_EXTENSIONS = (
+ALLOWED_EXTENSIONS: tuple[str, ...] = (
     ".tar.gz",
     ".whl",
     ".tar.xz",
@@ -24,7 +25,7 @@ ALLOWED_EXTENSIONS = (
 )
 
 
-def copy_if_match(src_path) -> None:
+def copy_if_match(src_path: Path) -> None:
     if src_path.endswith(ALLOWED_EXTENSIONS):
         try:
             pathlib.Path(DEST_DIR).mkdir(exist_ok=True, parents=True)
@@ -43,11 +44,11 @@ def startup_scan(fpath: str) -> None:
 
 
 class CopyEventHandler(FileSystemEventHandler):
-    def on_created(self, event) -> None:
+    def on_created(self, event: Any) -> None:
         if not event.is_directory:
             copy_if_match(event.src_path)
 
-    def on_modified(self, event) -> None:
+    def on_modified(self, event: Any) -> None:
         if not event.is_directory:
             copy_if_match(event.src_path)
 

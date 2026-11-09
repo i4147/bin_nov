@@ -10,13 +10,14 @@ import sys
 import threading
 import time
 import traceback
+from typing import Any
 
 from dh import fsz
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 
-def tail_file(fname, n: int = 10) -> list[str]:
+def tail_file(fname: str, n: int = 10) -> list[str]:
     try:
         with open(fname) as f:
             lines = f.readlines()
@@ -148,19 +149,19 @@ class ChangeHandler(FileSystemEventHandler):
             print("-" * 40)
             self._errors.clear()
 
-    def on_created(self, event) -> None:
+    def on_created(self, event: Any) -> None:
         if not event.is_directory:
             self._queue(Path(event.src_path), "create")
 
-    def on_modified(self, event) -> None:
+    def on_modified(self, event: Any) -> None:
         if not event.is_directory:
             self._queue(Path(event.src_path), "change")
 
-    def on_deleted(self, event) -> None:
+    def on_deleted(self, event: Any) -> None:
         if not event.is_directory:
             self._queue(Path(event.src_path), "delete")
 
-    def on_moved(self, event) -> None:
+    def on_moved(self, event: Any) -> None:
         if not event.is_directory:
             self._queue(Path(event.src_path), "moved-out")
             self._queue(Path(event.dest_path), "moved-in")

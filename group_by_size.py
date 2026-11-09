@@ -23,7 +23,7 @@ def get_directory_size(path: Path) -> int:
     return total_size
 
 
-def folderize_directories(n_parts: int):
+def folderize_directories(n_parts: int) -> None:
     current_dir = Path()
     subdirs = [p for p in current_dir.iterdir() if p.is_dir() and not p.name.startswith("group_")]
     if not subdirs:

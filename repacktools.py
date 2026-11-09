@@ -25,7 +25,7 @@ import subprocess
 import sys
 import sysconfig
 import tempfile
-from typing import Any, Optional, Sequence
+from typing import Any, Iterable, Optional, Sequence
 import zipfile
 
 from dh import MAX_WORKERS
@@ -46,7 +46,7 @@ try:
 except ImportError:
     _HAS_TQDM = False
 
-    def _tqdm(it, **_kw):
+    def _tqdm(it: Iterable[Any], **_kw: Any):
         return it
 
 
@@ -109,7 +109,7 @@ def current_sys_tag() -> tuple[str, str, str]:
         return interp, interp, platform_tag()
 
 
-BINARY_SUFFIXES = {".so", ".pyd", ".dll", ".dylib", ".sl"}
+BINARY_SUFFIXES: set[str] = {".so", ".pyd", ".dll", ".dylib", ".sl"}
 
 
 def _has_binary(root: Path) -> bool:

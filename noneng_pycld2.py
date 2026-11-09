@@ -9,7 +9,7 @@ from pathlib import Path
 import pycld2 as cld2
 
 
-def detect_language(text):
+def detect_language(text: str) -> tuple[str, float]:
     try:
         _is_reliable, _text_bytes_found, details = cld2.detect(text)
         lang = details[0][1] if details else "unknown"
@@ -19,7 +19,7 @@ def detect_language(text):
     return lang, prob
 
 
-def scan_and_detect(root_dir: Path):
+def scan_and_detect(root_dir: Path) -> None:
     print(f"{'File Path':<40} | {'pycld2':<15} | Snippet", flush=True)
 
     for root, dirs, files in os.walk(root_dir):

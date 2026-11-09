@@ -7,7 +7,7 @@ Usage: html_minify_py [paths ...] Examples: $ html_minify_py site/ Runs as a scr
 from pathlib import Path
 import re
 import sys
-from typing import TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 from dh import get_files, mpf
 from lxml import html as lxml_html
@@ -23,7 +23,7 @@ class HTMLMinifier:
         remove_optional_tags: bool = False,
         minify_css: bool = False,
         minify_js: bool = False,
-    ):
+    ) -> None:
         self.remove_comments = remove_comments
         self.collapse_whitespace = collapse_whitespace
         self.remove_empty_attributes = remove_empty_attributes
@@ -71,7 +71,7 @@ class HTMLMinifier:
         return html_str
 
     def _minify_style_tags(self, html_str: str) -> str:
-        def minify_css(match):
+        def minify_css(match: re.Match[str]) -> str:
             css = match.group(1)
             css = re.sub(r"/\*.*?\*/", "", css, flags=re.DOTALL)
             css = re.sub(r"\s*([{};:,])\s*", r"\1", css)
@@ -81,7 +81,7 @@ class HTMLMinifier:
         return re.sub(r"<style[^>]*>(.*?)</style>", minify_css, html_str, flags=re.DOTALL)
 
     def _minify_script_tags(self, html_str: str) -> str:
-        def minify_js(match):
+        def minify_js(match: re.Match[str]) -> str:
             js = match.group(1)
             js = re.sub(r"//.*?$", "", js, flags=re.MULTILINE)
             js = re.sub(r"/\*.*?\*/", "", js, flags=re.DOTALL)
@@ -95,7 +95,7 @@ def minify(
     html_str: str,
     remove_comments: bool = True,
     collapse_whitespace: bool = True,
-    **options,
+    **options: Any,
 ) -> str:
     minifier = HTMLMinifier(
         remove_comments=remove_comments,
@@ -107,7 +107,7 @@ def minify(
 
 def process_file(
     path: str | Path,
-    **options,
+    **options: Any,
 ) -> str:
     path = Path(path)
     html_str = path.read_text(encoding="utf-8")
@@ -116,7 +116,7 @@ def process_file(
     return minified
 
 
-def main():
+def main() -> None:
     cwd = Path.cwd()
     args = sys.argv[1:]
     files = [Path(p) for p in args] if args else get_files(cwd, ext=[".html"])

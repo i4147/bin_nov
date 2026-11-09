@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Any, Callable, Optional, Sequence
+from typing import Any, Callable, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS
 
@@ -28,7 +28,7 @@ try:
 except ImportError:
     _rjsmin = None
 _NONE_TYPE = type(None)
-_ANSI = {
+_ANSI: dict[str, str] = {
     "red": "\033[31m",
     "green": "\033[32m",
     "yellow": "\033[33m",
@@ -234,7 +234,7 @@ HTML_HTMIN_FLAGS: list[str] = [
     "--remove-tag-whitespace",
     "--decode-entities",
 ]
-_INLINE_TAGS = "span|a|strong|em|b|i|code|label"
+_INLINE_TAGS: str = "span|a|strong|em|b|i|code|label"
 _RE_DOCTYPE_LOWER = re.compile(r"<!(doctype)(html)", re.IGNORECASE)
 _RE_DOCTYPE_UPPER = re.compile(r"<!(DOCTYPE)(HTML)")
 _RE_INLINE_WS = re.compile(f"(</(?:{_INLINE_TAGS})>)(<(?:{_INLINE_TAGS}))")

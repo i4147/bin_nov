@@ -5,12 +5,13 @@ Usage: rmlic [paths ...] Examples: $ rmlic src/ Runs as a script (``python rmlic
 
 from pathlib import Path
 import re
+from typing import Any, Iterable
 
 from dh import cprint, fsz, get_nobinary, gsz, mpf
 
 
-LIC_FILE = Path("/sdcard/lic")
-MIN_BLANK_LINES = 3
+LIC_FILE: Path = Path("/sdcard/lic")
+MIN_BLANK_LINES: int = 3
 
 
 def load_patterns(lic_path: Path) -> list[str]:

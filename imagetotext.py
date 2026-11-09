@@ -7,16 +7,17 @@ Usage: imagetotext Examples: $ imagetotext Runs as a script (``python imagetotex
 from multiprocessing import Pool
 from pathlib import Path
 import re
+from typing import Any
 
 from PIL import Image
 import pytesseract
 
 
 TESSDATA = str(Path.home() / ".local" / "share" / "tessdata")
-LANGS = "eng+fas+rus"
-OVERWRITE = False
+LANGS: str = "eng+fas+rus"
+OVERWRITE: bool = False
 
-IMAGE_EXTS = {
+IMAGE_EXTS: set[str] = {
     ".png",
     ".jpg",
     ".jpeg",
@@ -29,7 +30,7 @@ IMAGE_EXTS = {
     ".ppm",
 }
 
-CONFIGS = [
+CONFIGS: list[tuple[Any, ...]] = [
     (3, 3),
     (1, 3),
     (4, 3),
@@ -40,7 +41,7 @@ CONFIGS = [
     (6, 1),
 ]
 
-_LETTERS = r"A-Za-z\u0600-\u06FF\u0400-\u04FF"
+_LETTERS: str = r"A-Za-z\u0600-\u06FF\u0400-\u04FF"
 _WORD_RE = re.compile(rf"[{_LETTERS}]{{2,}}")
 _ALPHA_RE = re.compile(rf"[{_LETTERS}]")
 

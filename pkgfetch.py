@@ -42,7 +42,7 @@ from packaging.utils import InvalidWheelFilename, canonicalize_name, parse_wheel
 from packaging.version import InvalidVersion, Version
 
 
-__all__ = [
+__all__: list[str] = [
     "Link",
     "Package",
     "PackageFinder",
@@ -50,10 +50,10 @@ __all__ = [
     "download",
     "main",
 ]
-PYPI_SIMPLE_URL = "https://pypi.org/simple/"
-TSINGHUA_SIMPLE_URL = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-YANDEX_SIMPLE_URL = "https://pypi.yandex.ru/simple/"
-DEFAULT_INDEXES = (
+PYPI_SIMPLE_URL: str = "https://pypi.org/simple/"
+TSINGHUA_SIMPLE_URL: str = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+YANDEX_SIMPLE_URL: str = "https://pypi.yandex.ru/simple/"
+DEFAULT_INDEXES: tuple[str, str, str] = (
     PYPI_SIMPLE_URL,
     TSINGHUA_SIMPLE_URL,
     YANDEX_SIMPLE_URL,
@@ -66,7 +66,7 @@ HASH_ALGORITHMS = frozenset({
     "sha1",
     "md5",
 })
-SOURCE_SUFFIXES = (
+SOURCE_SUFFIXES: tuple[str, ...] = (
     ".tar.gz",
     ".tar.bz2",
     ".tar.bz",
@@ -82,7 +82,7 @@ SOURCE_SUFFIXES = (
     ".zip",
     ".tar",
 )
-HASH_PREFERENCE = {
+HASH_PREFERENCE: dict[str, int] = {
     "sha512": 6,
     "sha384": 5,
     "sha256": 4,
@@ -90,9 +90,9 @@ HASH_PREFERENCE = {
     "sha1": 2,
     "md5": 1,
 }
-CHUNK_SIZE = 1024 * 1024
-PARALLEL_DOWNLOAD_THRESHOLD = 5 * 1024 * 1024
-SIMPLE_ACCEPT_HEADER = (
+CHUNK_SIZE: int = 1024 * 1024
+PARALLEL_DOWNLOAD_THRESHOLD: int = 5 * 1024 * 1024
+SIMPLE_ACCEPT_HEADER: str = (
     "application/vnd.pypi.simple.v1+json, application/vnd.pypi.simple.v1+html; q=0.1, text/html; q=0.01"
 )
 JSON_SIMPLE_CONTENT_TYPES = frozenset({

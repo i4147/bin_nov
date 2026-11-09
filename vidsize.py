@@ -14,19 +14,20 @@ import re
 import sys
 import threading
 from urllib.parse import urljoin, urlparse
+from typing import Any, Iterable, TextIO
 
 from dh import MAX_WORKERS
 import requests
 
 
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-HEADERS = {
+UA: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+HEADERS: dict[str, str] = {
     "User-Agent": UA,
     "Accept": "*/*",
     "Accept-Language": "en-US,en;q=0.9",
 }
-QUALITY_ORDER = ["2160p", "1440p", "1080p", "900p", "720p", "576p", "540p", "480p", "360p", "240p", "unknown"]
-MEDIA_EXT = r"(?:mp4|m3u8|mkv|webm|mov|m4v|ts|avi|flv)"
+QUALITY_ORDER: list[str] = ["2160p", "1440p", "1080p", "900p", "720p", "576p", "540p", "480p", "360p", "240p", "unknown"]
+MEDIA_EXT: str = r"(?:mp4|m3u8|mkv|webm|mov|m4v|ts|avi|flv)"
 ABS_LINK_RE = re.compile(r"https?://[^\s\"'<>\\]+?\." + MEDIA_EXT + r"(?:\?[^\s\"'<>\\]*)?", re.IGNORECASE)
 REL_LINK_RE = re.compile(
     r"""(?:src|href|data-src|data-video|data-file|file|url)\s*[=:]\s*"""
@@ -45,7 +46,7 @@ def session() -> requests.Session:
     return s
 
 
-def human_size(n) -> str:
+def human_size(n: int) -> str:
     if n is None:
         return "unknown"
     n = float(n)
@@ -63,7 +64,7 @@ def quality_rank(q: str) -> int:
         return len(QUALITY_ORDER)
 
 
-def guess_quality(*texts) -> str:
+def guess_quality(*texts: Any) -> str:
     blob = " ".join(t for t in texts if t)
     m = re.search(r"(?<![\d])(2160|1440|1080|900|720|576|540|480|360|240)\s*[pP](?!\w)", blob)
     if m:
@@ -172,7 +173,7 @@ def parse_master_playlist(text: str, base_url: str) -> list:
     return variants
 
 
-def parse_media_playlist(text: str, base_url: str):
+def parse_media_playlist(text: str, base_url: str) -> tuple[bool,]:
     segs, duration, byterange = [], 0.0, False
     for raw in text.splitlines():
         line = raw.strip()
@@ -194,7 +195,7 @@ def parse_media_playlist(text: str, base_url: str):
 def sum_sizes(urls: list, timeout: float, workers: int = 16):
     total, ok, unknown = 0, 0, 0
 
-    def one(u):
+    def one(u: Any):
         return get_size(u, timeout)[0]
 
     with ThreadPoolExecutor(max_workers=max(1, workers)) as ex:
@@ -212,7 +213,7 @@ def sum_sizes(urls: list, timeout: float, workers: int = 16):
     return total, ok, unknown
 
 
-def hls_entry(url: str, quality: str, args, extra: dict | None = None) -> dict:
+def hls_entry(url: str, quality: str, args: list[Any], extra: dict | None = None) -> dict:
     text = fetch_text(url, args.timeout)
     segs, duration, byterange = parse_media_playlist(text, url)
     entry = {
@@ -249,7 +250,7 @@ def extract_links(html: str, base_url: str) -> list:
     html = html.replace("\\/", "/")
     found, seen = [], set()
 
-    def add(u):
+    def add(u: str) -> None:
         u = u.strip().rstrip(".,;)\"'")
         if not u:
             return
@@ -265,7 +266,7 @@ def extract_links(html: str, base_url: str) -> list:
     return found
 
 
-def analyze(url: str, args, depth: int = 0, entries=None, seen=None) -> list:
+def analyze(url: str, args: list[Any], depth: int = 0, entries = None, seen = None) -> list:
     entries = [] if entries is None else entries
     seen = set() if seen is None else seen
     if url in seen or depth > args.max_depth:
@@ -415,7 +416,7 @@ def print_report(report: dict) -> None:
     print(line)
 
 
-def main(argv=None) -> int:
+def main(argv = None) -> int:
     ap = argparse.ArgumentParser(
         description="Report the size of videos behind direct links, web pages and HLS playlists."
     )

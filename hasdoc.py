@@ -9,6 +9,7 @@ import argparse
 import ast
 import multiprocessing as mp
 from pathlib import Path
+from typing import Any, Iterable
 
 
 def find_docstring_lines(source_bytes: bytes) -> set[int]:
@@ -64,7 +65,7 @@ def collect_files(inputs: list[str]) -> list[Path]:
     return list(files)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Check Python files for unstripped comments/docstrings.")
     parser.add_argument(
         "inputs",

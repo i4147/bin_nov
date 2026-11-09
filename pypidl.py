@@ -64,7 +64,7 @@ HTTP_TIMEOUT: int = 30
 CHUNKED_THRESHOLD: int = 5 * 1024 * 1024
 SCRAPE_RETRIES: int = 3
 SCRAPE_BACKOFF: int = 2
-DEFAULT_USER_AGENT = (
+DEFAULT_USER_AGENT: str = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 )
 
@@ -565,7 +565,7 @@ _ARCH_RE = re.compile(
     r"-(cp\d+|pp\d+|py\d+)(-(cp\d+|pp\d+|py\d+))?" r"-(manylinux|musllinux|win|macosx|linux|darwin)",
     re.IGNORECASE,
 )
-_ARCH_TOKENS = (
+_ARCH_TOKENS: tuple[str, ...] = (
     "manylinux",
     "musllinux",
     "macosx",

@@ -18,7 +18,7 @@ from pathlib import Path
 import re
 import sys
 import tokenize
-from typing import Iterator, NamedTuple
+from typing import Any, Iterator, NamedTuple
 
 from atomicio import atomic_write
 from dh import MAX_WORKERS, SKIP_DIRS
@@ -29,11 +29,11 @@ from loguru import logger
 CAMEL_RE = re.compile(r"^(?P<pre>_*)(?P<body>[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)+)(?P<post>_*)$")
 PARTIAL_RE = re.compile(r"[a-z][A-Z]")
 SNAKE_BOUNDARY_RE = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
-CACHE_FILE = ".camel_cache.json"
-UNDO_FILE = ".camel_undo.json"
+CACHE_FILE: str = ".camel_cache.json"
+UNDO_FILE: str = ".camel_undo.json"
 DUNDER_RE = re.compile(r"^__.*__$")
 GETATTR_FUNCS = frozenset({"getattr", "setattr", "delattr", "hasattr"})
-ALLOWED_TARGETS = ("function", "class", "variable", "param")
+ALLOWED_TARGETS: tuple[str, str, str, str] = ("function", "class", "variable", "param")
 
 
 def to_snake(name: str) -> str | None:

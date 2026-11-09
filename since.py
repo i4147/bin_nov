@@ -5,6 +5,7 @@ Usage: since DAY MONTH YEAR Examples: $ since 10 12 1404 Runs as a script (``pyt
 
 import datetime as dt
 import sys
+from typing import Any
 
 
 class PersianDateConverter:
@@ -25,11 +26,11 @@ class PersianDateConverter:
     PERSIAN_MONTH_LENGTHS = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29]
 
     @staticmethod
-    def is_persian_leap_year(year):
+    def is_persian_leap_year(year: int) -> bool:
         return (year * 33 + 33) % 132 < 6
 
     @staticmethod
-    def persian_to_gregorian(persian_year, persian_month, persian_day):
+    def persian_to_gregorian(persian_year: int, persian_month: int, persian_day: int):
         if persian_month < 1 or persian_month > 12:
             msg = f"Month must be between 1 and 12, got {persian_month}"
             raise ValueError(msg)
@@ -56,14 +57,14 @@ class PersianDateConverter:
         return result_date.year, result_date.month, result_date.day
 
     @staticmethod
-    def days_since(gregorian_year, gregorian_month, gregorian_day):
+    def days_since(gregorian_year: Any, gregorian_month: Any, gregorian_day: Any):
         input_date = dt.date(gregorian_year, gregorian_month, gregorian_day)
         today = dt.date.today()
         delta = today - input_date
         return delta.days, input_date, today
 
     @staticmethod
-    def format_days_since(days):
+    def format_days_since(days: int) -> str:
         if days < 0:
             return f"{abs(days)} days in the future"
         elif days == 0:
@@ -101,12 +102,12 @@ class PersianDateConverter:
                 return f"{years} years, {months} months, and {remaining_days} days ago"
 
     @staticmethod
-    def format_persian_date(year, month, day):
+    def format_persian_date(year: str, month: int, day: str) -> str:
         month_name = PersianDateConverter.PERSIAN_MONTHS[month - 1]
         return f"{year}/{month:02d}/{day:02d} ({month_name})"
 
 
-def main():
+def main() -> None:
     if len(sys.argv) != 4:
         print("Usage: python convert_date.py <day> <month> <year>")
         print("Example: python convert_date.py 10 12 1404")

@@ -9,7 +9,7 @@ import sys
 import time
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 2:
         print(f"Usage: {sys.argv[0]} <pkg_list_file>")
         sys.exit(1)

@@ -116,12 +116,12 @@ IMAGE_EXTENSIONS: set[str] = {
 }
 TEXT_EXTENSIONS: set[str] = {".txt", ".md", ".csv", ".json", ".py"}
 PHOTO_EXTENSIONS: set[str] = {".jpg", ".jpeg", ".png"}
-DEFAULT_GRID_VARIANTS_PSM = [3, 4, 6, 11]
-DEFAULT_GRID_VARIANTS_OEM = [1, 3]
-DEFAULT_GRID_VARIANTS_DPI = [150, 300]
-DEFAULT_GRID_SEARCH_OEM = [0, 1, 2, 3]
-DEFAULT_GRID_SEARCH_PSM = [3, 4, 6, 11, 12, 13]
-DEFAULT_TRANSLATE_CHUNK = 32768
+DEFAULT_GRID_VARIANTS_PSM: list[int] = [3, 4, 6, 11]
+DEFAULT_GRID_VARIANTS_OEM: list[int] = [1, 3]
+DEFAULT_GRID_VARIANTS_DPI: list[int] = [150, 300]
+DEFAULT_GRID_SEARCH_OEM: list[int] = [0, 1, 2, 3]
+DEFAULT_GRID_SEARCH_PSM: list[int] = [3, 4, 6, 11, 12, 13]
+DEFAULT_TRANSLATE_CHUNK: int = 32768
 
 
 class AppError(RuntimeError):

@@ -10,16 +10,16 @@ import re
 import subprocess
 
 
-OLD_USERNAME = "iho147"
-OLD_EMAIL = "isaacaunegh@gmail.com"
-NEW_USERNAME = "i4147"
-NEW_EMAIL = "yesnacoc@gmail.com"
+OLD_USERNAME: str = "iho147"
+OLD_EMAIL: str = "isaacaunegh@gmail.com"
+NEW_USERNAME: str = "i4147"
+NEW_EMAIL: str = "yesnacoc@gmail.com"
 HOME = Path.home()
 SSH_DIR = HOME / ".ssh"
 GIT_CONFIG = HOME / ".gitconfig"
-SSH_KEY_NAME = "id_ed25519"
+SSH_KEY_NAME: str = "id_ed25519"
 SSH_KEY_PATH = SSH_DIR / SSH_KEY_NAME
-TARGET_FILENAMES = [
+TARGET_FILENAMES: list[str] = [
     "setup.py",
     "pyproject.toml",
     "setup.cfg",
@@ -32,7 +32,7 @@ TARGET_FILENAMES = [
     "*.yml",
     "*.yaml",
 ]
-EXCLUDE_DIRS = {
+EXCLUDE_DIRS: set[str] = {
     ".git",
     "node_modules",
     "venv",
@@ -46,7 +46,7 @@ EXCLUDE_DIRS = {
 }
 
 
-def run(cmd, check=True, capture_output=False, input_text=None):
+def run(cmd: str, check = True, capture_output = False, input_text = None) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         cmd,
         shell=isinstance(cmd, str),
@@ -57,12 +57,12 @@ def run(cmd, check=True, capture_output=False, input_text=None):
     )
 
 
-def update_git_global_config():
+def update_git_global_config() -> None:
     run(["git", "config", "--global", "user.name", NEW_USERNAME])
     run(["git", "config", "--global", "user.email", NEW_EMAIL])
 
 
-def remove_old_ssh_keys():
+def remove_old_ssh_keys() -> None:
     if SSH_DIR.exists():
         for f in SSH_DIR.iterdir():
             if f.name.startswith("id_") or f.name == "known_hosts":
@@ -70,7 +70,7 @@ def remove_old_ssh_keys():
                     f.unlink()
 
 
-def generate_new_ssh_key():
+def generate_new_ssh_key() -> None:
     SSH_DIR.mkdir(mode=0o700, exist_ok=True)
     run([
         "ssh-keygen",
@@ -87,7 +87,7 @@ def generate_new_ssh_key():
     os.chmod(f"{SSH_KEY_PATH}.pub", 0o644)
 
 
-def configure_ssh_agent():
+def configure_ssh_agent() -> None:
     run(["eval", "$(ssh-agent -s)"], check=False)
     agent_out = run(["ssh-agent", "-s"], capture_output=True)
     for line in agent_out.stdout.splitlines():
@@ -97,7 +97,7 @@ def configure_ssh_agent():
     run(["ssh-add", str(SSH_KEY_PATH)], check=False)
 
 
-def write_ssh_config():
+def write_ssh_config() -> None:
     ssh_config_path = SSH_DIR / "config"
     config_block = f"""Host github.com
     HostName github.com
@@ -110,7 +110,7 @@ def write_ssh_config():
     os.chmod(ssh_config_path, 0o600)
 
 
-def should_skip_dir(dirpath):
+def should_skip_dir(dirpath: Path) -> bool:
     parts = Path(dirpath).parts
     return any(p in EXCLUDE_DIRS for p in parts)
 
@@ -128,7 +128,7 @@ def find_target_files():
     return matched
 
 
-def replace_in_file(filepath):
+def replace_in_file(filepath: Path) -> None:
     try:
         with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
             content = f.read()
@@ -145,13 +145,13 @@ def replace_in_file(filepath):
             pass
 
 
-def scan_and_replace_all():
+def scan_and_replace_all() -> None:
     files = find_target_files()
     for filepath in files:
         replace_in_file(filepath)
 
 
-def update_git_remotes_in_repos():
+def update_git_remotes_in_repos() -> None:
     for root, dirs, files in os.walk(HOME):
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
         if should_skip_dir(root):
@@ -199,7 +199,7 @@ def update_git_remotes_in_repos():
                 pass
 
 
-def fix_git_config_files():
+def fix_git_config_files() -> None:
     for root, dirs, files in os.walk(HOME):
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
         if should_skip_dir(root):
@@ -210,7 +210,7 @@ def fix_git_config_files():
                 replace_in_file(cfg_path)
 
 
-def clear_git_credential():
+def clear_git_credential() -> None:
     credential_paths = [
         HOME / ".git-credentials",
         HOME / ".gitcredentials",
@@ -233,7 +233,7 @@ def clear_git_credential():
             run(["git", "credential-" + helper, "erase"], check=False, input_text="\n")
 
 
-def purge_gitconfig_old_identity():
+def purge_gitconfig_old_identity() -> None:
     if not GIT_CONFIG.exists():
         return
     try:
@@ -251,7 +251,7 @@ def purge_gitconfig_old_identity():
             pass
 
 
-def main():
+def main() -> None:
     print("[1/8] Updating git global config ...")
     update_git_global_config()
     print("[2/8] Purging old identity from ~/.gitconfig ...")

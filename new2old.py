@@ -6,15 +6,15 @@ Usage: new2old Examples: $ new2old Runs as a script (``python new2old.py``) in t
 from dataclasses import dataclass
 from pathlib import Path
 import sys
-from typing import Any, Callable
+from typing import Any, Callable, Iterable
 
 
 if sys.version_info < (3, 11):
     import tomli as tomllib
 else:
     import tomllib
-PYPROJECT_PATH = Path("pyproject.toml")
-SETUP_PATH = Path("setup.py")
+PYPROJECT_PATH: Path = Path("pyproject.toml")
+SETUP_PATH: Path = Path("setup.py")
 
 
 @dataclass

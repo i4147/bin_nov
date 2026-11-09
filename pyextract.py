@@ -35,7 +35,7 @@ import re
 import shutil
 import sqlite3
 import tarfile
-from typing import Iterable, Iterator, Optional
+from typing import Any, Iterable, Iterator, Optional, Sequence
 import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS
@@ -62,7 +62,7 @@ try:
 except Exception:
     HAS_ZSTD = False
 log = logger
-ARCHIVE_EXTS = (
+ARCHIVE_EXTS: tuple[str, ...] = (
     ".whl",
     ".zip",
     ".tar",
@@ -73,7 +73,7 @@ ARCHIVE_EXTS = (
     ".zst",
 )
 UPPER_RE = re.compile(r"^[A-Z_][A-Z0-9_]*$")
-DEFAULT_SKIP_TESTS = {"test", "tests", "examples"}
+DEFAULT_SKIP_TESTS: set[str] = {"test", "tests", "examples"}
 
 
 @dataclass
@@ -344,7 +344,7 @@ def _extract_libcst_impl(
     entities: list[Entity] = []
     imports: list[str] = []
 
-    def _code(node) -> str:
+    def _code(node: ast.AST) -> str:
         return cst.Module(body=[node]).code.strip()
 
     class V(cst.CSTVisitor):
@@ -352,19 +352,19 @@ def _extract_libcst_impl(
             self.class_stack: list[str] = []
             self.scope_stack: list[str] = []
 
-        def visit_Import(self, node) -> None:
+        def visit_Import(self, node: cst.Import) -> None:
             if not self.class_stack and not self.scope_stack:
                 c = _code(node)
                 if c not in imports:
                     imports.append(c)
 
-        def visit_ImportFrom(self, node) -> None:
+        def visit_ImportFrom(self, node: cst.ImportFrom) -> None:
             if not self.class_stack and not self.scope_stack:
                 c = _code(node)
                 if c not in imports:
                     imports.append(c)
 
-        def visit_ClassDef(self, node) -> None:
+        def visit_ClassDef(self, node: cst.ClassDef) -> None:
             parent = "_".join(self.class_stack)
             full = "_".join(self.class_stack + [node.name.value])
             top = not self.class_stack and not self.scope_stack
@@ -381,10 +381,10 @@ def _extract_libcst_impl(
                 )
             self.class_stack.append(node.name.value)
 
-        def leave_ClassDef(self, node) -> None:
+        def leave_ClassDef(self, node: cst.ClassDef) -> None:
             self.class_stack.pop()
 
-        def visit_FunctionDef(self, node) -> None:
+        def visit_FunctionDef(self, node: cst.FunctionDef) -> None:
             parent = "_".join(self.class_stack)
             full = "_".join(self.class_stack + self.scope_stack + [node.name.value])
             in_class = bool(self.class_stack)
@@ -402,10 +402,10 @@ def _extract_libcst_impl(
                 )
             self.scope_stack.append(node.name.value)
 
-        def leave_FunctionDef(self, node) -> None:
+        def leave_FunctionDef(self, node: cst.FunctionDef) -> None:
             self.scope_stack.pop()
 
-        def visit_Assign(self, node) -> None:
+        def visit_Assign(self, node: cst.Assign) -> None:
             top = not self.class_stack and not self.scope_stack
             if not (top or include_nested):
                 return
@@ -441,7 +441,7 @@ def extract_libcst(
 _TS_PARSER = None
 
 
-def _get_ts_parser():
+def _get_ts_parser() -> None:
     global _TS_PARSER
     if _TS_PARSER is not None:
         return _TS_PARSER
@@ -467,14 +467,14 @@ def extract_treesitter(
     entities: list[Entity] = []
     imports: list[str] = []
 
-    def text(n) -> str:
+    def text(n: int) -> str:
         return data[n.start_byte : n.end_byte].decode("utf-8", "replace")
 
-    def name_of(n) -> Optional[str]:
+    def name_of(n: int) -> Optional[str]:
         f = n.child_by_field_name("name")
         return text(f) if f else None
 
-    def walk(node, class_stack: list[str], func_stack: list[str]) -> None:
+    def walk(node: Any, class_stack: list[str], func_stack: list[str]) -> None:
         for child in node.children:
             t = child.type
             src_node = child
@@ -914,7 +914,7 @@ def cmd_nodes(args: argparse.Namespace) -> int:
     return 0
 
 
-def _node_to_sexpr(node, data: bytes) -> str:
+def _node_to_sexpr(node: Any, data: bytes) -> str:
     if node.child_count == 0:
         txt = data[node.start_byte : node.end_byte].decode("utf-8", "replace")
         return f'({node.type} "{txt}")'

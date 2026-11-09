@@ -19,7 +19,7 @@ import shutil
 import sys
 import threading
 import time
-from typing import Any, Iterator, Self
+from typing import Any, Iterable, Iterator, Self
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -27,7 +27,7 @@ import urllib.request
 from dh import MAX_WORKERS
 
 
-__version__ = "2.0.0"
+__version__: str = "2.0.0"
 CHUNK_SMALL: int = 64 * 1024
 CHUNK_MEDIUM: int = 256 * 1024
 CHUNK_LARGE: int = 1024 * 1024

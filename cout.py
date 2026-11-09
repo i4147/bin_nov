@@ -27,7 +27,7 @@ from pathlib import Path
 import shutil
 import sys
 from tempfile import NamedTemporaryFile
-from typing import TYPE_CHECKING
+from typing import Any, Iterable, TYPE_CHECKING
 
 from loguru import logger
 
@@ -203,7 +203,7 @@ def _worker(
     return process_chunk(*args)
 
 
-def _chunk_iter(stream, chunk_size: int) -> Iterator[list[str]]:
+def _chunk_iter(stream: Iterable[Any], chunk_size: int) -> Iterator[list[str]]:
     while True:
         chunk = list(islice(stream, chunk_size))
         if not chunk:

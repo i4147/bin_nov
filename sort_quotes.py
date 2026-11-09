@@ -6,9 +6,10 @@ Usage: sort_quotes QUOTES.json Examples: $ sort_quotes quotes.json Runs as a scr
 import json
 from pathlib import Path
 import sys
+from typing import Any, Iterable
 
 
-def dedup_quotes(quotes):
+def dedup_quotes(quotes: Iterable[Any]):
     seen = set()
     unique = []
     for q in quotes:
@@ -19,7 +20,7 @@ def dedup_quotes(quotes):
     return unique
 
 
-def sort_quotes_by_author(path):
+def sort_quotes_by_author(path: Path) -> None:
     if not Path(path).exists():
         print(f"Error: '{path}' could not be found.")
         return

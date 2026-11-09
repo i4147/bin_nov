@@ -14,7 +14,7 @@ import sys
 import tarfile
 import threading
 import time
-from typing import Iterable, Optional, Sequence
+from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
@@ -161,7 +161,7 @@ class TaskResult:
 
 def run_parallel(
     tasks: Sequence[Path],
-    worker,
+    worker: Any,
     workers: int,
     operation: str,
     dry_run: bool = False,

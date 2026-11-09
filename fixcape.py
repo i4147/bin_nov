@@ -10,9 +10,10 @@ from pathlib import Path
 import re
 import sys
 import tokenize
+from typing import Iterator
 
 
-def get_python_files(root_dir: Path):
+def get_python_files(root_dir: Path) -> Iterator[Path]:
     for path in root_dir.rglob("*.py"):
         if path.is_file():
             yield path
@@ -50,7 +51,7 @@ def fix_source_code(source_bytes: bytes) -> tuple[bytes, bool]:
                         new_string = new_prefix + quote + content + end_quote
                     else:
 
-                        def replacer(match):
+                        def replacer(match: re.Match[str]):
                             char = match.group(1)
                             if char in valid_escape_chars:
                                 return match.group(0)
@@ -67,7 +68,7 @@ def fix_source_code(source_bytes: bytes) -> tuple[bytes, bool]:
     return source_bytes, False
 
 
-def main():
+def main() -> None:
     root = Path.cwd()
     print(f"Scanning for Python files in: {root}")
     changed_files = []

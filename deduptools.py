@@ -30,7 +30,7 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import Iterator, Sequence
+from typing import Any, Iterator, Sequence
 
 from dh import MAX_WORKERS
 
@@ -270,11 +270,11 @@ def _ts_make_parser():
     return parser
 
 
-def _ts_node_text(src_bytes: bytes, node) -> str:
+def _ts_node_text(src_bytes: bytes, node: Any) -> str:
     return src_bytes[node.start_byte : node.end_byte].decode("utf-8", errors="replace")
 
 
-def _ts_collect(path: Path, parser) -> list[Declaration]:
+def _ts_collect(path: Path, parser: Any) -> list[Declaration]:
     text = read_text_safe(path)
     if text is None:
         return []

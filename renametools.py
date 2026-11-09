@@ -32,7 +32,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import re
 import sys
-from typing import Iterator, Optional, Sequence
+from typing import Any, Iterable, Iterator, Optional, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -203,7 +203,7 @@ def cmd_lowercase(args: argparse.Namespace) -> int:
     return 0
 
 
-IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".gif", ".webp"}
+IMAGE_SUFFIXES: set[str] = {".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".gif", ".webp"}
 DIM_IN_NAME = re.compile(r"\d+[xX]\d+")
 
 
@@ -269,7 +269,7 @@ def cmd_images(args: argparse.Namespace) -> int:
     return 0 if failed == 0 else 1
 
 
-DEFAULT_JUNK_PATTERNS = (
+DEFAULT_JUNK_PATTERNS: tuple[str, ...] = (
     r"\bOutcast\b",
     r"\bS\d{2}\b",
     r"\b720p\b",
@@ -278,7 +278,7 @@ DEFAULT_JUNK_PATTERNS = (
     r"\bx264\b",
     "-REWARD_HI",
 )
-DEFAULT_MEDIA_SUFFIXES = {".srt", ".mkv", ".mp4", ".avi"}
+DEFAULT_MEDIA_SUFFIXES: set[str] = {".srt", ".mkv", ".mp4", ".avi"}
 
 
 def _strip_junk(name: str, patterns: Sequence[re.Pattern[str]]) -> str:
@@ -367,8 +367,8 @@ def cmd_jscss(args: argparse.Namespace) -> int:
     return 0
 
 
-_MEANINGLESS_STEMS = {"main", "run", "test", "script", "app"}
-_STOP_WORDS = {
+_MEANINGLESS_STEMS: set[str] = {"main", "run", "test", "script", "app"}
+_STOP_WORDS: set[str] = {
     "this",
     "that",
     "from",
@@ -512,7 +512,7 @@ def cmd_suggest_names(args: argparse.Namespace) -> int:
     return 0
 
 
-SKIP_PARTS = {".git"}
+SKIP_PARTS: set[str] = {".git"}
 
 
 def _is_skippable(p: Path) -> bool:

@@ -8,7 +8,7 @@ import sys
 from weasyprint import HTML
 
 
-def convert_url_to_pdf(url: str, output_filename: str):
+def convert_url_to_pdf(url: str, output_filename: str) -> None:
     print(f"Fetching and converting: {url}...")
     try:
         HTML(url).write_pdf(output_filename)

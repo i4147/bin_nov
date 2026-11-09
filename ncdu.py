@@ -17,14 +17,14 @@ import shutil
 import stat
 import sys
 import time
-from typing import Any, Iterator
+from typing import Any, Iterator, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
 
 
-__version__ = "2.0.0"
-PROGNAME = "ncdu2.py"
+__version__: str = "2.0.0"
+PROGNAME: str = "ncdu2.py"
 LOG = logger
 
 
@@ -434,11 +434,11 @@ def import_json(path: Path) -> Node:
     return root
 
 
-SORT_MODES = ("size", "name", "items", "mtime")
+SORT_MODES: tuple[str, str, str, str] = ("size", "name", "items", "mtime")
 
 
 class Browser:
-    def __init__(self, root: Node, *, apparent: bool = False, si: bool = False):
+    def __init__(self, root: Node, *, apparent: bool = False, si: bool = False) -> None:
         self.root = root
         self.cur = root
         self.apparent = apparent
@@ -486,7 +486,7 @@ class Browser:
                 LOG.info("quitting browser")
                 return
 
-    def draw(self, scr, items: list[Node]) -> None:
+    def draw(self, scr: Any, items: list[Node]) -> None:
         scr.erase()
         h, w = scr.getmaxyx()
         body = max(h - 3, 1)
@@ -542,7 +542,7 @@ class Browser:
         self.message = ""
         scr.refresh()
 
-    def handle(self, scr, ch: int, items: list[Node]) -> bool:
+    def handle(self, scr: Any, ch: int, items: list[Node]) -> bool:
         h, _ = scr.getmaxyx()
         body = max(h - 3, 1)
         sel = items[self.cursor] if items else None
@@ -611,7 +611,7 @@ class Browser:
             pass
         return True
 
-    def popup(self, scr, title: str, lines: list[str]) -> None:
+    def popup(self, scr: Any, title: str, lines: list[str]) -> None:
         h, w = scr.getmaxyx()
         ph = min(len(lines) + 4, h - 2)
         pw = min(max(len(title), *(len(l) for l in lines)) + 4, w - 2)
@@ -627,7 +627,7 @@ class Browser:
         scr.touchwin()
         scr.refresh()
 
-    def help_popup(self, scr) -> None:
+    def help_popup(self, scr: Any) -> None:
         self.popup(
             scr,
             "Help",
@@ -647,7 +647,7 @@ class Browser:
             ],
         )
 
-    def info_popup(self, scr, n: Node) -> None:
+    def info_popup(self, scr: Any, n: Node) -> None:
         self.popup(
             scr,
             "Info",
@@ -664,7 +664,7 @@ class Browser:
             ],
         )
 
-    def confirm(self, scr, question: str) -> bool:
+    def confirm(self, scr: Any, question: str) -> bool:
         h, w = scr.getmaxyx()
         scr.addnstr(
             h - 1,
@@ -676,7 +676,7 @@ class Browser:
         scr.refresh()
         return scr.getch() in (ord("y"), ord("Y"))
 
-    def do_delete(self, scr, n: Node) -> None:
+    def do_delete(self, scr: Any, n: Node) -> None:
         target = n.path
         if not self.confirm(scr, f"Delete {target}?"):
             LOG.info("deletion of {} cancelled", target)
@@ -704,7 +704,7 @@ class Browser:
         LOG.info("deleted {} (freed {})", target, fmt_size(d))
         self.message = f" deleted {target.name} ({fmt_size(d).strip()} freed) "
 
-    def do_export(self, scr) -> None:
+    def do_export(self, scr: Any) -> None:
         out = Path.cwd() / f"ncdu2-export-{int(time.time())}.json"
         try:
             export_json(self.root, out)
@@ -713,7 +713,7 @@ class Browser:
             LOG.error("export failed: {}", exc)
             self.message = f" export failed: {exc} "
 
-    def rescan(self, scr) -> None:
+    def rescan(self, scr: Any) -> None:
         target = self.cur.path
         h, w = scr.getmaxyx()
         scr.addnstr(

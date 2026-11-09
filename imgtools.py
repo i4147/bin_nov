@@ -43,12 +43,12 @@ try:
     from tqdm import tqdm
 except ImportError:
     tqdm = None
-DEFAULT_IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff", ".tif"}
-DEFAULT_PNG_EXTS = {".png"}
-DEFAULT_EMBED_EXTS = {".css", ".html", ".htm", ".js"}
-DEFAULT_RESIZE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"}
-DEFAULT_UPSCALE_EXTS = {".webp", ".jpg", ".jpeg", ".png"}
-EMBED_MIME_EXT = {
+DEFAULT_IMAGE_EXTS: set[str] = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff", ".tif"}
+DEFAULT_PNG_EXTS: set[str] = {".png"}
+DEFAULT_EMBED_EXTS: set[str] = {".css", ".html", ".htm", ".js"}
+DEFAULT_RESIZE_EXTS: set[str] = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"}
+DEFAULT_UPSCALE_EXTS: set[str] = {".webp", ".jpg", ".jpeg", ".png"}
+EMBED_MIME_EXT: dict[str, str] = {
     "image/png": ".png",
     "image/jpeg": ".jpg",
     "image/jpg": ".jpg",
@@ -58,7 +58,7 @@ EMBED_MIME_EXT = {
     "application/javascript": ".js",
     "text/javascript": ".js",
 }
-EMBED_EXT_KIND = {
+EMBED_EXT_KIND: dict[str, str] = {
     ".png": "png",
     ".jpg": "jpg",
     ".jpeg": "jpg",
@@ -67,7 +67,7 @@ EMBED_EXT_KIND = {
     ".css": "css",
     ".js": "js",
 }
-EMBED_KIND_MIME = {
+EMBED_KIND_MIME: dict[str, str] = {
     "png": "image/png",
     "jpg": "image/jpeg",
     "svg": "image/svg+xml",

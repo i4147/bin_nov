@@ -15,6 +15,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from typing import Any
 
 from dh import SKIP_DIRS, WORKERS
 from loguru import logger
@@ -24,8 +25,8 @@ try:
     import tomllib
 except ImportError:
     tomllib = None
-MARKERS = ("setup.py", "pyproject.toml")
-TAIL_LINES = 40
+MARKERS: tuple[str, str] = ("setup.py", "pyproject.toml")
+TAIL_LINES: int = 40
 
 
 @dataclass(frozen=True, slots=True)

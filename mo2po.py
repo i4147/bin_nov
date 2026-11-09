@@ -23,7 +23,7 @@ def check_msgunfmt() -> bool:
         return False
 
 
-def mo_to_po(mo_path, remove_orig: bool = True, verbose: bool = False) -> bool:
+def mo_to_po(mo_path: Path, remove_orig: bool = True, verbose: bool = False) -> bool:
     mo_path = Path(mo_path)
     if not mo_path.exists():
         print(f"Error: File not found: {mo_path}")
@@ -63,7 +63,7 @@ def mo_to_po(mo_path, remove_orig: bool = True, verbose: bool = False) -> bool:
         return False
 
 
-def mo_to_po_python_only(mo_path, remove_orig: bool = True, verbose: bool = False) -> bool:
+def mo_to_po_python_only(mo_path: Path, remove_orig: bool = True, verbose: bool = False) -> bool:
     import struct
 
     mo_path = Path(mo_path)
@@ -155,7 +155,7 @@ def process_directory(
     print(f"\nSummary: {success_count} converted, {fail_count} failed")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Convert .mo files to .po files in-place",
         formatter_class=argparse.RawDescriptionHelpFormatter,

@@ -31,7 +31,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
-from typing import Iterable, Sequence
+from typing import Any, Iterable, Sequence
 import zipfile
 
 from dh import MAX_WORKERS
@@ -181,15 +181,15 @@ class _CapturingTool:
         base = _import_refactoring_tool()
 
         class _Tool(base):
-            def __init__(self, *a, **kw):
+            def __init__(self, *a: Any, **kw: Any) -> None:
                 self.captured_errors: list[str] = []
                 self.captured_output: list[str] = []
                 super().__init__(*a, **kw)
 
-            def log_error(self, msg, *args, **kwargs):
+            def log_error(self, msg: str, *args: Any, **kwargs: Any) -> None:
                 self.captured_errors.append(msg % args if args else msg)
 
-            def log_message(self, msg, *args, **kwargs):
+            def log_message(self, msg: str, *args: Any, **kwargs: Any) -> None:
                 if args:
                     msg = msg % args
                 self.captured_output.append(msg)

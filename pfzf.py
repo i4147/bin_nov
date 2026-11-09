@@ -4,14 +4,17 @@ Scores and ranks the lines read from stdin (or a built-in demo list) while you t
 ``--filter QUERY`` prints the ranked matches non-interactively.
 Usage: pfzf [--filter QUERY] Examples: $ ls | pfzf $ pfzf --filter btn Runs as a script (``python pfzf.py``) in the directory it should act on; the module can also be imported."""
 
+from __future__ import annotations
+
 import os
 import select
 import sys
 import termios
 import tty
+from typing import Any, Iterable, Sequence
 
 
-def fuzzy_score(query, text):
+def fuzzy_score(query: str, text: str):
     if not query:
         return (0, [])
     query_lower = query.lower()
@@ -57,7 +60,7 @@ def fuzzy_score(query, text):
     return (score, positions)
 
 
-def render_match(text, positions, width, selected=False):
+def render_match(text: str, positions: Iterable[Any], width: int, selected = False) -> str:
     RESET = "\033[0m"
     SELECTED = "\033[7m"
     MATCH = "\033[1;33m"
@@ -99,7 +102,7 @@ def get_terminal_size():
         return os.terminal_size((80, 24))
 
 
-def read_key():
+def read_key() -> str | None:
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     try:
@@ -167,22 +170,22 @@ def read_key():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
 
-def clear_screen():
+def clear_screen() -> None:
     sys.stdout.write("\033[2J\033[H")
     sys.stdout.flush()
 
 
-def move_cursor(row, col=0):
+def move_cursor(row: int, col = 0) -> None:
     sys.stdout.write(f"\033[{row + 1};{col + 1}H")
     sys.stdout.flush()
 
 
-def clear_line():
+def clear_line() -> None:
     sys.stdout.write("\033[2K\r")
     sys.stdout.flush()
 
 
-def fzf(items, prompt="> ", multi=False, preview=None, preview_window="right:50%"):
+def fzf(items: list[Any], prompt = "> ", multi = False, preview = None, preview_window = "right:50%"):
     items = list(items)
     if not items:
         return [] if multi else None
@@ -194,7 +197,7 @@ def fzf(items, prompt="> ", multi=False, preview=None, preview_window="right:50%
     scroll_offset = 0
     selected_items = set()
 
-    def get_matches(q):
+    def get_matches(q: Any):
         if not q:
             return [(item, 0, []) for item in items]
         scored = []
@@ -205,7 +208,7 @@ def fzf(items, prompt="> ", multi=False, preview=None, preview_window="right:50%
         scored.sort(key=lambda x: (-x[0], items.index(x[1])))
         return [(item, score, positions) for score, item, positions in scored]
 
-    def redraw():
+    def redraw() -> None:
         cols, rows = get_terminal_size()
         height = rows - 2
         matches = get_matches(query)
@@ -338,7 +341,7 @@ def fzf(items, prompt="> ", multi=False, preview=None, preview_window="right:50%
         sys.stdout.flush()
 
 
-def fzf_filter(query, items):
+def fzf_filter(query: str, items: list[Any]):
     results = []
     for item in items:
         score, positions = fuzzy_score(query, item)

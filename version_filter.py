@@ -6,9 +6,10 @@ Usage: version_filter Examples: $ cd ~/wheels && version_filter Runs as a script
 import os
 from pathlib import Path
 import re
+from typing import Any, Iterable
 
 
-WHL_DIRECTORY = Path()
+WHL_DIRECTORY: Path = Path()
 WHL_PATTERN = re.compile(
     r"(?P<name>[\w\-]+)"
     r"-(?P<version>[\d\.]+(?:-\d{8})?)"

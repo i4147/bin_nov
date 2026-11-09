@@ -150,7 +150,7 @@ def cmd_jsonl2dict(args: argparse.Namespace) -> int:
     return 0
 
 
-_JSONL_SUFFIXES = {".jsonl", ".ndjson"}
+_JSONL_SUFFIXES: set[str] = {".jsonl", ".ndjson"}
 
 
 def _is_jsonl(path: Path) -> bool:

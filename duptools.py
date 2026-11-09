@@ -19,7 +19,7 @@ import shutil
 import subprocess
 import sys
 import time
-from typing import Iterable, Optional, Sequence
+from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS
 
@@ -46,10 +46,10 @@ try:
     _HAS_XORHASH = True
 except ImportError:
     _HAS_XORHASH = False
-CHUNK_SIZE = 8192
-BIG_CHUNK_SIZE = 32768
-QUICK_HEAD = 4096
-DEFAULT_EXCLUDES = (
+CHUNK_SIZE: int = 8192
+BIG_CHUNK_SIZE: int = 32768
+QUICK_HEAD: int = 4096
+DEFAULT_EXCLUDES: tuple[str, ...] = (
     ".git",
     "__pycache__",
     ".mypy_cache",

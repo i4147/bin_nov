@@ -23,7 +23,7 @@ from pathlib import Path
 import re
 import sys
 import time
-from typing import TYPE_CHECKING, Any, TextIO
+from typing import Any, Iterable, Sequence, TextIO, TYPE_CHECKING
 
 from dh import MAX_WORKERS, SKIP_DIRS, is_binary
 from loguru import logger
@@ -57,14 +57,14 @@ TYPE_PRESETS: dict[str, set[str]] = {
     "xml": {".xml"},
     "csv": {".csv", ".tsv"},
 }
-ANSI_RESET = "\x1b[0m"
-ANSI_BOLD = "\x1b[1m"
-ANSI_BLUE = "\x1b[94m"
-ANSI_CYAN = "\x1b[5;96m"
-ANSI_GREEN = "\x1b[32m"
-ANSI_YELLOW = "\x1b[33m"
-ANSI_MAGENTA = "\x1b[35m"
-_PATH_PALETTE = (
+ANSI_RESET: str = "\x1b[0m"
+ANSI_BOLD: str = "\x1b[1m"
+ANSI_BLUE: str = "\x1b[94m"
+ANSI_CYAN: str = "\x1b[5;96m"
+ANSI_GREEN: str = "\x1b[32m"
+ANSI_YELLOW: str = "\x1b[33m"
+ANSI_MAGENTA: str = "\x1b[35m"
+_PATH_PALETTE: tuple[str, ...] = (
     ANSI_CYAN,
     ANSI_GREEN,
     ANSI_YELLOW,

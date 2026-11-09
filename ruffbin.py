@@ -8,7 +8,7 @@ from pathlib import Path
 from dh import runcmd
 
 
-def process_file(path: Path):
+def process_file(path: Path) -> None:
     try:
         runcmd(["ruff", "format", str(path)], show_output=True)
     except:

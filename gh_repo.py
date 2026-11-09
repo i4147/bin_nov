@@ -31,20 +31,20 @@ import shutil
 import subprocess
 import sys
 import traceback
-from typing import Optional, Sequence
+from typing import Any, Optional, Sequence
 
 
-DEFAULT_GITHUB_USERNAME = "i4147"
-DEFAULT_GIT_EMAIL = "adnanonagh@gmail.com"
-DEFAULT_GIT_USER = "i4147"
+DEFAULT_GITHUB_USERNAME: str = "i4147"
+DEFAULT_GIT_EMAIL: str = "adnanonagh@gmail.com"
+DEFAULT_GIT_USER: str = "i4147"
 DEFAULT_ENV_FILE = Path.home() / ".env"
 DEFAULT_GLOBAL_GITIGNORE = Path.home() / ".gitignore"
-DEFAULT_DESCRIPTION = "created with python"
-DEFAULT_BRANCH = "main"
-DEFAULT_API_PUSH_COMMIT_MESSAGE = "Update files"
-DEFAULT_GH_CREATE_COMMIT_MESSAGE = "initial"
-DEFAULT_GH_CLI_COMMIT_MESSAGE = "initial"
-BACKEND_CHOICES = [
+DEFAULT_DESCRIPTION: str = "created with python"
+DEFAULT_BRANCH: str = "main"
+DEFAULT_API_PUSH_COMMIT_MESSAGE: str = "Update files"
+DEFAULT_GH_CREATE_COMMIT_MESSAGE: str = "initial"
+DEFAULT_GH_CLI_COMMIT_MESSAGE: str = "initial"
+BACKEND_CHOICES: list[str] = [
     "subprocess",
     "gitpython",
     "rest",
@@ -515,7 +515,7 @@ class GhCliGitHub(GitHubBackend):
         r = run_cli(["gh", "repo", "view", f"{owner}/{name}"])
         return r.returncode == 0
 
-    def create_repo(self, name, description="", private=False, auto_init=False, owner=None):
+    def create_repo(self, name: str, description = "", private = False, auto_init = False, owner = None) -> Optional[dict[str, str]]:
         cmd = [
             "gh",
             "repo",
@@ -555,7 +555,7 @@ class RestGitHub(GitHubBackend):
         )
         return r.status_code == 200
 
-    def create_repo(self, name, description="", private=False, auto_init=False, owner=None):
+    def create_repo(self, name: str, description = "", private = False, auto_init = False, owner = None):
         import requests
 
         payload = {
@@ -597,7 +597,7 @@ class PyGithubGitHub(GitHubBackend):
         except Exception:
             return False
 
-    def create_repo(self, name, description="", private=False, auto_init=False, owner=None):
+    def create_repo(self, name: str, description = "", private = False, auto_init = False, owner = None) -> Optional[dict[str, str]]:
         try:
             user = self.client.get_user(owner) if owner else self.client.get_user()
             repo = user.create_repo(
@@ -635,7 +635,7 @@ class Github3GitHub(GitHubBackend):
         except Exception:
             return False
 
-    def create_repo(self, name, description="", private=False, auto_init=False, owner=None):
+    def create_repo(self, name: str, description = "", private = False, auto_init = False, owner = None) -> Optional[dict[str, str]]:
         try:
             repo = self.client.create_repo(
                 name,

@@ -10,7 +10,7 @@ from pathlib import Path
 import re
 import sys
 import tarfile
-from typing import TYPE_CHECKING, Optional
+from typing import Any, Iterable, Optional, TYPE_CHECKING
 from urllib.parse import unquote, urlparse
 import zipfile
 
@@ -25,7 +25,7 @@ try:
     from tqdm import tqdm as _tqdm
 except ImportError:
 
-    def _tqdm(it, **_kw):
+    def _tqdm(it: Iterable[Any], **_kw: Any):
         return it
 
 
@@ -64,7 +64,7 @@ GITHUB_RE = re.compile(
 GITHUB_REPO_RE = re.compile(
     r"https?://(?:www\.)?github\.com/[a-zA-Z0-9\-]+/[a-zA-Z0-9\-]+",
 )
-DEFAULT_GIT_HOSTS = "github.com,gitlab.com,gitea.io,bitbucket.org,git.sr.ht,codeberg.org,gitbucket.org,gogs.io"
+DEFAULT_GIT_HOSTS: str = "github.com,gitlab.com,gitea.io,bitbucket.org,git.sr.ht,codeberg.org,gitbucket.org,gogs.io"
 DEFAULT_FILE_EXTS = ",".join(
     sorted({
         ".txt",
@@ -121,8 +121,8 @@ DEFAULT_FILE_EXTS = ",".join(
         ".ttc",
     })
 )
-ZIP_SUFFIXES = (".zip", ".whl")
-TAR_SUFFIXES = (
+ZIP_SUFFIXES: tuple[str, str] = (".zip", ".whl")
+TAR_SUFFIXES: tuple[str, ...] = (
     ".tar",
     ".tar.gz",
     ".tgz",
@@ -134,9 +134,9 @@ TAR_SUFFIXES = (
     ".tbz",
     ".tbz2",
 )
-SEVENZ_SUFFIXES = (".7z",)
-FETCH_EXTS = (".css", ".ttf", ".woff", ".woff2", ".pdf")
-BY_EXT_KNOWN = [
+SEVENZ_SUFFIXES: tuple[str,] = (".7z",)
+FETCH_EXTS: tuple[str, ...] = (".css", ".ttf", ".woff", ".woff2", ".pdf")
+BY_EXT_KNOWN: list[str] = [
     "htm",
     "html",
     "js",

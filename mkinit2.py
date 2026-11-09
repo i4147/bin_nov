@@ -62,7 +62,7 @@ def parse_existing_init(init_file: Path) -> tuple[set[str], set[str], list[str]]
     return existing_imports, existing_all, original_lines
 
 
-def main():
+def main() -> None:
     cwd = Path.cwd()
     print(f"Scanning directory: {cwd}")
     modules = get_python_modules(cwd)

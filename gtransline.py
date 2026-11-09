@@ -10,7 +10,7 @@ import multiprocessing as mp
 from pathlib import Path
 import re
 import sys
-from typing import Final
+from typing import Any, Final
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -51,7 +51,7 @@ def is_non_english(text: str) -> bool:
 
 
 class UniversalTranslator:
-    def __init__(self):
+    def __init__(self) -> None:
         if HAS_DEEP_TRANSLATOR:
             self.translator = GoogleTranslator(source="auto", target="en")
             self.mode = "deep"

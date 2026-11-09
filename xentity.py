@@ -14,20 +14,20 @@ import os
 from pathlib import Path
 import textwrap
 import time
-from typing import Iterator
+from typing import Any, Iterable, Iterator, Sequence
 
 from dh import SKIP_DIRS
 from rich.console import Console
 from rich.text import Text
 
 
-OUT_DIR = Path("output")
+OUT_DIR: Path = Path("output")
 OUT_DIR.mkdir(exist_ok=True)
 
-ALL_KINDS = {"class", "function", "const", "import"}
-ORDER = ("const", "class", "function", "import")
+ALL_KINDS: set[str] = {"class", "function", "const", "import"}
+ORDER: tuple[str, str, str, str] = ("const", "class", "function", "import")
 
-_FILENAME_MAP = {
+_FILENAME_MAP: dict[frozenset[Any], str] = {
     frozenset({"const"}): "const.py",
     frozenset({"class"}): "classes.py",
     frozenset({"function"}): "funcs.py",
@@ -112,7 +112,7 @@ def _find_ts_imports(root: object) -> list[object]:
     import_nodes: list[tuple[object, tuple[object, ...]]] = []
     try_nodes: list[tuple[object, tuple[object, ...]]] = []
 
-    def walk(node, ancestors):
+    def walk(node: Any, ancestors: Iterable[Any]) -> None:
         if node.type in ("import_statement", "import_from_statement"):
             import_nodes.append((node, tuple(ancestors)))
             return

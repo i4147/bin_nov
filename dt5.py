@@ -13,7 +13,7 @@ import signal
 import sys
 import threading
 import time
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 from atomicio import atomic_write_json
 from dh import MAX_WORKERS
@@ -37,7 +37,7 @@ def setup_logging(debug_log: Path, error_stderr: bool = True) -> None:
         )
 
 
-LANGUAGE_CODES = {
+LANGUAGE_CODES: dict[str, dict[str, str]] = {
     "deep_translator": {
         "en": "en",
         "es": "es",
@@ -242,7 +242,7 @@ def _make_boto3(source: str, target: str) -> Callable:
     return translate_chunk
 
 
-BACKEND_FACTORIES = {
+BACKEND_FACTORIES: dict[str, Any] = {
     "deep_translator": _make_deep_translator,
     "deepl": _make_deepl,
     "translate": _make_translate,
@@ -251,7 +251,7 @@ BACKEND_FACTORIES = {
     "pygoogletranslation": _make_pygoogletranslation,
     "boto3": _make_boto3,
 }
-DEFAULT_BACKEND_ORDER = [
+DEFAULT_BACKEND_ORDER: list[str] = [
     "deepl",
     "deep_translator",
     "translate",
@@ -395,7 +395,7 @@ class TranslatorEngine:
         target_lang: str,
         backend_order: Optional[list[str]] = None,
         attempts_per_backend: int = 3,
-    ):
+    ) -> None:
         self.source_lang = source_lang
         self.target_lang = target_lang
         self.attempts = attempts_per_backend
@@ -445,13 +445,13 @@ class TranslatorEngine:
 
 
 class GracefulShutdown:
-    def __init__(self):
+    def __init__(self) -> None:
         self.event = threading.Event()
         self._prev_int = None
         self._prev_term = None
 
     def __enter__(self):
-        def handler(signum, frame):
+        def handler(signum: int, frame: Any) -> None:
             if not self.event.is_set():
                 logger.warning(f"Signal {signum} received; finishing current chunks...")
                 print(
@@ -467,7 +467,7 @@ class GracefulShutdown:
             self._prev_term = None
         return self
 
-    def __exit__(self, exc_type, exc, tb):
+    def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:
         if self._prev_int is not None:
             signal.signal(signal.SIGINT, self._prev_int)
         if self._prev_term is not None:

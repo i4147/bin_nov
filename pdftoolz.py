@@ -25,7 +25,7 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import Iterable, Optional
+from typing import Any, Iterable, Optional, Sequence
 import urllib.parse
 
 from dh import MAX_WORKERS
@@ -114,12 +114,12 @@ class _IdCollector(HTMLParser):
         super().__init__()
         self.ids: set[str] = set()
 
-    def handle_starttag(self, tag: str, attrs) -> None:
+    def handle_starttag(self, tag: str, attrs: Iterable[Any]) -> None:
         for k, v in attrs:
             if k == "id" and v:
                 self.ids.add(v)
 
-    def handle_startendtag(self, tag: str, attrs) -> None:
+    def handle_startendtag(self, tag: str, attrs: Any) -> None:
         self.handle_starttag(tag, attrs)
 
 
@@ -551,7 +551,7 @@ def _shrink_qpdf(pdf: Path) -> None:
             tmp.unlink(missing_ok=True)
 
 
-_SHRINK_ENGINES = {
+_SHRINK_ENGINES: dict[str, Any] = {
     "gs-basic": _shrink_gs_basic,
     "gs-screen": _shrink_gs_screen,
     "gs-mobile": _shrink_gs_mobile,

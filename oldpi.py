@@ -34,7 +34,7 @@ def get_files(path: str | Path, ext: list[str] | None = None) -> list[Path]:
     return files
 
 
-SIZE_THRESHOLD = 1 * 1024 * 1024
+SIZE_THRESHOLD: int = 1 * 1024 * 1024
 OLD_PRINT_RE = re.compile(r"(?m)^[ \t]*print[ \t]+[^(\n]")
 
 

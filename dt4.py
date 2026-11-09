@@ -13,7 +13,7 @@ import signal
 import sys
 from threading import Lock
 import time
-from typing import Callable, Optional
+from typing import Any, Callable, Iterable, Optional, TextIO
 
 from deep_translator import GoogleTranslator
 from deep_translator.exceptions import NotValidPayload, TranslationNotFound
@@ -21,17 +21,17 @@ from dh import MAX_WORKERS
 from loguru import logger
 
 
-DEFAULT_INPUT = "input.txt"
-DEFAULT_OUTPUT = "chunks.json"
-DEFAULT_FAILED = "failed.txt"
-DEFAULT_SOURCE = "en"
-DEFAULT_TARGET = "fr"
-DEFAULT_DELAY = 0.5
-DEFAULT_CHUNK_SIZE = 2500
-DEFAULT_SAVE_EVERY = 10
-MAX_RETRIES = 3
-BACKOFF_BASE = 2
-LANG_MAPPING = {
+DEFAULT_INPUT: str = "input.txt"
+DEFAULT_OUTPUT: str = "chunks.json"
+DEFAULT_FAILED: str = "failed.txt"
+DEFAULT_SOURCE: str = "en"
+DEFAULT_TARGET: str = "fr"
+DEFAULT_DELAY: float = 0.5
+DEFAULT_CHUNK_SIZE: int = 2500
+DEFAULT_SAVE_EVERY: int = 10
+MAX_RETRIES: int = 3
+BACKOFF_BASE: int = 2
+LANG_MAPPING: dict[str, dict[str, str]] = {
     "deep_translator": {
         "en": "english",
         "fr": "french",
@@ -105,7 +105,7 @@ LANG_MAPPING = {
         "ar": "ar",
     },
 }
-shutdown_flag = False
+shutdown_flag: bool = False
 
 
 def setup_logging(log_file: str = "translate_chunks.log") -> None:
@@ -114,7 +114,7 @@ def setup_logging(log_file: str = "translate_chunks.log") -> None:
     logger.add(log_file, level="DEBUG", rotation="10 MB")
 
 
-def signal_handler(sig, frame) -> None:
+def signal_handler(sig: int, frame: Any) -> None:
     global shutdown_flag
     shutdown_flag = True
     logger.info("Shutdown signal received. Waiting for current tasks to complete...")

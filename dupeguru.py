@@ -12,14 +12,14 @@ import multiprocessing as mp
 import os
 from pathlib import Path
 import sys
-from typing import Iterable, Iterator
+from typing import Any, Iterable, Iterator, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
 
-CHUNK_SIZE = 1 << 20
-PARTIAL_SIZE = 1 << 16
-DIGEST_BYTES = 16
+CHUNK_SIZE: int = 1 << 20
+PARTIAL_SIZE: int = 1 << 16
+DIGEST_BYTES: int = 16
 
 
 def human_size(n: int) -> str:
@@ -82,7 +82,7 @@ def find_duplicates(
     roots: list[Path],
     workers: int,
     min_size: int,
-    log,
+    log: Any,
 ) -> list[list[Path]]:
     by_size: dict[int, list[Path]] = defaultdict(list)
     seen_inodes: set[tuple[int, int]] = set()

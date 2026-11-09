@@ -10,7 +10,7 @@ import base64
 from pathlib import Path
 import re
 import sys
-from typing import Optional
+from typing import Any, Optional
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
@@ -31,7 +31,7 @@ DEFAULT_MIME_TYPES: dict[str, str] = {
     ".gif": "image/gif",
     ".webp": "image/webp",
 }
-DEFAULT_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) Monolith/1.0"
+DEFAULT_USER_AGENT: str = "Mozilla/5.0 (X11; Linux x86_64) Monolith/1.0"
 CSS_URL_RE = re.compile(r"""url\(\s*['"]?([^)'"]+?)['"]?\s*\)""")
 
 

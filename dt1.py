@@ -23,7 +23,7 @@ from pathlib import Path
 import sys
 import threading
 import time
-from typing import Callable
+from typing import Any, Callable
 
 from atomicio import atomic_save
 from dh import MAX_WORKERS
@@ -31,7 +31,7 @@ from loguru import logger
 
 
 Translator = Callable[[str], str]
-FALLBACK_BACKENDS = (
+FALLBACK_BACKENDS: tuple[str, ...] = (
     "deepl",
     "deep_translator",
     "translate",

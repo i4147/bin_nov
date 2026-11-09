@@ -29,7 +29,7 @@ try:
     from dotenv import load_dotenv
 except ImportError:
 
-    def load_dotenv(*_a, **_kw) -> bool:
+    def load_dotenv(*_a: Any, **_kw: Any) -> bool:
         return False
 
 
@@ -42,12 +42,12 @@ from googleapiclient.http import MediaIoBaseDownload
 import requests
 
 
-SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
-FOLDER_MIME = "application/vnd.google-apps.folder"
-DEFAULT_CREDENTIALS_FILE = "credentials.json"
-DEFAULT_TOKEN_FILE = "token.pickle"
+SCOPES: list[str] = ["https://www.googleapis.com/auth/drive.readonly"]
+FOLDER_MIME: str = "application/vnd.google-apps.folder"
+DEFAULT_CREDENTIALS_FILE: str = "credentials.json"
+DEFAULT_TOKEN_FILE: str = "token.pickle"
 DEFAULT_ENV_FILE = Path.home() / ".env"
-DEFAULT_BACKUP_DIR = "./google_drive_backup"
+DEFAULT_BACKUP_DIR: str = "./google_drive_backup"
 
 
 def _iso_to_timestamp(value: str) -> Optional[float]:

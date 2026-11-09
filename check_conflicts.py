@@ -11,12 +11,13 @@ from pathlib import Path
 import re
 import sys
 import time
+from typing import Iterator
 
 from dh import STDLIB
 
 
-PIP_JSON = Path("/sdcard/data/pip.json")
-DEFAULT_REPORT = Path("conflict_report.json")
+PIP_JSON: Path = Path("/sdcard/data/pip.json")
+DEFAULT_REPORT: Path = Path("conflict_report.json")
 
 
 def normalize(name: str) -> str:
@@ -54,7 +55,7 @@ def installed_distributions() -> set[str]:
     return names
 
 
-def collect_targets(root: Path):
+def collect_targets(root: Path) -> Iterator[str]:
     for p in sorted(root.iterdir()):
         if p.is_file() and p.suffix == ".py":
             yield p, p.stem, "module"

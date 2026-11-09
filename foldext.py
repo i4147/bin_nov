@@ -6,11 +6,12 @@ Usage: foldext Examples: $ foldext Runs as a script (``python foldext.py``) in t
 import contextlib
 from pathlib import Path
 import shutil
+from typing import Any
 
 from dh import gsz
 
 
-def folderize_by_extension(cwd: Path):
+def folderize_by_extension(cwd: Path) -> tuple[set[Any], dict[str, Any]]:
     root_path = Path(cwd)
     extension_stats = {}
     for path in root_path.rglob("*"):

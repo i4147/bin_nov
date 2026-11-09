@@ -14,14 +14,15 @@ import re
 import sys
 import tokenize
 import warnings
+from typing import Any
 
 
-RED = "\033[91m"
-CYAN = "\033[96m"
-RESET = "\033[0m"
+RED: str = "\033[91m"
+CYAN: str = "\033[96m"
+RESET: str = "\033[0m"
 
 
-def check_and_fix_file(args):
+def check_and_fix_file(args: list[Any]):
     filepath_str, fix = args
     filepath = pathlib.Path(filepath_str)
     try:
@@ -126,7 +127,7 @@ def check_and_fix_file(args):
     return filepath_str, True, output, new_content
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Recursively find and fix 'invalid escape sequence' SyntaxWarnings in Python code."
     )

@@ -25,17 +25,17 @@ from loguru import logger
 
 
 LOG = logger
-EXIT_OK = 0
-EXIT_NO_COMMITS = 1
-EXIT_USAGE = 2
-EXIT_REPO = 3
+EXIT_OK: int = 0
+EXIT_NO_COMMITS: int = 1
+EXIT_USAGE: int = 2
+EXIT_REPO: int = 3
 BACKEND_CAPS: dict[str, dict[str, bool]] = {
     "dulwich": {"rename": False, "stats": False},
     "pygit2": {"rename": True, "stats": True},
     "gitpython": {"rename": True, "stats": True},
     "gitcli": {"rename": True, "stats": True},
 }
-CSV_FIELDS = [
+CSV_FIELDS: list[str] = [
     "sha",
     "short",
     "author_name",
@@ -183,7 +183,7 @@ def _iter_dulwich(opts: Options) -> Iterator[CommitRecord]:
 
         emitted = 0
 
-        def _build(commit) -> CommitRecord:
+        def _build(commit: Any) -> CommitRecord:
             sha = commit.id.decode()
             an, ae = _parse_actor(commit.author)
             cn, ce = _parse_actor(commit.committer)
@@ -263,7 +263,7 @@ def _iter_pygit2(opts: Options) -> Iterator[CommitRecord]:
         ref.id if hasattr(ref, "id") and isinstance(ref.id, pygit2.Oid) else getattr(ref, "target", None) or ref.id
     )
 
-    def _build(commit) -> CommitRecord:
+    def _build(commit: Any) -> CommitRecord:
         parents = list(commit.parents)
         parents_used = parents[:1] if (opts.first_parent and parents) else parents
         if parents_used:

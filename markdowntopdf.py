@@ -12,6 +12,7 @@ import lzma
 from pathlib import Path
 import sys
 from time import time
+from typing import Any, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -19,20 +20,20 @@ from markdown import markdown
 from weasyprint import CSS, HTML
 
 
-MARKDOWN_BASE_EXTENSIONS = [
+MARKDOWN_BASE_EXTENSIONS: list[str] = [
     "markdown.extensions.tables",
     "pymdownx.magiclink",
     "pymdownx.betterem",
     "pymdownx.superfences",
 ]
-DEFAULT_CSS = Path("/sdcard/_static/css/markdown.css.xz")
+DEFAULT_CSS: Path = Path("/sdcard/_static/css/markdown.css.xz")
 
 
 class ValidationError(Exception):
     pass
 
 
-def md2pdf(pdf, raw=None, md=None, css=None, base_url=None, extras=None, extras_config=None):
+def md2pdf(pdf: Any, raw = None, md = None, css = None, base_url = None, extras = None, extras_config = None) -> None:
     extras_config = extras_config or {}
     extras = extras if extras and len(extras) else []
     if md:
@@ -58,7 +59,7 @@ def md2pdf(pdf, raw=None, md=None, css=None, base_url=None, extras=None, extras_
     html.write_pdf(pdf, stylesheets=styles)
 
 
-def parse_config(config):
+def parse_config(config: dict[str, Any]):
     try:
         parsed = json.loads(config)
     except json.decoder.JSONDecodeError as err:
@@ -67,7 +68,7 @@ def parse_config(config):
     return parsed
 
 
-def _convert_one(md_path, pdf_path, css=None, extras=None, extras_config=None):
+def _convert_one(md_path: Path, pdf_path: Path, css = None, extras = None, extras_config = None) -> None:
     md2pdf(
         pdf_path,
         md=md_path,
@@ -78,7 +79,7 @@ def _convert_one(md_path, pdf_path, css=None, extras=None, extras_config=None):
     )
 
 
-def convert_batch(workers, md_files, pdf=None, css=None, extras=None, extras_config=None):
+def convert_batch(workers: int, md_files: Sequence[Path], pdf = None, css = None, extras = None, extras_config = None) -> None:
     started_at = time()
     with ThreadPoolExecutor(max_workers=workers) as pool:
         futures = []
@@ -90,7 +91,7 @@ def convert_batch(workers, md_files, pdf=None, css=None, extras=None, extras_con
     print(f"🚀 Output files generated in {(time() - started_at):.3f}s")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(prog="md2pdf", usage="python md2pdf.py readme.md")
     parser.add_argument("md", nargs="*", help="Markdown input file(s)")
     parser.add_argument("-o", "--output", help="PDF output file (only with single input)")

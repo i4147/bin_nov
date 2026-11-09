@@ -9,12 +9,12 @@ import ast
 from pathlib import Path
 import re
 import sys
-from typing import Optional
+from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS
 
 
-LOGURU_LOGFORMAT = "{time:YYYY-MM-DD HH:mm:ss.SSS} {level} {file.name}:{line} {message}"
+LOGURU_LOGFORMAT: str = "{time:YYYY-MM-DD HH:mm:ss.SSS} {level} {file.name}:{line} {message}"
 MERGED_FILE_HEADER_RE = re.compile(r"^#\s*File:\s*(.+?)\s*$", re.MULTILINE)
 
 
@@ -253,8 +253,8 @@ OSPATH_METHOD_MAP: dict[str, str] = {
     "stat": "stat",
     "mkdir": "mkdir",
 }
-OSPATH_MAKEDIRS = "makedirs"
-OSPATH_GETSIZE = "getsize"
+OSPATH_MAKEDIRS: str = "makedirs"
+OSPATH_GETSIZE: str = "getsize"
 
 
 def _wrap_path(arg: ast.expr) -> ast.Call:
@@ -340,7 +340,7 @@ class OsPathTransformer(ast.NodeTransformer):
         )
 
 
-_EXECUTOR_NAMES = {"ProcessPoolExecutor", "ThreadPoolExecutor"}
+_EXECUTOR_NAMES: set[str] = {"ProcessPoolExecutor", "ThreadPoolExecutor"}
 
 
 class _ExecutorMethodRenamer(ast.NodeTransformer):
@@ -514,7 +514,7 @@ class LoggingTransformer(ast.NodeTransformer):
         return node
 
 
-_DEF_NODES = (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+_DEF_NODES: tuple[Any, ...] = (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
 
 
 def strip_docstrings(tree: ast.AST) -> None:
@@ -532,7 +532,7 @@ def strip_docstrings(tree: ast.AST) -> None:
                 node.body = body[1:] or [ast.Pass()]
 
 
-_STANDARD_HEADER = [
+_STANDARD_HEADER: list[str] = [
     "import sys",
     "import multiprocessing as mp",
     "from pathlib import Path",

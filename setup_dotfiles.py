@@ -19,13 +19,13 @@ FILTER_PATH = Path(HOME).joinpath(".local", "bin", "git-age-filter")
 REPO_DIR = Path(HOME).joinpath("dotfiles.git")
 GITATTRIBUTES = Path(HOME).joinpath(".gitattributes")
 GITIGNORE = Path(HOME).joinpath(".gitignore")
-SECRET_PATTERNS = [
+SECRET_PATTERNS: list[str] = [
     "secrets/**",
     "*.secret",
     ".env",
     "*.token",
 ]
-IGNORE_PATTERNS = [
+IGNORE_PATTERNS: list[str] = [
     ".config/age/",
     "dotfiles.git/",
     "storage/",
@@ -34,7 +34,7 @@ IGNORE_PATTERNS = [
 ]
 
 
-def run(cmd: list[str], **kw) -> subprocess.CompletedProcess:
+def run(cmd: list[str], **kw: str) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, check=True, **kw)
 
 
@@ -81,7 +81,7 @@ def ensure_age_key() -> str:
     return pubkey
 
 
-FILTER_SOURCE = r'''#!/data/data/com.termux/files/usr/bin/python
+FILTER_SOURCE: str = r'''#!/data/data/com.termux/files/usr/bin/python
 """Git clean/smudge filter using age. Managed by setup_dotfiles.py."""
 import os, subprocess, sys
 from pathlib import Path

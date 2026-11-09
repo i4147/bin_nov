@@ -20,7 +20,7 @@ from pathlib import Path
 import shutil
 import tarfile
 import time
-from typing import Optional, Self, Sequence
+from typing import Any, Iterable, Optional, Self, Sequence
 
 from dh import MAX_WORKERS, workers
 from loguru import logger
@@ -132,7 +132,7 @@ class Tool:
     def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *exc_info) -> None:
+    def __exit__(self, *exc_info: Any) -> None:
         self.close()
 
     def _compress_small(self, src: Path, dst: Path) -> bool:

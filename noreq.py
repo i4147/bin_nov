@@ -8,6 +8,7 @@ import shutil
 import tarfile
 import tempfile
 import zipfile
+from typing import Any
 
 
 def is_wheel_ok(path: Path) -> bool:
@@ -179,10 +180,10 @@ def _check_tar_bytes(raw: bytes) -> bool:
         return False
 
 
-TARGET_FILES = {"METADATA", "PKGINFO", "PKG-INFO"}
-PREFIX = "Requires-Dist:"
-LOG_FILE = Path("/sdcard/reqz.txt")
-removed_lines_accumulator = []
+TARGET_FILES: set[str] = {"METADATA", "PKGINFO", "PKG-INFO"}
+PREFIX: str = "Requires-Dist:"
+LOG_FILE: Path = Path("/sdcard/reqz.txt")
+removed_lines_accumulator: list[Any] = []
 
 
 def clean_text(text: str) -> tuple[str, list[str]]:

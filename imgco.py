@@ -15,7 +15,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from typing import Callable, Optional, Sequence
+from typing import Any, Callable, Optional, Sequence
 
 from dh import MAX_WORKERS
 
@@ -69,7 +69,7 @@ TARGET_EXTS: dict[str, set[str]] = {
     "pillow": {".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".webp", ".gif"},
     "imagemagick": {".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".webp", ".gif", ".avif", ".heic"},
 }
-PRIORITY = ("cv2", "skimage", "pillow", "imagemagick")
+PRIORITY: tuple[str, str, str, str] = ("cv2", "skimage", "pillow", "imagemagick")
 
 
 def detect_backend(preferred: Optional[str] = None) -> str:

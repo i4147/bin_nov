@@ -9,13 +9,13 @@ import subprocess
 import sys
 import sysconfig
 import textwrap
-from typing import Callable, Iterable, Optional, Sequence
+from typing import Any, Callable, Iterable, Optional, Sequence
 import zipfile
 
 
-__all__ = ["main"]
-DEFAULT_DEST = "empty_wheels"
-DEFAULT_DETECTOR = "dist-info-only"
+__all__: list[str] = ["main"]
+DEFAULT_DEST: str = "empty_wheels"
+DEFAULT_DETECTOR: str = "dist-info-only"
 _CODE_SUFFIXES: tuple[str, ...] = (".py", ".so", ".pyi")
 
 
@@ -78,7 +78,7 @@ DETECTORS: dict[str, DetectorFn] = {
     "no-code": _detect_no_code,
     "no-payload": _detect_no_payload,
 }
-DETECTOR_HELP = """\
+DETECTOR_HELP: str = """\
 detectors:
   dist-info-only  every entry lives under a single *.dist-info/ directory (default)
   record          every RECORD row points inside the *.dist-info/ directory

@@ -19,9 +19,9 @@ from typing import Any, Callable
 from dh import MAX_WORKERS
 
 
-BLOB_BASE64 = "__blob_base64"
-BLOB_HEX = "__blob_hex"
-BATCH_SIZE = 5000
+BLOB_BASE64: str = "__blob_base64"
+BLOB_HEX: str = "__blob_hex"
+BATCH_SIZE: int = 5000
 
 
 def quote_identifier(name: str) -> str:
@@ -70,7 +70,7 @@ def get_tables(conn: sqlite3.Connection, include_internal: bool = False) -> list
 def write_table_array(
     conn: sqlite3.Connection,
     table: str,
-    fp,
+    fp: Path,
     blob_fn: Callable[[bytes], Any],
     indent: int,
     ensure_ascii: bool,

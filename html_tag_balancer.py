@@ -9,6 +9,7 @@ import contextlib
 from html.parser import HTMLParser
 from pathlib import Path
 import sys
+from typing import Any
 
 
 VOID_ELEMENTS = frozenset({
@@ -40,12 +41,12 @@ class TagBalanceChecker(HTMLParser):
     def set_source(self, source: str) -> None:
         self.raw_source = source
 
-    def handle_starttag(self, tag, attrs) -> None:
+    def handle_starttag(self, tag: str, attrs: Any) -> None:
         if tag.lower() in VOID_ELEMENTS:
             return
         self.stack.append((tag.lower(), self.getpos()))
 
-    def handle_endtag(self, tag) -> None:
+    def handle_endtag(self, tag: str) -> None:
         tag = tag.lower()
         if not self.stack or self.stack[-1][0] != tag:
             try:
@@ -63,7 +64,7 @@ class TagBalanceChecker(HTMLParser):
         else:
             self.stack.pop()
 
-    def handle_startendtag(self, tag, attrs) -> None:
+    def handle_startendtag(self, tag: str, attrs: Any) -> None:
         pass
 
 
@@ -102,13 +103,13 @@ def fix_html_file(path: Path) -> bool:
         line, col = pos
 
     class TagScanner(HTMLParser):
-        def __init__(self, source) -> None:
+        def __init__(self, source: str) -> None:
             super().__init__()
             self.source = source
             self.chars = list(source)
             self.tokens = []
 
-        def get_char_pos(self, line, col):
+        def get_char_pos(self, line: str, col: Any):
             lines = self.source.splitlines(keepends=True)
             idx = 0
             for i in range(line - 1):
@@ -116,7 +117,7 @@ def fix_html_file(path: Path) -> bool:
                     idx += len(lines[i])
             return idx + col
 
-        def handle_starttag(self, tag, attrs) -> None:
+        def handle_starttag(self, tag: str, attrs: Any) -> None:
             if tag.lower() not in VOID_ELEMENTS:
                 pos = self.getpos()
                 start = self.get_char_pos(*pos)
@@ -126,7 +127,7 @@ def fix_html_file(path: Path) -> bool:
                 else:
                     self.tokens.append(("start", tag, start, start + len(f"<{tag}")))
 
-        def handle_endtag(self, tag) -> None:
+        def handle_endtag(self, tag: str) -> None:
             pos = self.getpos()
             tag_str = f"</{tag}>"
             start = self.source.find(tag_str, self.get_char_pos(*pos))
@@ -139,7 +140,7 @@ def fix_html_file(path: Path) -> bool:
             if start != -1:
                 self.tokens.append(("end", tag, start, start + len(tag_str)))
 
-        def handle_startendtag(self, tag, attrs) -> None:
+        def handle_startendtag(self, tag: str, attrs: Any) -> None:
             pos = self.getpos()
             start = self.get_char_pos(*pos)
             end = self.source.find(">", start)

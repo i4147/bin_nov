@@ -1,6 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Unified command-line tool for cleaning requirements.txt files and inspecting installed packages."""
 
+from __future__ import annotations
+
 import argparse
 from concurrent.futures import ProcessPoolExecutor
 import csv
@@ -13,6 +15,7 @@ import sys
 import tarfile
 import tempfile
 import zipfile
+from typing import Any, Sequence
 
 from loguru import logger
 
@@ -30,14 +33,14 @@ def get_installed_pkgs():
         return []
 
 
-def cmd_clean_req(args):
+def cmd_clean_req(args: list[Any]) -> str | None:
     req_path = Path(args.file)
     if not req_path.exists():
         print(f"Error: File '{req_path}' not found.", file=sys.stderr)
         sys.exit(1)
     op_re = re.compile(r"\s*(?:===|==|!=|>=|<=|~=|>|<)\s*")
 
-    def clean_line(m_str):
+    def clean_line(m_str: str) -> str:
         m_str = m_str.split("#", 1)[0].strip()
         if not m_str:
             return ""
@@ -50,7 +53,7 @@ def cmd_clean_req(args):
         parts = op_re.split(m_str, maxsplit=1)
         return parts[0].strip()
 
-    def sort_key(o):
+    def sort_key(o: Sequence[Any]):
         g = o[0]
         if g.isupper():
             return (0, o)
@@ -74,14 +77,14 @@ def cmd_clean_req(args):
         print(l)
 
 
-def cmd_clean_freeze(args):
+def cmd_clean_freeze(args: list[Any]):
     file_path = Path(args.file)
     if not file_path.is_file():
         print(f"Error: File '{file_path}' not found.", file=sys.stderr)
         sys.exit(1)
     freeze_re = re.compile(r"^\s*(?:-e\s+)?(?P<name>[A-Za-z0-9_.\-]+)", re.VERBOSE)
 
-    def parse_line(k):
+    def parse_line(k: str):
         k = k.strip()
         if not k or k.startswith("#"):
             return None
@@ -107,7 +110,7 @@ def cmd_clean_freeze(args):
     print(f"Cleaned freeze output in {file_path}")
 
 
-def cmd_strip_versions(args):
+def cmd_strip_versions(args: list[Any]) -> None:
     file_path = Path(args.file)
     if not file_path.exists():
         print(f"Error: File '{file_path}' not found.", file=sys.stderr)
@@ -141,7 +144,7 @@ def cmd_strip_versions(args):
     print(f"Updated {file_path} with {len(sorted_pkgs)} unique packages.")
 
 
-def cmd_keep_pure(args):
+def cmd_keep_pure(args: list[Any]) -> Any | None:
     req_file = args.file
     binary_output = Path(args.binary_output)
 
@@ -162,7 +165,7 @@ def cmd_keep_pure(args):
                 h.extend([str(z) for z in q_path.iterdir() if z.name.endswith(".dist-info")])
         return h
 
-    def check_binary(i):
+    def check_binary(i: Path) -> str | None:
         i_path = Path(i)
         record_path = i_path / "RECORD"
         pkg_name = i_path.name.replace(".dist-info", "").split("-")[0].lower()
@@ -214,13 +217,13 @@ def cmd_keep_pure(args):
         print("✅ No binary packages found in requirements.txt")
 
 
-def cmd_extract_reqs(args):
+def cmd_extract_reqs(args: list[Any]) -> bool | None:
     output_path = Path(args.output)
     meta_names = {"METADATA", "PKGINFO", "PKG-INFO"}
     req_prefix = "Requires-Dist:"
     extracted = []
 
-    def parse_metadata_content(content):
+    def parse_metadata_content(content: str) -> tuple[str,]:
         lines = content.splitlines()
         normal, reqs = [], []
         for line in lines:
@@ -233,7 +236,7 @@ def cmd_extract_reqs(args):
             body += "\n"
         return body, reqs
 
-    def process_file_meta(af):
+    def process_file_meta(af: Path) -> None:
         try:
             text = af.read_text(encoding="utf-8", errors="ignore")
         except Exception:
@@ -243,7 +246,7 @@ def cmd_extract_reqs(args):
             extracted.extend(reqs)
             af.write_text(normal, encoding="utf-8")
 
-    def is_valid_archive(af):
+    def is_valid_archive(af: Path) -> bool:
         af = Path(af)
         try:
             if not af.is_file() or not af.stat().st_size:
@@ -259,7 +262,7 @@ def cmd_extract_reqs(args):
         except Exception:
             return False
 
-    def process_zip_archive(af):
+    def process_zip_archive(af: str) -> None:
         with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
             tmp_path = Path(tmp.name)
         try:
@@ -281,7 +284,7 @@ def cmd_extract_reqs(args):
         finally:
             tmp_path.unlink(missing_ok=True)
 
-    def process_tar_archive(af):
+    def process_tar_archive(af: str) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             tar_temp = temp_path / "temp.tar.gz"
@@ -332,7 +335,7 @@ def cmd_extract_reqs(args):
         print("No matching lines were found or removed.")
 
 
-def cmd_remove_req(args):
+def cmd_remove_req(args: list[Any]) -> None:
     req_to_remove = args.requirement
     site_pkgs = site.getsitepackages()
     target_dir = None
@@ -346,7 +349,7 @@ def cmd_remove_req(args):
         termux_path = Path(f"/data/data/com.termux/files/usr/lib/python{g}{h}/site-packages")
         target_dir = termux_path if termux_path.exists() else Path(site_pkgs[0]) if site_pkgs else Path.cwd()
 
-    def process_metadata(meta_path, req_str):
+    def process_metadata(meta_path: Path, req_str: str) -> None:
         meta_path = Path(meta_path)
         text = meta_path.read_text(encoding="utf-8", errors="ignore")
         target_line = "Requires-Dist:" + req_str
@@ -361,14 +364,14 @@ def cmd_remove_req(args):
             process_metadata(metadata_file, req_to_remove)
 
 
-def cmd_strip_installed(args):
+def cmd_strip_installed(args: list[Any]) -> list[str] | None:
     req_file = args.file
     req_path = Path(req_file)
     if not req_path.exists():
         print(f"Error: {req_file} not found", file=sys.stderr)
         return
 
-    def get_reqs():
+    def get_reqs() -> list[str]:
         with req_path.open(encoding="utf-8") as f:
             return [l.strip().replace("-", "_").lower() for l in f if l.strip() and not l.startswith("#")]
 
@@ -383,14 +386,14 @@ def cmd_strip_installed(args):
     print(f"Removed {removed_count} packages")
 
 
-def cmd_strip_stdlib(args):
+def cmd_strip_stdlib(args: list[Any]) -> list[str] | None:
     req_file = args.file
     req_path = Path(req_file)
     if not req_path.exists():
         print(f"Error: {req_file} not found", file=sys.stderr)
         return
 
-    def get_reqs():
+    def get_reqs() -> list[str]:
         with req_path.open(encoding="utf-8") as f:
             return [k.strip().replace("-", "_").lower() for k in f if k.strip() and not k.startswith("#")]
 
@@ -401,7 +404,7 @@ def cmd_strip_stdlib(args):
     print(f"Removed {removed_count} packages")
 
 
-def cmd_trim_imports(args):
+def cmd_trim_imports(args: list[Any]) -> bool | None:
     log_path = Path(args.log_file)
     try:
         from loguru import logger
@@ -411,7 +414,7 @@ def cmd_trim_imports(args):
     except ImportError:
         has_loguru = False
 
-    def test_import(mod_name):
+    def test_import(mod_name: str) -> bool:
         try:
             __import__(mod_name)
             print(f"✓ {mod_name}")
@@ -444,7 +447,7 @@ def cmd_trim_imports(args):
             print(f"Error iterating distributions: {e}", file=sys.stderr)
 
 
-def cmd_uv_req(args):
+def cmd_uv_req(args: list[Any]) -> None:
     lock_path = Path(args.lock_file)
     req_path = Path(args.req_file)
     if not lock_path.exists():
@@ -460,7 +463,7 @@ def cmd_uv_req(args):
                 f.write(pkg_name + "\n")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Unified Python Package and Requirements Management Tool")
     subparsers = parser.add_subparsers(dest="command", required=True)
     p_clean_req = subparsers.add_parser("clean-req", help="Clean requirements file (comments, markers, versions, sort)")

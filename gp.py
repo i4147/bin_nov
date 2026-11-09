@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 import subprocess
 import sys
-from typing import Literal, Protocol, Sequence
+from typing import Any, Literal, Protocol, Sequence
 
 
 try:
@@ -35,7 +35,7 @@ except ImportError:
     HAS_DULWICH = False
 
 BackendName = Literal["subprocess", "gitpython", "pygit2", "dulwich"]
-WHITE_LIST = {"py.typed", "__init__.py"}
+WHITE_LIST: set[str] = {"py.typed", "__init__.py"}
 AVAILABLE_BACKENDS: list[BackendName] = ["subprocess"]
 if HAS_GITPYTHON:
     AVAILABLE_BACKENDS.append("gitpython")

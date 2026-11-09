@@ -12,10 +12,10 @@ from dh import MAX_WORKERS
 import pycurl
 
 
-OUTPUT_DIR = Path("downloads")
-TIMEOUT = 30
-CONNECT_TIMEOUT = 5
-USER_AGENT = "Mozilla/5.0 (compatible; PyCurlDownloader/1.0)"
+OUTPUT_DIR: Path = Path("downloads")
+TIMEOUT: int = 30
+CONNECT_TIMEOUT: int = 5
+USER_AGENT: str = "Mozilla/5.0 (compatible; PyCurlDownloader/1.0)"
 
 
 def filename_from_url(url: str) -> str:
@@ -83,7 +83,7 @@ def download_one(url: str) -> tuple[str, bool, str]:
         return (url, False, f"exception: {e}")
 
 
-def worker_init():
+def worker_init() -> None:
     import signal
 
     signal.signal(signal.SIGINT, signal.SIG_IGN)
@@ -104,7 +104,7 @@ def save_failed(path: Path, failed_urls: list[str]) -> None:
         path.write_text("", encoding="utf-8")
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 2:
         print(f"Usage: {sys.argv[0]} <urls_file>")
         sys.exit(1)

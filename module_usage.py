@@ -14,15 +14,15 @@ from datetime import datetime
 import importlib
 from pathlib import Path
 import sys
-from typing import Any, Sequence
+from typing import Any, Iterable, Sequence
 
 
-DEFAULT_PACKAGE = "dh"
+DEFAULT_PACKAGE: str = "dh"
 DEFAULT_DIR = Path.home() / "bin"
 DEFAULT_OUTPUT = Path.home() / "dh_usage.txt"
 DEFAULT_CHART_DIR = Path.home()
-DEFAULT_CHART_STYLE = "seaborn-v0_8-darkgrid"
-DEFAULT_TOP_N = 10
+DEFAULT_CHART_STYLE: str = "seaborn-v0_8-darkgrid"
+DEFAULT_TOP_N: int = 10
 STDLIB_FALLBACK: set[str] = {
     "os",
     "sys",

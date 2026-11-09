@@ -30,7 +30,7 @@ def is_empty_wheel(wheel_path: Path) -> bool:
         return False
 
 
-def move_empty_wheels(source_dir, dest_dir_name: str = "empty_wheels") -> None:
+def move_empty_wheels(source_dir: Path, dest_dir_name: str = "empty_wheels") -> None:
     source_path = Path(source_dir)
     dest_path = source_path / dest_dir_name
     dest_path.mkdir(exist_ok=True)

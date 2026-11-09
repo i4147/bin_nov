@@ -9,7 +9,7 @@ import multiprocessing as mp
 from pathlib import Path
 import sys
 import time
-from typing import Iterable, Sequence
+from typing import Any, Iterable, Sequence
 
 from dh import MAX_WORKERS
 
@@ -24,7 +24,7 @@ except ImportError as _exc:
     )
     raise SystemExit(2)
 _LANGUAGE = Language(_tspython.language())
-_DOCSTRING_QUERY = """
+_DOCSTRING_QUERY: str = """
 (comment) @comment
 (block
   . (expression_statement

@@ -86,7 +86,7 @@ def replace_string_in_names(
     return renamed_count
 
 
-def should_skip(path):
+def should_skip(path: Path) -> bool:
     path = Path(path)
     if path.is_symlink():
         return True

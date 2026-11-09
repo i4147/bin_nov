@@ -10,7 +10,7 @@ from dh import get_files, mpf
 import trafilatura
 
 
-remove_orig = "-r" in sys.argv
+remove_orig: bool = "-r" in sys.argv
 
 
 def process_file(path: str | Path) -> tuple[Path, bool]:

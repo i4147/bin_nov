@@ -16,7 +16,7 @@ def is_git_repo_simple(folder_path: str | Path) -> bool:
         return False
 
 
-def clean_non_git_dir():
+def clean_non_git_dir() -> None:
     current_dir = Path.cwd().resolve()
 
     if is_git_repo_simple(current_dir):

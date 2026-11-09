@@ -42,7 +42,7 @@ import re
 import site
 import subprocess
 import sys
-from typing import Iterable, Iterator, Sequence
+from typing import Any, Iterable, Iterator, Sequence
 
 
 BINARY_EXTS: tuple[str, ...] = (".so", ".pyd", ".dll", ".dylib")
@@ -197,7 +197,7 @@ def _is_within(needle: str, haystack: Sequence[str]) -> bool:
     return any(needle.startswith(h) for h in haystack)
 
 
-def _iter_metadata_in_dirs(dirs: Sequence[Path]):
+def _iter_metadata_in_dirs(dirs: Sequence[Path]) -> Iterator[Path]:
     dir_strs = [str(d.resolve()) for d in dirs]
     for dist in metadata.distributions():
         try:
@@ -495,7 +495,7 @@ def cmd_binary(args: argparse.Namespace) -> int:
     return 0
 
 
-_IGNORABLE_SUFFIXES = {".pyc", ".pyo", ".pyd", ".egg-link", ".pth"}
+_IGNORABLE_SUFFIXES: set[str] = {".pyc", ".pyo", ".pyd", ".egg-link", ".pth"}
 
 
 def _is_ignorable(p: Path) -> bool:

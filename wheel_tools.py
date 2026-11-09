@@ -11,7 +11,7 @@ import shutil
 import subprocess
 import sys
 import textwrap
-from typing import Optional, Sequence
+from typing import Any, Optional, Sequence
 import zipfile
 
 from dh import MAX_WORKERS
@@ -126,7 +126,7 @@ def parse_metadata_version(value: str):
         return (value,)
 
 
-_BAD_ROOT_SUFFIXES = (".py", ".pyc", ".pyd", ".so", ".dll")
+_BAD_ROOT_SUFFIXES: tuple[str, ...] = (".py", ".pyc", ".pyd", ".so", ".dll")
 
 
 def cmd_check(args: argparse.Namespace) -> int:

@@ -9,14 +9,14 @@ import re
 import tokenize
 
 
-def reformat_docstring(content):
+def reformat_docstring(content: str) -> str:
     content = content.strip()
     content = re.sub(r"\s+", " ", content)
     sentences = re.split(r"(?<=[.!?])\s+", content)
     return "\n".join(sentences)
 
 
-def process_file(path):
+def process_file(path: Path) -> bool:
     try:
         with tokenize.open(path) as f:
             source = f.read()
@@ -73,7 +73,7 @@ def process_file(path):
     return True
 
 
-def main():
+def main() -> None:
     for path in Path().rglob("*.py"):
         if path.is_file() and process_file(path):
             try:

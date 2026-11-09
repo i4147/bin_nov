@@ -5,6 +5,7 @@ import importlib.metadata
 import json
 from pathlib import Path
 import sysconfig
+from typing import Any, Iterable
 
 
 def get_site_packages_dirs() -> set[Path]:
@@ -56,7 +57,7 @@ def is_pure_package(dist: importlib.metadata.Distribution) -> bool:
     return True
 
 
-def main():
+def main() -> None:
     site_dirs = get_site_packages_dirs()
 
     # Storage bucket for each target category

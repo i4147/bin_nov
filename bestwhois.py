@@ -32,6 +32,7 @@ import datetime as dt
 import json
 from pathlib import Path
 import sys
+from typing import Any, Iterable
 
 from pygments import highlight
 from pygments.formatters import TerminalFormatter
@@ -39,21 +40,21 @@ from pygments.lexers import JsonLexer
 import requests
 
 
-IDN = True
+IDN: bool = True
 try:
     import idna
 except:
     IDN = False
-VERSION = "0.1.0"
+VERSION: str = "0.1.0"
 MYNAME = sys.argv[0].replace("./", "")
-RC_FILE_LOCS = [
+RC_FILE_LOCS: list[Any] = [
     ".bestwhoisrc",
     Path("~/.bestwhoisrc").expanduser(),
     "data/data/com.termux/files/usr/etc/bestwhois/bestwhoisrc",
 ]
 
 
-def valid_date(s):
+def valid_date(s: str):
     try:
         _ = dt.datetime.strptime(s, "%Y-%m-%d")
         return s
@@ -62,7 +63,7 @@ def valid_date(s):
         raise ArgumentTypeError(msg)
 
 
-def dictstr(structure, ntabs: int) -> None:
+def dictstr(structure: Iterable[Any], ntabs: int) -> None:
     global raw_str
     for field in structure:
         tabs = ""
@@ -82,11 +83,11 @@ def dictstr(structure, ntabs: int) -> None:
             raw_str += f"{tabs}{field}: {structure[field]}\n"
 
 
-def is_empty_field(field):
+def is_empty_field(field: Any) -> bool:
     return field is None or field in ("", {}, [])
 
 
-def purge_empty_fields(structure):
+def purge_empty_fields(structure: Any):
     for field in structure.copy():
         if isinstance(structure[field], dict):
             structure[field] = purge_empty_fields(structure[field])

@@ -18,21 +18,21 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Final
+from typing import Any, Final
 import xml.etree.ElementTree as ET
 
 from dh import MAX_WORKERS, walker
 
 
-GREEN = "\033[32m"
-DIM = "\033[2m"
-RESET = "\033[0m"
-ALL_EXTS = [".jpg", ".jpeg", ".png", ".svg"]
-KIND_BY_EXT = {".jpg": "jpg", ".jpeg": "jpg", ".png": "png", ".svg": "svg"}
+GREEN: str = "\033[32m"
+DIM: str = "\033[2m"
+RESET: str = "\033[0m"
+ALL_EXTS: list[str] = [".jpg", ".jpeg", ".png", ".svg"]
+KIND_BY_EXT: dict[str, str] = {".jpg": "jpg", ".jpeg": "jpg", ".png": "png", ".svg": "svg"}
 JPEG_MAGIC: Final[bytes] = b"\xff\xd8\xff"
 PNG_MAGIC: Final[bytes] = b"\x89PNG\r\n\x1a\n"
 DEFAULT_TIMEOUT: Final[float] = 300.0
-PNGQUANT_NOOP = {98, 99}
+PNGQUANT_NOOP: set[int] = {98, 99}
 
 
 @dataclass
@@ -55,7 +55,7 @@ def kind_of(p: Path) -> str:
     return KIND_BY_EXT.get(p.suffix.lower(), "")
 
 
-def _run(cmd, timeout, label):
+def _run(cmd: str, timeout: float, label: str):
     try:
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False)
     except subprocess.TimeoutExpired:

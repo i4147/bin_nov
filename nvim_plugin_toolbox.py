@@ -29,7 +29,7 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import Optional, Sequence
+from typing import Any, Iterable, Optional, Sequence
 
 
 PLUGIN_PATTERNS: dict[str, list[str]] = {
@@ -669,7 +669,7 @@ def _split_top_level(body: str) -> list[str]:
     return entries
 
 
-_URL_PATTERNS = (
+_URL_PATTERNS: tuple[str, str, str, str] = (
     r'"([^"]+/[^"]+)"',
     r"'([^']+/[^']+)'",
     r'\[\s*"([^"]+/[^"]+)"\s*\]',

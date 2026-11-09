@@ -14,6 +14,7 @@ import fnmatch
 import os
 from pathlib import Path
 import sys
+from typing import Any, Iterable
 
 
 def human_size(num_bytes: int) -> str:
@@ -24,7 +25,7 @@ def human_size(num_bytes: int) -> str:
     return f"{num_bytes:.1f}EB"
 
 
-def scan_path(root: Path, exclude_patterns, follow_symlinks):
+def scan_path(root: Path, exclude_patterns: Iterable[Any], follow_symlinks: Any) -> tuple[int,]:
     total_size = 0
     dir_sizes = defaultdict(int)
 
@@ -52,7 +53,7 @@ def scan_path(root: Path, exclude_patterns, follow_symlinks):
     return dir_sizes, total_size
 
 
-def print_tree(root: Path, dir_sizes, max_depth, prefix=""):
+def print_tree(root: Path, dir_sizes: dict[str, Any], max_depth: int, prefix = "") -> None:
     if max_depth is not None and max_depth < 0:
         return
 
@@ -68,7 +69,7 @@ def print_tree(root: Path, dir_sizes, max_depth, prefix=""):
         print_tree(sub, dir_sizes, None if max_depth is None else max_depth - 1, prefix=deeper_prefix)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="A tiny, friendly 'gdu' clone written in Python.")
     parser.add_argument("path", nargs="?", default=".", help="Root directory to scan (default: current folder).")
     parser.add_argument(

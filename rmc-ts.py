@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 import re
 import textwrap
-from typing import NamedTuple
+from typing import Any, Iterable, NamedTuple
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from rich.console import Console
@@ -36,9 +36,9 @@ HASH_PREFIX = re.compile(r"^[ \t]*#[ ]?")
 COMMENT_LINE = re.compile(rb"^[ \t]*#")
 SEMI = re.compile(rb"[ \t]*;[ \t]*")
 NEWLINE = re.compile(rb"\r?\n?")
-STRINGS = {"string", "template_string"}
+STRINGS: set[str] = {"string", "template_string"}
 STOP = STRINGS | {"comment"}
-DEFS = {"function_definition", "class_definition"}
+DEFS: set[str] = {"function_definition", "class_definition"}
 
 
 @functools.cache

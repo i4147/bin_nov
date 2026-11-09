@@ -10,7 +10,7 @@ import sys
 from dh import fsz, get_files, gsz, mpf, runcmd
 
 
-def process_file(path):
+def process_file(path: Path) -> None:
     path = Path(path)
     if not path.exists():
         print("Input file not found.", file=sys.stderr)
@@ -39,7 +39,7 @@ def process_file(path):
             temp_qpdf.unlink(missing_ok=True)
 
 
-def main():
+def main() -> None:
     cwd = Path.cwd()
     before = gsz(cwd)
     args = sys.argv[1:]

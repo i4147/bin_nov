@@ -20,7 +20,7 @@ import sqlite3
 import sys
 import tarfile
 import textwrap
-from typing import Iterable, Iterator
+from typing import Any, Iterable, Iterator, Sequence
 import zipfile
 
 from dh import SKIP_DIRS
@@ -278,7 +278,7 @@ class ASTExtractor(ast.NodeVisitor):
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
         self._handle_function(node)
 
-    def _handle_function(self, node) -> None:
+    def _handle_function(self, node: cst.CSTNode) -> None:
         in_class = bool(self._class_stack)
         parent = self._class_stack[-1] if in_class else ""
         full = f"{parent}_{node.name}" if parent else node.name
@@ -369,7 +369,7 @@ def extract_with_ast(source: str, path: str, scope: str) -> tuple[list[Entity], 
 _TS_PARSER = None
 
 
-def _ts_parser():
+def _ts_parser() -> None:
     global _TS_PARSER
     if not HAS_TS:
         msg = "tree-sitter / tree-sitter-python not installed"
@@ -387,16 +387,16 @@ def extract_with_tree_sitter(source: str, path: str) -> tuple[list[Entity], list
     root = tree.root_node
     out: list[Entity] = []
 
-    def text(n) -> str:
+    def text(n: int) -> str:
         return data[n.start_byte : n.end_byte].decode("utf-8", errors="replace")
 
-    def get_name(n) -> str:
+    def get_name(n: int) -> str:
         for c in n.children:
             if c.type == "identifier":
                 return text(c)
         return ""
 
-    def get_decorators(n) -> list[str]:
+    def get_decorators(n: int) -> list[str]:
         decs: list[str] = []
         prev = n.prev_sibling
         while prev is not None and prev.type == "decorator":
@@ -404,7 +404,7 @@ def extract_with_tree_sitter(source: str, path: str) -> tuple[list[Entity], list
             prev = prev.prev_sibling
         return list(reversed(decs))
 
-    def walk(node) -> None:
+    def walk(node: Any) -> None:
         for child in node.children:
             t = child.type
             if t in ("function_definition", "class_definition"):
@@ -463,13 +463,13 @@ def extract_with_libcst(source: str, path: str) -> tuple[list[Entity], list[str]
     imports: list[str] = []
 
     class V(cst.CSTVisitor):
-        def visit_Import(self, node) -> None:
+        def visit_Import(self, node: cst.Import) -> None:
             imports.append(cst.Module([node]).code.strip())
 
-        def visit_ImportFrom(self, node) -> None:
+        def visit_ImportFrom(self, node: cst.ImportFrom) -> None:
             imports.append(cst.Module([node]).code.strip())
 
-        def visit_FunctionDef(self, node) -> bool:
+        def visit_FunctionDef(self, node: cst.FunctionDef) -> bool:
             code = cst.Module([node]).code
             entities.append(
                 Entity(
@@ -483,7 +483,7 @@ def extract_with_libcst(source: str, path: str) -> tuple[list[Entity], list[str]
             )
             return False
 
-        def visit_ClassDef(self, node) -> bool:
+        def visit_ClassDef(self, node: cst.ClassDef) -> bool:
             code = cst.Module([node]).code
             entities.append(
                 Entity(
@@ -497,7 +497,7 @@ def extract_with_libcst(source: str, path: str) -> tuple[list[Entity], list[str]
             )
             return False
 
-        def visit_Assign(self, node) -> None:
+        def visit_Assign(self, node: cst.Assign) -> None:
             for t in node.targets:
                 if isinstance(t.target, cst.Name) and UPPER_RE.match(t.target.value):
                     code = cst.Module([node]).code.strip()
@@ -804,7 +804,7 @@ def _extract_nodes(source: bytes, kind: str) -> list[str]:
     tree = parser.parse(source)
     root = tree.root_node
 
-    def text(n) -> str:
+    def text(n: int) -> str:
         return source[n.start_byte : n.end_byte].decode("utf-8", errors="replace")
 
     results: list[str] = []
@@ -871,7 +871,7 @@ def cmd_sexpr(args: argparse.Namespace) -> int:
     data = args.file.read_bytes()
     tree = parser.parse(data)
 
-    def render(n) -> str:
+    def render(n: int) -> str:
         if n.child_count == 0:
             return f'({n.type} "{data[n.start_byte : n.end_byte].decode("utf-8", errors="replace")}")'
         children = " ".join(render(c) for c in n.children)

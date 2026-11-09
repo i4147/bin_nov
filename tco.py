@@ -7,18 +7,19 @@ import json
 from pathlib import Path
 import sys
 import time
+from typing import Any
 
 from translate import Translator
 
 
-SAVE_EVERY = 50
-SLEEP_BETWEEN = 0.5
-MAX_RETRIES = 5
-BACKOFF_BASE = 1.5
-DEFAULT_SOURCE = "zh"
-DEFAULT_TARGET = "en"
-MAX_CHARS = 450
-CHUNK_SIZE = MAX_CHARS
+SAVE_EVERY: int = 50
+SLEEP_BETWEEN: float = 0.5
+MAX_RETRIES: int = 5
+BACKOFF_BASE: float = 1.5
+DEFAULT_SOURCE: str = "zh"
+DEFAULT_TARGET: str = "en"
+MAX_CHARS: int = 450
+CHUNK_SIZE: int = MAX_CHARS
 
 
 def progress_path(target: Path) -> Path:

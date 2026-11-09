@@ -7,15 +7,16 @@ from collections import defaultdict
 from datetime import UTC, datetime
 import json
 from pathlib import Path
+from typing import Any
 
 from xxhash import xxh64
 
 
-BACKUP_FILE = ".symlink_backup.json"
-MIN_FILE_SIZE = 1
+BACKUP_FILE: str = ".symlink_backup.json"
+MIN_FILE_SIZE: int = 1
 
 
-def calculate_file_hash(path, chunk_size=32768) -> str | None:
+def calculate_file_hash(path: Path, chunk_size = 32768) -> str | None:
     if not path.is_file():
         return None
     hasher = xxh64()
@@ -56,11 +57,11 @@ def find_duplicates(directory: str = "."):
     return {h: paths for h, paths in hash_map.items() if len(paths) > 1}
 
 
-def choose_keeper(files):
+def choose_keeper(files: list[Path]):
     return min(files, key=lambda f: (len(str(f)), f))
 
 
-def create_symlinks(duplicates, dry_run=False) -> int:
+def create_symlinks(duplicates: dict[str, Any], dry_run = False) -> int:
     backup_data = {"timestamp": datetime.now(tz=UTC).isoformat(), "operations": []}
     total_saved = 0
     symlink_count = 0

@@ -15,7 +15,7 @@ import multiprocessing as mp
 from pathlib import Path
 import sys
 import threading
-from typing import TYPE_CHECKING, Any
+from typing import Any, TYPE_CHECKING
 
 from dh import MAX_WORKERS, is_binary
 import gcld3
@@ -180,7 +180,7 @@ def process_file_per_line_parallel(path: Path, max_len: int, workers: int) -> li
     return local
 
 
-def run_per_file(files: list[Path], workers: int, max_len: int):
+def run_per_file(files: list[Path], workers: int, max_len: int) -> None:
     with mp.Pool(processes=8) as ex:
         futures = {
             ex.apply_async(
@@ -202,7 +202,7 @@ def run_per_file(files: list[Path], workers: int, max_len: int):
                 print(f"Error processing {futures[fut]}: {e}", file=sys.stderr)
 
 
-def run_per_line(files: list[Path], workers: int, max_len: int):
+def run_per_line(files: list[Path], workers: int, max_len: int) -> None:
     with mp.Pool(processes=8) as ex_files:
         futures = {
             ex_files.apply_async(
@@ -225,7 +225,7 @@ def run_per_line(files: list[Path], workers: int, max_len: int):
                 print(f"Error in per-line mode for {futures[fut]}: {e}", file=sys.stderr)
 
 
-def main(argv=None) -> int:
+def main(argv = None) -> int:
     parser = argparse.ArgumentParser(description="Detect non-English lines in text files.")
     parser.add_argument("paths", default=".", nargs="*", help="Files or directories (default: .)")
     parser.add_argument("--out", "-o", default="noneng.json", help="Output JSON file.")

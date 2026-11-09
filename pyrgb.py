@@ -8,10 +8,11 @@ import select
 import sys
 import termios
 import tty
+from typing import Any, Sequence
 
 
-RESET = "\033[0m"
-SEQ_MAP = {
+RESET: str = "\033[0m"
+SEQ_MAP: dict[bytes, str] = {
     b"\x1b[5~": "pgup",
     b"\x1b[6~": "pgdn",
     b"\x1b[A": "up",
@@ -21,11 +22,11 @@ SEQ_MAP = {
     b"\x1b[1~": "home",
     b"\x1b[4~": "end",
 }
-CELL_W = 15
-CELL_PITCH = 17
+CELL_W: int = 15
+CELL_PITCH: int = 17
 
 
-def parse_args(argv):
+def parse_args(argv: list[Any]) -> dict[str, bool]:
     demo = False
     step = 17
     step_given = False
@@ -69,7 +70,7 @@ def parse_args(argv):
     return {"demo": False, "rgb": (r, g, b)}
 
 
-def print_usage():
+def print_usage() -> None:
     print("usage: rgb.py R G B           show one color")
     print("       rgb.py -d [--step N]    browse all colors page by page")
     print()
@@ -104,7 +105,7 @@ def compute_layout():
     return cols, cols * rows
 
 
-def show_color(r, g, b):
+def show_color(r: int, g: int, b: int) -> None:
     hexcode = f"#{r:02x}{g:02x}{b:02x}"
     fg = f"\033[38;2;{r};{g};{b}m"
     bg = f"\033[48;2;{r};{g};{b}m"
@@ -119,19 +120,19 @@ def show_color(r, g, b):
     print()
 
 
-def get_values(step):
+def get_values(step: int):
     vals = list(range(0, 256, step))
     if vals[-1] != 255:
         vals.append(255)
     return vals
 
 
-def color_at(idx, vals):
+def color_at(idx: int, vals: Sequence[Any]):
     n = len(vals)
     return vals[idx // (n * n)], vals[(idx // n) % n], vals[idx % n]
 
 
-def render_page(vals, page, total_pages, step, cols, page_size):
+def render_page(vals: Sequence[Any], page: Any, total_pages: str, step: int, cols: int, page_size: int) -> None:
     n = len(vals)
     total = n**3
     start = page * page_size
@@ -159,7 +160,7 @@ def render_page(vals, page, total_pages, step, cols, page_size):
     sys.stdout.flush()
 
 
-def read_key(fd):
+def read_key(fd: Any) -> str:
     ch = os.read(fd, 1)
     if ch == b"\x1b":
         if not select.select([fd], [], [], 0.02)[0]:
@@ -187,7 +188,7 @@ def read_key(fd):
         return "unknown"
 
 
-def run_demo(step):
+def run_demo(step: int) -> None:
     if not sys.stdin.isatty() or not sys.stdout.isatty():
         sys.exit("error: demo mode needs an interactive terminal")
     vals = get_values(step)
@@ -232,7 +233,7 @@ def run_demo(step):
         termios.tcsetattr(fd, termios.TCSADRAIN, old_attrs)
 
 
-def main(argv):
+def main(argv: list[Any]) -> None:
     opts = parse_args(argv)
     if opts["demo"]:
         run_demo(opts["step"])

@@ -9,7 +9,7 @@ import sys
 from dh import get_files, gsz, mpf, rrs, runcmd
 
 
-EXT = [".js", ".jsx", ".jsm", ".jsc"]
+EXT: list[str] = [".js", ".jsx", ".jsm", ".jsc"]
 
 
 def safe_run(path: Path) -> bool:
@@ -22,7 +22,7 @@ def safe_run(path: Path) -> bool:
     return True
 
 
-def process_file(path):
+def process_file(path: Path) -> None:
     path = Path(path)
     if path.name.endswith(".min.js"):
         return
@@ -41,7 +41,7 @@ def process_file(path):
     return
 
 
-def main():
+def main() -> None:
     cwd = Path.cwd()
     args = sys.argv[1:]
     files = []

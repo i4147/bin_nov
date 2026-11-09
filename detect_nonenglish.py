@@ -25,7 +25,7 @@ from datetime import datetime
 import json
 from pathlib import Path
 import sys
-from typing import Optional, Sequence
+from typing import Any, Optional, Sequence, TextIO
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
@@ -81,10 +81,10 @@ DEFAULT_EXTENSIONS: frozenset[str] = frozenset({
     ".gitignore",
     ".dockerfile",
 })
-DEFAULT_MAX_BYTES = 10 * 1024 * 1024
-DEFAULT_MIN_CONFIDENCE = 0.5
-SAMPLE_CHARS = 10_000
-MIN_LINE_LEN = 3
+DEFAULT_MAX_BYTES: int = 10 * 1024 * 1024
+DEFAULT_MIN_CONFIDENCE: float = 0.5
+SAMPLE_CHARS: int = 10_000
+MIN_LINE_LEN: int = 3
 
 
 @dataclass

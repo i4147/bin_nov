@@ -13,7 +13,7 @@ import readline
 import shutil
 import subprocess
 import sys
-from typing import Final
+from typing import Final, Iterable
 
 from faprint import faprint
 from loguru import logger

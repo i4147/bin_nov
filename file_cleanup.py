@@ -23,9 +23,9 @@ from typing import Any, Callable, Iterable, Optional, Sequence
 from dh import MAX_WORKERS
 
 
-MMAP_THRESHOLD = 1_048_576
-DEFAULT_CHUNK_SIZE = 100_000
-DEFAULT_ENCODING = "utf-8"
+MMAP_THRESHOLD: int = 1_048_576
+DEFAULT_CHUNK_SIZE: int = 100_000
+DEFAULT_ENCODING: str = "utf-8"
 
 
 def info(msg: str) -> None:

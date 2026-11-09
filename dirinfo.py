@@ -13,12 +13,13 @@ from collections import defaultdict
 import operator
 from pathlib import Path
 import sys
+from typing import Any
 
 from dh import fsz
 import matplotlib.pyplot as plt
 
 
-def scan_directory(path: str = "."):
+def scan_directory(path: str = ".") -> tuple[int, int, int, set[Any]]:
     total_size = 0
     file_count = 0
     folder_count = 0

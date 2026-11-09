@@ -4,9 +4,10 @@ Reads the lines of the file, sorts them with a Persian collation key (letter ord
 Usage: fasort FILE Examples: $ fasort words.txt Runs as a script (``python fasort.py``) in the directory it should act on; the module can also be imported."""
 
 import sys
+from typing import Any, Iterable
 
 
-def persian_sort_key(word):
+def persian_sort_key(word: Iterable[Any]):
     persian_order = {
         "آ": "ا",
         "ا": "ا",
@@ -89,7 +90,7 @@ def persian_sort_key(word):
     return tuple(sort_key)
 
 
-def sort_persian_dict(path):
+def sort_persian_dict(path: str) -> None:
     try:
         with open(path, "r", encoding="utf-8") as f:
             lines = f.readlines()

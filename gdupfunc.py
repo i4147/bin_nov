@@ -30,10 +30,10 @@ MIN_AST_NODES: int = 5
 
 
 class TypeAnnotationChecker(ast.NodeVisitor):
-    def __init__(self):
+    def __init__(self) -> None:
         self.has_annotations = False
 
-    def visit_FunctionDef(self, node: ast.FunctionDef):
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
         if node.returns:
             self.has_annotations = True
         for arg in node.args.args + node.args.kwonlyargs:
@@ -45,16 +45,16 @@ class TypeAnnotationChecker(ast.NodeVisitor):
             self.has_annotations = True
         self.generic_visit(node)
 
-    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef):
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
         self.visit_FunctionDef(node)
 
-    def visit_AnnAssign(self, node: ast.AnnAssign):
+    def visit_AnnAssign(self, node: ast.AnnAssign) -> None:
         self.has_annotations = True
         self.generic_visit(node)
 
 
 class CodeNormalizer(ast.NodeTransformer):
-    def __init__(self, fuzzy: bool = True):
+    def __init__(self, fuzzy: bool = True) -> None:
         super().__init__()
         self.fuzzy = fuzzy
         self.var_map: dict[str, str] = {}
@@ -68,7 +68,7 @@ class CodeNormalizer(ast.NodeTransformer):
             self.var_counter += 1
         return self.var_map[name]
 
-    def _strip_docstring(self, node: Any):
+    def _strip_docstring(self, node: Any) -> None:
         if (
             isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Module))
             and node.body
@@ -78,7 +78,7 @@ class CodeNormalizer(ast.NodeTransformer):
         ):
             node.body.pop(0)
 
-    def visit_FunctionDef(self, node: ast.FunctionDef):
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> ast.FunctionDef:
         self._strip_docstring(node)
         node.returns = None
         for arg in node.args.args + node.args.kwonlyargs:
@@ -96,10 +96,10 @@ class CodeNormalizer(ast.NodeTransformer):
         self.generic_visit(node)
         return node
 
-    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef):
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> ast.AnnAssign:
         return self.visit_FunctionDef(node)
 
-    def visit_ClassDef(self, node: ast.ClassDef):
+    def visit_ClassDef(self, node: ast.ClassDef) -> ast.ClassDef:
         self._strip_docstring(node)
         self.generic_visit(node)
         return node
@@ -110,7 +110,7 @@ class CodeNormalizer(ast.NodeTransformer):
             return self.visit(new_node)
         return None
 
-    def visit_Name(self, node: ast.Name):
+    def visit_Name(self, node: ast.Name) -> ast.Name:
         if self.fuzzy and isinstance(node.ctx, (ast.Store, ast.Load)):
             node.id = self._get_norm_var(node.id)
         return node
@@ -167,7 +167,7 @@ def process_file_task(task_args: tuple[str, bool, int]) -> list[dict[str, Any]]:
     return extracted_objects
 
 
-def generate_html_report(categorized_duplicates: dict[str, list[dict[str, Any]]], output_path: Path):
+def generate_html_report(categorized_duplicates: dict[str, list[dict[str, Any]]], output_path: Path) -> None:
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -223,7 +223,7 @@ def generate_html_report(categorized_duplicates: dict[str, list[dict[str, Any]]]
     output_path.write_text(html_content, encoding="utf-8")
 
 
-def main():
+def main() -> None:
     if sys.version_info < (3, 14):
         sys.exit("Error: This script requires Python 3.14 or newer to use InterpreterPoolExecutor.")
     parser = argparse.ArgumentParser(description="Python 3.14 Duplicate Detector via Subinterpreters")

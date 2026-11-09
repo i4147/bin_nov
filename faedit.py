@@ -4,10 +4,13 @@ Opens the file in urwid, curses, prompt_toolkit or textual (``-b``), shows the r
 Usage: faedit FILE [-b urwid|curses|prompt_toolkit|textual] Positional arguments: file Options: -b, --backend Examples: $ faedit notes.txt -b textual Command-line script: run ``python faedit.py`` or the ``faedit`` command.
 The module is importable as well."""
 
+from __future__ import annotations
+
 import argparse
 import os
 from pathlib import Path
 import sys
+from typing import Any, Sequence
 
 
 try:
@@ -15,10 +18,10 @@ try:
 except ImportError:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from core import format_persian
-CTX = 2
+CTX: int = 2
 
 
-def around(s, pos, n=CTX):
+def around(s: Sequence[Any], pos: Any, n = CTX):
     a = s.rfind("\n", 0, pos) + 1
     for _ in range(n):
         if a == 0:
@@ -34,13 +37,13 @@ def around(s, pos, n=CTX):
     return format_persian(s[a:b])
 
 
-def run_urwid(text):
+def run_urwid(text: str):
     import urwid
 
     pv = urwid.Text(around(text, 0))
 
     class Ed(urwid.Edit):
-        def keypress(self, size, key):
+        def keypress(self, size: int, key: str):
             if key == "ctrl q":
                 raise urwid.ExitMainLoop
             key = super().keypress(size, key)
@@ -59,14 +62,14 @@ def run_urwid(text):
     return ed.edit_text
 
 
-def run_curses(text):
+def run_curses(text: str) -> str | None:
     os.environ.setdefault("ESCDELAY", "25")
     import curses
 
     lines = text.split("\n")
     st = {"y": 0, "x": 0, "top": 0}
 
-    def main(scr):
+    def main(scr: Any) -> None:
         curses.raw()
         scr.keypad(True)
         while True:
@@ -147,7 +150,7 @@ def run_curses(text):
     return "\n".join(lines)
 
 
-def run_prompt_toolkit(text):
+def run_prompt_toolkit(text: str):
     from prompt_toolkit import Application
     from prompt_toolkit.buffer import Buffer
     from prompt_toolkit.document import Document
@@ -165,7 +168,7 @@ def run_prompt_toolkit(text):
     kb = KeyBindings()
 
     @kb.add("c-q")
-    def _(event):
+    def _(event: Any) -> None:
         event.app.exit()
 
     root = HSplit([edit, Window(height=1, char="─"), prev])
@@ -173,7 +176,7 @@ def run_prompt_toolkit(text):
     return buf.text
 
 
-def run_textual(text):
+def run_textual(text: str):
     from rich.text import Text
     from textual.app import App
     from textual.binding import Binding
@@ -187,27 +190,27 @@ def run_textual(text):
             yield TextArea(text, id="ed")
             yield Static("", id="pv")
 
-        def on_mount(self):
+        def on_mount(self) -> None:
             self.query_one("#ed").focus()
             self.refresh_pv()
 
-        def on_text_area_selection_changed(self, event):
+        def on_text_area_selection_changed(self, event: Any) -> None:
             self.refresh_pv()
 
-        def refresh_pv(self):
+        def refresh_pv(self) -> None:
             ta = self.query_one("#ed", TextArea)
             r = ta.cursor_location[0]
             lo, hi = max(0, r - CTX), min(ta.document.line_count, r + CTX + 1)
             s = "\n".join(ta.document.get_line(i) for i in range(lo, hi))
             self.query_one("#pv", Static).update(Text(format_persian(s)))
 
-        def action_save_quit(self):
+        def action_save_quit(self) -> None:
             self.exit(self.query_one("#ed", TextArea).text)
 
     return FaEdit().run() or text
 
 
-BACKENDS = {
+BACKENDS: dict[str, Any] = {
     "urwid": run_urwid,
     "curses": run_curses,
     "prompt_toolkit": run_prompt_toolkit,
@@ -215,7 +218,7 @@ BACKENDS = {
 }
 
 
-def main():
+def main() -> None:
     ap = argparse.ArgumentParser(description="Edit Persian text with live faprint preview (Ctrl+Q saves & quits)")
     ap.add_argument("file")
     ap.add_argument("-b", "--backend", choices=BACKENDS, default="urwid")

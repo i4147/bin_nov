@@ -12,10 +12,10 @@ from dh import get_files, mpf
 
 
 START_DIR = Path.cwd()
-NUM_PROCESSES = 4
+NUM_PROCESSES: int = 4
 
 
-def process_file(path) -> None:
+def process_file(path: Path) -> None:
     path = Path(path)
     pardir = path.parent
     os_chdir(pardir)

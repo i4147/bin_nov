@@ -30,7 +30,7 @@ from pathlib import Path
 import re
 import shutil
 import tokenize
-from typing import Iterator, Sequence
+from typing import Any, Callable, Iterable, Iterator, Sequence
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS
@@ -68,7 +68,7 @@ DEFAULT_MARKERS = frozenset({
 })
 JAPANESE_RE = re.compile(r"[\u3040-\u30ff\u4e00-\u9fff]")
 NON_ASCII_RE = re.compile(r"[^\x00-\x7f]")
-PYCLD2_CODES_TO_SKIP = {"en", "un"}
+PYCLD2_CODES_TO_SKIP: set[str] = {"en", "un"}
 
 
 @dataclass(frozen=True)
@@ -337,7 +337,7 @@ def replace_token_text(
 def translate_python_tokens(
     source: str,
     translator: Translator,
-    predicate,
+    predicate: Callable[..., Any],
     *,
     include_print_strings: bool,
     include_docstrings: bool,
@@ -418,7 +418,7 @@ def translate_python_tokens(
 def translate_ast_mode(
     source: str,
     translator: Translator,
-    predicate,
+    predicate: Any,
 ) -> tuple[str, int]:
     return translate_python_tokens(
         source,
@@ -434,7 +434,7 @@ def translate_ast_mode(
 def translate_file(
     path: Path,
     translator: Translator,
-    transform,
+    transform: Callable[..., Any],
     *,
     config: TranslationConfig,
 ) -> tuple[Path, bool, int]:
@@ -471,7 +471,7 @@ def translate_file(
 
 def process_in_parallel(
     files: Sequence[Path],
-    processor,
+    processor: Any,
     *,
     workers: int,
 ) -> TranslationStats:
@@ -496,7 +496,7 @@ def process_in_parallel(
 def run_python_mode(
     args: argparse.Namespace,
     *,
-    detector,
+    detector: Any,
     include_print_strings: bool,
     include_docstrings: bool,
     include_comments: bool,
@@ -560,7 +560,7 @@ def run_python_mode(
 def translate_plain_text(
     source: str,
     translator: Translator,
-    predicate,
+    predicate: Callable[..., Any],
     *,
     batch: bool,
 ) -> tuple[str, int]:
@@ -612,7 +612,7 @@ def run_batch_mode(args: argparse.Namespace) -> int:
         print("No files to process.")
         return 0
 
-    def process(path: Path):
+    def process(path: Path) -> tuple[Path,]:
         if path.suffix == ".py":
             predicate = lambda text: should_translate_non_ascii(
                 text,

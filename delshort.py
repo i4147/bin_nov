@@ -8,8 +8,8 @@ from pathlib import Path
 from dh import get_files, is_binary
 
 
-SIZE_THRESHOLD = 100
-LINE_THRESHOLD = 3
+SIZE_THRESHOLD: int = 100
+LINE_THRESHOLD: int = 3
 
 
 def process_file(path: Path) -> None:

@@ -14,7 +14,7 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import Iterable, Optional, Sequence
+from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS
 
@@ -267,7 +267,7 @@ def _replace_latex(text: str) -> str:
     return text
 
 
-_HTML_TEMPLATE = """\
+_HTML_TEMPLATE: str = """\
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth bg-gray-50 text-gray-900 antialiased">
 <head>

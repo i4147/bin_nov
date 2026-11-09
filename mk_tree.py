@@ -9,26 +9,27 @@ import itertools
 from pathlib import Path
 import re
 import sys
+from typing import Any, Callable, Iterable
 
 
-NODE_MARKERS = ("\u251c\u2500\u2500", "\u2514\u2500\u2500", "|--", "`--")
+NODE_MARKERS: tuple[str, str, str, str] = ("\u251c\u2500\u2500", "\u2514\u2500\u2500", "|--", "`--")
 FOOTER_RE = re.compile(r"^\d+\s+(directories|files|dirs|items)(,\s*\d+\s+(directories|files|dirs|items))?$")
 JUNK_LINE_CHARS = set(" \u2502\u251c\u2514\u2500|+-`")
 JUNK_TOKEN_RE = re.compile(r"^[\u2502\u251c\u2514\u2500|+\-]+$")
 LEAD_JUNK_RE = re.compile(r"^([\u2502\u251c\u2514\u2500|+`\-]{2,}|[\u2502\u251c\u2514\u2500|+`\-]+\s+)")
 
 
-def strip_leading_junk(left, text):
+def strip_leading_junk(left: Any, text: str):
     m = LEAD_JUNK_RE.match(text)
     if not m:
         return left, text
     return left + len(m.group(0)), text[m.end() :]
 
 
-IMG_EXTS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif", ".tif", ".tiff"}
+IMG_EXTS: set[str] = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif", ".tif", ".tiff"}
 
 
-def find_node_marker(line):
+def find_node_marker(line: str):
     best, best_len = None, 0
     for m in NODE_MARKERS:
         i = line.find(m)
@@ -37,7 +38,7 @@ def find_node_marker(line):
     return best, best_len
 
 
-def clean_name(raw, keep_suffix=False):
+def clean_name(raw: str, keep_suffix = False):
     raw = raw.strip()
     raw = re.sub(r"\s+#.*$", "", raw).strip()
     if not raw or raw.startswith("#"):
@@ -54,7 +55,7 @@ def clean_name(raw, keep_suffix=False):
     return raw, explicit
 
 
-def median(values):
+def median(values: list[Any]) -> float:
     s = sorted(values)
     n = len(s)
     if n == 0:
@@ -62,7 +63,7 @@ def median(values):
     return s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2.0
 
 
-def cluster_means(values, min_gap=None):
+def cluster_means(values: list[Any], min_gap = None) -> list[float]:
     values = sorted(values)
     if len(values) <= 1:
         return [float(v) for v in values]
@@ -79,7 +80,7 @@ def cluster_means(values, min_gap=None):
     return [sum(c) / len(c) for c in clusters]
 
 
-def parse_tree_text(text, keep_suffix=False, warn=print):
+def parse_tree_text(text: str, keep_suffix = False, warn = print):
     lines = text.splitlines()
     flat_list = not any(find_node_marker(line)[0] is not None for line in lines)
     candidates = []
@@ -134,14 +135,14 @@ def parse_tree_text(text, keep_suffix=False, warn=print):
     return entries
 
 
-def load_ocr(choice):
+def load_ocr(choice: str):
     if choice in ("auto", "rapidocr"):
         try:
             from rapidocr_onnxruntime import RapidOCR
 
             engine = RapidOCR()
 
-            def run(img):
+            def run(img: Any):
                 import numpy as np
 
                 tokens = []
@@ -164,7 +165,7 @@ def load_ocr(choice):
         try:
             import pytesseract
 
-            def run(img):
+            def run(img: Any):
                 data = pytesseract.image_to_data(img, output_type=pytesseract.Output.DICT, config="--psm 6")
                 tokens = []
                 for i, t in enumerate(data["text"]):
@@ -197,7 +198,7 @@ def load_ocr(choice):
     )
 
 
-def detect_marker_xs(img, rows, pitch, char_width):
+def detect_marker_xs(img: Any, rows: Iterable[Any], pitch: float, char_width: int):
     width, height = img.size
     px = img.load()
     out = []
@@ -228,7 +229,7 @@ def detect_marker_xs(img, rows, pitch, char_width):
     return out
 
 
-def image_to_entries(path, keep_suffix=False, engine="auto"):
+def image_to_entries(path: Path, keep_suffix = False, engine = "auto"):
     from PIL import Image, ImageOps, ImageStat
 
     try:
@@ -291,7 +292,7 @@ def image_to_entries(path, keep_suffix=False, engine="auto"):
     marker_means = cluster_means([m for m in marker_xs if m is not None], min_gap=col_gap)
     marker_depth = {m: k + 1 for k, m in enumerate(marker_means)}
 
-    def depth_of(i):
+    def depth_of(i: Any):
         m = marker_xs[i]
         if m is not None and marker_means:
             nearest = min(marker_means, key=lambda x: abs(x - m))
@@ -316,7 +317,7 @@ def image_to_entries(path, keep_suffix=False, engine="auto"):
     return engine_name, entries, {"tokens": raw_count, "rows": len(rows)}
 
 
-def finalize(entries, assume_dir=False):
+def finalize(entries: list[Any], assume_dir = False) -> None:
     for i, e in enumerate(entries):
         if e["name"] == ".":
             e["is_dir"] = True
@@ -331,7 +332,7 @@ def finalize(entries, assume_dir=False):
             e["is_dir"] = False
 
 
-def ambiguous_notes(entries, assume_dir=False):
+def ambiguous_notes(entries: list[Any], assume_dir = False):
     notes = []
     ambiguous = [
         e["name"]
@@ -356,12 +357,12 @@ def ambiguous_notes(entries, assume_dir=False):
     return notes
 
 
-def _unsafe_name(name):
+def _unsafe_name(name: str) -> bool:
     p = Path(name)
     return not name or "\\" in name or p.is_absolute() or any(part in ("", ".", "..") for part in p.parts)
 
 
-def create_tree(entries, base_dir: Path, dry_run=False):
+def create_tree(entries: list[Any], base_dir: Path, dry_run = False) -> dict[str, int]:
     base_dir = base_dir.resolve()
     if not dry_run:
         base_dir.mkdir(parents=True, exist_ok=True)
@@ -419,7 +420,7 @@ def create_tree(entries, base_dir: Path, dry_run=False):
     return counts
 
 
-def detect_mode(path: Path):
+def detect_mode(path: Path) -> str:
     if path.suffix.lower() in IMG_EXTS:
         return "image"
     try:
@@ -440,7 +441,7 @@ def detect_mode(path: Path):
     return "text"
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         prog="tree2fs",
         description="Recreate a directory tree from a `tree` listing (text) or a screenshot of one (OCR).",

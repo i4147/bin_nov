@@ -14,7 +14,7 @@ import json
 import os
 from pathlib import Path
 import sys
-from typing import Optional
+from typing import Any, Iterable, Optional
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
@@ -23,8 +23,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 
 
-__version__ = "0.0.0"
-DATE_FIELDS = [
+__version__: str = "0.0.0"
+DATE_FIELDS: list[str] = [
     "CURRENT_DATE",
     "START_CURRENT_MONTH",
     "END_CURRENT_MONTH",
@@ -33,7 +33,7 @@ DATE_FIELDS = [
 ]
 
 
-def _is_number(s):
+def _is_number(s: float) -> bool:
     try:
         float(s)
         return True
@@ -41,24 +41,24 @@ def _is_number(s):
         return False
 
 
-def _first_day_month(current_date):
+def _first_day_month(current_date: str) -> str:
     return current_date.replace(day=1)
 
 
-def _first_day_year(current_date):
+def _first_day_year(current_date: str) -> str:
     return current_date.replace(day=1).replace(month=1)
 
 
-def _last_day_year(current_date):
+def _last_day_year(current_date: str) -> str:
     return current_date.replace(day=31).replace(month=12)
 
 
-def _last_day_month(current_date):
+def _last_day_month(current_date: str) -> str:
     month_last_day = calendar.monthrange(current_date.year, current_date.month)[1]
     return current_date.replace(day=month_last_day)
 
 
-def _parse_field(field, to_add, current_date, date_format="%Y-%m-%d"):
+def _parse_field(field: str, to_add: Any, current_date: Any, date_format = "%Y-%m-%d"):
     if field == "CURRENT_DATE":
         return (current_date + dt.timedelta(days=to_add)).strftime(date_format)
     elif field == "START_CURRENT_MONTH":
@@ -73,7 +73,7 @@ def _parse_field(field, to_add, current_date, date_format="%Y-%m-%d"):
         return field
 
 
-def _parse_formula(formula, current_date, date_format="%Y-%m-%d"):
+def _parse_formula(formula: str, current_date: Any, date_format = "%Y-%m-%d"):
     if any(ext in formula for ext in DATE_FIELDS):
         if "+" in formula:
             parts = formula.split("+")
@@ -84,7 +84,7 @@ def _parse_formula(formula, current_date, date_format="%Y-%m-%d"):
     return _parse_field(formula.strip(), 0, current_date, date_format)
 
 
-def parse_parameter(param_value, current_date, format_separator="|"):
+def parse_parameter(param_value: str, current_date: Any, format_separator = "|"):
     if not param_value:
         return param_value
     elif _is_number(param_value):
@@ -102,21 +102,21 @@ def _current_date(timezone: Optional[str] = None) -> dt.date:
     return dt.date.today()
 
 
-def map_result_proxy2list_dict(result_proxy) -> list:
+def map_result_proxy2list_dict(result_proxy: dict[str, Any]) -> list:
     keys = list(result_proxy.keys())
     return [dict(zip(keys, row)) for row in result_proxy]
 
 
-_TRUTHY_STRINGS = {"true", "t", "yes", "y", "1", "on"}
+_TRUTHY_STRINGS: set[str] = {"true", "t", "yes", "y", "1", "on"}
 
 
-def _coerce_bool(value) -> bool:
+def _coerce_bool(value: bool) -> bool:
     if isinstance(value, str):
         return value.strip().lower() in _TRUTHY_STRINGS
     return bool(value)
 
 
-def _begin_read_only(con) -> None:
+def _begin_read_only(con: Any) -> None:
     dialect = con.engine.dialect.name
     try:
         if dialect == "sqlite":
@@ -133,21 +133,21 @@ def _is_read_only_violation(exc: Exception) -> bool:
 
 
 def handle_run_query2json(
-    name="default",
-    query="default",
-    wrapper=False,
-    first=False,
-    key="",
-    value="",
-    jsonkeys="",
-    format="json",
-    output=None,
-    list_connections=False,
+    name = "default",
+    query = "default",
+    wrapper = False,
+    first = False,
+    key = "",
+    value = "",
+    jsonkeys = "",
+    format = "json",
+    output = None,
+    list_connections = False,
     list_queries: bool | str = False,
-    timezone=None,
-    read_only=False,
-    **kwargs,
-):
+    timezone = None,
+    read_only = False,
+    **kwargs: Any,
+) -> None:
     try:
         if isinstance(name, str) and name.endswith(".sql") and Path(name).is_file():
             if query == "default":
@@ -189,11 +189,11 @@ def handle_run_query2json(
 
 
 def run_query(
-    engine,
+    engine: Any,
     raw_query: str,
     timezone: Optional[str] = None,
     read_only: bool = False,
-    **kwargs,
+    **kwargs: Any,
 ) -> list | dict:
     read_only = _coerce_bool(read_only)
     current_date = _current_date(timezone)
@@ -335,7 +335,7 @@ def _resolve_query_string(connection_name: str, query_name: str, connections: di
     return config_queries.get(query_name, query_name)
 
 
-def run_query_by_name(conection_name: str = "default", query_name: str = "default", **kwargs) -> list | dict:
+def run_query_by_name(conection_name: str = "default", query_name: str = "default", **kwargs: Any) -> list | dict:
     config_path = kwargs.pop("config", None) or _find_config()
     timezone = kwargs.pop("timezone", None)
     read_only = kwargs.pop("read_only", False)
@@ -419,7 +419,7 @@ def run_query2json(
     jsonkeys: str = "",
     timezone: Optional[str] = None,
     read_only: bool = False,
-    **kwargs,
+    **kwargs: Any,
 ) -> str | dict | list:
     read_only = _coerce_bool(read_only)
     result = run_query_by_name(name, query, timezone=timezone, read_only=read_only, **kwargs)
@@ -430,31 +430,31 @@ def run_query2json(
     return apply_output_transforms(result, wrapper, first, key, value, jsonkeys)
 
 
-def _parse_filename_after_brackets(part, current_date):
+def _parse_filename_after_brackets(part: str, current_date: Any):
     if "}" in part:
         new_parts = [parse_parameter(item, current_date) for item in part.split("}")]
         return "".join(new_parts)
     return parse_parameter(part, current_date)
 
 
-def parse_filename(file_name, current_date):
+def parse_filename(file_name: str, current_date: Any) -> str:
     parts = file_name.split("{")
     results = [_parse_filename_after_brackets(part, current_date) for part in parts]
     return "".join(results)
 
 
-def json_default(value):
+def json_default(value: float) -> float:
     if isinstance(value, Decimal):
         return float(value)
     msg = f"Object of type {type(value).__name__} is not JSON serializable"
     raise TypeError(msg)
 
 
-def json_dumps(value):
+def json_dumps(value: Any) -> str:
     return json.dumps(value, default=json_default)
 
 
-def save_json(rows, file_name, timezone=None):
+def save_json(rows: Iterable[Any], file_name: str, timezone = None) -> None:
     current_date = _current_date(timezone)
     parsed_filename = parse_filename(file_name, current_date)
     final_file_name = parsed_filename if ".json" in parsed_filename else parsed_filename + ".json"
@@ -462,7 +462,7 @@ def save_json(rows, file_name, timezone=None):
         outfile.write(json_dumps(rows))
 
 
-def save_csv(rows, file_name, dialect, key, timezone=None):
+def save_csv(rows: Iterable[Any], file_name: str, dialect: str, key: str, timezone = None) -> None:
     current_date = _current_date(timezone)
     parsed_filename = parse_filename(file_name, current_date)
     ext = ".xls" if dialect == "excel" else ".csv"
@@ -495,7 +495,7 @@ def save_csv(rows, file_name, dialect, key, timezone=None):
             writer.writerow(data)
 
 
-def emit_result(result, format, output, key, value, first, timezone):
+def emit_result(result: str, format: str, output: Path, key: str, value: Any, first: Any, timezone: Any) -> None:
     if output:
         if format == "csv":
             save_csv(result, output, "csv", key, timezone=timezone)
@@ -512,21 +512,21 @@ def emit_result(result, format, output, key, value, first, timezone):
 
 
 def handle_run_query2json(
-    name="default",
-    query="default",
-    wrapper=False,
-    first=False,
-    key="",
-    value="",
-    jsonkeys="",
-    format="json",
-    output=None,
-    list_connections=False,
+    name = "default",
+    query = "default",
+    wrapper = False,
+    first = False,
+    key = "",
+    value = "",
+    jsonkeys = "",
+    format = "json",
+    output = None,
+    list_connections = False,
     list_queries: bool | str = False,
-    timezone=None,
-    read_only=False,
-    **kwargs,
-):
+    timezone = None,
+    read_only = False,
+    **kwargs: Any,
+) -> None:
     try:
         if isinstance(name, str) and name.endswith(".sql") and Path(name).is_file():
             if query == "default":
@@ -567,7 +567,7 @@ def handle_run_query2json(
         sys.exit(1)
 
 
-def main():
+def main() -> None:
     if any(arg in ("--version", "-v") for arg in sys.argv[1:]):
         print(f"sql2json {__version__}")
         sys.exit(0)

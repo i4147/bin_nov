@@ -15,7 +15,7 @@ def process_line(line: str, autofix: bool = False) -> tuple:
     misspelled_count = 0
     fixed_count = 0
 
-    def check_and_replace(match):
+    def check_and_replace(match: re.Match[str]):
         nonlocal misspelled_count, fixed_count
         word = match.group(0)
         clean_word = word.strip("'")
@@ -50,7 +50,7 @@ def process_line(line: str, autofix: bool = False) -> tuple:
     return updated_line, misspelled_count, fixed_count
 
 
-def process_file(path: str, autofix: bool = False, num_processes: int | None = None):
+def process_file(path: str, autofix: bool = False, num_processes: int | None = None) -> None:
     try:
         with open(path, "r", encoding="utf-8") as f:
             lines = f.readlines()

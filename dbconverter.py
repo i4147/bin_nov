@@ -11,11 +11,12 @@ from pathlib import Path
 import pickle
 import sqlite3
 import sys
+from typing import Any, Iterable
 
 import pandas as pd
 
 
-SQLITE_MAGIC = b"SQLite format 3\x00"
+SQLITE_MAGIC: bytes = b"SQLite format 3\x00"
 
 
 def is_sqlite_file(path: Path) -> bool:
@@ -66,7 +67,7 @@ def parse_target(name: str) -> str:
     raise ValueError(msg)
 
 
-def _coerce_to_tables(obj) -> dict[str, pd.DataFrame]:
+def _coerce_to_tables(obj: dict[str, Any]) -> dict[str, pd.DataFrame]:
     if isinstance(obj, pd.DataFrame):
         return {"data": obj}
     if isinstance(obj, dict):
@@ -190,7 +191,7 @@ def write_excel(tables: dict[str, pd.DataFrame], path: Path) -> None:
             df.to_excel(xw, sheet_name=name[:31], index=False)
 
 
-READERS = {
+READERS: dict[str, Any] = {
     "json": read_json,
     "jsonl": read_jsonl,
     "csv": read_csv,
@@ -200,7 +201,7 @@ READERS = {
     "parquet": read_parquet,
     "excel": read_excel,
 }
-WRITERS = {
+WRITERS: dict[str, Any] = {
     "json": write_json,
     "jsonl": write_jsonl,
     "csv": write_csv,
@@ -210,7 +211,7 @@ WRITERS = {
     "parquet": write_parquet,
     "excel": write_excel,
 }
-EXT_FOR = {
+EXT_FOR: dict[str, str] = {
     "json": ".json",
     "jsonl": ".jsonl",
     "csv": ".csv",

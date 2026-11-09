@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 
-def process_file(path) -> None:
+def process_file(path: Path) -> None:
     content = path.read_bytes()
     target_dir = Path("/sdcard/doc")
     if not target_dir.exists():

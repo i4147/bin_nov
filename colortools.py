@@ -22,24 +22,24 @@ from pathlib import Path
 import random
 import re
 import sys
-from typing import Iterator, Optional, Sequence
+from typing import Any, Iterable, Iterator, Optional, Sequence
 
 
 try:
     from dh import cprint, is_binary, should_skip
 except ImportError:
 
-    def cprint(*args, **kwargs):
+    def cprint(*args: Any, **kwargs: str) -> None:
         print(*args, **kwargs)
 
-    def is_binary(path) -> bool:
+    def is_binary(path: Path) -> bool:
         try:
             with open(path, "rb") as f:
                 return b"\x00" in f.read(1024)
         except Exception:
             return True
 
-    def should_skip(path) -> bool:
+    def should_skip(path: Path) -> bool:
         return False
 
 
@@ -50,7 +50,7 @@ RGB_RE = re.compile(
     r"\brgba?\(\s*(?P<r>\d{1,3})\s*,\s*(?P<g>\d{1,3})\s*,\s*" r"(?P<b>\d{1,3})(?:\s*,\s*(?P<a>[\d\.]+))?\s*\)\b",
     re.IGNORECASE,
 )
-RESET = "\x1b[0m"
+RESET: str = "\x1b[0m"
 
 
 def _walk_files(root: Path) -> Iterator[Path]:

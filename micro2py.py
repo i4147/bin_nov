@@ -12,6 +12,7 @@ import argparse
 from pathlib import Path
 import re
 import sys
+from typing import Any, Iterator
 
 
 if sys.version_info >= (3, 10):
@@ -71,7 +72,7 @@ def refactor_file(path: Path, dry_run: bool = False) -> tuple[bool, bool]:
     return content_changed, name_changed
 
 
-def _iter_py_files(root: Path):
+def _iter_py_files(root: Path) -> Iterator[Path]:
     if root.is_file():
         if root.suffix == ".py":
             yield root

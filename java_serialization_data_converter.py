@@ -6,6 +6,7 @@ Usage: java_serialization_data_converter INPUT.bin OUTPUT.json Examples: $ java_
 import json
 from pathlib import Path
 import sys
+from typing import Any, Iterable
 
 import javaobj
 
@@ -46,7 +47,7 @@ def save_as_json(parsed_data: list, output_path: str) -> None:
         json.dump(serializable_data, f, default=default_json_encoder, indent=4, ensure_ascii=False)
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 3:
         print("Usage: python java_serializer.py <input_java_serialized_bin> <output_data_json>")
         sys.exit(1)

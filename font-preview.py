@@ -4,10 +4,11 @@
 from base64 import b64encode
 from html import escape
 from pathlib import Path
+from typing import Any
 
 
-OUTPUT = Path("font_preview.html")
-FONT_FORMATS = {
+OUTPUT: Path = Path("font_preview.html")
+FONT_FORMATS: dict[str, tuple[Any, ...]] = {
     ".ttf": ("font/ttf", "truetype"),
     ".otf": ("font/otf", "opentype"),
     ".woff": ("font/woff", "woff"),
@@ -15,7 +16,7 @@ FONT_FORMATS = {
 }
 
 
-def main():
+def main() -> None:
     root = Path.cwd()
     fonts = sorted(
         (

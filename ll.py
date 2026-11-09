@@ -11,7 +11,7 @@ import sys
 
 # from dh import gsz2
 
-REVERSE = "-r" in sys.argv
+REVERSE: bool = "-r" in sys.argv
 
 
 def fsz(sz: float) -> str:

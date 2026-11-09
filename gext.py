@@ -9,15 +9,16 @@ import multiprocessing as mp
 import os
 from pathlib import Path
 import sys
+from typing import Any, Iterable
 
 from dh import MAX_WORKERS
 
 
-OUTPUT_DIR = "output"
+OUTPUT_DIR: str = "output"
 CLASSES_DIR = Path(OUTPUT_DIR).joinpath("classes")
 FUNCTIONS_DIR = Path(OUTPUT_DIR).joinpath("functions")
 CONST_DIR = Path(OUTPUT_DIR).joinpath("const")
-EXCLUDE_DIRS = {"test", "tests", "examples", "output"}
+EXCLUDE_DIRS: set[str] = {"test", "tests", "examples", "output"}
 
 
 def is_python_script(path: str) -> bool:
@@ -47,7 +48,7 @@ def collect_files(inputs: list[str]) -> list[str]:
     return files
 
 
-def mark_parents(node: ast.AST, parent=None):
+def mark_parents(node: ast.AST, parent = None) -> None:
     for child in ast.iter_child_nodes(node):
         child._parent = node
         mark_parents(child, node)
@@ -104,7 +105,7 @@ def write_entity(directory: str, name: str, src: str) -> None:
         f.write(src.rstrip() + "\n")
 
 
-def main():
+def main() -> None:
     inputs = sys.argv[1:]
     if not inputs:
         inputs = ["."]

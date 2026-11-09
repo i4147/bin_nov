@@ -12,6 +12,7 @@ from pathlib import Path
 import sys
 import threading
 import time
+from typing import Any, Callable, TextIO
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -31,15 +32,15 @@ logger.add(
     level="ERROR",
     format="<red>{level}</red>: {message}",
 )
-FALLBACK_ORDER = ("translate", "deep_translator", "googletrans")
-MAX_RETRIES = 3
+FALLBACK_ORDER: tuple[str, str, str] = ("translate", "deep_translator", "googletrans")
+MAX_RETRIES: int = 3
 
 
 class BackendError(Exception):
     pass
 
 
-def _make_translate(source, target, script_path):
+def _make_translate(source: str, target: Path, script_path: Path) -> Callable[..., Any]:
     try:
         import translate
     except ImportError as e:
@@ -55,31 +56,31 @@ def _make_translate(source, target, script_path):
         raise BackendError(msg)
     if cls.__name__ == "Translator":
 
-        def call(text, cls=cls, source=source, target=target):
+        def call(text: str, cls = cls, source = source, target = target):
             return cls(from_lang=source, to_lang=target).translate(text)
 
     else:
 
-        def call(text, cls=cls, source=source, target=target):
+        def call(text: str, cls = cls, source = source, target = target):
             return cls(source=source, target=target).translate(text)
 
     return call
 
 
-def _make_deep_translator(source, target, _script_path):
+def _make_deep_translator(source: str, target: Path, _script_path: Path) -> Callable[..., Any]:
     try:
         from deep_translator import GoogleTranslator
     except ImportError as e:
         msg = f"cannot import 'deep_translator': {e}"
         raise BackendError(msg)
 
-    def call(text, cls=GoogleTranslator, source=source, target=target):
+    def call(text: str, cls = GoogleTranslator, source = source, target = target):
         return cls(source=source, target=target).translate(text)
 
     return call
 
 
-def _make_googletrans(source, target, _script_path):
+def _make_googletrans(source: str, target: Path, _script_path: Path) -> Callable[..., Any]:
     try:
         from googletrans import Translator
     except ImportError as e:
@@ -88,14 +89,14 @@ def _make_googletrans(source, target, _script_path):
     lock = threading.Lock()
     inst = Translator()
 
-    def call(text, inst=inst, lock=lock, source=source, target=target):
+    def call(text: str, inst = inst, lock = lock, source = source, target = target):
         with lock:
             return inst.translate(text, src=source, dest=target).text
 
     return call
 
 
-_BACKEND_FACTORIES = {
+_BACKEND_FACTORIES: dict[str, Any] = {
     "translate": _make_translate,
     "deep_translator": _make_deep_translator,
     "googletrans": _make_googletrans,
@@ -103,7 +104,7 @@ _BACKEND_FACTORIES = {
 
 
 class TranslatorWrapper:
-    def __init__(self, preferred, source, target, script_path):
+    def __init__(self, preferred: str, source: str, target: Path, script_path: Path) -> None:
         self.source = source
         self.target = target
         self.backend_name = None
@@ -136,11 +137,11 @@ class TranslatorWrapper:
         print("  pip install googletrans==4.0.0rc1", file=sys.stderr)
         sys.exit(1)
 
-    def translate(self, text):
+    def translate(self, text: str):
         return self._call(text)
 
 
-def load_progress(out_path):
+def load_progress(out_path: Path):
     if not Path(out_path).exists():
         return {}
     try:
@@ -153,7 +154,7 @@ def load_progress(out_path):
     return {}
 
 
-def save_output(out_path, data, lock):
+def save_output(out_path: Path, data: TextIO, lock: Any) -> None:
     with lock:
         tmp_path = out_path + ".tmp"
         with open(tmp_path, "w", encoding="utf-8") as f:
@@ -161,7 +162,7 @@ def save_output(out_path, data, lock):
         os.replace(tmp_path, out_path)
 
 
-def append_failed(failed_path, word, lock):
+def append_failed(failed_path: Path, word: str, lock: Any) -> None:
     with lock, open(failed_path, "a", encoding="utf-8") as f:
         f.write(word + "\n")
 
@@ -215,7 +216,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     args = parse_args()
     input_path = args.input
     out_path = args.output
@@ -253,7 +254,7 @@ def main():
     completed_count = [0]
     total_pending = len(pending)
 
-    def translate_word(word):
+    def translate_word(word: str):
         for attempt in range(1, MAX_RETRIES + 1):
             try:
                 time.sleep(args.delay)

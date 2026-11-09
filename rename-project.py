@@ -7,11 +7,12 @@ import os
 from pathlib import Path
 import re
 import sys
+from typing import Any
 
 from dh import SKIP_DIRS, TEXT_EXTENSIONS
 
 
-TEXT_PREFIXES = (
+TEXT_PREFIXES: tuple[str, ...] = (
     "readme",
     "license",
     "copying",
@@ -22,7 +23,7 @@ TEXT_PREFIXES = (
     "makefile",
     "dockerfile",
 )
-DOTFILES = {
+DOTFILES: set[str] = {
     ".gitignore",
     ".gitattributes",
     ".editorconfig",
@@ -41,7 +42,7 @@ def looks_textual(path: Path) -> bool:
     return bool(name.startswith(TEXT_PREFIXES))
 
 
-def build_replacer(old: str, new: str):
+def build_replacer(old: str, new: str) -> str:
     pattern = re.compile(r"\b" + re.escape(old) + r"\b", re.IGNORECASE)
 
     def _repl(match: re.Match) -> str:
@@ -57,7 +58,7 @@ def build_replacer(old: str, new: str):
     return pattern, _repl
 
 
-def replace_in_file(path: Path, pattern, repl) -> bool:
+def replace_in_file(path: Path, pattern: str, repl: Any) -> bool:
     try:
         text = path.read_text(encoding="utf-8")
     except (UnicodeDecodeError, OSError):

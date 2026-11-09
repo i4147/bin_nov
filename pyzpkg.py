@@ -11,13 +11,13 @@ import shutil
 import sys
 
 
-def get_user_site_packages():
+def get_user_site_packages() -> Path:
     import site
 
     return Path(site.getusersitepackages())
 
 
-def check_dist_info_safely(dist_info_path):
+def check_dist_info_safely(dist_info_path: Path):
     top_level_path = dist_info_path / "top_level.txt"
     if top_level_path.exists():
         try:
@@ -47,7 +47,7 @@ def check_dist_info_safely(dist_info_path):
     return (False, "")
 
 
-def create_loader_stub(pkg_name, site_packages):
+def create_loader_stub(pkg_name: str, site_packages: str) -> None:
     stub_path = site_packages / f"{pkg_name}.py"
     pkg_dir = site_packages / pkg_name
     has_main = (pkg_dir / "__main__.py").exists()
@@ -69,7 +69,7 @@ def create_loader_stub(pkg_name, site_packages):
     print(f"  Created loader stub: {pkg_name}.py (with __main__ execution hook: {has_main})")
 
 
-def process_package(pkg_name, site_packages):
+def process_package(pkg_name: str, site_packages: Path) -> bool:
     pkg_dir = site_packages / pkg_name
     if not pkg_dir.is_dir() or pkg_name.endswith((".dist-info", ".egg-info", "__pycache__")):
         return False
@@ -114,7 +114,7 @@ def process_package(pkg_name, site_packages):
         return False
 
 
-def main():
+def main() -> None:
     site_packages = get_user_site_packages()
     if not site_packages.exists():
         print(f"User site-packages directory not found at: {site_packages}")

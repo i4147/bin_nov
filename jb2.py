@@ -10,7 +10,7 @@ import sys
 from dh import cprint, fsz, get_files, gsz, mpf
 
 
-def process_file(path) -> None:
+def process_file(path: Path) -> None:
     path = Path(path)
     before = gsz(path)
     data = path.read_text(encoding="utf-8")

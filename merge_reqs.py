@@ -21,7 +21,7 @@ import re
 import subprocess
 import sys
 import tarfile
-from typing import Any, Iterable, Iterator, Optional, Sequence
+from typing import Any, Iterable, Iterator, Optional, Sequence, TextIO
 import zipfile
 
 from dh import MAX_WORKERS
@@ -31,7 +31,7 @@ try:
     from tqdm import tqdm as _tqdm
 except Exception:
 
-    def _tqdm(iterable=None, **kwargs):
+    def _tqdm(iterable = None, **kwargs: Any):
         return iterable if iterable is not None else []
 
 
@@ -44,9 +44,9 @@ def _hash_bytes(data: bytes) -> str:
         return hashlib.sha256(data).hexdigest()
 
 
-DEFAULT_PIP_FILE = "/sdcard/data/pip.txt"
-DEFAULT_CACHE_FILE = ".reqcache.json"
-DEFAULT_IGNORE = [
+DEFAULT_PIP_FILE: str = "/sdcard/data/pip.txt"
+DEFAULT_CACHE_FILE: str = ".reqcache.json"
+DEFAULT_IGNORE: list[str] = [
     ".git",
     ".hg",
     ".svn",
@@ -66,7 +66,7 @@ DEFAULT_IGNORE = [
     "dist",
     "site-packages",
 ]
-ARCHIVE_SUFFIXES = (
+ARCHIVE_SUFFIXES: tuple[str, ...] = (
     ".zip",
     ".whl",
     ".tar",

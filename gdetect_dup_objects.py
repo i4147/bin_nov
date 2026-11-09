@@ -12,10 +12,10 @@ from typing import Any
 
 
 class TypeAnnotationChecker(ast.NodeVisitor):
-    def __init__(self):
+    def __init__(self) -> None:
         self.has_annotations = False
 
-    def visit_FunctionDef(self, node):
+    def visit_FunctionDef(self, node: ast.AST) -> None:
         if node.returns:
             self.has_annotations = True
         for arg in node.args.args + node.args.kwonlyargs:
@@ -27,16 +27,16 @@ class TypeAnnotationChecker(ast.NodeVisitor):
             self.has_annotations = True
         self.generic_visit(node)
 
-    def visit_AsyncFunctionDef(self, node):
+    def visit_AsyncFunctionDef(self, node: ast.AST) -> None:
         self.visit_FunctionDef(node)
 
-    def visit_AnnAssign(self, node):
+    def visit_AnnAssign(self, node: ast.AST) -> None:
         self.has_annotations = True
         self.generic_visit(node)
 
 
 class AnnotationStripper(ast.NodeTransformer):
-    def visit_FunctionDef(self, node):
+    def visit_FunctionDef(self, node: ast.AST):
         node.returns = None
         for arg in node.args.args + node.args.kwonlyargs:
             arg.annotation = None
@@ -47,10 +47,10 @@ class AnnotationStripper(ast.NodeTransformer):
         self.generic_visit(node)
         return node
 
-    def visit_AsyncFunctionDef(self, node):
+    def visit_AsyncFunctionDef(self, node: ast.AST):
         return self.visit_FunctionDef(node)
 
-    def visit_AnnAssign(self, node):
+    def visit_AnnAssign(self, node: ast.AST):
         if node.value is not None:
             return ast.Assign(targets=[node.target], value=node.value)
         return None
@@ -99,7 +99,7 @@ def extract_objects_from_file(file_path: Path) -> list[dict[str, Any]]:
     return results
 
 
-def main():
+def main() -> None:
     current_dir = Path.cwd()
     output_dir = current_dir / "output"
     output_dir.mkdir(exist_ok=True)

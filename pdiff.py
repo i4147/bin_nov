@@ -11,9 +11,10 @@ import opcode
 import pprint
 import sys
 import types
+from typing import Any, TextIO
 
 
-def diff_bytecode_of_files(filename_a, filename_b):
+def diff_bytecode_of_files(filename_a: Any, filename_b: Any):
     with open_with_encoding(filename_a) as file_a:
         source_a = file_a.read()
     with open_with_encoding(filename_b) as file_b:
@@ -21,7 +22,7 @@ def diff_bytecode_of_files(filename_a, filename_b):
     return diff_bytecode(source_a, source_b, filename_a, filename_b)
 
 
-def diff_bytecode(source_a, source_b, filename_a="", filename_b=""):
+def diff_bytecode(source_a: Any, source_b: Any, filename_a = "", filename_b = "") -> str:
     if dump_ast(source_a, filename_a) == dump_ast(source_b, filename_b):
         return ""
     bytecode_a = disassemble(source_a, filename_a)
@@ -36,15 +37,15 @@ def diff_bytecode(source_a, source_b, filename_a="", filename_b=""):
     )
 
 
-def disassemble(source, filename=None):
+def disassemble(source: str, filename = None):
     return tree(compile(source, filename or "<string>", "exec", dont_inherit=True))
 
 
-def dump_ast(source, filename=None):
+def dump_ast(source: str, filename = None) -> None:
     return ast.dump(ast.parse(source, filename or "<string>", "exec"))
 
 
-def tree(code):
+def tree(code: Any) -> dict[str, list[Any]]:
     dictionary = {"co_consts": [], "co_code": []}
     for name in dir(code):
         if name.startswith("co_") and name not in [
@@ -68,7 +69,7 @@ def tree(code):
     return dictionary
 
 
-def open_with_encoding(filename, encoding=None, mode="r"):
+def open_with_encoding(filename: str, encoding = None, mode = "r") -> TextIO:
     if not encoding:
         encoding = detect_encoding(filename)
     import io
@@ -76,7 +77,7 @@ def open_with_encoding(filename, encoding=None, mode="r"):
     return io.open(filename, mode=mode, encoding=encoding, newline="")
 
 
-def detect_encoding(filename):
+def detect_encoding(filename: str):
     try:
         with open(filename, "rb") as input_file:
             import tokenize
@@ -89,7 +90,7 @@ def detect_encoding(filename):
         return "latin-1"
 
 
-def parse_args(argv):
+def parse_args(argv: list[Any]):
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__, prog="pydiff")
@@ -98,7 +99,7 @@ def parse_args(argv):
     return args
 
 
-def main(argv, standard_out, standard_error):
+def main(argv: list[Any], standard_out: TextIO, standard_error: TextIO) -> None:
     args = parse_args(argv)
     try:
         diff = diff_bytecode_of_files(args.files[0], args.files[1])

@@ -9,10 +9,10 @@ import sys
 from dh import get_pyfiles, runcmd
 
 
-CHUNK_SIZE = 1024 * 1024
+CHUNK_SIZE: int = 1024 * 1024
 
 
-def process_file(path) -> None:
+def process_file(path: Path) -> None:
     path = Path(path)
     cmd = [
         "pylint",

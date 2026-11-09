@@ -5,9 +5,10 @@ Reads text lines from the terminal, detects whether the script is Arabic or Lati
 Usage: mkart Examples: $ mkart Runs as a script (``python mkart.py``) in the directory it should act on; the module can also be imported."""
 
 import os
+from typing import Any, Iterable
 
 
-def create_english_style_art(word):
+def create_english_style_art(word: Iterable[Any]):
     letter_art = {
         "A": [
             " ███ ",
@@ -658,7 +659,7 @@ def create_english_style_art(word):
     return art_lines
 
 
-def create_arabic_style_art(word):
+def create_arabic_style_art(word: Iterable[Any]):
     letter_art = {
         "ا": [
             "  █  ",
@@ -922,7 +923,7 @@ def create_arabic_style_art(word):
     return art_lines
 
 
-def detect_script(text):
+def detect_script(text: str) -> str:
     arabic_chars = set("ابتثجحخدذرزسشصضطظعغفقكلمنهويءآأإةى")
     for char in text:
         if char in arabic_chars:
@@ -930,7 +931,7 @@ def detect_script(text):
     return "english"
 
 
-def main():
+def main() -> None:
     print("Text Art Generator (English & Arabic)")
     print("=" * 40)
     print("Enter text to convert to art")

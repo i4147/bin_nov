@@ -14,17 +14,17 @@ import re
 class Extractor(object):
     def __init__(
         self,
-        backend="fitz",
-        password="",
-        encoding="utf-8",
-        normalize_spaces=True,
-    ):
+        backend = "fitz",
+        password = "",
+        encoding = "utf-8",
+        normalize_spaces = True,
+    ) -> None:
         self.backend = backend.lower()
         self.password = password
         self.encoding = encoding
         self.normalize_spaces = normalize_spaces
 
-    def extract_pages(self, pdf_path):
+    def extract_pages(self, pdf_path: Path) -> list[str]:
         pdf_path = Path(pdf_path)
         pages = []
         if self.backend == "fitz":
@@ -73,11 +73,11 @@ class Extractor(object):
             pages = [re.sub(r" +", " ", page) for page in pages]
         return pages
 
-    def __call__(self, pdf_path):
+    def __call__(self, pdf_path: Path) -> str:
         return "\n".join(self.extract_pages(pdf_path))
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("pdffiles", nargs="+")
     parser.add_argument("-p", "--perpage", action="store_true")

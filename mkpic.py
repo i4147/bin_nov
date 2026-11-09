@@ -11,12 +11,12 @@ import sys
 from dh import get_pyfiles, mpf
 
 
-REMOVE_ORIG = False
-LEGACY_MODE = False
-OPTIMIZE_LEVEL = 0
+REMOVE_ORIG: bool = False
+LEGACY_MODE: bool = False
+OPTIMIZE_LEVEL: int = 0
 
 
-def process_file(path) -> bool | None:
+def process_file(path: Path) -> bool | None:
     path = Path(path)
     if not path.exists() or path.is_symlink():
         return False
@@ -36,7 +36,7 @@ def process_file(path) -> bool | None:
     return False
 
 
-def main():
+def main() -> int:
     global REMOVE_ORIG, LEGACY_MODE, OPTIMIZE_LEVEL
     os.environ["PYTHONPYCACHEPREFIX"] = "__pycache__"
     cwd = Path.cwd()

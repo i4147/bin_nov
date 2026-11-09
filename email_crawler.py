@@ -11,18 +11,19 @@ import traceback
 import urllib.error
 import urllib.parse
 import urllib.request
+from typing import Any
 
 from loguru import logger
 from sqlalchemy import Boolean, Column, Integer, MetaData, Table, Unicode, create_engine, select
 
 
-DEBUG = True
-DATABASE_NAME = "data/crawler.sqlite"
-HTML_DIR = Path("data/html")
-EMAILS_FILENAME = Path("data/emails.csv")
-DOMAINS_FILENAME = Path("data/domains.csv")
-LOG_DIR = Path("logs")
-MAX_SEARCH_RESULTS = 150
+DEBUG: bool = True
+DATABASE_NAME: str = "data/crawler.sqlite"
+HTML_DIR: Path = Path("data/html")
+EMAILS_FILENAME: Path = Path("data/emails.csv")
+DOMAINS_FILENAME: Path = Path("data/domains.csv")
+LOG_DIR: Path = Path("logs")
+MAX_SEARCH_RESULTS: int = 150
 
 
 LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -69,14 +70,14 @@ class CrawlerDb:
         self.connection.commit()
         return True
 
-    def dequeue(self):
+    def dequeue(self) -> bool:
         if not self.connected:
             return False
         s = select(self.website_table).where(self.website_table.c.has_crawled.is_(False)).limit(1)
         result = self.connection.execute(s).fetchall()
         return result[0] if result else False
 
-    def crawled(self, website, new_emails: str | None = None) -> None:
+    def crawled(self, website: Any, new_emails: str | None = None) -> None:
         if not self.connected:
             return
         stmt = (

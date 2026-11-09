@@ -9,7 +9,7 @@ import math
 import os
 from pathlib import Path
 import sys
-from typing import Callable
+from typing import Any, Callable
 
 
 DetectionResult = tuple[str, float]
@@ -110,7 +110,7 @@ BACKENDS: dict[str, Callable[[str], DetectionResult]] = {
     "lingua": _detect_lingua,
 }
 
-INSTALL_HINT = {
+INSTALL_HINT: dict[str, str] = {
     "pycld2": "pycld2",
     "gcld3": "gcld3",
     "cld3": "cld3",
@@ -159,7 +159,7 @@ def scan_and_detect(root_dir: str, backend: str, only_non_english: bool) -> None
             print(f"{file_path:<50} | {lang:<10} | {conf_str:<6} | {snippet}", flush=True)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Scan a directory and detect the language of each file.",
         formatter_class=argparse.RawDescriptionHelpFormatter,

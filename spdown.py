@@ -8,6 +8,7 @@ import hashlib
 from pathlib import Path
 import sys
 from urllib.parse import unquote, urljoin, urlparse
+from typing import Any, Iterable
 
 import httpx
 from loguru import logger
@@ -25,10 +26,10 @@ from packaging.version import InvalidVersion, Version
 from rich.progress import BarColumn, DownloadColumn, Progress, TextColumn, TimeRemainingColumn, TransferSpeedColumn
 
 
-PYPI = "https://pypi.org/simple/"
-ACCEPT = "application/vnd.pypi.simple.v1+json"
-CHUNK = 1024 * 1024
-NO_TAG = 10**9
+PYPI: str = "https://pypi.org/simple/"
+ACCEPT: str = "application/vnd.pypi.simple.v1+json"
+CHUNK: int = 1024 * 1024
+NO_TAG: int = 10**9
 
 
 @dataclass(frozen=True, slots=True)
@@ -161,7 +162,7 @@ def download(client: httpx.Client, link: Link, dest_dir: Path) -> Path:
     return dest
 
 
-def main(argv=None) -> int:
+def main(argv = None) -> int:
     ap = argparse.ArgumentParser(description="Download a package from PyPI.")
     ap.add_argument("requirement", help="e.g. requests or 'requests==2.31.0'")
     ap.add_argument(

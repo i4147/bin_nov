@@ -29,7 +29,7 @@ class BatToShConverter:
         r"^if\s+not\s+exist\s+": "if [ ! -f ",
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.converted_count = 0
         self.error_count = 0
 
@@ -107,7 +107,7 @@ class BatToShConverter:
         print("=" * 40)
 
 
-def main():
+def main() -> None:
     target_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.cwd()
     converter = BatToShConverter()
     converter.process_directory(target_dir)

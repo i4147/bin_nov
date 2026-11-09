@@ -7,9 +7,10 @@ import json
 from pathlib import Path
 import quopri
 import sys
+from typing import Any
 
 
-def decode_value(value, params):
+def decode_value(value: str, params: dict[str, Any]):
     encoding = None
     charset = "utf-8"
     for p in params:
@@ -31,7 +32,7 @@ def decode_value(value, params):
     return value
 
 
-def parse_vcard(input_path):
+def parse_vcard(input_path: Path):
     logical_lines = []
     with input_path.open("r", encoding="utf-8") as f:
         for raw in f:
@@ -79,7 +80,7 @@ def parse_vcard(input_path):
     return result
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 2:
         print("Usage: python vcard_to_json.py <input.vcf>")
         sys.exit(1)

@@ -9,7 +9,7 @@ import sysconfig
 import zipfile
 
 
-def is_empty_package(dist_info_path) -> bool:
+def is_empty_package(dist_info_path: Path) -> bool:
     dist_info_path = Path(dist_info_path)
     record_file = dist_info_path / "RECORD"
     if not record_file.is_file():

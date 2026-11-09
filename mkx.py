@@ -11,12 +11,12 @@ import re
 from dh import MAX_WORKERS
 
 
-SUFFIXES = {".py", ".sh", ".bash", ".pl", ".rb", ".pyw", ".txt"}
-BIN_DIRS = {"sbin", "bin", ".bin"}
+SUFFIXES: set[str] = {".py", ".sh", ".bash", ".pl", ".rb", ".pyw", ".txt"}
+BIN_DIRS: set[str] = {"sbin", "bin", ".bin"}
 SO_RE = re.compile(r".*\.so(?:\.\d+)*$")
 
 
-def has_shebang(p):
+def has_shebang(p: Path) -> bool:
     try:
         with p.open("rb") as f:
             return f.read(2) == b"#!"
@@ -24,7 +24,7 @@ def has_shebang(p):
         return False
 
 
-def is_binary(p):
+def is_binary(p: Path) -> bool:
     try:
         with p.open("rb") as f:
             return b"\x00" in f.read(8192)
@@ -32,14 +32,14 @@ def is_binary(p):
         return False
 
 
-def is_executable(p):
+def is_executable(p: Path) -> bool:
     try:
         return bool(p.stat().st_mode & 0o100)
     except OSError:
         return False
 
 
-def chmod_x(p):
+def chmod_x(p: Path) -> bool:
     try:
         p.chmod(p.stat().st_mode | 0o111)
         return True
@@ -47,7 +47,7 @@ def chmod_x(p):
         return False
 
 
-def should_execute(p):
+def should_execute(p: Path) -> bool:
     if has_shebang(p):
         return True
     if p.parent.name in BIN_DIRS:
@@ -57,7 +57,7 @@ def should_execute(p):
     return bool(not p.suffix and is_binary(p))
 
 
-def process(path_str):
+def process(path_str: str):
     p = Path(path_str)
     try:
         if not p.is_file():
@@ -75,7 +75,7 @@ def process(path_str):
         return path_str, False, str(e)
 
 
-def main():
+def main() -> int:
     root = Path.cwd()
     self_path = Path(__file__).resolve()
     files = []

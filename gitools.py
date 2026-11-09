@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-from typing import Optional, Sequence
+from typing import Any, Optional, Sequence
 
 
 @dataclass
@@ -399,7 +399,7 @@ def make_backend(name: str, repo: Path) -> GitBackend:
     raise ValueError(msg)
 
 
-BACKEND_CHOICES = (
+BACKEND_CHOICES: tuple[str, ...] = (
     "subprocess",
     "gitpython",
     "libgit2",

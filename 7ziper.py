@@ -11,7 +11,7 @@ import shutil
 import sys
 import tarfile
 import tempfile
-from typing import Any, Optional
+from typing import Any, Iterator, Optional
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -22,10 +22,10 @@ try:
     from loguru import logger as _log
 except ImportError:
     _log = None
-_BASIC_SKIP_SUFFIXES = {".7z", ".xz", ".br", ".zst", ".gz", ".zip", ".whl", ".log"}
-_NAMED_SKIP_SUFFIXES = {".tar", ".7z", ".br", ".gz", ".xz", ".zip", ".whl"}
-_FULL_SKIP_SUFFIXES = (".7z", ".xz", ".gz", ".bz2", ".br", ".zst", ".zip", ".rar")
-_NAMED_METHODS = ("LZMA2", "LZMA", "PPMd")
+_BASIC_SKIP_SUFFIXES: set[str] = {".7z", ".xz", ".br", ".zst", ".gz", ".zip", ".whl", ".log"}
+_NAMED_SKIP_SUFFIXES: set[str] = {".tar", ".7z", ".br", ".gz", ".xz", ".zip", ".whl"}
+_FULL_SKIP_SUFFIXES: tuple[str, ...] = (".7z", ".xz", ".gz", ".bz2", ".br", ".zst", ".zip", ".rar")
+_NAMED_METHODS: tuple[str, str, str] = ("LZMA2", "LZMA", "PPMd")
 _FULL_SETTINGS: dict[str, Any] = {
     "filters": [{"id": py7zr.FILTER_LZMA2, "preset": 9}],
     "dictionary_size": 268435456,
@@ -81,13 +81,13 @@ def _basic_setup_logging(log_file: Path) -> None:
     logger.add(sys.stderr)
 
 
-def _basic_iter_dirs(base: Path):
+def _basic_iter_dirs(base: Path) -> Iterator[Path]:
     for p in base.iterdir():
         if p.is_dir() and not p.is_symlink():
             yield p
 
 
-def _basic_iter_files(base: Path):
+def _basic_iter_files(base: Path) -> Iterator[Path]:
     for p in base.iterdir():
         if p.is_file() and not p.is_symlink() and p.suffix not in _BASIC_SKIP_SUFFIXES:
             yield p
@@ -189,7 +189,7 @@ class NamedResult:
         self.error = error
 
 
-def _named_iter_entries(base: Path, exclude_names: set):
+def _named_iter_entries(base: Path, exclude_names: set) -> Iterator[Path]:
     for p in base.iterdir():
         if p.name in exclude_names:
             continue

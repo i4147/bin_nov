@@ -11,11 +11,12 @@ import shlex
 import subprocess
 import sys
 import time
+from typing import Any
 
 
 LOG_DIR = Path.home() / "tmp" / "log" / "apps"
-CLIPBOARD_MAX_BYTES = 1 * 1024 * 1024
-COLORS = {
+CLIPBOARD_MAX_BYTES: int = 1 * 1024 * 1024
+COLORS: dict[str, str] = {
     "reset": "\033[0m",
     "bold": "\033[1m",
     "red": "\033[31m",
@@ -205,10 +206,10 @@ def main() -> None:
 
 
 class nullcontext:
-    def __enter__(self):
+    def __enter__(self) -> None:
         return None
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: Any) -> bool:
         return False
 
 

@@ -34,7 +34,7 @@ import re
 import shutil
 import string
 import sys
-from typing import Iterator, Sequence
+from typing import Any, Callable, Iterable, Iterator, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
@@ -51,7 +51,7 @@ HISTORICAL_LINE_PATTERNS: tuple[str, ...] = (
     ".zip",
 )
 PRINTABLE_CHARS: frozenset[str] = frozenset(string.printable) | {"\n", "\r", "\t"}
-_ANSI = {
+_ANSI: dict[str, str] = {
     "blue": "\033[34m",
     "green": "\033[32m",
     "grey": "\033[90m",
@@ -269,7 +269,7 @@ def _build_line_predicate(
     regex: bool,
     multiline: bool,
     ignore_case: bool,
-):
+) -> Callable[..., Any]:
     if regex:
         flags = 0
         if ignore_case:

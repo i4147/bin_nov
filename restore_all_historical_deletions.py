@@ -5,6 +5,7 @@ Usage: restore_all_historical_deletions Examples: $ restore_all_historical_delet
 
 from pathlib import Path
 import subprocess
+from typing import Any
 
 
 def run_git_command(args: list[str]) -> str:
@@ -16,7 +17,7 @@ def run_git_command(args: list[str]) -> str:
         return None
 
 
-def main():
+def main() -> None:
     repo_root = Path()
     if not (repo_root / ".git").exists() and not run_git_command(["rev-parse", "--is-inside-work-tree"]) == "true":
         print("❌ Error: Current directory is not a Git repository root.")

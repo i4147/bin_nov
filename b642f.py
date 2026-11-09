@@ -7,6 +7,7 @@ Usage: b642f FILE Examples: $ b642f payloads.txt Runs as a script (``python b642
 import base64
 from pathlib import Path
 import sys
+from typing import Any, Sequence
 
 from dh import cprint
 
@@ -19,14 +20,14 @@ def content_hash(data: bytes) -> str:
     return sha256(data).hexdigest()
 
 
-cleanup = True
+cleanup: bool = True
 cwd = Path.cwd()
-out_dir = Path("output")
+out_dir: Path = Path("output")
 if not out_dir.exists():
     out_dir.mkdir(exist_ok=True)
 
 
-def try_again(txt, fout) -> None:
+def try_again(txt: Sequence[Any], fout: Path) -> None:
     try:
         txt = txt[:-1]
         dbz = base64.b64decode(txt)
@@ -35,7 +36,7 @@ def try_again(txt, fout) -> None:
         return
 
 
-def clean_line(txt):
+def clean_line(txt: Sequence[Any]) -> str:
     cleaned: str = ""
     indx = txt.index("base64,") + 7
     cleaned = txt[indx:]

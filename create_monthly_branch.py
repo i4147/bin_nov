@@ -10,7 +10,7 @@ import sys
 
 
 REPO_PATH = Path.home() / "bin"
-MAIN_BRANCH = "main"
+MAIN_BRANCH: str = "main"
 
 
 def get_branch_name() -> str:

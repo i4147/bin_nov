@@ -11,9 +11,9 @@ from dh import cprint
 
 
 major, minor, _, _, _ = sys.version_info
-py_version = f"{major}.{minor}"
-ALLOWED = ["METADATA", "RECORD", "WHEEL", "top_level.txt"]
-NOT_ALLOWED = [
+py_version: str = f"{major}.{minor}"
+ALLOWED: list[str] = ["METADATA", "RECORD", "WHEEL", "top_level.txt"]
+NOT_ALLOWED: list[str] = [
     "REQUESTED",
     "INSTALLER",
     "direct_url.json",

@@ -3,19 +3,22 @@
 Finds the real ``gh`` binary, appends the command, the arguments, the exit status and the duration to a dated log file under ``~/tmp/log/apps`` and passes the output through unchanged.
 Usage: wrapper_gh [gh arguments ...] Examples: $ wrapper_gh pr list Meant to shadow ``gh`` on ``PATH``; keep the real binary reachable at the path it probes."""
 
+from __future__ import annotations
+
 import datetime as dt
 import os
 from pathlib import Path
 import subprocess
 import sys
 import time
+from typing import Any
 
 
 LOG_DIR = Path.home() / "tmp" / "log" / "apps"
-REAL_GH = "/data/data/com.termux/files/usr/bin/gh"
+REAL_GH: str = "/data/data/com.termux/files/usr/bin/gh"
 
 
-def find_real_gh():
+def find_real_gh() -> Any | None:
     if (
         Path(REAL_GH).is_file()
         and os.access(REAL_GH, os.X_OK)
@@ -43,7 +46,7 @@ def create_log_file():
     return log_file
 
 
-def write_log_header(log_file, command_args):
+def write_log_header(log_file: Path, command_args: Any) -> None:
     timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     cwd = os.getcwd()
     with open(log_file, "a") as f:
@@ -53,7 +56,7 @@ def write_log_header(log_file, command_args):
         f.write("================================\n\n")
 
 
-def write_log_footer(log_file, exit_code):
+def write_log_footer(log_file: Path, exit_code: str) -> None:
     timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     with open(log_file, "a") as f:
         f.write("\n================================\n")
@@ -62,7 +65,7 @@ def write_log_footer(log_file, exit_code):
         f.write("================================\n")
 
 
-def main():
+def main() -> None:
     real_gh = find_real_gh()
     if not real_gh:
         print("Error: Could not find the real gh binary", file=sys.stderr)

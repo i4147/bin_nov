@@ -1,14 +1,16 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert declarative sentences found in text files into questions written to qmade.txt."""
 
+from __future__ import annotations
+
 
 from pathlib import Path
 import re
 
 
-EXTENSIONS = {".txt", ".md", ".csv", ".json", ".xml", ".html", ".htm", ".log"}
+EXTENSIONS: set[str] = {".txt", ".md", ".csv", ".json", ".xml", ".html", ".htm", ".log"}
 
-AUXILIARIES = (
+AUXILIARIES: tuple[str, ...] = (
     "is",
     "are",
     "am",
@@ -29,7 +31,7 @@ AUXILIARIES = (
 )
 
 
-def to_question(sentence):
+def to_question(sentence: str) -> str | None:
     sentence = sentence.strip()
 
     if not sentence:

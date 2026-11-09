@@ -12,7 +12,7 @@ import sys
 import tempfile
 import threading
 import time
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -23,7 +23,7 @@ class BackendError(RuntimeError):
 
 
 TranslationFunction = Callable[[str], str]
-_FORBIDDEN_BACKENDS = {
+_FORBIDDEN_BACKENDS: set[str] = {
     "argostranslate",
     "libretranslate",
     "opus_mt",
@@ -40,7 +40,7 @@ _FORBIDDEN_BACKENDS = {
     "anthropic",
     "mistralai",
 }
-_DEFAULT_CHAIN = [
+_DEFAULT_CHAIN: list[str] = [
     "deepl",
     "deep_translator",
     "libretranslate_remote",
@@ -49,7 +49,7 @@ _DEFAULT_CHAIN = [
     "googletrans",
     "pygoogletranslation",
 ]
-_LANG_MAP = {
+_LANG_MAP: dict[str, dict[str, str]] = {
     "deepl": {
         "fr": "FR",
         "en": "EN-US",
@@ -445,7 +445,7 @@ def _make_azure(source: str, target: str, script_path: str) -> TranslationFuncti
     return translate
 
 
-_BACKEND_FACTORIES = {
+_BACKEND_FACTORIES: dict[str, Any] = {
     "deep_translator": _make_deep_translator,
     "deepl": _make_deepl,
     "libretranslate_remote": _make_libretranslate_remote,

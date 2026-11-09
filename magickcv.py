@@ -11,13 +11,14 @@ The module is importable as well."""
 import argparse
 from pathlib import Path
 import re
+from typing import Any, Iterable, Sequence
 
 import cv2
 import numpy as np
 from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFont, ImageOps
 
 
-RESAMPLING = {
+RESAMPLING: dict[str, Any] = {
     "nearest": Image.Resampling.NEAREST,
     "box": Image.Resampling.BOX,
     "bilinear": Image.Resampling.BILINEAR,

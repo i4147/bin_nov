@@ -9,11 +9,12 @@ import importlib.metadata
 import multiprocessing
 from pathlib import Path
 import sys
+from typing import Any, Iterable
 
 from pip._internal.commands import main as pip_main
 
 
-def installer(batch):
+def installer(batch: Iterable[Any]) -> None:
     if not batch:
         return
     print(f"[+] Reinstalling batch: {batch}")
@@ -24,7 +25,7 @@ def installer(batch):
         pip_main("install", "--no-deps", "--force-reinstall", *batch)
 
 
-def _inspect_distribution(dist):
+def _inspect_distribution(dist: Any) -> None:
     try:
         name = dist.metadata.get("Name", "")
         if not name:
@@ -63,12 +64,12 @@ def get_pure_python_packages_sorted():
     return [pkg[0] for pkg in packages_info]
 
 
-def chunked(iterable, n):
+def chunked(iterable: Iterable[Any], n: int):
     for i in range(0, len(iterable), n):
         yield iterable[i : i + n]
 
 
-def parse_package_file(file_path):
+def parse_package_file(file_path: Path):
     path = Path(file_path)
     if not path.exists():
         print(f"[!] Error: File '{file_path}' not found.")

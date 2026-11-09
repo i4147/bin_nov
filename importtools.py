@@ -683,7 +683,7 @@ class _ParentMapper(ast.NodeVisitor):
         return super().visit(node)
 
 
-_NESTING_NODES = (
+_NESTING_NODES: tuple[Any, ...] = (
     ast.Try,
     ast.If,
     ast.With,

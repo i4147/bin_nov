@@ -23,9 +23,9 @@ except ImportError:
     print("Error: Required packages not installed.", file=sys.stderr)
     print("Install with: pip install tree-sitter tree-sitter-html", file=sys.stderr)
     sys.exit(1)
-HTML_EXTENSIONS = {".html", ".htm", ".xhtml"}
-MAX_FILE_SIZE = 50 * 1024 * 1024
-CHUNK_SIZE = 1024 * 1024
+HTML_EXTENSIONS: set[str] = {".html", ".htm", ".xhtml"}
+MAX_FILE_SIZE: int = 50 * 1024 * 1024
+CHUNK_SIZE: int = 1024 * 1024
 
 
 @dataclass
@@ -99,7 +99,7 @@ class HTMLFormatter:
     }
     INLINE_TAGS = {"b", "i", "u", "em", "strong", "code", "small", "sub", "sup"}
 
-    def __init__(self):
+    def __init__(self) -> None:
         try:
             self.HTML_LANGUAGE = Language(ts_html.language())
             self.parser = Parser(self.HTML_LANGUAGE)

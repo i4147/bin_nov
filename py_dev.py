@@ -106,7 +106,7 @@ logs/
 .env.*.local
 """
 
-    def __init__(self, project_path: Path | None = None):
+    def __init__(self, project_path: Path | None = None) -> None:
         self.project_path = project_path or Path.cwd()
         self.venv_path = self.project_path / ".venv"
         self.is_windows = sys.platform == "win32"

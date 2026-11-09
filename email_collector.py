@@ -4,6 +4,8 @@ Follows links on the same hostname (two levels deep) for the given start URL, ke
 ``--emails``/``-e`` only exports what is already in the database.
 Usage: email_collector URL | --emails Examples: $ email_collector https://example.com $ email_collector --emails Runs as a script (``python email_collector.py``) in the directory it should act on; the module can also be imported."""
 
+from __future__ import annotations
+
 from pathlib import Path
 import re
 import sys
@@ -11,26 +13,27 @@ import traceback
 import urllib.error
 import urllib.parse
 import urllib.request
+from typing import Any
 
 from loguru import logger
 from sqlalchemy import Boolean, Column, Integer, MetaData, Table, Unicode, create_engine, select
 
 
-DEBUG = True
-DATABASE_NAME = "data/crawler.sqlite"
-HTML_DIR = "data/html/"
-EMAILS_FILENAME = "data/emails.csv"
-DOMAINS_FILENAME = "data/domains.csv"
-MAX_SEARCH_RESULTS = 150
+DEBUG: bool = True
+DATABASE_NAME: str = "data/crawler.sqlite"
+HTML_DIR: str = "data/html/"
+EMAILS_FILENAME: str = "data/emails.csv"
+DOMAINS_FILENAME: str = "data/domains.csv"
+MAX_SEARCH_RESULTS: int = 150
 
 logger.add("logs/pycrawler.log", rotation="midnight", retention=1, level="DEBUG" if DEBUG else "INFO")
 
 
 class CrawlerDb:
-    def __init__(self):
+    def __init__(self) -> None:
         self.connected = False
 
-    def connect(self):
+    def connect(self) -> None:
         Path(DATABASE_NAME).parent.mkdir(parents=True, exist_ok=True)
         self.engine = create_engine("sqlite:///" + DATABASE_NAME)
         self.connection = self.engine.connect()
@@ -46,7 +49,7 @@ class CrawlerDb:
         )
         self.metadata.create_all(self.engine)
 
-    def enqueue(self, url, emails=None):
+    def enqueue(self, url: str, emails = None) -> bool:
         if not self.connected:
             return False
         s = select([self.website_table]).where(self.website_table.c.url == url)
@@ -73,7 +76,7 @@ class CrawlerDb:
             return result[0]
         return False
 
-    def crawled(self, website, new_emails=None):
+    def crawled(self, website: Any, new_emails = None) -> bool | None:
         if not self.connected:
             return False
         stmt = (
@@ -86,7 +89,7 @@ class CrawlerDb:
         self.connection.commit()
         return None
 
-    def get_all_emails(self):
+    def get_all_emails(self) -> set[Any] | None:
         if not self.connected:
             return None
         s = select([self.website_table])
@@ -101,7 +104,7 @@ class CrawlerDb:
                 email_set.add(email)
         return email_set
 
-    def get_all_domains(self):
+    def get_all_domains(self) -> set[Any] | None:
         if not self.connected:
             return None
         s = select([self.website_table])
@@ -118,10 +121,10 @@ class CrawlerDb:
             domain_set.add(hostname)
         return domain_set
 
-    def close(self):
+    def close(self) -> None:
         self.connection.close()
 
-    def save_html(self, filename, html):
+    def save_html(self, filename: str, html: str) -> None:
         Path(HTML_DIR).mkdir(parents=True, exist_ok=True)
         path = Path(HTML_DIR).joinpath(filename)
         with open(path, "w+", encoding="utf-8", errors="replace") as f:
@@ -136,7 +139,7 @@ db = CrawlerDb()
 db.connect()
 
 
-def retrieve_html(url):
+def retrieve_html(url: str) -> str | None:
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "Just-Crawling 0.1")
     request = None
@@ -159,7 +162,7 @@ def retrieve_html(url):
     return str(data)
 
 
-def find_emails_in_html(html):
+def find_emails_in_html(html: str):
     if html is None:
         return set()
     email_set = set()
@@ -168,7 +171,7 @@ def find_emails_in_html(html):
     return email_set
 
 
-def find_links_in_html_with_same_hostname(url, html):
+def find_links_in_html_with_same_hostname(url: str, html: str):
     if html is None:
         return set()
     url = urllib.parse.urlparse(url)
@@ -193,7 +196,7 @@ def find_links_in_html_with_same_hostname(url, html):
     return link_set
 
 
-def find_emails_2_level_deep(url):
+def find_emails_2_level_deep(url: str):
     html = retrieve_html(url)
     email_set = find_emails_in_html(html)
     if len(email_set) > 0:
@@ -210,7 +213,7 @@ def find_emails_2_level_deep(url):
         return set()
 
 
-def crawl(keywords):
+def crawl(keywords: str) -> None:
     logger.info("-" * 40)
     logger.info("Keywords to Google for: %s" % keywords)
     logger.info("-" * 40)

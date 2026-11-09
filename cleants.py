@@ -20,7 +20,7 @@ import re
 import shlex
 import shutil
 import sys
-from typing import Iterator
+from typing import Any, Iterable, Iterator
 
 from atomicio import atomic_write
 from dh import MAX_WORKERS
@@ -34,7 +34,7 @@ class LangSpec:
     comment_types: frozenset[str]
 
 
-_LANG_ATTR = "language"
+_LANG_ATTR: str = "language"
 LANGUAGES: dict[str, LangSpec] = {
     "bash": LangSpec("tree_sitter_bash", _LANG_ATTR, frozenset({"comment"})),
     "c": LangSpec("tree_sitter_c", _LANG_ATTR, frozenset({"comment"})),
@@ -122,7 +122,7 @@ VITAL_RE = re.compile(
     r"%!|\[if\b|/\*!|[#/]\s*(end)?region\b|sourceMappingURL|sourceURL",
     re.IGNORECASE,
 )
-DOC_PREFIXES = (b"/**", b"///", b"//!")
+DOC_PREFIXES: tuple[bytes, bytes, bytes] = (b"/**", b"///", b"//!")
 DOCSTRING_TYPES = frozenset({"string", "concatenated_string"})
 BODY_OWNERS = frozenset({"function_definition", "class_definition"})
 DEFAULT_EXCLUDES = frozenset({
@@ -144,11 +144,11 @@ DEFAULT_EXCLUDES = frozenset({
     "target",
 })
 CHANGED = frozenset({"changed", "would-change"})
-RESET = "\033[0m"
-BOLD = "\033[1m"
-RED = "\033[31m"
-GREEN = "\033[32m"
-CYAN = "\033[36m"
+RESET: str = "\033[0m"
+BOLD: str = "\033[1m"
+RED: str = "\033[31m"
+GREEN: str = "\033[32m"
+CYAN: str = "\033[36m"
 
 
 @dataclass(frozen=True, slots=True)

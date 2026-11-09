@@ -38,7 +38,7 @@ import subprocess
 import sys
 import tarfile
 import tokenize
-from typing import TYPE_CHECKING, Any, Callable
+from typing import Any, Callable, Iterable, TYPE_CHECKING
 import zipfile
 
 from dh import MAX_WORKERS
@@ -1075,7 +1075,7 @@ def cmd_validate(args: argparse.Namespace) -> int:
     return 1 if mismatches else 0
 
 
-PY_KEYWORDS = {"def", "class", "import", "from", "lambda", "yield", "async", "await"}
+PY_KEYWORDS: set[str] = {"def", "class", "import", "from", "lambda", "yield", "async", "await"}
 
 
 def looks_like_python_line(line: str) -> bool:

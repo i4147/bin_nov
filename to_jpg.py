@@ -8,7 +8,7 @@ from pathlib import Path
 from PIL import Image
 
 
-def convert_images_to_jpg_recursive():
+def convert_images_to_jpg_recursive() -> None:
     extensions = {".png", ".webp", ".bmp", ".tiff", ".tif", ".gif"}
     current_dir = Path()
     converted_count = 0

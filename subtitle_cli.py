@@ -8,7 +8,7 @@ from babelfish import Language
 from subliminal import download_best_subtitles, save_subtitles, scan_video
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="A lightweight CLI tool to download English subtitles for movies or videos."
     )

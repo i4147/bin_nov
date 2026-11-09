@@ -11,7 +11,7 @@ import ast
 import multiprocessing as mp
 from pathlib import Path
 import sys
-from typing import NamedTuple
+from typing import Any, Iterable, NamedTuple
 
 from loguru import logger
 from tree_sitter import Language, Parser
@@ -35,7 +35,7 @@ class ProcessResult(NamedTuple):
     error: str | None = None
 
 
-def is_shebang(byte_content: bytes, node) -> bool:
+def is_shebang(byte_content: bytes, node: Any) -> bool:
     return node.start_point[0] == 0 and byte_content.startswith(b"#!")
 
 
@@ -45,7 +45,7 @@ def remove_comments_from_code(source_bytes: bytes) -> tuple[bytes, int]:
     comment_nodes = []
     cursor = tree.walk()
 
-    def visit_node():
+    def visit_node() -> None:
         if cursor.node.type == "comment":
             if not is_shebang(source_bytes, cursor.node):
                 comment_nodes.append(cursor.node)
@@ -73,7 +73,7 @@ def check_remaining_comments(source_bytes: bytes) -> int:
     remaining = 0
     cursor = tree.walk()
 
-    def count_comments():
+    def count_comments() -> None:
         nonlocal remaining
         if cursor.node.type == "comment":
             if not is_shebang(source_bytes, cursor.node):

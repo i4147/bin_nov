@@ -13,14 +13,14 @@ from pathlib import Path
 import shutil
 from string import Template
 import sys
-from typing import Optional
+from typing import Any, Optional
 
 
 try:
     from dh import cprint
 except ImportError:
 
-    def cprint(*args, **kwargs):
+    def cprint(*args: Any, **kwargs: str) -> None:
         print(*args, **kwargs)
 
 

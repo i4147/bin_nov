@@ -11,7 +11,7 @@ from datetime import datetime
 from functools import lru_cache
 import html
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import Any, Iterable, Optional, Sequence
 
 from loguru import logger
 
@@ -37,10 +37,10 @@ PRESETS: dict[str, dict] = {
         "output": "fonts_preview.html",
     },
 }
-RICH_TEXT_DEFAULT = "Lorem ipsum dolor sit amet\nهنر برتر از گوهر آمد پدید"
-RICH_OUTPUT_DEFAULT = "fontpreview.html"
-RICH_MAX_FONTS_DEFAULT = 10_000
-_FONT_FORMATS = {
+RICH_TEXT_DEFAULT: str = "Lorem ipsum dolor sit amet\nهنر برتر از گوهر آمد پدید"
+RICH_OUTPUT_DEFAULT: str = "fontpreview.html"
+RICH_MAX_FONTS_DEFAULT: int = 10_000
+_FONT_FORMATS: dict[str, str] = {
     ".ttf": "TrueType",
     ".otf": "OpenType",
     ".woff": "WOFF",

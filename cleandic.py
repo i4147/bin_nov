@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 
 
-def main():
+def main() -> None:
     if len(sys.argv) != 2:
         print(f"Usage: {sys.argv[0]} <dic.json>")
         sys.exit(1)

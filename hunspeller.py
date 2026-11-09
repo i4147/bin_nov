@@ -20,7 +20,7 @@ def process_line(line: str, autofix: bool = False) -> tuple:
     fixed_count = 0
     suggestions_dict = {}
 
-    def check_and_replace(match):
+    def check_and_replace(match: re.Match[str]):
         nonlocal misspelled_count, fixed_count
         word = match.group(0)
         clean_word = word.strip("'")
@@ -61,7 +61,7 @@ def process_file(
     num_processes: int | None = None,
     dic_path: str = "/usr/share/hunspell/en_US.dic",
     aff_path: str = "/usr/share/hunspell/en_US.aff",
-):
+) -> None:
     try:
         with open(path, "r", encoding="utf-8") as f:
             lines = f.readlines()
