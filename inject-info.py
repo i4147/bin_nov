@@ -140,7 +140,7 @@ def process_file(path: Path, transforms: Iterable[Any], *, dry_run: bool, show_d
     return True
 
 
-def main(argv = None) -> int:
+def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Inject personal info from ~/.myinfo into a project.")
     parser.add_argument("project_dir", type=Path, help="Project directory to update")
     parser.add_argument("--dry-run", action="store_true", help="Do not write any files, just report")

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Format Python files (black, yapf, autopep8, ruff and more)."""
 
-
 import argparse
 from concurrent.futures import (
     ProcessPoolExecutor,

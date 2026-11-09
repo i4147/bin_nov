@@ -82,7 +82,7 @@ def process_file(path: Path):
 
 def save_exact_duplicates(
     all_objects: list[Any],
-    output_file = "exact_duplicates.json",
+    output_file="exact_duplicates.json",
 ):
     hash_groups = defaultdict(list)
     for obj in all_objects:
@@ -171,7 +171,7 @@ def refactor_duplicates(hash_groups: dict[str, Any]) -> None:
     print(f"[+] Refactored {len(file_imports)} files.")
 
 
-def generate_fuzzy_report(all_objects: list[Any], output_file = "fuzzy_duplicates.json") -> None:
+def generate_fuzzy_report(all_objects: list[Any], output_file="fuzzy_duplicates.json") -> None:
     report = []
     n = len(all_objects)
     print("[*] Calculating fuzzy similarities (this may take a while for large codebases)...")

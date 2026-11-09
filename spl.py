@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Unified text splitting and merging toolkit."""
 
-
 import argparse
 import concurrent.futures
 from dataclasses import dataclass

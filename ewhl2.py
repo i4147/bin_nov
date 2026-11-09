@@ -107,7 +107,7 @@ def check_package_location(
     return None, False
 
 
-def analyze_wheels(source_dir: Path, dest_dir_name: str = "empty_wheels", check_installed = True) -> None:
+def analyze_wheels(source_dir: Path, dest_dir_name: str = "empty_wheels", check_installed=True) -> None:
     source_path = Path(source_dir)
     dest_path = source_path / dest_dir_name
     installed_packages = get_installed_packages() if check_installed else {}

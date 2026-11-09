@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Rebuild wheel files from packages installed in site-packages."""
 
-
 import argparse
 import base64
 import csv
@@ -22,9 +21,9 @@ class WheelBuilder:
         self,
         site_packages: Path,
         output_dir: Path,
-        force_all = False,
-        parallel = True,
-        max_workers = None,
+        force_all=False,
+        parallel=True,
+        max_workers=None,
     ) -> None:
         self.site_packages = site_packages.resolve()
         self.output_dir = output_dir.resolve()

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Unified multi-codec compression toolkit."""
 
-
 import argparse
 import bz2
 from collections.abc import Callable, Sequence

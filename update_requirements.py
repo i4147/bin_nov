@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Show packages with newer versions available on PyPI."""
 
-
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path

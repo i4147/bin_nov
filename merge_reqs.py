@@ -31,7 +31,7 @@ try:
     from tqdm import tqdm as _tqdm
 except Exception:
 
-    def _tqdm(iterable = None, **kwargs: Any):
+    def _tqdm(iterable=None, **kwargs: Any):
         return iterable if iterable is not None else []
 
 

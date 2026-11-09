@@ -225,7 +225,7 @@ def run_per_line(files: list[Path], workers: int, max_len: int) -> None:
                 print(f"Error in per-line mode for {futures[fut]}: {e}", file=sys.stderr)
 
 
-def main(argv = None) -> int:
+def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Detect non-English lines in text files.")
     parser.add_argument("paths", default=".", nargs="*", help="Files or directories (default: .)")
     parser.add_argument("--out", "-o", default="noneng.json", help="Output JSON file.")

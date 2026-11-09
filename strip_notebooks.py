@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Strip outputs from Jupyter notebook (.ipynb) files."""
 
-
 import argparse
 import json
 from multiprocessing import Pool

@@ -15,6 +15,7 @@ Three checks, each of which must come back clean before the changes are kept:
     python arena/audit_annotations.py --rev HEAD      # compare against HEAD
     python arena/audit_annotations.py --rev HEAD~1 --paths '*.py'
 """
+
 from __future__ import annotations
 
 import argparse
@@ -138,7 +139,10 @@ def git_show(rev: str, path: Path) -> str | None:
     try:
         out = subprocess.run(
             ["git", "show", f"{rev}:{rel}"],
-            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
         )
     except OSError:
         return None
@@ -186,8 +190,10 @@ def main(argv: list[str] | None = None) -> int:
             if len(items) > 20:
                 print(f"  ... and {len(items) - 20} more")
     total = sum(len(v) for v in problems.values())
-    print(f"\naudited {len(files)} files: syntax={len(problems['syntax'])} "
-          f"undefined={len(problems['undefined'])} drift={len(problems['drift'])}")
+    print(
+        f"\naudited {len(files)} files: syntax={len(problems['syntax'])} "
+        f"undefined={len(problems['undefined'])} drift={len(problems['drift'])}"
+    )
     return 1 if total else 0
 
 

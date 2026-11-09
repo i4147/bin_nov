@@ -33,7 +33,7 @@ class ValidationError(Exception):
     pass
 
 
-def md2pdf(pdf: Any, raw = None, md = None, css = None, base_url = None, extras = None, extras_config = None) -> None:
+def md2pdf(pdf: Any, raw=None, md=None, css=None, base_url=None, extras=None, extras_config=None) -> None:
     extras_config = extras_config or {}
     extras = extras if extras and len(extras) else []
     if md:
@@ -68,7 +68,7 @@ def parse_config(config: dict[str, Any]):
     return parsed
 
 
-def _convert_one(md_path: Path, pdf_path: Path, css = None, extras = None, extras_config = None) -> None:
+def _convert_one(md_path: Path, pdf_path: Path, css=None, extras=None, extras_config=None) -> None:
     md2pdf(
         pdf_path,
         md=md_path,
@@ -79,7 +79,7 @@ def _convert_one(md_path: Path, pdf_path: Path, css = None, extras = None, extra
     )
 
 
-def convert_batch(workers: int, md_files: Sequence[Path], pdf = None, css = None, extras = None, extras_config = None) -> None:
+def convert_batch(workers: int, md_files: Sequence[Path], pdf=None, css=None, extras=None, extras_config=None) -> None:
     started_at = time()
     with ThreadPoolExecutor(max_workers=workers) as pool:
         futures = []

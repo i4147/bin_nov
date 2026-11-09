@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert XML, YAML and TOML configuration files to JSON."""
 
-
 import argparse
 import concurrent.futures
 import json

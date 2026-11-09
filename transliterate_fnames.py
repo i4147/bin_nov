@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Transliterate non-ASCII file/dir names in place."""
 
-
 import argparse
 from pathlib import Path
 import re

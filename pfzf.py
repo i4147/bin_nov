@@ -60,7 +60,7 @@ def fuzzy_score(query: str, text: str):
     return (score, positions)
 
 
-def render_match(text: str, positions: Iterable[Any], width: int, selected = False) -> str:
+def render_match(text: str, positions: Iterable[Any], width: int, selected=False) -> str:
     RESET = "\033[0m"
     SELECTED = "\033[7m"
     MATCH = "\033[1;33m"
@@ -175,7 +175,7 @@ def clear_screen() -> None:
     sys.stdout.flush()
 
 
-def move_cursor(row: int, col = 0) -> None:
+def move_cursor(row: int, col=0) -> None:
     sys.stdout.write(f"\033[{row + 1};{col + 1}H")
     sys.stdout.flush()
 
@@ -185,7 +185,7 @@ def clear_line() -> None:
     sys.stdout.flush()
 
 
-def fzf(items: list[Any], prompt = "> ", multi = False, preview = None, preview_window = "right:50%"):
+def fzf(items: list[Any], prompt="> ", multi=False, preview=None, preview_window="right:50%"):
     items = list(items)
     if not items:
         return [] if multi else None

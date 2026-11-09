@@ -65,7 +65,7 @@ def parse_metadata_section(lines: list[Any]) -> tuple[dict[str, Any], int]:
     return metadata, end_line
 
 
-def find_section_boundaries(content: str, start_pos = 0):
+def find_section_boundaries(content: str, start_pos=0):
     sections = []
     pos = start_pos
     code_pattern = re.compile(r"```(python|shell|bash|sh|py)\s*\n(.*?)```", re.DOTALL)

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Translate a one-word-per-line file into a JSON mapping."""
 
-
 import argparse
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 import importlib

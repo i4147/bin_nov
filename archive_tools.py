@@ -234,7 +234,7 @@ def _safe_extract_tar(tar: tarfile.TarFile, dest: Path) -> None:
     try:
         tar.extractall(path=dest, filter="data")
     except TypeError:
-        tar.extractall(path=dest,filter='data')
+        tar.extractall(path=dest, filter="data")
 
 
 def _extract_tar_python(archive: Path, dest: Path) -> None:

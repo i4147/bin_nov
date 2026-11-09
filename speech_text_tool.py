@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Speech-to-text and text-to-speech utilities (transcribe, speak, play)."""
 
-
 import argparse
 from collections.abc import Sequence
 from pathlib import Path

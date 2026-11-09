@@ -53,7 +53,7 @@ def scan_path(root: Path, exclude_patterns: Iterable[Any], follow_symlinks: Any)
     return dir_sizes, total_size
 
 
-def print_tree(root: Path, dir_sizes: dict[str, Any], max_depth: int, prefix = "") -> None:
+def print_tree(root: Path, dir_sizes: dict[str, Any], max_depth: int, prefix="") -> None:
     if max_depth is not None and max_depth < 0:
         return
 

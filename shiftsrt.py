@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Shift SRT subtitle timestamps in place."""
 
-
 import argparse
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path

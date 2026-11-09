@@ -371,7 +371,7 @@ def page_output(text: str) -> None:
         sys.stdout.write(text)
 
 
-def main(argv = None) -> int:
+def main(argv=None) -> int:
     args = build_arg_parser().parse_args(argv)
     if args.list_languages:
         list_languages()

@@ -143,7 +143,7 @@ class Bar:
 
 
 class Progress:
-    def __init__(self, stream = None, enabled: bool | None = None, final: bool = True) -> None:
+    def __init__(self, stream=None, enabled: bool | None = None, final: bool = True) -> None:
         self.stream = stream if stream is not None else sys.stdout
         if enabled is None:
             enabled = bool(getattr(self.stream, "isatty", lambda: False)())
@@ -260,7 +260,7 @@ class _UrllibStream(StreamResponse):
 class PureBackend(Backend):
     name = "pure"
 
-    def open(self, url: str, start = None, end = None, timeout = 30.0) -> _UrllibStream:
+    def open(self, url: str, start=None, end=None, timeout=30.0) -> _UrllibStream:
         headers = {"User-Agent": UA, "Accept-Encoding": "identity"}
         if start is not None or end is not None:
             rng = f"bytes={start or 0}-"
@@ -296,7 +296,7 @@ class RequestsBackend(Backend):
 
         self._requests = requests
 
-    def open(self, url: str, start = None, end = None, timeout = 30.0) -> _RequestsStream:
+    def open(self, url: str, start=None, end=None, timeout=30.0) -> _RequestsStream:
         headers = {"User-Agent": UA, "Accept-Encoding": "identity"}
         if start is not None or end is not None:
             rng = f"bytes={start or 0}-"
@@ -428,7 +428,7 @@ class PycurlBackend(Backend):
 
         self._pycurl = pycurl
 
-    def open(self, url: str, start = None, end = None, timeout = 30.0) -> _PycurlStream:
+    def open(self, url: str, start=None, end=None, timeout=30.0) -> _PycurlStream:
         return _PycurlStream(self._pycurl, url, start, end, timeout)
 
 
@@ -681,7 +681,7 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def main(argv = None) -> int:
+def main(argv=None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     urls = list(args.urls)

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert a SQLite database to JSON."""
 
-
 import argparse
 import base64
 from concurrent.futures import ProcessPoolExecutor, as_completed

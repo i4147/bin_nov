@@ -33,7 +33,7 @@ def load_tiles(tiles_folder: Path, tile_size=(50, 50)):
     return np.array(tiles), np.array(tile_avg_colors)
 
 
-def create_mosaic_blended(target_image_path: Path, tiles: Any, tile_avg_colors: Any, grid_size=(100, 100), alpha = 0.3):
+def create_mosaic_blended(target_image_path: Path, tiles: Any, tile_avg_colors: Any, grid_size=(100, 100), alpha=0.3):
     target_img = cv2.imread(target_image_path, cv2.IMREAD_COLOR)
     if target_img is None:
         msg = f"Could not open target image: {target_image_path}"

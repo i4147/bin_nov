@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Translate lines in a text file with persistent caching."""
 
-
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path

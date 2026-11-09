@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Remove comments and docstrings from Python files in place using tree-sitter."""
 
-
 import argparse
 import ast
 from collections.abc import Iterator

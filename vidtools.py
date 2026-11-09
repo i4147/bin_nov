@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Cut or reverse videos."""
 
-
 import argparse
 from pathlib import Path
 import subprocess

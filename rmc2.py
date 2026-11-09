@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Strip comments and docstrings from Python files in place, with backup/restore support."""
 
-
 import argparse
 import ast
 import contextlib
@@ -14,7 +13,7 @@ import tokenize as _tokenize
 from typing import Any, Iterable, Iterator
 
 from atomicio import atomic_replace
-from dh import DOC_TH1, DOC_TH2, SKIP_DIRS
+from dh import SKIP_DIRS
 import libcst as cst
 
 
@@ -30,18 +29,18 @@ PROTECTED_COMMENT_PREFIXES: tuple[str, ...] = (
     "# noqa",
     "# pylint",
     "# ruff",
-    "# isort",
+    "# nano",
     "# mypy",
     "# pyright",
-    "# pragma",
+    "# editor",
 )
 GREEN: str = "\x1b[32m"
 RESET: str = "\x1b[0m"
-BACKUP_SUFFIX: str = ".pystripbak"
+BACKUP_SUFFIX: str = ".bak"
 
 
 def has_no_strippable_content(source: str) -> bool:
-    return "#" not in source and DOC_TH1 not in source and DOC_TH2 not in source
+    return "#" not in source and '"""' not in source and "'''" not in source  # editor: """ '''
 
 
 def format_size(num_bytes: int) -> str:
@@ -233,7 +232,9 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return True
         return not self._is_protected_comment(comment_node.value)
 
-    def leave_TrailingWhitespace(self, original_node: cst.TrailingWhitespace, updated_node: cst.TrailingWhitespace) -> cst.CSTNode:
+    def leave_TrailingWhitespace(
+        self, original_node: cst.TrailingWhitespace, updated_node: cst.TrailingWhitespace
+    ) -> cst.CSTNode:
         del original_node
         if updated_node.comment is None:
             return updated_node
@@ -617,7 +618,7 @@ def run_reverse(paths: list[Path]) -> int:
     return 2 if error_count else 0
 
 
-def main(argv = None):
+def main(argv=None):
     args = build_arg_parser().parse_args(argv)
     paths = args.paths or [Path.cwd()]
     if args.reverse:

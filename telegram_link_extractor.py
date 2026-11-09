@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract URLs/links from a Telegram channel using Telethon."""
 
-
 import argparse
 import asyncio
 import os

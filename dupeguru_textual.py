@@ -114,7 +114,7 @@ class DuplicateFinder:
         self.duplicates: list[DuplicateGroup] = []
         self.progress_callback = None
 
-    def scan_directory(self, root: Path, progress_callback = None) -> None:
+    def scan_directory(self, root: Path, progress_callback=None) -> None:
         self.progress_callback = progress_callback
         self.files = []
         all_files = list(root.rglob("*"))
@@ -138,7 +138,7 @@ class DuplicateFinder:
             except (OSError, PermissionError):
                 continue
 
-    def find_duplicates(self, progress_callback = None) -> list[DuplicateGroup]:
+    def find_duplicates(self, progress_callback=None) -> list[DuplicateGroup]:
         self.duplicates = []
         if self.scan_mode == "filename":
             self._find_by_filename(progress_callback)
@@ -146,7 +146,7 @@ class DuplicateFinder:
             self._find_by_contents(progress_callback)
         return self.duplicates
 
-    def _find_by_filename(self, progress_callback = None) -> None:
+    def _find_by_filename(self, progress_callback=None) -> None:
         groups: dict[str, list[FileEntry]] = defaultdict(list)
         for file in self.files:
             key = file.filename_normalized
@@ -181,7 +181,7 @@ class DuplicateFinder:
                             )
                         )
 
-    def _find_by_contents(self, progress_callback = None) -> None:
+    def _find_by_contents(self, progress_callback=None) -> None:
         by_size: dict[int, list[FileEntry]] = defaultdict(list)
         for file in self.files:
             by_size[file.size].append(file)

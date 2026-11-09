@@ -48,7 +48,7 @@ def collect_files(inputs: list[str]) -> list[str]:
     return files
 
 
-def mark_parents(node: ast.AST, parent = None) -> None:
+def mark_parents(node: ast.AST, parent=None) -> None:
     for child in ast.iter_child_nodes(node):
         child._parent = node
         mark_parents(child, node)

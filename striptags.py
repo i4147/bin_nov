@@ -126,7 +126,7 @@ def repl(m: re.Match[str]) -> str:
         return " "
 
 
-def tag_with_attributes(node: Any, content: str, all_attrs = False) -> str:
+def tag_with_attributes(node: Any, content: str, all_attrs=False) -> str:
     to_keep = {"id", "class"}
     to_keep.update(ATTRS_TO_KEEP.get(node.name) or [])
     bits = [f"<{node.name}"]
@@ -139,7 +139,7 @@ def tag_with_attributes(node: Any, content: str, all_attrs = False) -> str:
     return output
 
 
-def process_node(node: Any, minify: Any, keep_tags: str, all_attrs = False):
+def process_node(node: Any, minify: Any, keep_tags: str, all_attrs=False):
     if isinstance(node, Comment):
         return ""
     if isinstance(node, NavigableString):
@@ -240,7 +240,9 @@ def strip_tags(
 @click.option("keep_tags", "-t", "--keep-tag", multiple=True, help="Keep these <tags>")
 @click.option("--all-attrs", is_flag=True, help="Include all attributes on kept tags")
 @click.option("--first", is_flag=True, help="First element matching the selectors")
-def cli(selectors: Any, removes: Any, input: TextIO, minify: Any, keep_tags: Any, all_attrs: list[Any], first: Any) -> None:
+def cli(
+    selectors: Any, removes: Any, input: TextIO, minify: Any, keep_tags: Any, all_attrs: list[Any], first: Any
+) -> None:
     input_text = input.read()
     if isinstance(input_text, bytes):
         input_text = input_text.decode("utf-8")

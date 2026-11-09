@@ -38,7 +38,7 @@ def find_node_marker(line: str):
     return best, best_len
 
 
-def clean_name(raw: str, keep_suffix = False):
+def clean_name(raw: str, keep_suffix=False):
     raw = raw.strip()
     raw = re.sub(r"\s+#.*$", "", raw).strip()
     if not raw or raw.startswith("#"):
@@ -63,7 +63,7 @@ def median(values: list[Any]) -> float:
     return s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2.0
 
 
-def cluster_means(values: list[Any], min_gap = None) -> list[float]:
+def cluster_means(values: list[Any], min_gap=None) -> list[float]:
     values = sorted(values)
     if len(values) <= 1:
         return [float(v) for v in values]
@@ -80,7 +80,7 @@ def cluster_means(values: list[Any], min_gap = None) -> list[float]:
     return [sum(c) / len(c) for c in clusters]
 
 
-def parse_tree_text(text: str, keep_suffix = False, warn = print):
+def parse_tree_text(text: str, keep_suffix=False, warn=print):
     lines = text.splitlines()
     flat_list = not any(find_node_marker(line)[0] is not None for line in lines)
     candidates = []
@@ -229,7 +229,7 @@ def detect_marker_xs(img: Any, rows: Iterable[Any], pitch: float, char_width: in
     return out
 
 
-def image_to_entries(path: Path, keep_suffix = False, engine = "auto"):
+def image_to_entries(path: Path, keep_suffix=False, engine="auto"):
     from PIL import Image, ImageOps, ImageStat
 
     try:
@@ -317,7 +317,7 @@ def image_to_entries(path: Path, keep_suffix = False, engine = "auto"):
     return engine_name, entries, {"tokens": raw_count, "rows": len(rows)}
 
 
-def finalize(entries: list[Any], assume_dir = False) -> None:
+def finalize(entries: list[Any], assume_dir=False) -> None:
     for i, e in enumerate(entries):
         if e["name"] == ".":
             e["is_dir"] = True
@@ -332,7 +332,7 @@ def finalize(entries: list[Any], assume_dir = False) -> None:
             e["is_dir"] = False
 
 
-def ambiguous_notes(entries: list[Any], assume_dir = False):
+def ambiguous_notes(entries: list[Any], assume_dir=False):
     notes = []
     ambiguous = [
         e["name"]
@@ -362,7 +362,7 @@ def _unsafe_name(name: str) -> bool:
     return not name or "\\" in name or p.is_absolute() or any(part in ("", ".", "..") for part in p.parts)
 
 
-def create_tree(entries: list[Any], base_dir: Path, dry_run = False) -> dict[str, int]:
+def create_tree(entries: list[Any], base_dir: Path, dry_run=False) -> dict[str, int]:
     base_dir = base_dir.resolve()
     if not dry_run:
         base_dir.mkdir(parents=True, exist_ok=True)

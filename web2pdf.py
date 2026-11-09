@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert web pages or local HTML files to PDF (WeasyPrint backend)."""
 
-
 import argparse
 from pathlib import Path
 import sys

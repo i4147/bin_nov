@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Unified cleaner for Python comments, docstrings and unused code (AST, regex, just-the-code engines)."""
 
-
 import argparse
 import ast
 import io

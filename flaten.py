@@ -22,7 +22,7 @@ def unique_target(target: Path) -> Path:
         counter += 1
 
 
-def flatten_directory(directory = ".") -> None:
+def flatten_directory(directory=".") -> None:
     root = Path(directory).resolve()
     if not root.is_dir():
         print(f"Error: {root} is not a valid directory")

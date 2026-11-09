@@ -73,7 +73,7 @@ def group_similar_files(hashes: dict[str, Any], threshold: int):
     return groups
 
 
-def copy_groups(groups: Iterable[Any], output_dir = "output") -> None:
+def copy_groups(groups: Iterable[Any], output_dir="output") -> None:
     Path(output_dir).mkdir(exist_ok=True, parents=True)
     for idx, group in enumerate(groups, start=1):
         group_dir = Path(output_dir).joinpath(f"group_{idx}")
@@ -85,7 +85,7 @@ def copy_groups(groups: Iterable[Any], output_dir = "output") -> None:
                 print(f"Failed to copy {f}: {e}")
 
 
-def write_report(groups: Iterable[Any], format = "csv", output_dir = "output") -> None:
+def write_report(groups: Iterable[Any], format="csv", output_dir="output") -> None:
     Path(output_dir).mkdir(exist_ok=True, parents=True)
     if format == "csv":
         report_file = Path(output_dir).joinpath("similar_report.csv")
@@ -114,7 +114,7 @@ def colorize_score(score: str, threshold: float) -> str:
     return Fore.RED + str(score) + Style.RESET_ALL
 
 
-def write_matrix(hashes: dict[str, Any], threshold: int, output_dir = "output", pretty = False) -> None:
+def write_matrix(hashes: dict[str, Any], threshold: int, output_dir="output", pretty=False) -> None:
     Path(output_dir).mkdir(exist_ok=True, parents=True)
     files = list(hashes.keys())
     matrix_file = Path(output_dir).joinpath("similarity_matrix.csv")

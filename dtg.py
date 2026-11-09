@@ -87,7 +87,7 @@ def get_translator_func(backend_name: str):
         sys.exit(1)
 
 
-def safe_translate(text: str, translate_func: Callable[..., Any], retries = 3):
+def safe_translate(text: str, translate_func: Callable[..., Any], retries=3):
     if not text.strip():
         return text
     for attempt in range(retries):

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Detect and optionally autofix misspelled words in a file using parallel processing."""
 
-
 import argparse
 from multiprocessing import Pool, cpu_count
 import re

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """Report the size of videos behind direct links, web pages and HLS playlists."""
 
-
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import contextlib
@@ -20,13 +19,27 @@ from dh import MAX_WORKERS
 import requests
 
 
-UA: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+UA: str = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
 HEADERS: dict[str, str] = {
     "User-Agent": UA,
     "Accept": "*/*",
     "Accept-Language": "en-US,en;q=0.9",
 }
-QUALITY_ORDER: list[str] = ["2160p", "1440p", "1080p", "900p", "720p", "576p", "540p", "480p", "360p", "240p", "unknown"]
+QUALITY_ORDER: list[str] = [
+    "2160p",
+    "1440p",
+    "1080p",
+    "900p",
+    "720p",
+    "576p",
+    "540p",
+    "480p",
+    "360p",
+    "240p",
+    "unknown",
+]
 MEDIA_EXT: str = r"(?:mp4|m3u8|mkv|webm|mov|m4v|ts|avi|flv)"
 ABS_LINK_RE = re.compile(r"https?://[^\s\"'<>\\]+?\." + MEDIA_EXT + r"(?:\?[^\s\"'<>\\]*)?", re.IGNORECASE)
 REL_LINK_RE = re.compile(
@@ -266,7 +279,7 @@ def extract_links(html: str, base_url: str) -> list:
     return found
 
 
-def analyze(url: str, args: list[Any], depth: int = 0, entries = None, seen = None) -> list:
+def analyze(url: str, args: list[Any], depth: int = 0, entries=None, seen=None) -> list:
     entries = [] if entries is None else entries
     seen = set() if seen is None else seen
     if url in seen or depth > args.max_depth:
@@ -416,7 +429,7 @@ def print_report(report: dict) -> None:
     print(line)
 
 
-def main(argv = None) -> int:
+def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         description="Report the size of videos behind direct links, web pages and HLS playlists."
     )

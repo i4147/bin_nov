@@ -344,7 +344,7 @@ def getImageUrls(params: dict[str, Any], url: str):
     return imageUrls
 
 
-def download_with_requests(url: str, timeout = 10, headers = None) -> tuple[str,]:
+def download_with_requests(url: str, timeout=10, headers=None) -> tuple[str,]:
     if requests is None:
         msg = "The 'requests' library is not installed (`pip install requests`)."
         raise ImportError(msg)
@@ -354,7 +354,7 @@ def download_with_requests(url: str, timeout = 10, headers = None) -> tuple[str,
     return resp.content, content_type
 
 
-def download_with_httpx(url: str, timeout = 10, headers = None) -> tuple[str,]:
+def download_with_httpx(url: str, timeout=10, headers=None) -> tuple[str,]:
     if httpx is None:
         msg = "The 'httpx' library is not installed (`pip install httpx`)."
         raise ImportError(msg)
@@ -365,7 +365,7 @@ def download_with_httpx(url: str, timeout = 10, headers = None) -> tuple[str,]:
         return resp.content, content_type
 
 
-def download_with_pycurl(url: str, timeout = 10, headers = None) -> tuple[str,]:
+def download_with_pycurl(url: str, timeout=10, headers=None) -> tuple[str,]:
     if pycurl is None:
         msg = "The 'pycurl' library is not installed (`pip install pycurl`)."
         raise ImportError(msg)
@@ -393,7 +393,7 @@ def download_with_pycurl(url: str, timeout = 10, headers = None) -> tuple[str,]:
     return buffer.getvalue(), content_type
 
 
-def get_extension_from_content_type(content_type: str, default = ".jpg"):
+def get_extension_from_content_type(content_type: str, default=".jpg"):
     if "image/png" in content_type:
         return ".png"
     elif "image/gif" in content_type:

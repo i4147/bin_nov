@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Sanity check installed Termux Python packages."""
 
-
 import argparse
 from fnmatch import fnmatch
 import importlib.metadata

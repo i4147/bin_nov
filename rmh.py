@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Remove comments from C/C++ files recursively."""
 
-
 from dataclasses import dataclass
 from multiprocessing import Pool, cpu_count
 from pathlib import Path

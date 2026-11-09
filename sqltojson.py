@@ -58,7 +58,7 @@ def _last_day_month(current_date: str) -> str:
     return current_date.replace(day=month_last_day)
 
 
-def _parse_field(field: str, to_add: Any, current_date: Any, date_format = "%Y-%m-%d"):
+def _parse_field(field: str, to_add: Any, current_date: Any, date_format="%Y-%m-%d"):
     if field == "CURRENT_DATE":
         return (current_date + dt.timedelta(days=to_add)).strftime(date_format)
     elif field == "START_CURRENT_MONTH":
@@ -73,7 +73,7 @@ def _parse_field(field: str, to_add: Any, current_date: Any, date_format = "%Y-%
         return field
 
 
-def _parse_formula(formula: str, current_date: Any, date_format = "%Y-%m-%d"):
+def _parse_formula(formula: str, current_date: Any, date_format="%Y-%m-%d"):
     if any(ext in formula for ext in DATE_FIELDS):
         if "+" in formula:
             parts = formula.split("+")
@@ -84,7 +84,7 @@ def _parse_formula(formula: str, current_date: Any, date_format = "%Y-%m-%d"):
     return _parse_field(formula.strip(), 0, current_date, date_format)
 
 
-def parse_parameter(param_value: str, current_date: Any, format_separator = "|"):
+def parse_parameter(param_value: str, current_date: Any, format_separator="|"):
     if not param_value:
         return param_value
     elif _is_number(param_value):
@@ -133,19 +133,19 @@ def _is_read_only_violation(exc: Exception) -> bool:
 
 
 def handle_run_query2json(
-    name = "default",
-    query = "default",
-    wrapper = False,
-    first = False,
-    key = "",
-    value = "",
-    jsonkeys = "",
-    format = "json",
-    output = None,
-    list_connections = False,
+    name="default",
+    query="default",
+    wrapper=False,
+    first=False,
+    key="",
+    value="",
+    jsonkeys="",
+    format="json",
+    output=None,
+    list_connections=False,
     list_queries: bool | str = False,
-    timezone = None,
-    read_only = False,
+    timezone=None,
+    read_only=False,
     **kwargs: Any,
 ) -> None:
     try:
@@ -454,7 +454,7 @@ def json_dumps(value: Any) -> str:
     return json.dumps(value, default=json_default)
 
 
-def save_json(rows: Iterable[Any], file_name: str, timezone = None) -> None:
+def save_json(rows: Iterable[Any], file_name: str, timezone=None) -> None:
     current_date = _current_date(timezone)
     parsed_filename = parse_filename(file_name, current_date)
     final_file_name = parsed_filename if ".json" in parsed_filename else parsed_filename + ".json"
@@ -462,7 +462,7 @@ def save_json(rows: Iterable[Any], file_name: str, timezone = None) -> None:
         outfile.write(json_dumps(rows))
 
 
-def save_csv(rows: Iterable[Any], file_name: str, dialect: str, key: str, timezone = None) -> None:
+def save_csv(rows: Iterable[Any], file_name: str, dialect: str, key: str, timezone=None) -> None:
     current_date = _current_date(timezone)
     parsed_filename = parse_filename(file_name, current_date)
     ext = ".xls" if dialect == "excel" else ".csv"
@@ -512,19 +512,19 @@ def emit_result(result: str, format: str, output: Path, key: str, value: Any, fi
 
 
 def handle_run_query2json(
-    name = "default",
-    query = "default",
-    wrapper = False,
-    first = False,
-    key = "",
-    value = "",
-    jsonkeys = "",
-    format = "json",
-    output = None,
-    list_connections = False,
+    name="default",
+    query="default",
+    wrapper=False,
+    first=False,
+    key="",
+    value="",
+    jsonkeys="",
+    format="json",
+    output=None,
+    list_connections=False,
     list_queries: bool | str = False,
-    timezone = None,
-    read_only = False,
+    timezone=None,
+    read_only=False,
     **kwargs: Any,
 ) -> None:
     try:

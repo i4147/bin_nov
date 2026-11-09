@@ -56,12 +56,12 @@ def _make_translate(source: str, target: Path, script_path: Path) -> Callable[..
         raise BackendError(msg)
     if cls.__name__ == "Translator":
 
-        def call(text: str, cls = cls, source = source, target = target):
+        def call(text: str, cls=cls, source=source, target=target):
             return cls(from_lang=source, to_lang=target).translate(text)
 
     else:
 
-        def call(text: str, cls = cls, source = source, target = target):
+        def call(text: str, cls=cls, source=source, target=target):
             return cls(source=source, target=target).translate(text)
 
     return call
@@ -74,7 +74,7 @@ def _make_deep_translator(source: str, target: Path, _script_path: Path) -> Call
         msg = f"cannot import 'deep_translator': {e}"
         raise BackendError(msg)
 
-    def call(text: str, cls = GoogleTranslator, source = source, target = target):
+    def call(text: str, cls=GoogleTranslator, source=source, target=target):
         return cls(source=source, target=target).translate(text)
 
     return call
@@ -89,7 +89,7 @@ def _make_googletrans(source: str, target: Path, _script_path: Path) -> Callable
     lock = threading.Lock()
     inst = Translator()
 
-    def call(text: str, inst = inst, lock = lock, source = source, target = target):
+    def call(text: str, inst=inst, lock=lock, source=source, target=target):
         with lock:
             return inst.translate(text, src=source, dest=target).text
 

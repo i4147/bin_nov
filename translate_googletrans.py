@@ -183,7 +183,9 @@ def translate_chunk_factory(source_lang: str, target_lang: str) -> Callable[...,
     return translate_chunk
 
 
-def save_progress(all_lines: list[Any], results: list[Any], output_path: Path, json_path: Path, source_lang: str, target_lang: str) -> None:
+def save_progress(
+    all_lines: list[Any], results: list[Any], output_path: Path, json_path: Path, source_lang: str, target_lang: str
+) -> None:
     try:
         with output_path.open("w", encoding="utf-8") as f:
             translated_count = 0

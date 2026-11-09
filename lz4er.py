@@ -332,7 +332,7 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def main(argv = None) -> int:
+def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     try:
         return args.func(args)

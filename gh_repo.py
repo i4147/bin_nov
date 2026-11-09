@@ -515,7 +515,9 @@ class GhCliGitHub(GitHubBackend):
         r = run_cli(["gh", "repo", "view", f"{owner}/{name}"])
         return r.returncode == 0
 
-    def create_repo(self, name: str, description = "", private = False, auto_init = False, owner = None) -> Optional[dict[str, str]]:
+    def create_repo(
+        self, name: str, description="", private=False, auto_init=False, owner=None
+    ) -> Optional[dict[str, str]]:
         cmd = [
             "gh",
             "repo",
@@ -555,7 +557,7 @@ class RestGitHub(GitHubBackend):
         )
         return r.status_code == 200
 
-    def create_repo(self, name: str, description = "", private = False, auto_init = False, owner = None):
+    def create_repo(self, name: str, description="", private=False, auto_init=False, owner=None):
         import requests
 
         payload = {
@@ -597,7 +599,9 @@ class PyGithubGitHub(GitHubBackend):
         except Exception:
             return False
 
-    def create_repo(self, name: str, description = "", private = False, auto_init = False, owner = None) -> Optional[dict[str, str]]:
+    def create_repo(
+        self, name: str, description="", private=False, auto_init=False, owner=None
+    ) -> Optional[dict[str, str]]:
         try:
             user = self.client.get_user(owner) if owner else self.client.get_user()
             repo = user.create_repo(
@@ -635,7 +639,9 @@ class Github3GitHub(GitHubBackend):
         except Exception:
             return False
 
-    def create_repo(self, name: str, description = "", private = False, auto_init = False, owner = None) -> Optional[dict[str, str]]:
+    def create_repo(
+        self, name: str, description="", private=False, auto_init=False, owner=None
+    ) -> Optional[dict[str, str]]:
         try:
             repo = self.client.create_repo(
                 name,

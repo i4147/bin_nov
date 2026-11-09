@@ -13,7 +13,7 @@ import sys
 from typing import Any
 
 
-def run(cmd: str, cwd = None, capture = False, check = True) -> subprocess.CompletedProcess[str]:
+def run(cmd: str, cwd=None, capture=False, check=True) -> subprocess.CompletedProcess[str]:
     if capture:
         res = subprocess.run(cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if check and res.returncode != 0:
@@ -26,7 +26,7 @@ def run(cmd: str, cwd = None, capture = False, check = True) -> subprocess.Compl
         return res
 
 
-def is_git_repo(path = ".") -> bool:
+def is_git_repo(path=".") -> bool:
     try:
         run(["git", "rev-parse", "--git-dir"], cwd=path, capture=True)
         return True
@@ -35,11 +35,11 @@ def is_git_repo(path = ".") -> bool:
 
 
 class Backend:
-    def __init__(self, repo_path = ".") -> None:
+    def __init__(self, repo_path=".") -> None:
         self.repo_path = Path(repo_path).absolute()
         self.fallback = SubprocessBackend(self.repo_path)
 
-    def ensure_clean_worktree(self, force = False) -> tuple[bool,]:
+    def ensure_clean_worktree(self, force=False) -> tuple[bool,]:
         return self.fallback.ensure_clean_worktree(force)
 
     def get_head(self) -> str:
@@ -63,7 +63,7 @@ class Backend:
     def add_all(self):
         return self.fallback.add_all()
 
-    def commit(self, message: str, allow_empty = False):
+    def commit(self, message: str, allow_empty=False):
         return self.fallback.commit(message, allow_empty)
 
     def rev_parse(self, rev: str) -> str:
@@ -71,10 +71,10 @@ class Backend:
 
 
 class SubprocessBackend(Backend):
-    def __init__(self, repo_path = ".") -> None:
+    def __init__(self, repo_path=".") -> None:
         self.repo_path = Path(repo_path).absolute()
 
-    def ensure_clean_worktree(self, force = False) -> tuple[bool, bool]:
+    def ensure_clean_worktree(self, force=False) -> tuple[bool, bool]:
         st = run(["git", "status", "--porcelain"], cwd=self.repo_path, capture=True)
         dirty = bool(st.stdout.strip())
         stash_made = False
@@ -201,7 +201,7 @@ class SubprocessBackend(Backend):
     def add_all(self) -> None:
         run(["git", "add", "-A"], cwd=self.repo_path)
 
-    def commit(self, message: str, allow_empty = False) -> None:
+    def commit(self, message: str, allow_empty=False) -> None:
         cmd = ["git", "commit", "-m", message]
         if allow_empty:
             cmd.append("--allow-empty")
@@ -209,7 +209,7 @@ class SubprocessBackend(Backend):
 
 
 class GenericBackend(Backend):
-    def __init__(self, name: str, repo_path = ".") -> None:
+    def __init__(self, name: str, repo_path=".") -> None:
         super().__init__(repo_path)
         self.name = name
         self.repo_path = Path(repo_path).absolute()
@@ -249,7 +249,7 @@ class GenericBackend(Backend):
             f"[{self.name}] operation '{op}' not fully supported by this backend or module not installed; falling back to git CLI (subprocess)."
         )
 
-    def ensure_clean_worktree(self, force = False):
+    def ensure_clean_worktree(self, force=False):
         if not any(self._available.values()):
             self._announce_fallback("ensure_clean_worktree")
             return self.subprocess.ensure_clean_worktree(force)
@@ -307,12 +307,12 @@ class GenericBackend(Backend):
         self._announce_fallback("add_all")
         return self.subprocess.add_all()
 
-    def commit(self, message: str, allow_empty = False):
+    def commit(self, message: str, allow_empty=False):
         self._announce_fallback("commit")
         return self.subprocess.commit(message, allow_empty)
 
 
-def create_backend(name: str, repo_path = "."):
+def create_backend(name: str, repo_path="."):
     name = (name or "subprocess").lower()
     if name in ("subprocess", "git"):
         return SubprocessBackend(repo_path)

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Detect misspelled words in filenames recursively."""
 
-
 import argparse
 from pathlib import Path
 import re

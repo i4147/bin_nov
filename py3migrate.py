@@ -562,7 +562,7 @@ def _process_tar(path: Path, targets: frozenset[str], tag: str) -> bool:
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir_p = Path(tmpdir)
         with tarfile.open(path, "r:*") as tin:
-            tin.extractall(tmpdir_p,filter='data')
+            tin.extractall(tmpdir_p, filter="data")
         changed = False
         for root, _dirs, files in tmpdir_p.walk():
             for name in files:

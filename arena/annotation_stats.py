@@ -9,6 +9,7 @@
 and PEP 673 say instance and class method receivers stay unannotated, so they
 would otherwise dominate the numbers.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -29,7 +30,9 @@ def function_stats(tree: ast.Module) -> dict:
         args = node.args
         positional = args.posonlyargs + args.args
         all_args = (
-            args.posonlyargs + args.args + args.kwonlyargs
+            args.posonlyargs
+            + args.args
+            + args.kwonlyargs
             + ([args.vararg] if args.vararg else [])
             + ([args.kwarg] if args.kwarg else [])
         )
@@ -51,8 +54,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--json", default="", help="write the report as JSON")
     args = ap.parse_args(argv)
 
-    totals = {"files": 0, "functions": 0, "params": 0, "params_annotated": 0,
-              "returns_annotated": 0, "files_with_gaps": 0}
+    totals = {
+        "files": 0,
+        "functions": 0,
+        "params": 0,
+        "params_annotated": 0,
+        "returns_annotated": 0,
+        "files_with_gaps": 0,
+    }
     per_file = []
     for path in sorted(REPO_ROOT.glob("*.py")):
         try:

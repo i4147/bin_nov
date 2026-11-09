@@ -46,7 +46,7 @@ EXCLUDE_DIRS: set[str] = {
 }
 
 
-def run(cmd: str, check = True, capture_output = False, input_text = None) -> subprocess.CompletedProcess[str]:
+def run(cmd: str, check=True, capture_output=False, input_text=None) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         cmd,
         shell=isinstance(cmd, str),

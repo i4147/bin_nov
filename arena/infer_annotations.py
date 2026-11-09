@@ -42,6 +42,7 @@ Notes
   union (``X | None``) was inserted into a file that did not use one before.
 * ``self`` / ``cls`` are never annotated (PEP 484/673).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -59,17 +60,52 @@ from pathlib import Path
 # --------------------------------------------------------------------------- #
 
 BUILTIN_TYPES = {
-    "int", "float", "complex", "bool", "str", "bytes", "bytearray", "list",
-    "dict", "set", "frozenset", "tuple", "object", "type", "range", "None",
+    "int",
+    "float",
+    "complex",
+    "bool",
+    "str",
+    "bytes",
+    "bytearray",
+    "list",
+    "dict",
+    "set",
+    "frozenset",
+    "tuple",
+    "object",
+    "type",
+    "range",
+    "None",
 }
 
 NUMERIC = {"int", "float", "complex"}
 
 TYPING_NAMES = {
-    "Any", "Optional", "Union", "Iterator", "Iterable", "Sequence", "Mapping",
-    "MutableMapping", "TextIO", "IO", "Callable", "Generator", "AsyncIterator",
-    "AsyncIterable", "NoReturn", "TypeVar", "ClassVar", "Final", "Literal",
-    "TypedDict", "NamedTuple", "Protocol", "overload", "cast", "TYPE_CHECKING",
+    "Any",
+    "Optional",
+    "Union",
+    "Iterator",
+    "Iterable",
+    "Sequence",
+    "Mapping",
+    "MutableMapping",
+    "TextIO",
+    "IO",
+    "Callable",
+    "Generator",
+    "AsyncIterator",
+    "AsyncIterable",
+    "NoReturn",
+    "TypeVar",
+    "ClassVar",
+    "Final",
+    "Literal",
+    "TypedDict",
+    "NamedTuple",
+    "Protocol",
+    "overload",
+    "cast",
+    "TYPE_CHECKING",
     "Self",
 }
 
@@ -77,16 +113,50 @@ LITERAL_TYPE = {str: "str", int: "int", float: "float", bool: "bool", bytes: "by
 
 # attribute -> weight; used only when the receiver is the parameter itself
 PATH_ATTRS = {
-    "resolve": 6, "read_text": 8, "write_text": 8, "read_bytes": 8, "write_bytes": 8,
-    "is_file": 6, "is_dir": 6, "exists": 6, "unlink": 8, "mkdir": 8, "rglob": 8,
-    "iterdir": 8, "relative_to": 6, "as_posix": 6, "expanduser": 6, "with_suffix": 6,
-    "with_name": 6, "is_symlink": 6, "glob": 6, "is_absolute": 6, "touch": 6, "chmod": 6,
+    "resolve": 6,
+    "read_text": 8,
+    "write_text": 8,
+    "read_bytes": 8,
+    "write_bytes": 8,
+    "is_file": 6,
+    "is_dir": 6,
+    "exists": 6,
+    "unlink": 8,
+    "mkdir": 8,
+    "rglob": 8,
+    "iterdir": 8,
+    "relative_to": 6,
+    "as_posix": 6,
+    "expanduser": 6,
+    "with_suffix": 6,
+    "with_name": 6,
+    "is_symlink": 6,
+    "glob": 6,
+    "is_absolute": 6,
+    "touch": 6,
+    "chmod": 6,
 }
 STR_ATTRS = {
-    "strip": 4, "lstrip": 4, "rstrip": 4, "splitlines": 5, "split": 3, "rsplit": 3,
-    "lower": 5, "upper": 5, "casefold": 5, "startswith": 6, "endswith": 6, "zfill": 4,
-    "isdigit": 5, "isalpha": 5, "isalnum": 5, "isspace": 5, "capitalize": 4, "title": 4,
-    "removesuffix": 4, "removeprefix": 4,
+    "strip": 4,
+    "lstrip": 4,
+    "rstrip": 4,
+    "splitlines": 5,
+    "split": 3,
+    "rsplit": 3,
+    "lower": 5,
+    "upper": 5,
+    "casefold": 5,
+    "startswith": 6,
+    "endswith": 6,
+    "zfill": 4,
+    "isdigit": 5,
+    "isalpha": 5,
+    "isalnum": 5,
+    "isspace": 5,
+    "capitalize": 4,
+    "title": 4,
+    "removesuffix": 4,
+    "removeprefix": 4,
 }
 RICH_STR_ATTRS = {"replace": 3, "join": 4, "encode": 5, "format": 2, "partition": 3, "rpartition": 3}
 BYTES_ATTRS = {"decode": 8}
@@ -95,8 +165,17 @@ RICH_DICT_ATTRS = {"items": 3, "values": 2, "update": 2}
 LIST_ATTRS = {"append": 5, "extend": 4, "insert": 4, "sort": 4, "reverse": 4}
 SET_ATTRS = {"discard": 5, "issubset": 5, "issuperset": 5, "symmetric_difference": 5}
 FILE_ATTRS = {
-    "readlines": 8, "readline": 6, "writelines": 8, "fileno": 8, "readable": 8,
-    "writable": 8, "truncate": 8, "read": 4, "write": 3, "seek": 4, "tell": 3,
+    "readlines": 8,
+    "readline": 6,
+    "writelines": 8,
+    "fileno": 8,
+    "readable": 8,
+    "writable": 8,
+    "truncate": 8,
+    "read": 4,
+    "write": 3,
+    "seek": 4,
+    "tell": 3,
 }
 FILE_STR_ATTRS = {"seek": 3, "tell": 3, "read": 2, "write": 2}
 MATCH_ATTRS = {"groupdict": 8, "groups": 8, "span": 6}
@@ -108,132 +187,470 @@ DT_ATTRS = {"isoformat": 8, "timestamp": 8, "strftime": 6}
 
 NAME_HINTS = {
     # strings
-    "name": "str", "text": "str", "msg": "str", "message": "str", "content": "str",
-    "pattern": "str", "line": "str", "label": "str", "prefix": "str", "suffix": "str",
-    "encoding": "str", "mode": "str", "command": "str", "cmd": "str", "title": "str",
-    "url": "str", "html": "str", "markdown": "str", "source": "str", "target_lang": "str",
-    "lang": "str", "lang_code": "str", "revision": "str", "branch": "str", "ref": "str",
-    "rev": "str", "sha": "str", "hash": "str", "token": "str", "key": "str",
-    "separator": "str", "sep": "str", "delimiter": "str", "ext": "str", "extension": "str",
-    "new": "str", "old": "str", "reason": "str", "description": "str", "version": "str",
-    "tag": "str", "username": "str", "email": "str", "password": "str", "host": "str",
-    "user": "str", "dir_name": "str", "file_name": "str", "basename": "str", "module": "str",
-    "attr": "str", "attribute": "str", "method": "str", "column": "str", "comment": "str",
-    "raw": "str", "text_data": "str", "body": "str", "html_text": "str", "snippet": "str",
-    "query": "str", "prompt": "str", "answer": "str", "response": "str",
+    "name": "str",
+    "text": "str",
+    "msg": "str",
+    "message": "str",
+    "content": "str",
+    "pattern": "str",
+    "line": "str",
+    "label": "str",
+    "prefix": "str",
+    "suffix": "str",
+    "encoding": "str",
+    "mode": "str",
+    "command": "str",
+    "cmd": "str",
+    "title": "str",
+    "url": "str",
+    "html": "str",
+    "markdown": "str",
+    "source": "str",
+    "target_lang": "str",
+    "lang": "str",
+    "lang_code": "str",
+    "revision": "str",
+    "branch": "str",
+    "ref": "str",
+    "rev": "str",
+    "sha": "str",
+    "hash": "str",
+    "token": "str",
+    "key": "str",
+    "separator": "str",
+    "sep": "str",
+    "delimiter": "str",
+    "ext": "str",
+    "extension": "str",
+    "new": "str",
+    "old": "str",
+    "reason": "str",
+    "description": "str",
+    "version": "str",
+    "tag": "str",
+    "username": "str",
+    "email": "str",
+    "password": "str",
+    "host": "str",
+    "user": "str",
+    "dir_name": "str",
+    "file_name": "str",
+    "basename": "str",
+    "module": "str",
+    "attr": "str",
+    "attribute": "str",
+    "method": "str",
+    "column": "str",
+    "comment": "str",
+    "raw": "str",
+    "text_data": "str",
+    "body": "str",
+    "html_text": "str",
+    "snippet": "str",
+    "query": "str",
+    "prompt": "str",
+    "answer": "str",
+    "response": "str",
     # ints / floats
-    "count": "int", "n": "int", "num": "int", "index": "int", "idx": "int", "size": "int",
-    "limit": "int", "offset": "int", "port": "int", "width": "int", "height": "int",
-    "depth": "int", "level": "int", "retries": "int", "max_workers": "int", "workers": "int",
-    "line_no": "int", "lineno": "int", "line_number": "int", "min_size": "int",
-    "max_size": "int", "chunk_size": "int", "compression_level": "int",
-    "min_mb": "float", "max_mb": "float", "mb": "float", "kb": "float", "gb": "float",
-    "size_bytes": "int", "num_bytes": "int", "total_bytes": "int", "total_size": "int",
-    "total_files": "int", "file_count": "int", "saved_count": "int", "n_files": "int",
-    "radius": "float", "sigma": "float", "alpha": "float", "beta": "float", "gamma": "float",
-    "spaces": "int", "indent": "int", "indent_size": "int", "tab_size": "int",
-    "start": "int", "stop": "int", "step": "int", "end": "int", "r": "int", "g": "int", "b": "int",
-    "timeout": "float", "delay": "float", "interval": "float", "ratio": "float",
-    "threshold": "float", "factor": "float", "scale": "float", "ratio_threshold": "float",
+    "count": "int",
+    "n": "int",
+    "num": "int",
+    "index": "int",
+    "idx": "int",
+    "size": "int",
+    "limit": "int",
+    "offset": "int",
+    "port": "int",
+    "width": "int",
+    "height": "int",
+    "depth": "int",
+    "level": "int",
+    "retries": "int",
+    "max_workers": "int",
+    "workers": "int",
+    "line_no": "int",
+    "lineno": "int",
+    "line_number": "int",
+    "min_size": "int",
+    "max_size": "int",
+    "chunk_size": "int",
+    "compression_level": "int",
+    "min_mb": "float",
+    "max_mb": "float",
+    "mb": "float",
+    "kb": "float",
+    "gb": "float",
+    "size_bytes": "int",
+    "num_bytes": "int",
+    "total_bytes": "int",
+    "total_size": "int",
+    "total_files": "int",
+    "file_count": "int",
+    "saved_count": "int",
+    "n_files": "int",
+    "radius": "float",
+    "sigma": "float",
+    "alpha": "float",
+    "beta": "float",
+    "gamma": "float",
+    "spaces": "int",
+    "indent": "int",
+    "indent_size": "int",
+    "tab_size": "int",
+    "start": "int",
+    "stop": "int",
+    "step": "int",
+    "end": "int",
+    "r": "int",
+    "g": "int",
+    "b": "int",
+    "timeout": "float",
+    "delay": "float",
+    "interval": "float",
+    "ratio": "float",
+    "threshold": "float",
+    "factor": "float",
+    "scale": "float",
+    "ratio_threshold": "float",
     # bools
-    "verbose": "bool", "debug": "bool", "force": "bool", "enabled": "bool", "flag": "bool",
-    "dry_run": "bool", "recursive": "bool", "quiet": "bool", "check": "bool",
-    "capture": "bool", "overwrite": "bool", "include_hidden": "bool", "follow_links": "bool",
-    "as_bytes": "bool", "append": "bool", "create": "bool", "strict": "bool",
-    "absolute": "bool", "verify": "bool", "show": "bool", "write": "bool", "read": "bool",
-    "clean": "bool", "sync": "bool", "trim": "bool", "use_cache": "bool",
+    "verbose": "bool",
+    "debug": "bool",
+    "force": "bool",
+    "enabled": "bool",
+    "flag": "bool",
+    "dry_run": "bool",
+    "recursive": "bool",
+    "quiet": "bool",
+    "check": "bool",
+    "capture": "bool",
+    "overwrite": "bool",
+    "include_hidden": "bool",
+    "follow_links": "bool",
+    "as_bytes": "bool",
+    "append": "bool",
+    "create": "bool",
+    "strict": "bool",
+    "absolute": "bool",
+    "verify": "bool",
+    "show": "bool",
+    "write": "bool",
+    "read": "bool",
+    "clean": "bool",
+    "sync": "bool",
+    "trim": "bool",
+    "use_cache": "bool",
 }
 
 PATH_LIKE_NAMES = {
-    "path", "src", "dst", "dest", "target", "dest_path", "src_path", "base", "base_dir",
-    "root", "directory", "dir", "folder", "folder_path", "file", "file_name", "filename",
-    "file_path", "filepath", "out", "output", "output_path", "output_dir", "input",
-    "input_path", "source_path", "dest_dir", "target_dir", "workdir", "repo", "repo_path",
-    "archive_path", "patch_file", "meta_file", "cwd", "parent", "archive", "src_dir",
-    "tmpdir", "tmp_dir", "tempdir", "repos_dir", "clone_dir", "wheel_path", "script_path",
-    "out_dir", "base_path", "trash_dir", "cache_dir", "temp_path",
+    "path",
+    "src",
+    "dst",
+    "dest",
+    "target",
+    "dest_path",
+    "src_path",
+    "base",
+    "base_dir",
+    "root",
+    "directory",
+    "dir",
+    "folder",
+    "folder_path",
+    "file",
+    "file_name",
+    "filename",
+    "file_path",
+    "filepath",
+    "out",
+    "output",
+    "output_path",
+    "output_dir",
+    "input",
+    "input_path",
+    "source_path",
+    "dest_dir",
+    "target_dir",
+    "workdir",
+    "repo",
+    "repo_path",
+    "archive_path",
+    "patch_file",
+    "meta_file",
+    "cwd",
+    "parent",
+    "archive",
+    "src_dir",
+    "tmpdir",
+    "tmp_dir",
+    "tempdir",
+    "repos_dir",
+    "clone_dir",
+    "wheel_path",
+    "script_path",
+    "out_dir",
+    "base_path",
+    "trash_dir",
+    "cache_dir",
+    "temp_path",
 }
 
 EXPR_NAME_HINTS = {
-    "node": "ast.AST", "expr": "ast.expr", "stmt": "ast.stmt", "tree": "ast.AST",
-    "module_node": "ast.Module", "call_node": "ast.Call", "func_node": "ast.FunctionDef",
-    "assign": "ast.Assign", "body": "ast.Module", "arguments": "ast.arguments",
-    "arg_node": "ast.arg", "exc_node": "ast.ExceptHandler",
+    "node": "ast.AST",
+    "expr": "ast.expr",
+    "stmt": "ast.stmt",
+    "tree": "ast.AST",
+    "module_node": "ast.Module",
+    "call_node": "ast.Call",
+    "func_node": "ast.FunctionDef",
+    "assign": "ast.Assign",
+    "body": "ast.Module",
+    "arguments": "ast.arguments",
+    "arg_node": "ast.arg",
+    "exc_node": "ast.ExceptHandler",
 }
 
 CONTAINER_NAMES = {
-    "items": "list", "values": "list", "entries": "list", "files": "list", "paths": "list",
-    "lines": "list", "rows": "list", "results": "list", "found": "list", "matches": "list",
-    "ids": "list", "names": "list", "suffixes": "list", "parts": "list", "tokens": "list",
-    "words": "list", "sents": "list", "sentences": "list", "records": "list", "args": "list",
-    "argv": "list", "elts": "list", "elements": "list", "members": "list", "exts": "list",
-    "keys": "list", "errors": "list", "warnings": "list", "targets": "list",
-    "kwargs": "dict", "options": "dict", "config": "dict", "configs": "dict", "params": "dict",
-    "settings": "dict", "env": "dict", "metadata": "dict", "mapping": "dict",
+    "items": "list",
+    "values": "list",
+    "entries": "list",
+    "files": "list",
+    "paths": "list",
+    "lines": "list",
+    "rows": "list",
+    "results": "list",
+    "found": "list",
+    "matches": "list",
+    "ids": "list",
+    "names": "list",
+    "suffixes": "list",
+    "parts": "list",
+    "tokens": "list",
+    "words": "list",
+    "sents": "list",
+    "sentences": "list",
+    "records": "list",
+    "args": "list",
+    "argv": "list",
+    "elts": "list",
+    "elements": "list",
+    "members": "list",
+    "exts": "list",
+    "keys": "list",
+    "errors": "list",
+    "warnings": "list",
+    "targets": "list",
+    "kwargs": "dict",
+    "options": "dict",
+    "config": "dict",
+    "configs": "dict",
+    "params": "dict",
+    "settings": "dict",
+    "env": "dict",
+    "metadata": "dict",
+    "mapping": "dict",
 }
 
 CALLABLE_HINTS = {
-    "callback", "func", "handler", "hook", "keyfunc", "predicate", "action", "convert",
-    "transform", "factory", "visitor",
+    "callback",
+    "func",
+    "handler",
+    "hook",
+    "keyfunc",
+    "predicate",
+    "action",
+    "convert",
+    "transform",
+    "factory",
+    "visitor",
 }
 
 BUILTIN_CALL_RETURNS = {
-    "len": "int", "int": "int", "float": "float", "str": "str", "bool": "bool",
-    "bytes": "bytes", "bytearray": "bytearray", "repr": "str", "sorted": "list[Any]",
-    "reversed": "list[Any]", "range": "range", "enumerate": "enumerate[Any]",
-    "zip": "zip[Any]", "iter": "Iterator[Any]", "open": "TextIO", "input": "str",
-    "isinstance": "bool", "issubclass": "bool", "hasattr": "bool", "callable": "bool",
-    "print": "None", "type": "type", "id": "int", "ord": "int", "chr": "str",
-    "round": "int", "format": "str", "any": "bool", "all": "bool", "hex": "str",
-    "oct": "str", "bin": "str", "hash": "int", "exit": "None", "quit": "None",
-    "sum": "Any", "max": "Any", "min": "Any", "abs": "Any", "divmod": "tuple[int, int]",
-    "getattr": "Any", "next": "Any", "vars": "dict[str, Any]", "dir": "list[str]",
-    "globals": "dict[str, Any]", "locals": "dict[str, Any]", "super": "Any",
-    "property": "property", "staticmethod": "Any", "classmethod": "Any", "eval": "Any",
-    "exec": "None", "compile": "Any", "memoryview": "memoryview", "object": "object",
-    "frozenset": "frozenset[Any]", "tuple": "tuple[Any, ...]", "list": "list[Any]",
-    "dict": "dict[Any, Any]", "set": "set[Any]",
+    "len": "int",
+    "int": "int",
+    "float": "float",
+    "str": "str",
+    "bool": "bool",
+    "bytes": "bytes",
+    "bytearray": "bytearray",
+    "repr": "str",
+    "sorted": "list[Any]",
+    "reversed": "list[Any]",
+    "range": "range",
+    "enumerate": "enumerate[Any]",
+    "zip": "zip[Any]",
+    "iter": "Iterator[Any]",
+    "open": "TextIO",
+    "input": "str",
+    "isinstance": "bool",
+    "issubclass": "bool",
+    "hasattr": "bool",
+    "callable": "bool",
+    "print": "None",
+    "type": "type",
+    "id": "int",
+    "ord": "int",
+    "chr": "str",
+    "round": "int",
+    "format": "str",
+    "any": "bool",
+    "all": "bool",
+    "hex": "str",
+    "oct": "str",
+    "bin": "str",
+    "hash": "int",
+    "exit": "None",
+    "quit": "None",
+    "sum": "Any",
+    "max": "Any",
+    "min": "Any",
+    "abs": "Any",
+    "divmod": "tuple[int, int]",
+    "getattr": "Any",
+    "next": "Any",
+    "vars": "dict[str, Any]",
+    "dir": "list[str]",
+    "globals": "dict[str, Any]",
+    "locals": "dict[str, Any]",
+    "super": "Any",
+    "property": "property",
+    "staticmethod": "Any",
+    "classmethod": "Any",
+    "eval": "Any",
+    "exec": "None",
+    "compile": "Any",
+    "memoryview": "memoryview",
+    "object": "object",
+    "frozenset": "frozenset[Any]",
+    "tuple": "tuple[Any, ...]",
+    "list": "list[Any]",
+    "dict": "dict[Any, Any]",
+    "set": "set[Any]",
 }
 
 CONTAINER_CALLS = {
-    "list": "list[Any]", "dict": "dict[str, Any]", "set": "set[Any]",
-    "tuple": "tuple[Any, ...]", "frozenset": "frozenset[Any]",
-    "OrderedDict": "Any", "defaultdict": "Any",
+    "list": "list[Any]",
+    "dict": "dict[str, Any]",
+    "set": "set[Any]",
+    "tuple": "tuple[Any, ...]",
+    "frozenset": "frozenset[Any]",
+    "OrderedDict": "Any",
+    "defaultdict": "Any",
 }
 
 METHOD_RETURNS = {
     # str
-    "strip": "str", "lstrip": "str", "rstrip": "str", "lower": "str", "upper": "str",
-    "casefold": "str", "replace": "str", "join": "str", "encode": "bytes", "decode": "str",
-    "format": "str", "title": "str", "capitalize": "str", "removeprefix": "str",
-    "removesuffix": "str", "zfill": "str", "center": "str", "ljust": "str", "rjust": "str",
-    "expandtabs": "str", "splitlines": "list[str]", "partition": "tuple[str, str, str]",
-    "rpartition": "tuple[str, str, str]", "split": "list[str]", "rsplit": "list[str]",
+    "strip": "str",
+    "lstrip": "str",
+    "rstrip": "str",
+    "lower": "str",
+    "upper": "str",
+    "casefold": "str",
+    "replace": "str",
+    "join": "str",
+    "encode": "bytes",
+    "decode": "str",
+    "format": "str",
+    "title": "str",
+    "capitalize": "str",
+    "removeprefix": "str",
+    "removesuffix": "str",
+    "zfill": "str",
+    "center": "str",
+    "ljust": "str",
+    "rjust": "str",
+    "expandtabs": "str",
+    "splitlines": "list[str]",
+    "partition": "tuple[str, str, str]",
+    "rpartition": "tuple[str, str, str]",
+    "split": "list[str]",
+    "rsplit": "list[str]",
     # bool-ish
-    "startswith": "bool", "endswith": "bool", "isdigit": "bool", "isalpha": "bool",
-    "isalnum": "bool", "isspace": "bool", "is_file": "bool", "is_dir": "bool",
-    "exists": "bool", "is_symlink": "bool", "is_absolute": "bool", "is_relative": "bool",
-    "isupper": "bool", "islower": "bool", "istitle": "bool", "isnumeric": "bool",
-    "isdecimal": "bool", "isidentifier": "bool", "isprintable": "bool",
+    "startswith": "bool",
+    "endswith": "bool",
+    "isdigit": "bool",
+    "isalpha": "bool",
+    "isalnum": "bool",
+    "isspace": "bool",
+    "is_file": "bool",
+    "is_dir": "bool",
+    "exists": "bool",
+    "is_symlink": "bool",
+    "is_absolute": "bool",
+    "is_relative": "bool",
+    "isupper": "bool",
+    "islower": "bool",
+    "istitle": "bool",
+    "isnumeric": "bool",
+    "isdecimal": "bool",
+    "isidentifier": "bool",
+    "isprintable": "bool",
     # numbers
-    "find": "int", "rfind": "int", "count": "int", "index": "int", "getsize": "int",
+    "find": "int",
+    "rfind": "int",
+    "count": "int",
+    "index": "int",
+    "getsize": "int",
     # hashing
-    "hexdigest": "str", "digest": "bytes",
+    "hexdigest": "str",
+    "digest": "bytes",
     # Path
-    "resolve": "Path", "absolute": "Path", "expanduser": "Path", "joinpath": "Path",
-    "with_suffix": "Path", "with_name": "Path", "relative_to": "Path", "read_text": "str",
-    "read_bytes": "bytes", "write_text": "int", "write_bytes": "int", "as_posix": "str",
-    "as_uri": "str", "iterdir": "Iterator[Path]", "rglob": "Iterator[Path]",
-    "glob": "Iterator[Path]", "stat": "Any", "open": "TextIO",
-    "readlines": "list[str]", "readline": "str", "read": "str",
+    "resolve": "Path",
+    "absolute": "Path",
+    "expanduser": "Path",
+    "joinpath": "Path",
+    "with_suffix": "Path",
+    "with_name": "Path",
+    "relative_to": "Path",
+    "read_text": "str",
+    "read_bytes": "bytes",
+    "write_text": "int",
+    "write_bytes": "int",
+    "as_posix": "str",
+    "as_uri": "str",
+    "iterdir": "Iterator[Path]",
+    "rglob": "Iterator[Path]",
+    "glob": "Iterator[Path]",
+    "stat": "Any",
+    "open": "TextIO",
+    "readlines": "list[str]",
+    "readline": "str",
+    "read": "str",
     # dict / list / file
-    "keys": "Any", "values": "Any", "items": "Any", "get": "Any", "pop": "Any",
-    "setdefault": "Any", "copy": "Any", "append": "None", "extend": "None", "insert": "None",
-    "sort": "None", "reverse": "None", "update": "None", "add": "None", "discard": "None",
-    "remove": "None", "clear": "None", "close": "None", "flush": "None", "seek": "int",
-    "tell": "int", "write": "int", "writelines": "None", "match": "Any", "search": "Any",
-    "fullmatch": "Any", "findall": "Any", "finditer": "Any", "sub": "str", "compile": "Any",
-    "dumps": "str", "dump": "None", "loads": "Any", "load": "Any", "run": "Any",
+    "keys": "Any",
+    "values": "Any",
+    "items": "Any",
+    "get": "Any",
+    "pop": "Any",
+    "setdefault": "Any",
+    "copy": "Any",
+    "append": "None",
+    "extend": "None",
+    "insert": "None",
+    "sort": "None",
+    "reverse": "None",
+    "update": "None",
+    "add": "None",
+    "discard": "None",
+    "remove": "None",
+    "clear": "None",
+    "close": "None",
+    "flush": "None",
+    "seek": "int",
+    "tell": "int",
+    "write": "int",
+    "writelines": "None",
+    "match": "Any",
+    "search": "Any",
+    "fullmatch": "Any",
+    "findall": "Any",
+    "finditer": "Any",
+    "sub": "str",
+    "compile": "Any",
+    "dumps": "str",
+    "dump": "None",
+    "loads": "Any",
+    "load": "Any",
+    "run": "Any",
     "check_output": "bytes",
 }
 
@@ -299,10 +716,22 @@ MODULE_ATTR_RETURNS = {
 }
 
 DUNDER_RETURNS = {
-    "__init__": "None", "__post_init__": "None", "__str__": "str", "__repr__": "str",
-    "__format__": "str", "__eq__": "bool", "__ne__": "bool", "__lt__": "bool",
-    "__le__": "bool", "__gt__": "bool", "__ge__": "bool", "__contains__": "bool",
-    "__bool__": "bool", "__hash__": "int", "__len__": "int", "__index__": "int",
+    "__init__": "None",
+    "__post_init__": "None",
+    "__str__": "str",
+    "__repr__": "str",
+    "__format__": "str",
+    "__eq__": "bool",
+    "__ne__": "bool",
+    "__lt__": "bool",
+    "__le__": "bool",
+    "__gt__": "bool",
+    "__ge__": "bool",
+    "__contains__": "bool",
+    "__bool__": "bool",
+    "__hash__": "int",
+    "__len__": "int",
+    "__index__": "int",
     "__next__": "Any",
 }
 
@@ -326,26 +755,88 @@ BASE_METHOD_RETURNS = {
 }
 
 TS_ATTRS = {
-    "type", "children", "start_byte", "end_byte", "start_point", "end_point", "text",
-    "child_by_field_name", "is_named", "named_children", "grammar_name", "has_error",
-    "child_count", "field_name_for_child", "prev_named_sibling", "next_named_sibling",
+    "type",
+    "children",
+    "start_byte",
+    "end_byte",
+    "start_point",
+    "end_point",
+    "text",
+    "child_by_field_name",
+    "is_named",
+    "named_children",
+    "grammar_name",
+    "has_error",
+    "child_count",
+    "field_name_for_child",
+    "prev_named_sibling",
+    "next_named_sibling",
 }
 AST_ATTRS = {
-    "body", "targets", "id", "lineno", "col_offset", "annotation", "returns",
-    "decorator_list", "elts", "name", "func", "args", "value", "op", "attr", "ctx",
-    "orelse", "handlers", "test", "iter", "generators", "keys", "values", "slice",
-    "level", "module", "names",
+    "body",
+    "targets",
+    "id",
+    "lineno",
+    "col_offset",
+    "annotation",
+    "returns",
+    "decorator_list",
+    "elts",
+    "name",
+    "func",
+    "args",
+    "value",
+    "op",
+    "attr",
+    "ctx",
+    "orelse",
+    "handlers",
+    "test",
+    "iter",
+    "generators",
+    "keys",
+    "values",
+    "slice",
+    "level",
+    "module",
+    "names",
 }
 
 PRIORITIES = [
-    "Response", "CompletedProcess", "datetime", "Match", "Path", "TextIO", "FileLike",
-    "bytes", "set", "list", "dict", "Mapping", "Sequence", "Iterable", "Callable",
-    "float", "int", "bool", "str",
+    "Response",
+    "CompletedProcess",
+    "datetime",
+    "Match",
+    "Path",
+    "TextIO",
+    "FileLike",
+    "bytes",
+    "set",
+    "list",
+    "dict",
+    "Mapping",
+    "Sequence",
+    "Iterable",
+    "Callable",
+    "float",
+    "int",
+    "bool",
+    "str",
 ]
 
 ANY_ONLY = {
-    "Any", "tuple[Any, ...]", "dict[Any, Any]", "list[tuple[Any, ...]]", "Iterator[Any]",
-    "list", "dict", "set", "tuple", "list[Any]", "set[Any]", "dict[str, Any]",
+    "Any",
+    "tuple[Any, ...]",
+    "dict[Any, Any]",
+    "list[tuple[Any, ...]]",
+    "Iterator[Any]",
+    "list",
+    "dict",
+    "set",
+    "tuple",
+    "list[Any]",
+    "set[Any]",
+    "dict[str, Any]",
 }
 
 PEP604_RE = re.compile(r"\|\s*None\b")
@@ -418,15 +909,13 @@ def load_ctx(path: Path) -> FileCtx:
     text = raw.decode(enc)
     tree = ast.parse(text)
     future = any(
-        isinstance(n, ast.ImportFrom) and n.module == "__future__"
-        and any(a.name == "annotations" for a in n.names)
+        isinstance(n, ast.ImportFrom) and n.module == "__future__" and any(a.name == "annotations" for a in n.names)
         for n in tree.body
     )
     n_opt = text.count("Optional[") + text.count("Union[")
     n_604 = len(PEP604_RE.findall(text))
     style = "pep604" if future or n_604 >= n_opt else "optional"
-    ctx = FileCtx(path=path, text=text, encoding=enc, tree=tree,
-                  future_annotations=future, style=style)
+    ctx = FileCtx(path=path, text=text, encoding=enc, tree=tree, future_annotations=future, style=style)
     ctx.lines = text.splitlines(keepends=True)
     collect_names(ctx)
     collect_module_consts(ctx)
@@ -618,11 +1107,7 @@ def infer_expr(ctx: FileCtx, node: ast.AST | None, depth: int = 0) -> str:
             return "bool"
         if node.id == "None":
             return "None"
-        t = (
-            ctx.param_types.get(node.id)
-            or ctx.module_consts.get(node.id)
-            or ctx.local_returns.get(node.id)
-        )
+        t = ctx.param_types.get(node.id) or ctx.module_consts.get(node.id) or ctx.local_returns.get(node.id)
         if not t and ctx.func is not None:
             for arg in ast.walk(ctx.func.args):
                 if isinstance(arg, ast.arg) and arg.arg == node.id and arg.annotation is not None:
@@ -713,7 +1198,7 @@ def infer_expr(ctx: FileCtx, node: ast.AST | None, depth: int = 0) -> str:
     if isinstance(node, ast.Subscript):
         base = infer_expr(ctx, node.value, depth + 1)
         if base.startswith("dict["):
-            parts = _split_args(base[len("dict["):-1])
+            parts = _split_args(base[len("dict[") : -1])
             return parts[-1].strip() if len(parts) == 2 else "Any"
         m = re.fullmatch(r"(\w+)\[(.+)\]", base or "")
         if m:
@@ -975,11 +1460,16 @@ def collect_param_evidence(ctx: FileCtx, func: ast.AST, param: str) -> Evidence:
                 if isinstance(f, ast.Name):
                     fn = f.id
                     table = {
-                        "Path": ("Path", 12, True), "open": ("Path", 6, True),
-                        "str": ("str", 8, False), "int": ("int", 8, True),
-                        "float": ("float", 8, True), "bool": ("bool", 8, True),
-                        "bytes": ("bytes", 8, True), "print": ("str", 2, False),
-                        "repr": ("str", 2, False), "range": ("int", 4, False),
+                        "Path": ("Path", 12, True),
+                        "open": ("Path", 6, True),
+                        "str": ("str", 8, False),
+                        "int": ("int", 8, True),
+                        "float": ("float", 8, True),
+                        "bool": ("bool", 8, True),
+                        "bytes": ("bytes", 8, True),
+                        "print": ("str", 2, False),
+                        "repr": ("str", 2, False),
+                        "range": ("int", 4, False),
                     }
                     if fn in table:
                         typ, w, hard = table[fn]
@@ -988,16 +1478,26 @@ def collect_param_evidence(ctx: FileCtx, func: ast.AST, param: str) -> Evidence:
                         ev.add("Sequence", 3)
                 elif isinstance(f, ast.Attribute):
                     dotted = dotted_name(f)
-                    if dotted in ("os.path.join", "os.path.basename", "os.path.dirname",
-                                  "os.path.abspath", "os.path.normpath"):
+                    if dotted in (
+                        "os.path.join",
+                        "os.path.basename",
+                        "os.path.dirname",
+                        "os.path.abspath",
+                        "os.path.normpath",
+                    ):
                         ev.add("str", 6, hard=True)
                     elif dotted in ("json.dump", "json.load", "pickle.dump", "pickle.load"):
                         ev.add("FileLike", 8, hard=True)
                     elif dotted in ("shutil.copy", "shutil.copy2", "shutil.copyfile", "shutil.move"):
                         ev.add("Path", 5, hard=True)
                         ev.add("str", 2)
-                    elif dotted in ("subprocess.run", "subprocess.check_output",
-                                    "subprocess.Popen", "subprocess.call", "subprocess.check_call"):
+                    elif dotted in (
+                        "subprocess.run",
+                        "subprocess.check_output",
+                        "subprocess.Popen",
+                        "subprocess.call",
+                        "subprocess.check_call",
+                    ):
                         ev.add("Command", 8, hard=True)
                     elif f.attr == "decode" and is_param(f.value):
                         ev.add("bytes", 10, hard=True)
@@ -1069,11 +1569,20 @@ def evidence_to_type(ev: Evidence, ctx: FileCtx) -> str:
         key=lambda kv: (-kv[1], PRIORITIES.index(kv[0]) if kv[0] in PRIORITIES else 99),
     )[0][0]
     mapping = {
-        "Path": "Path", "Command": "str", "TextIO": "TextIO", "FileLike": "TextIO",
-        "Match": "re.Match[str]", "Response": "Any",
-        "CompletedProcess": "subprocess.CompletedProcess[str]", "datetime": "Any",
-        "dict": "dict[str, Any]", "Mapping": "dict[str, Any]", "list": "list[Any]",
-        "set": "set[Any]", "Sequence": "Sequence[Any]", "Iterable": "Iterable[Any]",
+        "Path": "Path",
+        "Command": "str",
+        "TextIO": "TextIO",
+        "FileLike": "TextIO",
+        "Match": "re.Match[str]",
+        "Response": "Any",
+        "CompletedProcess": "subprocess.CompletedProcess[str]",
+        "datetime": "Any",
+        "dict": "dict[str, Any]",
+        "Mapping": "dict[str, Any]",
+        "list": "list[Any]",
+        "set": "set[Any]",
+        "Sequence": "Sequence[Any]",
+        "Iterable": "Iterable[Any]",
         "Callable": "Callable[..., Any]",
     }
     typ = mapping.get(best, best)
@@ -1093,21 +1602,66 @@ def name_based_type(ctx: FileCtx, name: str) -> str:
         return "cst.CSTNode"
     if lname in ("tree",) and ctx.has_name("cst"):
         return "cst.Module"
-    if lname in ("event", "lock", "detector", "translator", "client", "session", "backend",
-                 "engine", "browser", "page", "driver", "log", "console", "progress",
-                 "bar", "task", "instance", "inst", "worker", "pool", "executor",
-                 "manager", "app", "frame", "img", "image", "tiles", "arr", "array"):
+    if lname in (
+        "event",
+        "lock",
+        "detector",
+        "translator",
+        "client",
+        "session",
+        "backend",
+        "engine",
+        "browser",
+        "page",
+        "driver",
+        "log",
+        "console",
+        "progress",
+        "bar",
+        "task",
+        "instance",
+        "inst",
+        "worker",
+        "pool",
+        "executor",
+        "manager",
+        "app",
+        "frame",
+        "img",
+        "image",
+        "tiles",
+        "arr",
+        "array",
+    ):
         return "Any"
     if lname in ("it", "iterable", "iterator", "seq", "sequence", "gen", "generator", "stream", "rows"):
         return "Iterable[Any]"
     if lname.endswith(("_bytes", "_blob", "_buf", "_buffer", "_raw")) or lname in (
-        "data_bytes", "byte_content", "src_bytes", "raw_bytes", "blob", "buf", "buffer",
+        "data_bytes",
+        "byte_content",
+        "src_bytes",
+        "raw_bytes",
+        "blob",
+        "buf",
+        "buffer",
     ):
         return "bytes"
     if lname in ("paths", "dirs", "files", "folders", "repos", "archives", "sources", "destinations"):
         return "list[Path]" if ctx.has_name("Path") else "list[str]"
-    if lname in ("filename", "file_name", "fname", "basename", "dirname", "path_str",
-                 "str_path", "root_dir", "trash_dir", "dest_str", "src_str", "target_str"):
+    if lname in (
+        "filename",
+        "file_name",
+        "fname",
+        "basename",
+        "dirname",
+        "path_str",
+        "str_path",
+        "root_dir",
+        "trash_dir",
+        "dest_str",
+        "src_str",
+        "target_str",
+    ):
         return "Path" if lname.endswith("_dir") and ctx.has_name("Path") else "str"
     if lname in PATH_LIKE_NAMES:
         return "Path" if ctx.has_name("Path") else "str"
@@ -1126,17 +1680,60 @@ def name_based_type(ctx: FileCtx, name: str) -> str:
         return "list[str]" if lname == "argv" else "list[Any]"
     if lname in NAME_HINTS:
         return NAME_HINTS[lname]
-    if lname in ("pypi_index", "index", "cache", "lookup", "table", "registry", "packages",
-                 "imports", "deps"):
+    if lname in ("pypi_index", "index", "cache", "lookup", "table", "registry", "packages", "imports", "deps"):
         return "dict[str, Any]"
-    if lname.endswith(("_name", "_text", "_str", "_msg", "_message", "_url", "_key", "_pattern",
-                       "_label", "_title", "_lang", "_mode", "_prefix", "_suffix", "_ext",
-                       "_encoding", "_sep", "_tag", "_comment", "_reason", "_revision",
-                       "_branch", "_ref", "_sha", "_hash", "_token", "_user", "_username",
-                       "_email", "_host", "_version", "_format")):
+    if lname.endswith((
+        "_name",
+        "_text",
+        "_str",
+        "_msg",
+        "_message",
+        "_url",
+        "_key",
+        "_pattern",
+        "_label",
+        "_title",
+        "_lang",
+        "_mode",
+        "_prefix",
+        "_suffix",
+        "_ext",
+        "_encoding",
+        "_sep",
+        "_tag",
+        "_comment",
+        "_reason",
+        "_revision",
+        "_branch",
+        "_ref",
+        "_sha",
+        "_hash",
+        "_token",
+        "_user",
+        "_username",
+        "_email",
+        "_host",
+        "_version",
+        "_format",
+    )):
         return "str"
-    if lname.endswith(("_count", "_num", "_size", "_len", "_idx", "_index", "_level", "_depth",
-                       "_limit", "_port", "_number", "_width", "_height", "_offset", "_n")):
+    if lname.endswith((
+        "_count",
+        "_num",
+        "_size",
+        "_len",
+        "_idx",
+        "_index",
+        "_level",
+        "_depth",
+        "_limit",
+        "_port",
+        "_number",
+        "_width",
+        "_height",
+        "_offset",
+        "_n",
+    )):
         return "int"
     if lname.endswith(("_flag", "_enabled", "_allowed")):
         return "bool"
@@ -1206,8 +1803,7 @@ def infer_default(ctx: FileCtx, default: ast.AST | None) -> str:
 
 def is_override(func: ast.AST) -> bool:
     return any(
-        (isinstance(d, ast.Name) and d.id == "override")
-        or (isinstance(d, ast.Attribute) and d.attr == "override")
+        (isinstance(d, ast.Name) and d.id == "override") or (isinstance(d, ast.Attribute) and d.attr == "override")
         for d in getattr(func, "decorator_list", [])
     )
 
@@ -1217,7 +1813,7 @@ def _visitor_kind(func: ast.AST) -> str:
     name = getattr(func, "name", "")
     for prefix in ("visit_", "leave_"):
         if name.startswith(prefix) and len(name) > len(prefix):
-            kind = name[len(prefix):]
+            kind = name[len(prefix) :]
             if kind[:1].isupper():
                 return kind
     return ""
@@ -1270,8 +1866,9 @@ def infer_param_type(
     ev_type = evidence_to_type(ev, ctx)
     none_default = isinstance(default, ast.Constant) and default.value is None
     container_default = (
-        default_type if default_type in ("list[Any]", "dict[str, Any]", "set[Any]",
-                                         "tuple[Any, ...]", "frozenset[Any]", "dict[Any, Any]")
+        default_type
+        if default_type
+        in ("list[Any]", "dict[str, Any]", "set[Any]", "tuple[Any, ...]", "frozenset[Any]", "dict[Any, Any]")
         else ""
     )
     if default_type.startswith("dict[") and default_type != "dict[str, Any]":
@@ -1545,8 +2142,13 @@ def infer_return_type(ctx: FileCtx, func: ast.FunctionDef | ast.AsyncFunctionDef
 # token level edits
 # --------------------------------------------------------------------------- #
 SKIP_TOKENS = {
-    tokenize.NL, tokenize.NEWLINE, tokenize.INDENT, tokenize.DEDENT,
-    tokenize.COMMENT, tokenize.ENCODING, tokenize.ENDMARKER,
+    tokenize.NL,
+    tokenize.NEWLINE,
+    tokenize.INDENT,
+    tokenize.DEDENT,
+    tokenize.COMMENT,
+    tokenize.ENCODING,
+    tokenize.ENDMARKER,
 }
 
 
@@ -1570,20 +2172,25 @@ def _char_at(ctx: FileCtx, line: int, col: int) -> str:
     return ""
 
 
-def collect_func_edits(ctx: FileCtx, tokens: list, func: ast.FunctionDef | ast.AsyncFunctionDef,
-                       edits: list[Edit], in_class: bool) -> None:
+def collect_func_edits(
+    ctx: FileCtx, tokens: list, func: ast.FunctionDef | ast.AsyncFunctionDef, edits: list[Edit], in_class: bool
+) -> None:
     """Emit one edit per missing parameter annotation and one for the return."""
     idx = next(
-        (i for i, t in enumerate(tokens)
-         if t.type == tokenize.NAME and t.string == "def"
-         and t.start[0] == func.lineno and t.start[1] >= func.col_offset),
+        (
+            i
+            for i, t in enumerate(tokens)
+            if t.type == tokenize.NAME
+            and t.string == "def"
+            and t.start[0] == func.lineno
+            and t.start[1] >= func.col_offset
+        ),
         -1,
     )
     if idx < 0:
         return
     open_i = next(
-        (i for i in range(idx + 1, len(tokens))
-         if tokens[i].type == tokenize.OP and tokens[i].string in ("(", ":")),
+        (i for i in range(idx + 1, len(tokens)) if tokens[i].type == tokenize.OP and tokens[i].string in ("(", ":")),
         -1,
     )
     if open_i < 0 or tokens[open_i].string != "(":
@@ -1628,7 +2235,7 @@ def collect_func_edits(ctx: FileCtx, tokens: list, func: ast.FunctionDef | ast.A
         ordered.append((a.kwarg, "kwarg"))
     defaults: dict[str, ast.AST] = {}
     pos_params = a.posonlyargs + a.args
-    for p, d in zip(pos_params[len(pos_params) - len(a.defaults):], a.defaults):
+    for p, d in zip(pos_params[len(pos_params) - len(a.defaults) :], a.defaults):
         defaults[p.arg] = d
     for p, d in zip(a.kwonlyargs, a.kw_defaults):
         if d is not None:
@@ -1660,9 +2267,9 @@ def collect_func_edits(ctx: FileCtx, tokens: list, func: ast.FunctionDef | ast.A
         name_tok = seg_tokens[j]
         if any(t.type == tokenize.NAME and t.string == "def" for t in seg_tokens):
             continue
-        after = seg_tokens[j + 1:]
+        after = seg_tokens[j + 1 :]
         par = next((i for i, t in enumerate(after) if t.type == tokenize.OP and t.string == "("), None)
-        if par is not None and not any(t.type == tokenize.OP and t.string in "=,)" for t in after[par + 1:]):
+        if par is not None and not any(t.type == tokenize.OP and t.string in "=,)" for t in after[par + 1 :]):
             continue  # `def f(arg)` is the wrapper/call form, not a parameter
         star = seg_tokens[0].string if j else ""
         lookup = star + name_tok.string if star else name_tok.string
@@ -1671,8 +2278,7 @@ def collect_func_edits(ctx: FileCtx, tokens: list, func: ast.FunctionDef | ast.A
         if any(t.type == tokenize.OP and t.string == ":" for t in after):
             continue  # already annotated
         typ = types_for_params[lookup]
-        edits.append(Edit(name_tok.end[0], name_tok.end[1], f": {typ}", "param",
-                          f"{func.name}({lookup}): {typ}"))
+        edits.append(Edit(name_tok.end[0], name_tok.end[1], f": {typ}", "param", f"{func.name}({lookup}): {typ}"))
         eq = next((t for t in after if t.type == tokenize.OP and t.string == "="), None)
         if eq is not None:
             if _char_at(ctx, eq.start[0], eq.start[1] - 1) != " ":
@@ -1683,8 +2289,9 @@ def collect_func_edits(ctx: FileCtx, tokens: list, func: ast.FunctionDef | ast.A
     if func.returns is None:
         rt = infer_return_type(ctx, func, in_class)
         if rt and not ctx.has_annotation(close_tok.end[0], close_tok.end[1]):
-            edits.append(Edit(close_tok.end[0], close_tok.end[1], f" -> {ctx.request(rt)}",
-                              "return", f"{func.name} -> {rt}"))
+            edits.append(
+                Edit(close_tok.end[0], close_tok.end[1], f" -> {ctx.request(rt)}", "return", f"{func.name} -> {rt}")
+            )
 
 
 def ctor_heavy(cls_node: ast.ClassDef | None) -> bool:
@@ -1709,11 +2316,25 @@ def ctor_heavy(cls_node: ast.ClassDef | None) -> bool:
 
 def _base_is_risky(base: ast.AST) -> bool:
     name = ast.unparse(base)
-    return any(r in name for r in (
-        "NamedTuple", "TypedDict", "Enum", "Protocol", "App", "Widget", "ModalScreen",
-        "Static", "Structure", "BaseTransformer", "urwid", "StreamResponse",
-        "ScrollableContainer", "str",
-    ))
+    return any(
+        r in name
+        for r in (
+            "NamedTuple",
+            "TypedDict",
+            "Enum",
+            "Protocol",
+            "App",
+            "Widget",
+            "ModalScreen",
+            "Static",
+            "Structure",
+            "BaseTransformer",
+            "urwid",
+            "StreamResponse",
+            "ScrollableContainer",
+            "str",
+        )
+    )
 
 
 def class_annotated_attrs(cls_node: ast.ClassDef | None) -> set[str]:
@@ -1818,11 +2439,15 @@ def add_imports(ctx: FileCtx, text: str) -> tuple[str, list[str]]:
     ):
         new_lines.append("import re\n")
         added.append("import re")
-    if ctx.need_path and not any(
-        (isinstance(n, ast.ImportFrom) and n.module == "pathlib" and any(a.name == "Path" for a in n.names))
-        or (isinstance(n, ast.Import) and any(a.name == "pathlib" for a in n.names))
-        for n in ast.walk(tree)
-    ) and "class Path" not in text:
+    if (
+        ctx.need_path
+        and not any(
+            (isinstance(n, ast.ImportFrom) and n.module == "pathlib" and any(a.name == "Path" for a in n.names))
+            or (isinstance(n, ast.Import) and any(a.name == "pathlib" for a in n.names))
+            for n in ast.walk(tree)
+        )
+        and "class Path" not in text
+    ):
         new_lines.append("from pathlib import Path\n")
         added.append("from pathlib import Path")
     if not new_lines:
@@ -1859,8 +2484,12 @@ def add_future_import(text: str) -> str:
     tree = ast.parse(text)
     lines = text.splitlines(keepends=True)
     insert_after = 0
-    if tree.body and isinstance(tree.body[0], ast.Expr) and isinstance(tree.body[0].value, ast.Constant) \
-            and isinstance(tree.body[0].value.value, str):
+    if (
+        tree.body
+        and isinstance(tree.body[0], ast.Expr)
+        and isinstance(tree.body[0].value, ast.Constant)
+        and isinstance(tree.body[0].value.value, str)
+    ):
         insert_after = tree.body[0].end_lineno
     for node in tree.body:
         if isinstance(node, ast.ImportFrom) and node.module == "__future__":
@@ -2041,11 +2670,7 @@ def collect_module_classes(ctx: FileCtx) -> dict[str, set[str]]:
 
 
 def collect_all_class_returns(ctx: FileCtx) -> dict[str, dict[str, str]]:
-    return {
-        node.name: local_method_returns(ctx, node)
-        for node in ast.walk(ctx.tree)
-        if isinstance(node, ast.ClassDef)
-    }
+    return {node.name: local_method_returns(ctx, node) for node in ast.walk(ctx.tree) if isinstance(node, ast.ClassDef)}
 
 
 def collect_method_returns(ctx: FileCtx) -> dict[str, str]:
@@ -2082,8 +2707,9 @@ def annotate_source(ctx: FileCtx) -> tuple[str, list[Edit], list[str]]:
     tokens = list(tokenize.generate_tokens(io.StringIO(ctx.text).readline))
     collect_module_edits(ctx, edits)
 
-    def handle_func(node: ast.FunctionDef | ast.AsyncFunctionDef, in_class: bool,
-                    cls_node: ast.ClassDef | None) -> None:
+    def handle_func(
+        node: ast.FunctionDef | ast.AsyncFunctionDef, in_class: bool, cls_node: ast.ClassDef | None
+    ) -> None:
         ctx.func = node
         ctx.param_types = {
             a.arg: ast.unparse(a.annotation)
@@ -2094,7 +2720,11 @@ def annotate_source(ctx: FileCtx) -> tuple[str, list[Edit], list[str]]:
         ctx.class_attr_types = {}
         if cls_node is not None:
             for stmt in cls_node.body:
-                if isinstance(stmt, ast.AnnAssign) and isinstance(stmt.target, ast.Name) and stmt.annotation is not None:
+                if (
+                    isinstance(stmt, ast.AnnAssign)
+                    and isinstance(stmt.target, ast.Name)
+                    and stmt.annotation is not None
+                ):
                     ctx.class_attr_types[stmt.target.id] = ast.unparse(stmt.annotation)
         ctx.local_types = collect_local_types(ctx, node)
         collect_func_edits(ctx, tokens, node, edits, in_class)
@@ -2140,7 +2770,7 @@ def annotate_source(ctx: FileCtx) -> tuple[str, list[Edit], list[str]]:
     for e in final:
         if 1 <= e.line <= len(lines):
             line = lines[e.line - 1]
-            lines[e.line - 1] = line[: e.col] + e.text + line[e.col:]
+            lines[e.line - 1] = line[: e.col] + e.text + line[e.col :]
     text = "".join(lines)
     imports_added: list[str] = []
     if ctx.needed or ctx.need_path or ctx.need_re:

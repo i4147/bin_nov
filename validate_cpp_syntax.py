@@ -18,7 +18,7 @@ HEADER_C_EXTS: set[str] = {".h"}
 ALL_EXTS = CPP_EXTS | C_EXTS | HEADER_CPP_EXTS | HEADER_C_EXTS
 
 
-def run(cmd: str, input_bytes = None):
+def run(cmd: str, input_bytes=None):
     try:
         proc = subprocess.run(
             cmd,

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Universal command wrapper with logging, colors, and clipboard support."""
 
-
 import argparse
 import datetime as dt
 import glob

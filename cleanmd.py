@@ -73,7 +73,12 @@ RE_RST_SUBST_REPLACE = re.compile(
     r"^\s*\.\.\s+\|[^|]+\|\s+replace::\s+(\S+\.(?:png|jpg|jpeg|gif|svg|ico|webp|bmp))",
     re.IGNORECASE,
 )
-_RST_PATTERNS: tuple[re.Pattern[str], re.Pattern[str], re.Pattern[str], re.Pattern[str]] = (RE_RST_IMAGE, RE_RST_FIGURE, RE_RST_SUBST_IMAGE, RE_RST_SUBST_REPLACE)
+_RST_PATTERNS: tuple[re.Pattern[str], re.Pattern[str], re.Pattern[str], re.Pattern[str]] = (
+    RE_RST_IMAGE,
+    RE_RST_FIGURE,
+    RE_RST_SUBST_IMAGE,
+    RE_RST_SUBST_REPLACE,
+)
 _RE_BLANKLINES = re.compile(r"\n{3,}")
 
 

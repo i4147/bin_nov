@@ -11,6 +11,7 @@ audit tools to make sure nothing was broken.
 
 The tool is idempotent: running it twice changes nothing the second time.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -40,14 +41,16 @@ def main(argv: list[str] | None = None) -> int:
     results: list[dict] = []
     started = time.time()
     for start in range(0, len(files), args.batch):
-        batch = files[start:start + args.batch]
+        batch = files[start : start + args.batch]
         for path in batch:
             results.append(ia.process_file(path, args.write))
         done = start + len(batch)
         changed = sum(1 for r in results if r["status"] == "changed")
         edits = sum(len(r["edits"]) for r in results)
-        print(f"  [{done:>4}/{len(files)}] changed={changed:<4} edits={edits:<5} "
-              f"({time.time() - started:.1f}s)", flush=True)
+        print(
+            f"  [{done:>4}/{len(files)}] changed={changed:<4} edits={edits:<5} ({time.time() - started:.1f}s)",
+            flush=True,
+        )
 
     bad = [r for r in results if r["status"] in ("rejected", "compile-error", "infer-error", "parse-error")]
     for r in bad:

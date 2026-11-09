@@ -17,7 +17,7 @@ from dh import get_files
 import ssdeep
 
 
-def X(h: str, M = 1):
+def X(h: str, M=1):
     try:
         if h.stat().st_size < M:
             return None
@@ -37,7 +37,7 @@ def X(h: str, M = 1):
         return None
 
 
-def Z(ag: Iterable[Any], ai = 70):
+def Z(ag: Iterable[Any], ai=70):
     t = {}
     for h in ag:
         I = X(h)
@@ -68,7 +68,7 @@ def Z(ag: Iterable[Any], ai = 70):
     return D
 
 
-def ah(s: TextIO, J = "simz.json") -> None:
+def ah(s: TextIO, J="simz.json") -> None:
     try:
         with Path(J).open("w", encoding="utf-8") as d:
             json.dump(s, d, indent=2, ensure_ascii=False)
@@ -87,7 +87,7 @@ def V(k: Any, l: Any) -> bool:
     return U(k) == l or U(l) == k
 
 
-def group_similar(ae = "simz.json"):
+def group_similar(ae="simz.json"):
     cwd = Path.cwd()
     y = cwd / ae
     if not y.exists():

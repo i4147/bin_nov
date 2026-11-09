@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Strip comments and docstrings from Python files (LibCST, AST and tree-sitter engines)."""
 
-
 import argparse
 import ast as ast_module
 import multiprocessing as mp

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Rename font files based on their internal metadata."""
 
-
 import argparse
 from pathlib import Path
 

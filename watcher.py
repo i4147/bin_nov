@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Unified recursive file/folder watcher."""
 
-
 import argparse
 import contextlib
 from pathlib import Path

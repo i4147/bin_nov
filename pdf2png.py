@@ -10,7 +10,7 @@ import subprocess
 import sys
 
 
-def pdf_to_png(pdf_path: Path, output_dir = None, dpi = 200) -> None:
+def pdf_to_png(pdf_path: Path, output_dir=None, dpi=200) -> None:
     if not Path(pdf_path).is_file():
         print(f"Error: file not found: {pdf_path}", file=sys.stderr)
         sys.exit(1)

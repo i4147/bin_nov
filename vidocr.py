@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract burned-in subtitles from a video using OCR."""
 
-
 import argparse
 from functools import partial
 import multiprocessing as mp

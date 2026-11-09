@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Compare two files and show their differences in a textual TUI."""
 
-
 import argparse
 import difflib
 from pathlib import Path

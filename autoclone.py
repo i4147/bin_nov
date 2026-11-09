@@ -68,7 +68,7 @@ def save_size_cache(cache_data: dict[str, Any]) -> None:
         print(f"⚠️  Error saving cache: {e}")
 
 
-def get_repo_size(repo: Path, token = None, cache_data = None):
+def get_repo_size(repo: Path, token=None, cache_data=None):
     if cache_data and repo in cache_data:
         cached_size = cache_data[repo].get("size_mb")
         cached_date = cache_data[repo].get("fetched_at", "")

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Unified text summarizer (NLTK / NLTK-simple / Sumy backends)."""
 
-
 import argparse
 from collections import Counter
 from pathlib import Path

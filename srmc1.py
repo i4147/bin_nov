@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Strip selected Python comments, docstrings, and annotations in place."""
 
-
 import argparse
 import ast
 from dataclasses import asdict, dataclass

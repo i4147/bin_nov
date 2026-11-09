@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Clean and filter wordlist files."""
 
-
 import argparse
 from collections import defaultdict
 import contextlib

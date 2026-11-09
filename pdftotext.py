@@ -14,10 +14,10 @@ import re
 class Extractor(object):
     def __init__(
         self,
-        backend = "fitz",
-        password = "",
-        encoding = "utf-8",
-        normalize_spaces = True,
+        backend="fitz",
+        password="",
+        encoding="utf-8",
+        normalize_spaces=True,
     ) -> None:
         self.backend = backend.lower()
         self.password = password

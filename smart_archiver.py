@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Archive files by automatically choosing the best compression algorithm."""
 
-
 import argparse
 import bz2
 from concurrent.futures import ProcessPoolExecutor, as_completed

@@ -156,7 +156,7 @@ class NameVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def analyze_imports(source: str, path = ""):
+def analyze_imports(source: str, path=""):
     try:
         tree = ast.parse(source)
     except SyntaxError as e:
@@ -407,7 +407,7 @@ def _reconstruct_import_line(node: ast.AST, unused_names: Any, original_line: An
     return original_line
 
 
-def autofix_file(path: Path, unused: Any, dry_run = False):
+def autofix_file(path: Path, unused: Any, dry_run=False):
     try:
         with open(path, "r", encoding="utf-8", errors="replace") as f:
             source = f.read()
@@ -428,10 +428,10 @@ def autofix_file(path: Path, unused: Any, dry_run = False):
 
 def print_report(
     reports: Iterable[Any],
-    use_color = True,
-    verbose = False,
-    dry_run = False,
-    autofix = False,
+    use_color=True,
+    verbose=False,
+    dry_run=False,
+    autofix=False,
 ) -> None:
     if not use_color:
         Colors.disable()

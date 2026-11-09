@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Translate non-English string literals in Python scripts in place."""
 
-
 import argparse
 import ast
 from functools import lru_cache

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Translate a word-list file into a JSON mapping on Termux."""
 
-
 import argparse
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor, as_completed

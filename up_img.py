@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Upload image from clipboard and return Markdown link."""
 
-
 import argparse
 from collections import namedtuple
 from datetime import datetime
@@ -27,7 +26,7 @@ CONFIG_DEFAULTS: list[str] = ["", "", "", "/", "https://test.upimg.com"]
 ConfigTuple = namedtuple("ConfigTuple", CONFIG_FIELDS)
 
 
-def send_notify(title = "UpImg", message = "") -> bool:
+def send_notify(title="UpImg", message="") -> bool:
     try:
         if SYSTEM == "Darwin":
             cmd = f'display notification "{message}" with title "{title}"'

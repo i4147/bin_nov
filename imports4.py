@@ -73,7 +73,7 @@ def write_cache(module: str, value: Any) -> None:
         p.write_text(json.dumps({"ts": time.time(), "value": value}))
 
 
-def load_pypi_index(path = PYPI_INDEX_PATH):
+def load_pypi_index(path=PYPI_INDEX_PATH):
     try:
         data = json.loads(Path(path).read_text())
     except Exception as e:
@@ -83,7 +83,7 @@ def load_pypi_index(path = PYPI_INDEX_PATH):
     return {normalize(k) for k in keys}
 
 
-def get_installed_packages(python = None):
+def get_installed_packages(python=None):
     python = python or sys.executable
     cmd = [python, "-m", "pip", "freeze"]
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -101,7 +101,7 @@ def get_installed_packages(python = None):
     return result
 
 
-def get_imports_info(module: str, pypi_server = "https://pypi.python.org/pypi/", proxy = None) -> str | None:
+def get_imports_info(module: str, pypi_server="https://pypi.python.org/pypi/", proxy=None) -> str | None:
     try:
         response = requests.get("{0}{1}/json".format(pypi_server, module), proxies=proxy, timeout=15)
         if response.status_code == 200:
@@ -119,7 +119,7 @@ def get_imports_info(module: str, pypi_server = "https://pypi.python.org/pypi/",
     return str(module) + "==" + str(data.latest_release_id)
 
 
-def get_imports_info_cached(module: str, proxy = None):
+def get_imports_info_cached(module: str, proxy=None):
     cached = read_cache(module)
     if cached is not _MISSING:
         return cached
@@ -128,7 +128,7 @@ def get_imports_info_cached(module: str, proxy = None):
     return result
 
 
-def extract_imports_from_source(source: str, include_optional = False):
+def extract_imports_from_source(source: str, include_optional=False):
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -163,7 +163,7 @@ def extract_imports_from_source(source: str, include_optional = False):
     return found
 
 
-def extract_imports_from_notebook(path: Path, include_optional = False):
+def extract_imports_from_notebook(path: Path, include_optional=False):
     try:
         nb = json.loads(Path(path).read_text(encoding="utf-8", errors="ignore"))
     except Exception:
@@ -179,7 +179,7 @@ def extract_imports_from_notebook(path: Path, include_optional = False):
     return found
 
 
-def get_project_imports(directory: Path, ignore_dirs: Iterable[Any], include_optional = False):
+def get_project_imports(directory: Path, ignore_dirs: Iterable[Any], include_optional=False):
     results = []
     ignore = set(ignore_dirs)
     for path, subdirs, files in os.walk(directory):

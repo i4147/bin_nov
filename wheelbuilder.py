@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Build Python wheels from package sources."""
 
-
 import argparse
 from multiprocessing import Pool, cpu_count
 from pathlib import Path

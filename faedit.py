@@ -21,7 +21,7 @@ except ImportError:
 CTX: int = 2
 
 
-def around(s: Sequence[Any], pos: Any, n = CTX):
+def around(s: Sequence[Any], pos: Any, n=CTX):
     a = s.rfind("\n", 0, pos) + 1
     for _ in range(n):
         if a == 0:

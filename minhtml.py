@@ -1,5 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Recursively minify HTML files in place with minhtml."""
+
 import argparse
 from collections import defaultdict
 from collections.abc import Sequence

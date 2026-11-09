@@ -81,7 +81,7 @@ def decode_bytes_to_text(b: int) -> str:
     return b.decode("utf-8", errors="ignore")
 
 
-def scan_bytes_for_urls(b: bytes, max_bytes: bytes, exts: list[Any], name_hint = None):
+def scan_bytes_for_urls(b: bytes, max_bytes: bytes, exts: list[Any], name_hint=None):
     if exts is not None and name_hint:
         _, ext = (str(Path(name_hint).with_suffix("")), Path(name_hint).suffix)
         if ext and ext.lower() not in exts:
@@ -121,7 +121,9 @@ def open_tar_from_zst_path(path: Path):
         return (None, None)
 
 
-def process_zipfile_zipped(zipf: ZipFile, max_bytes: bytes, exts: list[Any], found: list[Any], recursion_depth: int, max_recursion: Any) -> None:
+def process_zipfile_zipped(
+    zipf: ZipFile, max_bytes: bytes, exts: list[Any], found: list[Any], recursion_depth: int, max_recursion: Any
+) -> None:
     for zi in zipf.infolist():
         if zi.is_dir():
             continue
@@ -139,7 +141,9 @@ def process_zipfile_zipped(zipf: ZipFile, max_bytes: bytes, exts: list[Any], fou
             found.update(scan_bytes_for_urls(b, max_bytes, exts, name_hint=name))
 
 
-def process_tarfile_obj(tarf: TarFile, max_bytes: bytes, exts: list[Any], found: list[Any], recursion_depth: int, max_recursion: Any) -> None:
+def process_tarfile_obj(
+    tarf: TarFile, max_bytes: bytes, exts: list[Any], found: list[Any], recursion_depth: int, max_recursion: Any
+) -> None:
     for member in tarf.getmembers():
         if not member.isfile():
             continue
@@ -159,7 +163,15 @@ def process_tarfile_obj(tarf: TarFile, max_bytes: bytes, exts: list[Any], found:
             found.update(scan_bytes_for_urls(b, max_bytes, exts, name_hint=name))
 
 
-def process_bytes_as_archive(b: int, name: str, max_bytes: bytes, exts: list[Any], found: list[Any], recursion_depth: int = 0, max_recursion: int = 3) -> None:
+def process_bytes_as_archive(
+    b: int,
+    name: str,
+    max_bytes: bytes,
+    exts: list[Any],
+    found: list[Any],
+    recursion_depth: int = 0,
+    max_recursion: int = 3,
+) -> None:
     lname = name.lower()
     bio = io.BytesIO(b)
     try:
@@ -226,7 +238,7 @@ def process_bytes_as_archive(b: int, name: str, max_bytes: bytes, exts: list[Any
         found.update(scan_bytes_for_urls(b, max_bytes, exts, name_hint=name))
 
 
-def process_path(path: str, max_bytes: int, exts: list[Any], found: list[Any], recursion_limit = 999) -> None:
+def process_path(path: str, max_bytes: int, exts: list[Any], found: list[Any], recursion_limit=999) -> None:
     p = Path(path)
     try:
         size = p.stat().st_size

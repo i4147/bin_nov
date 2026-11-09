@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Remove inline (trailing) comments from Python files in place with LibCST."""
 
-
 import argparse
 import ast
 import contextlib

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Recursively extract embedded base64 data-URIs from files."""
 
-
 import argparse
 import base64
 import binascii

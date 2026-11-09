@@ -104,7 +104,7 @@ def backup_file(path: Path) -> Path:
     return backup_path
 
 
-def run_cmd(cmd: str, input_text = None, check = False) -> subprocess.CompletedProcess[str]:
+def run_cmd(cmd: str, input_text=None, check=False) -> subprocess.CompletedProcess[str]:
     logger.debug(f"Running command: {' '.join(cmd)}")
     result = subprocess.run(
         cmd,
@@ -144,7 +144,9 @@ def find_local_git_configs(home_dir: Path):
     return configs
 
 
-def update_local_git_configs(home_dir: Path, old_username: str, old_email: str, new_username: str, new_email: str, apply_changes: Any) -> None:
+def update_local_git_configs(
+    home_dir: Path, old_username: str, old_email: str, new_username: str, new_email: str, apply_changes: Any
+) -> None:
     logger.info(color("\n=== Step 1b: Local repo .git/config files ===", C.BOLD))
     configs = find_local_git_configs(home_dir)
     logger.info(f"Found {len(configs)} local repo git config file(s).")
@@ -186,7 +188,9 @@ def scan_files(home_dir: Path):
     return matches
 
 
-def preview_and_replace(home_dir: Path, old_username: str, old_email: str, new_username: str, new_email: str, apply_changes: Any) -> None:
+def preview_and_replace(
+    home_dir: Path, old_username: str, old_email: str, new_username: str, new_email: str, apply_changes: Any
+) -> None:
     logger.info(color("\n=== Step 2: Scanning files under home folder ===", C.BOLD))
     logger.info(f"Home directory: {home_dir}")
     candidates = scan_files(home_dir)

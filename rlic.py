@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Find and remove repeated multiline blocks in text files."""
 
-
 import argparse
 import ast
 from collections import defaultdict

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Unified zstandard compression and decompression toolkit."""
 
-
 import argparse
 import contextlib
 from dataclasses import dataclass
@@ -134,7 +133,7 @@ def _safe_extractall(tar: tarfile.TarFile, path: Path) -> None:
     try:
         tar.extractall(path, filter="data")
     except TypeError:
-        tar.extractall(path,filter='data')
+        tar.extractall(path, filter="data")
 
 
 @dataclass(slots=True)

@@ -201,7 +201,7 @@ class Tool:
         try:
             dest.mkdir(parents=True, exist_ok=True)
             with tarfile.open(tar_path, "r") as tf:
-                tf.extractall(dest,filter='data')
+                tf.extractall(dest, filter="data")
             return True
         except (OSError, tarfile.TarError) as exc:
             logger.error(f"  Failed to extract tar archive: {exc}")

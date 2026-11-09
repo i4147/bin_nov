@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Strip comments and docstrings from Python source trees."""
 
-
 import argparse
 import ast
 from dataclasses import dataclass

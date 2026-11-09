@@ -48,12 +48,16 @@ class TypeAnnotationRemover(cst.CSTTransformer):
             semicolon=updated_node.semicolon,
         )
 
-    def leave_SimpleStatementLine(self, original_node: cst.SimpleStatementLine, updated_node: cst.SimpleStatementLine) -> cst.CSTNode:
+    def leave_SimpleStatementLine(
+        self, original_node: cst.SimpleStatementLine, updated_node: cst.SimpleStatementLine
+    ) -> cst.CSTNode:
         if not updated_node.body:
             return cst.RemoveFromParent()
         return updated_node
 
-    def leave_SimpleStatementSuite(self, original_node: cst.SimpleStatementSuite, updated_node: cst.SimpleStatementSuite) -> cst.CSTNode:
+    def leave_SimpleStatementSuite(
+        self, original_node: cst.SimpleStatementSuite, updated_node: cst.SimpleStatementSuite
+    ) -> cst.CSTNode:
         if not updated_node.body:
             return updated_node.with_changes(body=[cst.Pass()])
         return updated_node

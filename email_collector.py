@@ -49,7 +49,7 @@ class CrawlerDb:
         )
         self.metadata.create_all(self.engine)
 
-    def enqueue(self, url: str, emails = None) -> bool:
+    def enqueue(self, url: str, emails=None) -> bool:
         if not self.connected:
             return False
         s = select([self.website_table]).where(self.website_table.c.url == url)
@@ -76,7 +76,7 @@ class CrawlerDb:
             return result[0]
         return False
 
-    def crawled(self, website: Any, new_emails = None) -> bool | None:
+    def crawled(self, website: Any, new_emails=None) -> bool | None:
         if not self.connected:
             return False
         stmt = (

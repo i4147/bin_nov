@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract on-screen text from a video using Tesseract OCR."""
 
-
 import argparse
 import os
 from pathlib import Path

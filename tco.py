@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Translate a text file between languages."""
 
-
 import argparse
 import json
 from pathlib import Path

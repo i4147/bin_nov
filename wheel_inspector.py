@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Inspect and validate .whl files."""
 
-
 from pathlib import Path
 import zipfile
 

@@ -250,7 +250,7 @@ def analyze_archive(path: Path):
     }
 
 
-def _copy_file_buffered(src_path: Path, dst_path: Path, buffer_size = 65536) -> None:
+def _copy_file_buffered(src_path: Path, dst_path: Path, buffer_size=65536) -> None:
     with open(src_path, "rb") as src, open(dst_path, "wb") as dst:
         while True:
             chunk = src.read(buffer_size)
@@ -291,7 +291,7 @@ def extract_archive(path: Path, out_dir: Path):
         return False, str(e)
 
 
-def scan_directory(target_dir: Path, auto_extract = False, test_integrity = False, verbose = False):
+def scan_directory(target_dir: Path, auto_extract=False, test_integrity=False, verbose=False):
     target = Path(target_dir).resolve()
     print(f"\033[38;5;39mScanning directory recursively:\033[0m {target}")
     if test_integrity:

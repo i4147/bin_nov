@@ -22,7 +22,7 @@ def diff_bytecode_of_files(filename_a: Any, filename_b: Any):
     return diff_bytecode(source_a, source_b, filename_a, filename_b)
 
 
-def diff_bytecode(source_a: Any, source_b: Any, filename_a = "", filename_b = "") -> str:
+def diff_bytecode(source_a: Any, source_b: Any, filename_a="", filename_b="") -> str:
     if dump_ast(source_a, filename_a) == dump_ast(source_b, filename_b):
         return ""
     bytecode_a = disassemble(source_a, filename_a)
@@ -37,11 +37,11 @@ def diff_bytecode(source_a: Any, source_b: Any, filename_a = "", filename_b = ""
     )
 
 
-def disassemble(source: str, filename = None):
+def disassemble(source: str, filename=None):
     return tree(compile(source, filename or "<string>", "exec", dont_inherit=True))
 
 
-def dump_ast(source: str, filename = None) -> None:
+def dump_ast(source: str, filename=None) -> None:
     return ast.dump(ast.parse(source, filename or "<string>", "exec"))
 
 
@@ -69,7 +69,7 @@ def tree(code: Any) -> dict[str, list[Any]]:
     return dictionary
 
 
-def open_with_encoding(filename: str, encoding = None, mode = "r") -> TextIO:
+def open_with_encoding(filename: str, encoding=None, mode="r") -> TextIO:
     if not encoding:
         encoding = detect_encoding(filename)
     import io

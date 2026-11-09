@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Remove Python type annotations from files in place."""
 
-
 import argparse
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass

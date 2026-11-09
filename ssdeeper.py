@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Find similar files using ssdeep."""
 
-
 import argparse
 import json
 import operator
@@ -75,7 +74,7 @@ def group_files(results: list[Any], base: Any) -> None:
                 continue
 
 
-def main(argv = None) -> int:
+def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Find similar files using ssdeep.")
     parser.add_argument("path", nargs="?", default=".", help="directory to scan")
     parser.add_argument("-t", "--threshold", type=int, default=70)

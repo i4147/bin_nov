@@ -52,7 +52,7 @@ class UniversalTranslator:
     def is_configured(self) -> bool:
         return self.openai_client is not None or self.gemini_client is not None
 
-    def translate_text(self, text: str, target_lang = "English"):
+    def translate_text(self, text: str, target_lang="English"):
         if not text.strip():
             return text
         prompt = (

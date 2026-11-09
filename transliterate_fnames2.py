@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Recursively transliterate Persian filenames/directories."""
 
-
 import argparse
 import pathlib
 import re

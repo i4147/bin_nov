@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Download a package from PyPI."""
 
-
 import argparse
 from dataclasses import dataclass
 import hashlib
@@ -162,7 +161,7 @@ def download(client: httpx.Client, link: Link, dest_dir: Path) -> Path:
     return dest
 
 
-def main(argv = None) -> int:
+def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Download a package from PyPI.")
     ap.add_argument("requirement", help="e.g. requests or 'requests==2.31.0'")
     ap.add_argument(

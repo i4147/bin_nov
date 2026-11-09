@@ -28,7 +28,7 @@ import time
 from typing import TYPE_CHECKING
 import warnings
 
-from dh import DOC_TH1, DOC_TH2, SKIP_DIRS
+from dh import SKIP_DIRS
 from loguru import logger
 
 
@@ -221,12 +221,12 @@ def clean_response(raw: str) -> tuple[str, str]:
 
 
 def to_docstring(text: str) -> str:
-    quote = DOC_TH1[:1]
+    quote = '""'[:1]
     escaped = text.replace("\\", "\\\\")
-    escaped = escaped.replace(DOC_TH1, DOC_TH1.replace(quote, "\\" + quote))
+    escaped = escaped.replace('"""', '"""'.replace(quote, "\\" + quote))
     if quote and escaped.endswith(quote):
         escaped = escaped[:-1] + "\\" + quote
-    return DOC_TH1 + escaped + DOC_TH1 + "\n\n"
+    return '"""' + escaped + '"""' + "\n\n"
 
 
 def split_header(source: str) -> tuple[str, str]:
@@ -242,12 +242,12 @@ def split_header(source: str) -> tuple[str, str]:
 
 
 def has_docstring_prefix(body: str) -> bool:
-    return body.lstrip().startswith((DOC_TH1, DOC_TH2))
+    return body.lstrip().startswith(('"""', "'''"))  # editor: """ '''
 
 
 def remove_docstring_prefix(body: str) -> str:
     stripped = body.lstrip()
-    delimiter = DOC_TH1 if stripped.startswith(DOC_TH1) else DOC_TH2 if stripped.startswith(DOC_TH2) else ""
+    delimiter = '"""' if stripped.startswith('"""') else "'''" if stripped.startswith("'''") else ""
     if not delimiter:
         return body
     end = stripped.find(delimiter, len(delimiter))

@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """View a PDF file in the terminal."""
 
-
 import argparse
 import contextlib
 import os

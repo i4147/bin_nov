@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Build every Python project under the current directory."""
 
-
 import argparse
 import contextlib
 from dataclasses import dataclass

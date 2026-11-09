@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract shell function definitions from scripts into individual files."""
 
-
 import argparse
 from collections.abc import Iterable, Iterator
 import contextlib

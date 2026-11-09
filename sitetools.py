@@ -53,7 +53,7 @@ def unique_path(path: Path) -> Path:
         counter += 1
 
 
-def get_files(path: Path, ext = None) -> Iterator[Path]:
+def get_files(path: Path, ext=None) -> Iterator[Path]:
     if path.is_file():
         yield path
         return

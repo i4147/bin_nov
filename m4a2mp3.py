@@ -10,7 +10,7 @@ import sys
 from dh import runcmd
 
 
-def convert_m4a_to_mp3(input_file: Path, bitrate = "64k") -> None:
+def convert_m4a_to_mp3(input_file: Path, bitrate="64k") -> None:
     if not Path(input_file).exists():
         print(f"Error: Input file '{input_file}' not found.")
         sys.exit(1)
