@@ -13,7 +13,8 @@ import sys
 import time
 from typing import Any, Iterable, Iterator, Sequence
 
-from dh import MAX_WORKERS, atomic_write
+from dh import MAX_WORKERS
+from atomicio import atomic_write
 from loguru import logger
 
 

@@ -4,7 +4,7 @@ Extends :doc:`pnr` with ``--regex``, case-insensitive matching, include/exclude 
 Usage: pnr2 [paths ...] [-r STR | -s OLD NEW | -t TEMPLATE] [-E] [--dry-run] Positional arguments: paths ...
 Target paths Options: -r, --remove Remove string -s, --replace Replace STR1 with STR2 -t, --template Rename using template -E, --regex Treat patterns as regex -i, --ignore-case Case-insensitive matching --include Include glob pattern --exclude Exclude glob pattern --exclude-dir Exclude directory pattern --ext File extension filters --files-only Process files only ...
 plus 40 more; run ``pnr2 --help`` for the full list.
-Examples: $ pnr2 ~/photos -E -s '^IMG_(\d+)' 'pic_\1' Command-line script: run ``python pnr2.py`` or the ``pnr2`` command.
+Examples: $ pnr2 ~/photos -E -s '^IMG_(\\d+)' 'pic_\1' Command-line script: run ``python pnr2.py`` or the ``pnr2`` command.
 The module is importable as well."""
 
 import argparse
