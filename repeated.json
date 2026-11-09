@@ -1,0 +1,494 @@
+[
+  {
+    "type": "FunctionDef",
+    "name": "main",
+    "source": "def main(argv: Optional[Sequence[str]] = None) -> int:\n    parser = build_parser()\n    args = parser.parse_args(argv)\n    return args.func(args)",
+    "count": 15,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pysearch.py",
+      "/data/data/com.termux/files/home/bin/gitools.py",
+      "/data/data/com.termux/files/home/bin/file_cleanup.py",
+      "/data/data/com.termux/files/home/bin/dirtools.py",
+      "/data/data/com.termux/files/home/bin/junktools.py",
+      "/data/data/com.termux/files/home/bin/rlic.py",
+      "/data/data/com.termux/files/home/bin/klv.py",
+      "/data/data/com.termux/files/home/bin/snapr.py",
+      "/data/data/com.termux/files/home/bin/img_similarity.py",
+      "/data/data/com.termux/files/home/bin/jsontools.py",
+      "/data/data/com.termux/files/home/bin/archive_tools.py",
+      "/data/data/com.termux/files/home/bin/duptools.py",
+      "/data/data/com.termux/files/home/bin/zhtrans.py",
+      "/data/data/com.termux/files/home/bin/doctools.py",
+      "/data/data/com.termux/files/home/bin/nettools.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "log",
+    "source": "log = logger",
+    "count": 11,
+    "files": [
+      "/data/data/com.termux/files/home/bin/repacktools.py",
+      "/data/data/com.termux/files/home/bin/renametools.py",
+      "/data/data/com.termux/files/home/bin/py3migrate.py",
+      "/data/data/com.termux/files/home/bin/cleanmd.py",
+      "/data/data/com.termux/files/home/bin/fa_translator.py",
+      "/data/data/com.termux/files/home/bin/pyextract.py",
+      "/data/data/com.termux/files/home/bin/xcompress.py",
+      "/data/data/com.termux/files/home/bin/xtranslate.py",
+      "/data/data/com.termux/files/home/bin/dbtools.py",
+      "/data/data/com.termux/files/home/bin/dhtools.py",
+      "/data/data/com.termux/files/home/bin/imports4.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "RESET",
+    "source": "RESET = \"\\x1b[0m\"",
+    "count": 11,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pysearch.py",
+      "/data/data/com.termux/files/home/bin/rmc2.py",
+      "/data/data/com.termux/files/home/bin/colortools.py",
+      "/data/data/com.termux/files/home/bin/pyfslint.py",
+      "/data/data/com.termux/files/home/bin/pyclean.py",
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py",
+      "/data/data/com.termux/files/home/bin/tpv.py",
+      "/data/data/com.termux/files/home/bin/pybat.py",
+      "/data/data/com.termux/files/home/bin/pdfv.py",
+      "/data/data/com.termux/files/home/bin/pbat.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "LOG",
+    "source": "LOG = logger",
+    "count": 8,
+    "files": [
+      "/data/data/com.termux/files/home/bin/imagetools.py",
+      "/data/data/com.termux/files/home/bin/pyfmt.py",
+      "/data/data/com.termux/files/home/bin/htmlstrip.py",
+      "/data/data/com.termux/files/home/bin/ncdu.py",
+      "/data/data/com.termux/files/home/bin/fontpreview.py",
+      "/data/data/com.termux/files/home/bin/pyclean.py",
+      "/data/data/com.termux/files/home/bin/gitutils.py",
+      "/data/data/com.termux/files/home/bin/filefixer.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "RESET",
+    "source": "RESET = \"\\033[0m\"",
+    "count": 8,
+    "files": [
+      "/data/data/com.termux/files/home/bin/addel.py",
+      "/data/data/com.termux/files/home/bin/pyrgb.py",
+      "/data/data/com.termux/files/home/bin/noneng_langid.py",
+      "/data/data/com.termux/files/home/bin/drmc.py",
+      "/data/data/com.termux/files/home/bin/fixescape.py",
+      "/data/data/com.termux/files/home/bin/cleants.py",
+      "/data/data/com.termux/files/home/bin/imgoptim.py",
+      "/data/data/com.termux/files/home/bin/pip_sanity_check.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "main",
+    "source": "def main(argv: Sequence[str] | None = None) -> int:\n    args: argparse.Namespace = build_parser().parse_args(argv)\n    return int(args.handler(args))",
+    "count": 8,
+    "files": [
+      "/data/data/com.termux/files/home/bin/git_diff_tool.py",
+      "/data/data/com.termux/files/home/bin/html2markdown.py",
+      "/data/data/com.termux/files/home/bin/pkl_tool.py",
+      "/data/data/com.termux/files/home/bin/cout2.py",
+      "/data/data/com.termux/files/home/bin/qrcode_tool.py",
+      "/data/data/com.termux/files/home/bin/notebook_convert_tool.py",
+      "/data/data/com.termux/files/home/bin/file_mover_tool.py",
+      "/data/data/com.termux/files/home/bin/c_build_tool.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "cwd",
+    "source": "cwd = Path.cwd()",
+    "count": 8,
+    "files": [
+      "/data/data/com.termux/files/home/bin/otf2woff2.py",
+      "/data/data/com.termux/files/home/bin/woff2woff2.py",
+      "/data/data/com.termux/files/home/bin/woff22woff.py",
+      "/data/data/com.termux/files/home/bin/find_big_files.py",
+      "/data/data/com.termux/files/home/bin/fix_shebang_opt.py",
+      "/data/data/com.termux/files/home/bin/b642f.py",
+      "/data/data/com.termux/files/home/bin/top11.py",
+      "/data/data/com.termux/files/home/bin/ttf2woff2.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "info",
+    "source": "def info(msg: str) -> None:\n    print(f\"[INFO] {msg}\")",
+    "count": 6,
+    "files": [
+      "/data/data/com.termux/files/home/bin/gitools.py",
+      "/data/data/com.termux/files/home/bin/file_cleanup.py",
+      "/data/data/com.termux/files/home/bin/rlic.py",
+      "/data/data/com.termux/files/home/bin/img_similarity.py",
+      "/data/data/com.termux/files/home/bin/duptools.py",
+      "/data/data/com.termux/files/home/bin/doctools.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "CHUNK_SIZE",
+    "source": "CHUNK_SIZE = 1024 * 1024",
+    "count": 6,
+    "files": [
+      "/data/data/com.termux/files/home/bin/run_pylint.py",
+      "/data/data/com.termux/files/home/bin/pkgfetch.py",
+      "/data/data/com.termux/files/home/bin/compresstools.py",
+      "/data/data/com.termux/files/home/bin/find_dup_folders.py",
+      "/data/data/com.termux/files/home/bin/htmlformat.py",
+      "/data/data/com.termux/files/home/bin/compress_files_500k.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "main",
+    "source": "def main(argv: Optional[list[str]] = None) -> int:\n    parser = build_parser()\n    args = parser.parse_args(argv)\n    return args.func(args)",
+    "count": 6,
+    "files": [
+      "/data/data/com.termux/files/home/bin/subtools.py",
+      "/data/data/com.termux/files/home/bin/gdrive_sync.py",
+      "/data/data/com.termux/files/home/bin/pdftoolz.py",
+      "/data/data/com.termux/files/home/bin/pdftools2.py",
+      "/data/data/com.termux/files/home/bin/format_python_code.py",
+      "/data/data/com.termux/files/home/bin/dedup_func.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "warn",
+    "source": "def warn(msg: str) -> None:\n    print(f\"[WARN] {msg}\", file=sys.stderr)",
+    "count": 5,
+    "files": [
+      "/data/data/com.termux/files/home/bin/gitools.py",
+      "/data/data/com.termux/files/home/bin/file_cleanup.py",
+      "/data/data/com.termux/files/home/bin/rlic.py",
+      "/data/data/com.termux/files/home/bin/duptools.py",
+      "/data/data/com.termux/files/home/bin/doctools.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "LOGGER",
+    "source": "LOGGER = logger",
+    "count": 5,
+    "files": [
+      "/data/data/com.termux/files/home/bin/python_duplicate_finder.py",
+      "/data/data/com.termux/files/home/bin/pydup.py",
+      "/data/data/com.termux/files/home/bin/translate_code_comments.py",
+      "/data/data/com.termux/files/home/bin/rmc_termux.py",
+      "/data/data/com.termux/files/home/bin/getsub.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "main",
+    "source": "def main(argv: Sequence[str] | None = None) -> int:\n    parser = build_parser()\n    args = parser.parse_args(argv)\n    return args.func(args)",
+    "count": 5,
+    "files": [
+      "/data/data/com.termux/files/home/bin/deduptools.py",
+      "/data/data/com.termux/files/home/bin/module_usage.py",
+      "/data/data/com.termux/files/home/bin/gh_repo.py",
+      "/data/data/com.termux/files/home/bin/snippetforgr.py",
+      "/data/data/com.termux/files/home/bin/imgtools.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "GREEN",
+    "source": "GREEN = \"\\033[32m\"",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pip_sanity_check.py",
+      "/data/data/com.termux/files/home/bin/cleants.py",
+      "/data/data/com.termux/files/home/bin/imgoptim.py",
+      "/data/data/com.termux/files/home/bin/drmc.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "console",
+    "source": "console = Console()",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/rmc3.py",
+      "/data/data/com.termux/files/home/bin/strep.py",
+      "/data/data/com.termux/files/home/bin/detect_code_similarity.py",
+      "/data/data/com.termux/files/home/bin/dirsizes.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "err",
+    "source": "def err(msg: str) -> None:\n    print(f\"[ERROR] {msg}\", file=sys.stderr)",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/img_similarity.py",
+      "/data/data/com.termux/files/home/bin/file_cleanup.py",
+      "/data/data/com.termux/files/home/bin/duptools.py",
+      "/data/data/com.termux/files/home/bin/rlic.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "HOME",
+    "source": "HOME = \"\\x1b[H\"",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv.py",
+      "/data/data/com.termux/files/home/bin/tpv.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "CLEAR",
+    "source": "CLEAR = \"\\x1b[2J\"",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv.py",
+      "/data/data/com.termux/files/home/bin/tpv.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "HIDE_CURSOR",
+    "source": "HIDE_CURSOR = \"\\x1b[?25l\"",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv.py",
+      "/data/data/com.termux/files/home/bin/tpv.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "SHOW_CURSOR",
+    "source": "SHOW_CURSOR = \"\\x1b[?25h\"",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv.py",
+      "/data/data/com.termux/files/home/bin/tpv.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "ENTER_ALT",
+    "source": "ENTER_ALT = \"\\x1b[?1049h\"",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv.py",
+      "/data/data/com.termux/files/home/bin/tpv.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "LEAVE_ALT",
+    "source": "LEAVE_ALT = \"\\x1b[?1049l\"",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv.py",
+      "/data/data/com.termux/files/home/bin/tpv.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "REVERSE",
+    "source": "REVERSE = \"\\x1b[7m\"",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv.py",
+      "/data/data/com.termux/files/home/bin/tpv.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "main",
+    "source": "def main(argv: Sequence[str] | None = None) -> int:\n    \"\"\"Entry point.\"\"\"\n    args: argparse.Namespace = build_parser().parse_args(argv)\n    return int(args.handler(args))",
+    "count": 4,
+    "files": [
+      "/data/data/com.termux/files/home/bin/file_viewer_tool.py",
+      "/data/data/com.termux/files/home/bin/filename_translate_tool.py",
+      "/data/data/com.termux/files/home/bin/python_imports_tool.py",
+      "/data/data/com.termux/files/home/bin/watch_files.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "ROOT",
+    "source": "ROOT = Path.cwd()",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/tscleaner.py",
+      "/data/data/com.termux/files/home/bin/noneng_langid.py",
+      "/data/data/com.termux/files/home/bin/mksetuppy.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "Translator",
+    "source": "Translator = Callable[[str], str]",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/dt1.py",
+      "/data/data/com.termux/files/home/bin/ctrans.py",
+      "/data/data/com.termux/files/home/bin/tco3.py"
+    ]
+  },
+  {
+    "type": "ClassDef",
+    "name": "BackendError",
+    "source": "class BackendError(Exception):\n    pass",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/tco2.py",
+      "/data/data/com.termux/files/home/bin/ctrans.py",
+      "/data/data/com.termux/files/home/bin/atrans.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "unique_path",
+    "source": "def unique_path(p: Path) -> Path:\n    if not p.exists():\n        return p\n    stem, suffix = p.stem, p.suffix\n    i = 1\n    while True:\n        cand = p.parent / f\"{stem}_{i}{suffix}\"\n        if not cand.exists():\n            return cand\n        i += 1",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/dl.py",
+      "/data/data/com.termux/files/home/bin/dirtools.py",
+      "/data/data/com.termux/files/home/bin/doctools.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "MAX_QUEUE",
+    "source": "MAX_QUEUE = 16",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/rmshebang.py",
+      "/data/data/com.termux/files/home/bin/ensurebracket.py",
+      "/data/data/com.termux/files/home/bin/exjs.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "SUPPORTED_ARCHIVES",
+    "source": "SUPPORTED_ARCHIVES = (\n    \".zip\",\n    \".tar\",\n    \".tar.gz\",\n    \".tgz\",\n    \".tar.bz2\",\n    \".tbz2\",\n    \".tar.xz\",\n    \".txz\",\n    \".gz\",\n    \".bz2\",\n    \".xz\",\n    \".zst\",\n    \".br\",\n)",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/deduplicate_python.py",
+      "/data/data/com.termux/files/home/bin/deduper.py",
+      "/data/data/com.termux/files/home/bin/dduper.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "extract_objects",
+    "source": "def extract_objects(code: str):\n    if TREE_SITTER_AVAILABLE:\n        return extract_with_tree_sitter(code)\n    return extract_with_ast(code)",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/deduplicate_python.py",
+      "/data/data/com.termux/files/home/bin/deduper.py",
+      "/data/data/com.termux/files/home/bin/dduper.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "is_supported_archive",
+    "source": "def is_supported_archive(path: Path) -> bool:\n    s = str(path).lower()\n    return any(s.endswith(ext) for ext in SUPPORTED_ARCHIVES)",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/deduplicate_python.py",
+      "/data/data/com.termux/files/home/bin/deduper.py",
+      "/data/data/com.termux/files/home/bin/dduper.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "HOME",
+    "source": "HOME = Path.home()",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/fix_shebang_opt.py",
+      "/data/data/com.termux/files/home/bin/zshdiag.py",
+      "/data/data/com.termux/files/home/bin/migrate_git_user.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "main",
+    "source": "def main(argv: Optional[Sequence[str]] = None) -> int:\n    parser = build_parser()\n    args = parser.parse_args(argv)\n    try:\n        return args.func(args)\n    except KeyboardInterrupt:\n        LOG.warning(\"Operation cancelled by user\")\n        return 130\n    except Exception as e:\n        LOG.opt(exception=True).error(\n            \"Unexpected error: {}\",\n            e,\n        )\n        return 1",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pyclean.py",
+      "/data/data/com.termux/files/home/bin/fontpreview.py",
+      "/data/data/com.termux/files/home/bin/htmlstrip.py"
+    ]
+  },
+  {
+    "type": "ClassDef",
+    "name": "RenderError",
+    "source": "class RenderError(RuntimeError):\n    pass",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfv.py",
+      "/data/data/com.termux/files/home/bin/tpv.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "HALF_BLOCK",
+    "source": "HALF_BLOCK = \"\\u2580\"",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py",
+      "/data/data/com.termux/files/home/bin/tpv.py"
+    ]
+  },
+  {
+    "type": "FunctionDef",
+    "name": "read_key",
+    "source": "def read_key(fd: int, timeout: float | None = None) -> str | None:\n    ready, _, _ = select.select([fd], [], [], timeout)\n    if not ready:\n        return None\n    first = os.read(fd, 1)\n    if not first:\n        return \"q\"\n    if first != b\"\\x1b\":\n        return first.decode(\"utf-8\", \"replace\")\n    seq = bytearray(first)\n    while len(seq) < 8:\n        ready, _, _ = select.select([fd], [], [], 0.03)\n        if not ready:\n            break\n        seq += os.read(fd, 1)\n        if seq[-1:].isalpha() or seq[-1:] == b\"~\":\n            break\n    return seq.decode(\"latin-1\")",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pdfviewer.py",
+      "/data/data/com.termux/files/home/bin/pdfv2.py",
+      "/data/data/com.termux/files/home/bin/tpv.py"
+    ]
+  },
+  {
+    "type": "Constant",
+    "name": "__version__",
+    "source": "__version__ = \"2.0.0\"",
+    "count": 3,
+    "files": [
+      "/data/data/com.termux/files/home/bin/pyget.py",
+      "/data/data/com.termux/files/home/bin/ncdu.py",
+      "/data/data/com.termux/files/home/bin/python_downloader.py"
+    ]
+  }
+]
