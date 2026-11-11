@@ -55,7 +55,7 @@ CFF_TABLES = frozenset({"CFF ", "CFF2"})
 TRUETYPE_TABLE: str = "glyf"
 
 
-@dataclass
+@dataclass(slots=True)
 class ConversionResult:
     input: Path
     output_format: str

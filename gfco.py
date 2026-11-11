@@ -29,7 +29,7 @@ try:
     from concurrent.futures import InterpreterPoolExecutor
 except ImportError:
     InterpreterPoolExecutor = None
-SUPPORTED_EXTENSIONS: set[str] = {".ttf", ".otf", ".woff", ".woff2", ".eot"}
+SUPPORTED_EXT: set[str] = {".ttf", ".otf", ".woff", ".woff2", ".eot"}
 
 
 def convert_font(
@@ -94,7 +94,7 @@ def _worker_wrapper(args: tuple[Path, str, Optional[Path], bool]) -> None:
 
 def find_fonts_in_current_dir() -> list[Path]:
     current_dir = Path.cwd()
-    found_fonts = [f for f in current_dir.rglob("*") if f.is_file() and f.suffix.lower() in SUPPORTED_EXTENSIONS]
+    found_fonts = [f for f in current_dir.rglob("*") if f.is_file() and f.suffix.lower() in SUPPORTED_EXT]
     return found_fonts
 
 

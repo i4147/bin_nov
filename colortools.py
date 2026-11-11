@@ -89,7 +89,7 @@ def _text_color(r: int, g: int, b: int) -> tuple[int, int, int]:
     return (0, 0, 0) if _luminance(r, g, b) > 0.35 else (255, 255, 255)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Color:
     r: int
     g: int

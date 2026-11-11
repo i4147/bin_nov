@@ -17,7 +17,7 @@ import subprocess
 import sys
 
 
-BINARY_EXTENSIONS: frozenset[str] = frozenset({
+BINARY_EXT: frozenset[str] = frozenset({
     ".png",
     ".jpg",
     ".jpeg",
@@ -130,7 +130,7 @@ def group_by_extension(root: Path, excluded: frozenset[str]) -> dict[str, list[P
 
 def cmd_dup_lines(args: argparse.Namespace) -> int:
     """Report lines that occur at least --min-count times, per extension."""
-    excluded: frozenset[str] = BINARY_EXTENSIONS | {(e if e.startswith(".") else "." + e).lower() for e in args.exclude}
+    excluded: frozenset[str] = BINARY_EXT | {(e if e.startswith(".") else "." + e).lower() for e in args.exclude}
     groups: dict[str, list[Path]] = group_by_extension(args.root, excluded)
     if not groups:
         print("No eligible files found.")

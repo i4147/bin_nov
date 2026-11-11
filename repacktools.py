@@ -178,7 +178,7 @@ def _console_script_names(dist_info: Path) -> list[str]:
     return names
 
 
-@dataclass
+@dataclass(slots=True)
 class PackageInfo:
     name: str
     version: str
@@ -487,7 +487,7 @@ def build_wheel_via_subprocess(src_unpacked: Path, output_dir: Path, verbose: bo
     return True, "ok", wheels[0] if wheels else None
 
 
-@dataclass
+@dataclass(slots=True)
 class RepackStats:
     total: int = 0
     success: int = 0

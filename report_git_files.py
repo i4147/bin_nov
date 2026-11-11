@@ -19,7 +19,7 @@ class GitError(RuntimeError):
     pass
 
 
-@dataclass
+@dataclass(slots=True)
 class CommitInfo:
     commit_hash: str
     parents: list[str]
@@ -27,7 +27,7 @@ class CommitInfo:
     subject: str
 
 
-@dataclass
+@dataclass(slots=True)
 class CommitReport:
     hash: str
     date: str

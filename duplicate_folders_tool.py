@@ -18,10 +18,10 @@ import json
 from pathlib import Path
 import sys
 
+from dh import MAX_WORKERS, SKIP_DIRS
+
 
 CHUNK_SIZE: int = 1 << 20
-DEFAULT_WORKERS: int = 8
-SKIP_DIR_NAMES: frozenset[str] = frozenset({".git", "__pycache__", "venv", ".venv", "node_modules"})
 
 
 def file_digest(path: Path) -> str:
@@ -45,7 +45,7 @@ def folder_files(folder: Path) -> list[Path]:
     """Return all files inside *folder* (sorted), skipping junk dirs."""
     files: list[Path] = []
     for path in sorted(folder.rglob("*")):
-        if path.is_file() and not SKIP_DIR_NAMES.intersection(path.parts):
+        if path.is_file() and not SKIP_DIRS.intersection(path.parts):
             files.append(path)
     return files
 
@@ -65,7 +65,7 @@ def all_folders(root: Path) -> list[Path]:
     """Return every non-junk directory under *root* (including *root*)."""
     folders: list[Path] = [root]
     for path in root.rglob("*"):
-        if path.is_dir() and not SKIP_DIR_NAMES.intersection(path.parts):
+        if path.is_dir() and not SKIP_DIRS.intersection(path.parts):
             folders.append(path)
     return sorted(set(folders))
 
@@ -135,7 +135,7 @@ def build_parser() -> argparse.ArgumentParser:
     find.add_argument(
         "--prune-nested", action="store_true", help="Hide duplicate groups nested inside other duplicates"
     )
-    find.add_argument("-j", "--workers", type=int, default=DEFAULT_WORKERS, help="Workers (default: 8)")
+    find.add_argument("-j", "--workers", type=int, default=MAX_WORKERS, help="Workers (default: 8)")
     find.add_argument("-o", "--output", type=Path, default=None, help="Also write groups as JSON")
     find.set_defaults(handler=cmd_find)
     return parser

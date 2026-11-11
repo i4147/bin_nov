@@ -16,7 +16,7 @@ from watchdog.observers import Observer
 
 
 DEST_DIR = pathlib.Path("~/tmp/tgz").expanduser()
-ALLOWED_EXTENSIONS: tuple[str, ...] = (
+ALLOWED_EXT: tuple[str, ...] = (
     ".tar.gz",
     ".whl",
     ".tar.xz",
@@ -26,7 +26,7 @@ ALLOWED_EXTENSIONS: tuple[str, ...] = (
 
 
 def copy_if_match(src_path: Path) -> None:
-    if src_path.endswith(ALLOWED_EXTENSIONS):
+    if src_path.endswith(ALLOWED_EXT):
         try:
             pathlib.Path(DEST_DIR).mkdir(exist_ok=True, parents=True)
             dest = Path(DEST_DIR).joinpath(pathlib.Path(src_path).name)

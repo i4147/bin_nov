@@ -9,7 +9,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-from dh import NUM_WORKERS
+from dh import MAX_WORKERS
 
 
 CURRENT_DIR = Path.cwd()
@@ -55,9 +55,9 @@ def main() -> None:
     for p in pkg_dirs:
         print("  -", p.name)
     print(f"\nBuilding wheels into: {OUTPUT_DIR}")
-    print(f"Using {NUM_WORKERS} workers\n")
+    print(f"Using {MAX_WORKERS} workers\n")
     results = []
-    with Pool(processes=NUM_WORKERS) as pool:
+    with Pool(processes=MAX_WORKERS) as pool:
         async_results = [(pkg_dir, pool.apply_async(build_wheel, (pkg_dir,))) for pkg_dir in pkg_dirs]
         for pkg_dir, ar in async_results:
             name, ok, msg = ar.get()

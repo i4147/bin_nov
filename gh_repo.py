@@ -662,7 +662,7 @@ class Github3GitHub(GitHubBackend):
             return None
 
 
-@dataclass
+@dataclass(slots=True)
 class Backend:
     name: str
     git: GitBackend

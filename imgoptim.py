@@ -35,7 +35,7 @@ DEFAULT_TIMEOUT: Final[float] = 300.0
 PNGQUANT_NOOP: set[int] = {98, 99}
 
 
-@dataclass
+@dataclass(slots=True)
 class Result:
     path: Path
     before: int

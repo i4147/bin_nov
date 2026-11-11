@@ -59,18 +59,18 @@ except Exception:
     filetype = None
 try:
     from dh import (
-        BINARY_EXTENSIONS as DH_BINARY_EXTENSIONS,
+        BINARY_EXT as DH_BINARY_EXT,
         MIME2EXT as DH_MIME2EXT,
         SHEBANG_MAP as DH_SHEBANG_MAP,
-        TEXT_EXTENSIONS as DH_TEXT_EXTENSIONS,
+        TEXT_EXT as DH_TEXT_EXT,
         get_files as dh_get_files,
         is_binary as dh_is_binary,
     )
 except Exception:
-    DH_BINARY_EXTENSIONS = None
+    DH_BINARY_EXT = None
     DH_MIME2EXT = None
     DH_SHEBANG_MAP = None
-    DH_TEXT_EXTENSIONS = None
+    DH_TEXT_EXT = None
     dh_get_files = None
     dh_is_binary = None
 ALIASES: dict[str, str] = {
@@ -166,7 +166,7 @@ SHEBANG_MAP: dict[str, str] = {
 }
 if DH_SHEBANG_MAP:
     SHEBANG_MAP.update(DH_SHEBANG_MAP)
-BINARY_EXTENSIONS: set[str] = {
+BINARY_EXT: set[str] = {
     ".png",
     ".jpg",
     ".jpeg",
@@ -197,9 +197,9 @@ BINARY_EXTENSIONS: set[str] = {
     ".whl",
     ".xz",
 }
-if DH_BINARY_EXTENSIONS:
-    BINARY_EXTENSIONS = set(DH_BINARY_EXTENSIONS)
-TEXT_EXTENSIONS: set[str] = {
+if DH_BINARY_EXT:
+    BINARY_EXT = set(DH_BINARY_EXT)
+TEXT_EXT: set[str] = {
     ".txt",
     ".md",
     ".py",
@@ -226,8 +226,8 @@ TEXT_EXTENSIONS: set[str] = {
     ".sql",
     ".log",
 }
-if DH_TEXT_EXTENSIONS:
-    TEXT_EXTENSIONS = set(DH_TEXT_EXTENSIONS)
+if DH_TEXT_EXT:
+    TEXT_EXT = set(DH_TEXT_EXT)
 DEFAULT_PROTECT_EXT: set[str] = {
     ".py",
     ".pyc",
@@ -348,7 +348,7 @@ FILE_DESC2EXT: dict[str, str] = {
 LOG = logger
 
 
-@dataclass
+@dataclass(slots=True)
 class Detection:
     ext: str
     desc: str
@@ -356,7 +356,7 @@ class Detection:
     mime: str | None = None
 
 
-@dataclass
+@dataclass(slots=True)
 class FixResult:
     path: Path
     action: str
@@ -865,7 +865,7 @@ def process_fix_file(
             reason=f"protected extension {current}",
             engine=detection.engine,
         )
-    if skip_text_mismatches and detected == ".txt" and current in TEXT_EXTENSIONS:
+    if skip_text_mismatches and detected == ".txt" and current in TEXT_EXT:
         return FixResult(
             path,
             "skipped",
@@ -1029,7 +1029,7 @@ def cmd_validate(args: argparse.Namespace) -> int:
     if not root.exists():
         eprint(f"Error: path {root} does not exist")
         return 2
-    ext_set = BINARY_EXTENSIONS if args.kind == "binary" else TEXT_EXTENSIONS
+    ext_set = BINARY_EXT if args.kind == "binary" else TEXT_EXT
     files = list(
         iter_files(
             root,

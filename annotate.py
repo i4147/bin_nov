@@ -271,7 +271,7 @@ def _run_cmd(cmd: list[str]) -> "subprocess.CompletedProcess[str]":
     return subprocess.run(cmd, text=True, capture_output=True, check=False)
 
 
-@dataclass
+@dataclass(slots=True)
 class Options:
     dry_run: bool = False
     backup: bool = False
@@ -285,7 +285,7 @@ class Options:
     remove: bool = False
 
 
-@dataclass
+@dataclass(slots=True)
 class Result:
     path: Path
     changed: bool = False

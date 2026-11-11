@@ -33,13 +33,12 @@ from pathlib import Path
 import re
 import sys
 import tokenize
-
+from dh import SKIP_DIRS
 
 SEPARATOR_RE: re.Pattern[str] = re.compile(r"""(cprint|print)\s*\(\s*['"](.)['"](\s*\*\s*)(\d+)([^)]*)\)""")
 DEFAULT_REPLACEMENT: str = "print('-'*42)"
 OPENERS: dict[str, str] = {"(": ")", "[": "]", "{": "}"}
 CLOSERS: dict[str, str] = {v: k for k, v in OPENERS.items()}
-SKIP_DIRS: frozenset[str] = frozenset({".git", "__pycache__", "venv", ".venv"})
 
 
 @dataclass(slots=True)

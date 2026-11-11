@@ -45,8 +45,8 @@ DEFAULT_ZSTD_THREADS: int = 4
 DEFAULT_ZSTD_CHUNK_SIZE: int = 131_072
 DEFAULT_XZ_PRESET: int = 9
 DEFAULT_XZ_THREADS: int = 4
-ZSTD_EXTENSIONS = frozenset({".zst"})
-ZSTD_SKIP_EXTENSIONS = frozenset({
+ZSTD_EXT = frozenset({".zst"})
+ZSTD_SKIP_EXT = frozenset({
     ".xz",
     ".gz",
     ".7z",
@@ -124,7 +124,7 @@ ZSTD_SKIP_EXTENSIONS = frozenset({
     ".pkg",
     ".msi",
 })
-ZSTD_MEDIA_EXTENSIONS = frozenset({
+ZSTD_MEDIA_EXT = frozenset({
     ".jpg",
     ".jpeg",
     ".png",
@@ -189,7 +189,7 @@ ZSTD_EXCLUDED_DIR_NAMES = frozenset({
     "zstandard",
 })
 ZSTD_EXCLUDED_DIR_PATTERNS: list[str] = ["*.egg-info", "*.dist-info"]
-XZ_SKIP_EXTENSIONS = frozenset({
+XZ_SKIP_EXT = frozenset({
     ".zip",
     ".br",
     ".xz",
@@ -212,7 +212,7 @@ XZ_SKIP_EXTENSIONS = frozenset({
 XZ_EXCLUDED_DIR_NAMES = frozenset({".git", "__pycache__", ".venv", "venv", ".env", "node_modules"})
 
 
-@dataclass
+@dataclass(slots=True)
 class Stats:
     original_size: int = 0
     compressed_size: int = 0
@@ -230,7 +230,7 @@ class Stats:
         return (saved, compressed_pct, saved_pct)
 
 
-@dataclass
+@dataclass(slots=True)
 class ScanStats:
     dirs: int = 0
     files: int = 0
@@ -295,7 +295,7 @@ def collect_zstd_tasks(
 ) -> tuple[list[tuple[Path, Path]], ScanStats]:
     stats = ScanStats()
     tasks: list[tuple[Path, Path]] = []
-    skip_exts = set(ZSTD_SKIP_EXTENSIONS)
+    skip_exts = set(ZSTD_SKIP_EXT)
     if args.no_skip_so:
         skip_exts.discard(".so")
     if args.legacy_extra_skips:
@@ -359,14 +359,14 @@ def collect_zstd_tasks(
                     suffix = path.suffix.lower()
                     if suffix in skip_exts:
                         stats.skipped_extensions += 1
-                        if suffix in ZSTD_MEDIA_EXTENSIONS:
+                        if suffix in ZSTD_MEDIA_EXT:
                             stats.skipped_media += 1
                         continue
                 else:
                     if args.tar_zst_skip_decompress and path.name.endswith(".tar.zst"):
                         stats.skipped_extensions += 1
                         continue
-                    if path.suffix not in ZSTD_EXTENSIONS:
+                    if path.suffix not in ZSTD_EXT:
                         stats.skipped_extensions += 1
                         continue
                 out = path.with_suffix(path.suffix + ".zst") if compress else path.with_suffix("")
@@ -659,7 +659,7 @@ def run_xz(args: argparse.Namespace) -> int:
     root = resolve_directory(args.directory, args.dir_flag)
     if root is None:
         return 1
-    skip_extensions = set(args.skip_extensions) if args.skip_extensions is not None else set(XZ_SKIP_EXTENSIONS)
+    skip_extensions = set(args.skip_extensions) if args.skip_extensions is not None else set(XZ_SKIP_EXT)
     excluded_dirs = set(args.exclude_dirs) if args.exclude_dirs is not None else set(XZ_EXCLUDED_DIR_NAMES)
     tasks = collect_xz_tasks(root, compress, skip_extensions, excluded_dirs)
     print(f"Working directory: {root}")

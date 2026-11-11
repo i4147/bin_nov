@@ -85,7 +85,7 @@ CLI_COMMANDS: dict[str, list[str]] = {
     ".arj": ["arj", "x", "-y"],
     ".ace": ["unace", "x"],
 }
-ALL_EXTENSIONS: tuple[str, ...] = tuple(
+ALL_EXT: tuple[str, ...] = tuple(
     sorted(
         {
             ".tar.gz",
@@ -119,7 +119,7 @@ ALL_EXTENSIONS: tuple[str, ...] = tuple(
 )
 
 
-@dataclass
+@dataclass(slots=True)
 class ExtractResult:
     archive_path: Path
     status: str = "failed"
@@ -494,7 +494,7 @@ def check_integrity(archive: Path) -> tuple[bool, str]:
 
 
 def find_archives(roots: Iterable[Path], recursive: bool, formats: Optional[set[str]] = None) -> list[Path]:
-    exts = formats or set(ALL_EXTENSIONS)
+    exts = formats or set(ALL_EXT)
     ordered = sorted(exts, key=len, reverse=True)
     found: list[Path] = []
     seen: set[Path] = set()

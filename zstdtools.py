@@ -27,7 +27,7 @@ DEFAULT_THREADS: int = 4
 DEFAULT_ARCHIVE_LEVEL: int = 3
 ZST_EXT: str = ".zst"
 TAR_ZST_EXT: str = ".tar.zst"
-SKIP_EXTENSIONS: frozenset[str] = frozenset({
+SKIP_EXT: frozenset[str] = frozenset({
     ".zst",
     ".zstd",
     ".gz",
@@ -439,7 +439,7 @@ def discover_targets(root: Path, args: argparse.Namespace) -> tuple[list[Path], 
             if whitelist is not None:
                 if p.suffix.lower() not in whitelist:
                     continue
-            elif p.suffix.lower() in SKIP_EXTENSIONS:
+            elif p.suffix.lower() in SKIP_EXT:
                 continue
             if args.min_size and _file_size(p) < args.min_size:
                 continue

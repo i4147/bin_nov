@@ -45,7 +45,7 @@ class ANSI:
                 setattr(cls, attr, "")
 
 
-@dataclass
+@dataclass(slots=True)
 class FileResult:
     path: Path
     status: str
@@ -55,7 +55,7 @@ class FileResult:
     is_bin: bool = False
 
 
-@dataclass
+@dataclass(slots=True)
 class ProcessingStats:
     total_files: int = 0
     text_files: int = 0

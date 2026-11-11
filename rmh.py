@@ -13,7 +13,7 @@ from loguru import logger
 from tqdm import tqdm
 
 
-@dataclass
+@dataclass(slots=True)
 class ProcessResult:
     path: Path
     success: bool

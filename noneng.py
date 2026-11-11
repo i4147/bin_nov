@@ -27,7 +27,7 @@ _BACKEND: str = ""
 _DETECTOR: Any = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class ScanResult:
     path: Path
     found: bool

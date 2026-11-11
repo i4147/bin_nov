@@ -33,7 +33,7 @@ PREVIEW_LENGTH: int = 200
 REPORT_PREVIEW_LENGTH: int = 150
 
 
-@dataclass
+@dataclass(slots=True)
 class DetectionResult:
     path: Path
     non_english_lines: list[dict[str, Any]] = field(default_factory=list)
@@ -41,7 +41,7 @@ class DetectionResult:
     error: str | None = None
 
 
-@dataclass
+@dataclass(slots=True)
 class ScanConfig:
     confidence_threshold: float = DEFAULT_CONFIDENCE
     min_line_length: int = DEFAULT_MIN_LINE_LENGTH

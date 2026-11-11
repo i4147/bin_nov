@@ -16,7 +16,7 @@ import re
 from typing import Any, Sequence
 
 
-LANGUAGE_EXTENSIONS: dict[str, list[str]] = {
+LANGUAGE_EXT: dict[str, list[str]] = {
     "python": [".py", ".pyi"],
     "javascript": [".js"],
     "java": [".java"],
@@ -131,7 +131,7 @@ def _add(
 def analyze(root: Path, excludes: set[str]) -> dict[str, Any]:
     stats: dict[str, Any] = {
         "total": {"code": 0, "comments": 0, "blank": 0},
-        "languages": {lang: {"code": 0, "comments": 0, "blank": 0} for lang in LANGUAGE_EXTENSIONS},
+        "languages": {lang: {"code": 0, "comments": 0, "blank": 0} for lang in LANGUAGE_EXT},
     }
     for path in root.rglob("*"):
         if not path.is_file():
@@ -143,7 +143,7 @@ def analyze(root: Path, excludes: set[str]) -> dict[str, Any]:
                 c, m, b = count_file(path, lang, excludes)
                 _add(stats, lang, c, m, b)
                 continue
-        for lang, exts in LANGUAGE_EXTENSIONS.items():
+        for lang, exts in LANGUAGE_EXT.items():
             if suffix in exts:
                 c, m, b = count_file(path, lang, excludes)
                 _add(stats, lang, c, m, b)

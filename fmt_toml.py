@@ -17,7 +17,7 @@ from dh import MAX_WORKERS
 from tree_sitter import Language, Parser
 
 
-@dataclass
+@dataclass(slots=True)
 class FormatConfig:
     indent_size: int = 2
     column_width: int = 80

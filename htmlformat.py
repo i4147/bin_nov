@@ -23,12 +23,12 @@ except ImportError:
     print("Error: Required packages not installed.", file=sys.stderr)
     print("Install with: pip install tree-sitter tree-sitter-html", file=sys.stderr)
     sys.exit(1)
-HTML_EXTENSIONS: set[str] = {".html", ".htm", ".xhtml"}
+HTML_EXT: set[str] = {".html", ".htm", ".xhtml"}
 MAX_FILE_SIZE: int = 50 * 1024 * 1024
 CHUNK_SIZE: int = 1024 * 1024
 
 
-@dataclass
+@dataclass(slots=True)
 class ProcessingResult:
     path: Path
     success: bool
@@ -219,12 +219,12 @@ def find_html_files(paths: list[Path]) -> Iterator[Path]:
     for path in paths:
         try:
             if path.is_file():
-                if path.suffix.lower() in HTML_EXTENSIONS and path not in seen:
+                if path.suffix.lower() in HTML_EXT and path not in seen:
                     seen.add(path)
                     yield path
             elif path.is_dir():
                 for html_file in path.rglob("*"):
-                    if html_file.is_file() and html_file.suffix.lower() in HTML_EXTENSIONS and html_file not in seen:
+                    if html_file.is_file() and html_file.suffix.lower() in HTML_EXT and html_file not in seen:
                         seen.add(html_file)
                         yield html_file
             else:

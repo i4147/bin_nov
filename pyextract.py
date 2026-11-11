@@ -76,7 +76,7 @@ UPPER_RE = re.compile(r"^[A-Z_][A-Z0-9_]*$")
 DEFAULT_SKIP_TESTS: set[str] = {"test", "tests", "examples"}
 
 
-@dataclass
+@dataclass(slots=True)
 class Entity:
     name: str
     full_name: str

@@ -383,7 +383,7 @@ _STOP_WORDS: set[str] = {
 _EPILOG_RE = re.compile(r"epilog\s*=\s*[\\'\"]([^\\'\"]+)[\\'\"]", re.IGNORECASE)
 
 
-@dataclass
+@dataclass(slots=True)
 class NameSuggestion:
     path: Path
     current_name: str

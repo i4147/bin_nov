@@ -13,7 +13,7 @@ from pathlib import Path
 import shutil
 import sys
 import textwrap
-
+from dh import SKIP_DIRS, MAX_WORKERS
 
 DEFAULT_APPEND_TEXT: str = "\n#migrate from logging with print and standard logging module to loguru\n"
 DEFAULT_TAB_WIDTH: int = 4
@@ -41,7 +41,7 @@ def collect_text_files(inputs: Sequence[Path], glob: str = "*") -> list[Path]:
     for root in roots:
         candidates = root.rglob(glob) if root.is_dir() else iter((root,))
         for path in candidates:
-            if not path.is_file() or ".git" in path.parts:
+            if not path.is_file() or any(part in SKIP_DIRS for part in path.parts):
                 continue
             try:
                 if b"\x00" in path.read_bytes()[:8192]:

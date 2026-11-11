@@ -104,7 +104,7 @@ except ImportError:
             pass
 
     logger = _FallbackLogger()
-IMAGE_EXTENSIONS: set[str] = {
+IMAGE_EXT: set[str] = {
     ".png",
     ".jpg",
     ".jpeg",
@@ -114,8 +114,8 @@ IMAGE_EXTENSIONS: set[str] = {
     ".gif",
     ".webp",
 }
-TEXT_EXTENSIONS: set[str] = {".txt", ".md", ".csv", ".json", ".py"}
-PHOTO_EXTENSIONS: set[str] = {".jpg", ".jpeg", ".png"}
+TEXT_EXT: set[str] = {".txt", ".md", ".csv", ".json", ".py"}
+PHOTO_EXT: set[str] = {".jpg", ".jpeg", ".png"}
 DEFAULT_GRID_VARIANTS_PSM: list[int] = [3, 4, 6, 11]
 DEFAULT_GRID_VARIANTS_OEM: list[int] = [1, 3]
 DEFAULT_GRID_VARIANTS_DPI: list[int] = [150, 300]
@@ -156,7 +156,7 @@ def find_images(
     paths: Iterable[Path],
     *,
     recursive: bool = False,
-    extensions: set[str] = IMAGE_EXTENSIONS,
+    extensions: set[str] = IMAGE_EXT,
 ) -> list[Path]:
     out: list[Path] = []
     seen: set[Path] = set()
@@ -323,7 +323,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     files = find_images(inputs, recursive=args.recursive)
     if not files:
         logger.error("no supported image files found")
-        print(f"supported extensions: {', '.join(sorted(IMAGE_EXTENSIONS))}")
+        print(f"supported extensions: {', '.join(sorted(IMAGE_EXT))}")
         return 1
     print(f"found {len(files)} image(s) to process")
     worker = _prepare_cv if backend == "cv" else _prepare_pillow
@@ -484,7 +484,7 @@ def cmd_grid_search(args: argparse.Namespace) -> int:
 
 
 def _ocr_single(path: Path, lang: str | None) -> bool:
-    if not path.is_file() or path.suffix.lower() not in IMAGE_EXTENSIONS:
+    if not path.is_file() or path.suffix.lower() not in IMAGE_EXT:
         print(f"error: '{path.name}' is not a supported image file")
         return False
     try:
@@ -617,9 +617,9 @@ def cmd_translate(args: argparse.Namespace) -> int:
         raise AppError(msg)
     suffix = p.suffix.lower()
     ocr_written: Path | None = None
-    if suffix in TEXT_EXTENSIONS:
+    if suffix in TEXT_EXT:
         text = p.read_text(encoding="utf-8")
-    elif suffix in PHOTO_EXTENSIONS:
+    elif suffix in PHOTO_EXT:
         if not (HAS_PIL and HAS_TESS):
             msg = "translate on images requires Pillow and pytesseract"
             raise AppError(msg)
@@ -634,7 +634,7 @@ def cmd_translate(args: argparse.Namespace) -> int:
     lang = args.lang if args.lang != "auto" else _detect_lang(text)
     translator = GoogleTranslator(source=lang, target="en")
     translated = "".join(translator.translate(c) for c in _chunks(text, args.chunk_size))
-    if suffix in PHOTO_EXTENSIONS:
+    if suffix in PHOTO_EXT:
         out = p.with_name(f"{p.stem}_eng.txt")
     else:
         out = p.with_name(f"{p.stem}_eng{suffix}")

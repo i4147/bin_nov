@@ -20,7 +20,7 @@ from markdown import markdown
 from weasyprint import CSS, HTML
 
 
-MARKDOWN_BASE_EXTENSIONS: list[str] = [
+MARKDOWN_BASE_EXT: list[str] = [
     "markdown.extensions.tables",
     "pymdownx.magiclink",
     "pymdownx.betterem",
@@ -42,7 +42,7 @@ def md2pdf(pdf: Any, raw=None, md=None, css=None, base_url=None, extras=None, ex
     if raw is None or not len(raw):
         msg = "No markdown content to process (empty file or raw string)"
         raise ValidationError(msg)
-    extensions = MARKDOWN_BASE_EXTENSIONS + extras
+    extensions = MARKDOWN_BASE_EXT + extras
     raw_html = markdown(raw, extensions=extensions, extension_configs=extras_config)
     if base_url is None:
         base_url = Path.cwd()

@@ -64,14 +64,14 @@ except ImportError:
 DEFAULT_IGNORED_DIRECTORIES: frozenset[str] = frozenset({".git", "__pycache__", "node_modules"})
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class FileHash:
     path: Path
     exact: str
     fuzzy: str
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class ScanOptions:
     root: Path
     include_symlinks: bool

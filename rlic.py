@@ -120,7 +120,7 @@ def err(msg: str) -> None:
     print(f"[ERROR] {msg}", file=sys.stderr)
 
 
-@dataclass
+@dataclass(slots=True)
 class Occurrence:
     path: Path
     start: int

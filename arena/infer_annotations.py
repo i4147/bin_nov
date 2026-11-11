@@ -847,7 +847,7 @@ STDLIB_MODULES = set(sys.stdlib_module_names) if hasattr(sys, "stdlib_module_nam
 # --------------------------------------------------------------------------- #
 # file context
 # --------------------------------------------------------------------------- #
-@dataclass
+@dataclass(slots=True)
 class FileCtx:
     """Everything the inference needs to know about one file."""
 
@@ -2152,7 +2152,7 @@ SKIP_TOKENS = {
 }
 
 
-@dataclass
+@dataclass(slots=True)
 class Edit:
     line: int
     col: int

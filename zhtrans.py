@@ -23,7 +23,7 @@ CHINESE_RE = re.compile(
     "\U0002b820-\U0002ceaf"
     "\uf900-\ufaff]"
 )
-DEFAULT_EXTENSIONS: tuple[str, ...] = (
+DEFAULT_EXT: tuple[str, ...] = (
     ".txt",
     ".md",
     ".py",
@@ -499,7 +499,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--extensions",
         "-e",
         nargs="+",
-        default=list(DEFAULT_EXTENSIONS),
+        default=list(DEFAULT_EXT),
         help="File extensions to process when walking directories.",
     )
     p.add_argument("--exclude", "-x", nargs="+", default=[], help="Paths to exclude.")

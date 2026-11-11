@@ -23,7 +23,7 @@ SUFFIX: str = ""
 MIN_PATH_WIDTH: int = 10
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Result:
     path: Path
     changed: bool

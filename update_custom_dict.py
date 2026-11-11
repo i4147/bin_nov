@@ -14,72 +14,13 @@ from pathlib import Path
 import re
 from typing import Any, Callable, Iterable, Iterator
 
-from atomicio import atomic_write_text
-from dh import SKIP_DIRS
+from atomicio import atomic_write
+from dh import SKIP_DIRS, BINARY_EXT
 
 
 CWD = Path.cwd()
 DICT_PATH = Path.home() / ".personal_dict"
 JSON_PATH = CWD / "word_freq.json"
-BINARY_EXT: set[str] = {
-    ".png",
-    ".jpg",
-    ".jpeg",
-    ".gif",
-    ".bmp",
-    ".tiff",
-    ".webp",
-    ".ico",
-    ".svgz",
-    ".pdf",
-    ".zip",
-    ".gz",
-    ".bz2",
-    ".xz",
-    ".7z",
-    ".rar",
-    ".tar",
-    ".exe",
-    ".dll",
-    ".so",
-    ".dylib",
-    ".a",
-    ".o",
-    ".obj",
-    ".bin",
-    ".pyc",
-    ".pyo",
-    ".class",
-    ".jar",
-    ".war",
-    ".mp3",
-    ".mp4",
-    ".m4a",
-    ".wav",
-    ".flac",
-    ".ogg",
-    ".avi",
-    ".mkv",
-    ".mov",
-    ".webm",
-    ".woff",
-    ".woff2",
-    ".ttf",
-    ".otf",
-    ".eot",
-    ".db",
-    ".sqlite",
-    ".sqlite3",
-    ".iso",
-    ".img",
-    ".dmg",
-    ".pkl",
-    ".npy",
-    ".npz",
-    ".h5",
-    ".parquet",
-    ".lock",
-}
 MAX_BYTES: int = 5 * 1024 * 1024
 WORD_RE = re.compile(r"[A-Za-z]{2,}")
 _TOKENIZER = None
@@ -298,7 +239,7 @@ def main() -> None:
     known = spell.word_frequency.words()
     custom = {w: c for w, c in counter.items() if w not in known}
     words_sorted = sorted(custom)
-    atomic_write_text(
+    atomic_write(
         DICT_PATH,
         "\n".join(words_sorted) + ("\n" if words_sorted else ""),
     )

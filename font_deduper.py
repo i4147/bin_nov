@@ -12,7 +12,7 @@ from fontTools.ttLib import TTFont
 
 
 DRY_RUN: bool = False
-FONT_EXTENSIONS: tuple[str, str, str] = (".ttf", ".woff2", ".woff")
+FONT_EXT: tuple[str, str, str] = (".ttf", ".woff2", ".woff")
 
 
 def get_font_ps_name(file_path: Path) -> str | None:
@@ -35,7 +35,7 @@ def main() -> None:
     font_count = 0
     for root, dirs, files in os.walk("."):
         for file_name in files:
-            if file_name.lower().endswith(FONT_EXTENSIONS):
+            if file_name.lower().endswith(FONT_EXT):
                 font_count += 1
                 file_path = Path(root).joinpath(file_name)
                 ps_name = get_font_ps_name(file_path)

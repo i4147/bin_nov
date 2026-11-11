@@ -218,7 +218,7 @@ def cmd_cargo_toml(args: argparse.Namespace) -> int:
     return 0
 
 
-@dataclass
+@dataclass(slots=True)
 class Author:
     name: str | None = None
     email: str | None = None
@@ -263,7 +263,7 @@ def _readme_content(readme: Any, root: Path) -> tuple[str, str]:
     return "", "text/plain"
 
 
-@dataclass
+@dataclass(slots=True)
 class ProjectMeta:
     name: str = ""
     version: str = "0.0.0"

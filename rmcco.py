@@ -19,7 +19,7 @@ from loguru import logger
 POOL_SIZE: Final[int] = 8
 
 
-@dataclass
+@dataclass(slots=True)
 class FileResult:
     path: str
     is_error: bool = False
@@ -29,7 +29,7 @@ class FileResult:
     is_wheel_member: bool = False
 
 
-@dataclass
+@dataclass(slots=True)
 class ProcessingStats:
     total_files: int = 0
     changed_files: int = 0

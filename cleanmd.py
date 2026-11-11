@@ -82,7 +82,7 @@ _RST_PATTERNS: tuple[re.Pattern[str], re.Pattern[str], re.Pattern[str], re.Patte
 _RE_BLANKLINES = re.compile(r"\n{3,}")
 
 
-@dataclass
+@dataclass(slots=True)
 class Result:
     path: Path
     removed_refs: int

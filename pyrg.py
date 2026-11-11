@@ -27,6 +27,7 @@ from typing import Any, Iterable, Sequence, TextIO, TYPE_CHECKING
 
 from dh import MAX_WORKERS, SKIP_DIRS, is_binary
 from loguru import logger
+from zlib import crc32
 
 
 logger.remove()
@@ -59,27 +60,24 @@ TYPE_PRESETS: dict[str, set[str]] = {
 }
 ANSI_RESET: str = "\x1b[0m"
 ANSI_BOLD: str = "\x1b[1m"
-ANSI_BLUE: str = "\x1b[94m"
-ANSI_CYAN: str = "\x1b[5;96m"
-ANSI_GREEN: str = "\x1b[32m"
-ANSI_YELLOW: str = "\x1b[33m"
-ANSI_MAGENTA: str = "\x1b[35m"
+ANSI_BLUE: str = "\x1b[38;5;123m"
+ANSI_CYAN: str = "\x1b[38;5;81m"
+ANSI_GREEN: str = "\x1b[38;5;118m"
+ANSI_YELLOW: str = "\x1b[38;5;15m"
+ANSI_MAGENTA: str = "\x1b[38;5;10m"
 _PATH_PALETTE: tuple[str, ...] = (
     ANSI_CYAN,
     ANSI_GREEN,
     ANSI_YELLOW,
     ANSI_MAGENTA,
-    "\x1b[96m",
-    "\x1b[92m",
-    "\x1b[93m",
+    "\x1b[38;5;10m",
+    "\x1b[38;5;14m",
+    "\x1b[38;5;7m",
 )
 
 
-def _stable_hash(s: str) -> int:
-    h = 2166136261
-    for ch in str(s):
-        h = ((h ^ ord(ch)) * 16777619) & 0xFFFFFFFF
-    return h
+def _stable_hash(s) -> int:
+    return crc32(str(s).encode("utf-8"))
 
 
 def color_for_path(path: str, enabled: bool) -> str:
@@ -261,7 +259,7 @@ class IgnoreMatcher:
 OutputLine = tuple[int, str, bool, list[tuple[int, int]]]
 
 
-@dataclass
+@dataclass(slots=True)
 class FileResult:
     path: str
     groups: list[list[OutputLine]] = field(default_factory=list)
@@ -690,7 +688,7 @@ def _colorize_line(line: str, spans: list[tuple[int, int]]) -> str:
     return "".join(chars)
 
 
-def _emit_path(path: str, out_fh: TextIO, color: bool) -> None:
+def _emit_path(path: str, out_fh: TextIO, color: bool = True) -> None:
     if color:
         print(f"{color_for_path(path, color)}{path}{ANSI_RESET}", file=out_fh)
     else:
@@ -701,8 +699,8 @@ def emit_result(
     result: FileResult,
     args: argparse.Namespace,
     out_fh: TextIO,
-    color: bool,
-    heading: bool,
+    color: bool = True,
+    heading: bool = True,
 ) -> None:
     if args.files_with_matches:
         _emit_path(result.path, out_fh, color)
@@ -732,7 +730,7 @@ def emit_result(
     if heading:
         path_col = color_for_path(result.path, color)
         reset = ANSI_RESET if color else ""
-        print(f"{path_col}{result.path}{reset}", file=out_fh)
+        print(f"{ANSI_CYAN + ANSI_BOLD}{result.path}{reset}", file=out_fh)
         indent = "  "
     else:
         indent = ""

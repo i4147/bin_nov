@@ -21,7 +21,7 @@ import shutil
 import sys
 
 
-IMAGE_EXTENSIONS: frozenset[str] = frozenset({
+IMAGE_EXT: frozenset[str] = frozenset({
     ".jpg",
     ".jpeg",
     ".png",
@@ -168,7 +168,7 @@ def cmd_by_image_size(args: argparse.Namespace) -> int:
     root: Path = args.root.resolve()
     plan: list[tuple[Path, Path]] = []
     for path in gather(root, True):
-        if path.suffix.lower() not in IMAGE_EXTENSIONS:
+        if path.suffix.lower() not in IMAGE_EXT:
             continue
         try:
             with Image.open(path) as img:

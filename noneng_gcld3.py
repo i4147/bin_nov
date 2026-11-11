@@ -16,7 +16,7 @@ MIN_PROBABILITY: float = 0.5
 _detector: gcld3.NNetLanguageIdentifier = gcld3.NNetLanguageIdentifier(min_num_bytes=0, max_num_bytes=1000)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Detection:
     language: str
     probability: float

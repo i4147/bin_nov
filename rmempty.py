@@ -9,9 +9,6 @@ import sys
 from dh import cprint, get_files
 
 
-TIMEOUT: int = 0
-
-
 def wait_for_keypress(timeout: float) -> bool:
     if timeout <= 0:
         return False
@@ -27,6 +24,7 @@ def wait_for_keypress(timeout: float) -> bool:
 
 def main() -> int:
     cwd = Path.cwd()
+    zeroto100 = "-z" in sys.argv
     files = get_files(cwd)
     empty_files = [p for p in files if p.stat().st_size == 0 and p.name != "__init__.py"]
     found = len(empty_files)
@@ -36,16 +34,13 @@ def main() -> int:
     cprint(f"{found} empty files found.", "cyan")
     for empty_file in empty_files:
         cprint(f"    - {empty_file.relative_to(cwd)}", "yellow")
-    deleted = 0
-    failed = 0
-    for empty_file in empty_files:
-        try:
-            if empty_file.exists():
-                empty_file.unlink()
-                deleted += 1
-        except Exception as e:
-            failed += 1
-    cprint(f"Deleted: {deleted}, Failed: {failed}", "green")
+        empty_file.unlink()
+
+    if zeroto100:
+        small_files = [p for p in files if p.stat().st_size and p.stat().st_size < 100]
+    for f in small_files:
+        cprint(f"    - {f.relative_to(cwd)}", "blue")
+        f.unlink()
     return 0
 
 

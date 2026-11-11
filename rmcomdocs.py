@@ -36,7 +36,7 @@ _BASE_KEEP_PREFIXES: tuple[str, ...] = ("#!", "# type:", "# fmt:")
 _TODO_KEEP_PREFIXES: tuple[str, ...] = ("# TODO", "# noqa")
 
 
-@dataclass
+@dataclass(slots=True)
 class StripConfig:
     engine: str = "query"
     docstring_action: str = "pass"
@@ -47,14 +47,14 @@ class StripConfig:
     keep_prefixes: tuple[str, ...] = _BASE_KEEP_PREFIXES
 
 
-@dataclass
+@dataclass(slots=True)
 class Edit:
     start: int
     end: int
     replacement: bytes
 
 
-@dataclass
+@dataclass(slots=True)
 class FileResult:
     path: Path
     success: bool

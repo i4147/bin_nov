@@ -16,7 +16,7 @@ from typing import Any, Iterable, Optional
 from dh import MAX_WORKERS
 
 
-@dataclass
+@dataclass(slots=True)
 class FileStats:
     path: Path
     removed_count: int = 0

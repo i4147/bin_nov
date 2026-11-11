@@ -13,11 +13,11 @@ from multiprocessing.pool import AsyncResult, Pool
 from pathlib import Path
 from typing import TYPE_CHECKING, TypeAlias
 
-from dh import BINARY_EXTENSIONS, MAX_WORKERS
+from dh import BINARY_EXT, MAX_WORKERS
 from loguru import logger
 
 
-EXCLUDED_EXTENSIONS: frozenset[str] = frozenset(BINARY_EXTENSIONS)
+EXCLUDED_EXT: frozenset[str] = frozenset(BINARY_EXT)
 POOL_METHODS: tuple[str, ...] = ("map", "starmap", "imap_unordered", "apply_async")
 LineCounter: TypeAlias = Counter[str]
 
@@ -44,7 +44,7 @@ def collect_files_by_extension() -> dict[str, list[Path]]:
                 continue
             path = root / fname
             ext = path.suffix
-            if ext in EXCLUDED_EXTENSIONS:
+            if ext in EXCLUDED_EXT:
                 continue
             if not ext:
                 ext = ".no_ext"

@@ -15,7 +15,7 @@ from dh import fsz
 from loguru import logger
 
 
-@dataclass
+@dataclass(slots=True)
 class FileResult:
     path: Path
     rel: str

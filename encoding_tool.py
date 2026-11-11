@@ -32,10 +32,10 @@ from pathlib import Path
 import re
 import sys
 from typing import Any, Iterable, Sequence
+from dh import MAX_WORKERS, is_binary
 
 
 SAMPLE_SIZE: int = 100_000
-DEFAULT_WORKERS: int = 8
 COMMON_ENCODINGS: tuple[str, ...] = (
     "utf-8",
     "utf-8-sig",
@@ -63,11 +63,6 @@ COMMON_ENCODINGS: tuple[str, ...] = (
     "latin-1",
 )
 HEX_ESCAPE: re.Pattern[str] = re.compile(r"\\x([0-9a-fA-F]{2})")
-
-
-def is_binary(data: bytes) -> bool:
-    """Heuristic binary check on already-read bytes."""
-    return b"\x00" in data[:8192]
 
 
 def strict_decodings(data: bytes) -> list[str]:
@@ -228,7 +223,7 @@ def build_parser() -> argparse.ArgumentParser:
     tu.add_argument("--from", dest="from_encoding", default=None, help="Source encoding (default: auto-detect)")
     tu.add_argument("-n", "--dry-run", action="store_true")
     tu.add_argument("-v", "--verbose", action="store_true")
-    tu.add_argument("-j", "--workers", type=int, default=DEFAULT_WORKERS)
+    tu.add_argument("-j", "--workers", type=int, default=MAX_WORKERS)
     tu.set_defaults(handler=cmd_to_utf8)
 
     pr = sub.add_parser("probe", help="Show encodings that decode a file")

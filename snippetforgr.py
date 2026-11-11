@@ -516,7 +516,7 @@ HTML_FILENAME_RE = re.compile(
 HTML_PY_MARKERS: tuple[str, ...] = ("def ", "import ", "class ", "if __name__")
 
 
-@dataclass
+@dataclass(slots=True)
 class CodeBlock:
     content: str
     language: str

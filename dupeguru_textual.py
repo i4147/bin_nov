@@ -33,7 +33,7 @@ from textual.widgets import (
 )
 
 
-@dataclass
+@dataclass(slots=True)
 class FileEntry:
     path: Path
     size: int
@@ -44,7 +44,7 @@ class FileEntry:
         self.filename_normalized = self.path.name.lower()
 
 
-@dataclass
+@dataclass(slots=True)
 class DuplicateGroup:
     files: list[FileEntry] = field(default_factory=list)
     match_score: float = 100.0

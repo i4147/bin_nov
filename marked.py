@@ -9,7 +9,7 @@ import re
 from typing import Any, Callable, Optional
 
 
-@dataclass
+@dataclass(slots=True)
 class Token:
     type: str
     raw: str = ""

@@ -71,7 +71,7 @@ NON_ASCII_RE = re.compile(r"[^\x00-\x7f]")
 PYCLD2_CODES_TO_SKIP: set[str] = {"en", "un"}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class TranslationConfig:
     target_language: str = "en"
     source_language: str = "auto"
@@ -83,7 +83,7 @@ class TranslationConfig:
     max_chars: int | None = None
 
 
-@dataclass
+@dataclass(slots=True)
 class TranslationStats:
     changed_files: int = 0
     translated_items: int = 0

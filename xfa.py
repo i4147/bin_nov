@@ -28,7 +28,7 @@ try:
     HAZM_AVAILABLE = True
 except ImportError:
     HAZM_AVAILABLE = False
-TEXT_EXTENSIONS: set[str] = {
+TEXT_EXT: set[str] = {
     ".txt",
     ".py",
     ".md",
@@ -152,7 +152,7 @@ class PersianTokenizer:
 def is_valid_text_file(file_path: Path) -> bool:
     if not file_path.is_file():
         return False
-    if file_path.suffix.lower() not in TEXT_EXTENSIONS:
+    if file_path.suffix.lower() not in TEXT_EXT:
         return False
     try:
         if file_path.stat().st_size == 0:

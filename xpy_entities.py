@@ -159,7 +159,7 @@ STDLIB_IMPORTS: dict[str, str] = {
 }
 
 
-@dataclass
+@dataclass(slots=True)
 class Entity:
     name: str
     full_name: str

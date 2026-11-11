@@ -24,7 +24,7 @@ class MissingToolError(RuntimeError):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class SubtitleStream:
     stream_index: int
     relative_index: int

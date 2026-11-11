@@ -78,14 +78,14 @@ _WORKER_NEXT_REQUEST: Value
 _WORKER_RATE_LOCK: Lock
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class TextEdit:
     start: int
     end: int
     replacement: str
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class TranslationJob:
     text: str
     start: int

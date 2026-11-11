@@ -9,7 +9,7 @@ import re
 import sys
 from typing import Any
 
-from dh import SKIP_DIRS, TEXT_EXTENSIONS
+from dh import SKIP_DIRS, TEXT_EXT
 
 
 TEXT_PREFIXES: tuple[str, ...] = (
@@ -37,7 +37,7 @@ def looks_textual(path: Path) -> bool:
     name = path.name.lower()
     if name in DOTFILES:
         return True
-    if path.suffix.lower() in TEXT_EXTENSIONS:
+    if path.suffix.lower() in TEXT_EXT:
         return True
     return bool(name.startswith(TEXT_PREFIXES))
 

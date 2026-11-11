@@ -38,7 +38,7 @@ class TokenType(Enum):
     WHITESPACE = auto()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Token:
     type: TokenType
     value: str
@@ -46,7 +46,7 @@ class Token:
     col: int
 
 
-@dataclass
+@dataclass(slots=True)
 class FormatConfig:
     indent_size: int = 2
     sort_keys: bool = True
@@ -240,7 +240,7 @@ class Tokenizer:
         return bool(re.match(iso_pattern, s))
 
 
-@dataclass
+@dataclass(slots=True)
 class AST:
     root: dict[str, Any] = field(default_factory=dict)
     comments: dict[str, str] = field(default_factory=dict)

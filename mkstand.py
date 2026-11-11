@@ -23,7 +23,7 @@ import requests
 
 logger.remove()
 logger.add(sys.stderr, level="WARNING", format="<red>{level}</red> | <cyan>{message}</cyan>")
-IMAGE_EXTENSIONS: set[str] = {
+IMAGE_EXT: set[str] = {
     ".png",
     ".jpg",
     ".jpeg",
@@ -46,7 +46,7 @@ def is_remote(url: str) -> bool:
 
 def is_image(url: str) -> bool:
     ext = Path(urlparse(url).path).suffix.lower()
-    return ext in IMAGE_EXTENSIONS
+    return ext in IMAGE_EXT
 
 
 def get_mime_type(path: str) -> str:

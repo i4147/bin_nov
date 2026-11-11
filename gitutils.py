@@ -56,7 +56,7 @@ CSV_FIELDS: list[str] = [
 ]
 
 
-@dataclass
+@dataclass(slots=True)
 class Options:
     repo_path: str = "."
     branch: str = "HEAD"
@@ -71,7 +71,7 @@ class Options:
     rename: bool = False
 
 
-@dataclass
+@dataclass(slots=True)
 class CommitRecord:
     sha: str
     short: str

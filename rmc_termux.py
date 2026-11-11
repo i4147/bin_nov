@@ -38,7 +38,7 @@ LOGGER = logger
 _COOKIE_RE = re.compile(rb"coding[:=]\s*[-\w.]+")
 
 
-@dataclass
+@dataclass(slots=True)
 class StripFileResult:
     path: Path
     saved: int = 0
@@ -220,7 +220,7 @@ def colorize_diff(diff: str, color: bool) -> str:
     return "".join(output)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Limits:
     max_bytes: int = 1_048_576
     max_lines: int = 20_000
@@ -309,7 +309,7 @@ def normalize_inputs(inputs: list[Path]) -> list[Path]:
     return roots
 
 
-@dataclass
+@dataclass(slots=True)
 class Stats:
     files: int = 0
     changed: int = 0

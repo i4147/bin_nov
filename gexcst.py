@@ -18,7 +18,7 @@ from libcst.metadata import MetadataWrapper, PositionProvider
 
 
 OUTPUT_DIR: Path = Path("output")
-ARCHIVE_EXTENSIONS: tuple[str, ...] = (
+ARCHIVE_EXT: tuple[str, ...] = (
     ".whl",
     ".zip",
     ".tar.gz",
@@ -28,7 +28,7 @@ ARCHIVE_EXTENSIONS: tuple[str, ...] = (
     ".tar",
     ".zst",
 )
-ALLOWED_PYTHON_EXTENSIONS: tuple[str, str] = (".py", "")
+ALLOWED_PYTHON_EXT: tuple[str, str] = (".py", "")
 
 
 class EntityExtractor(cst.CSTVisitor):
@@ -227,7 +227,7 @@ def process_archive(path: Path) -> list[dict[str, Any]]:
 
 def worker_process(path_str: str) -> list[dict[str, Any]]:
     path = Path(path_str)
-    if path.name.endswith(ARCHIVE_EXTENSIONS):
+    if path.name.endswith(ARCHIVE_EXT):
         return process_archive(path)
     return process_single_file(path)
 
@@ -245,8 +245,8 @@ def main() -> int:
             path = Path(root) / name
             if path.is_relative_to(OUTPUT_DIR):
                 continue
-            is_archive = path.suffix in ARCHIVE_EXTENSIONS or any(path.name.endswith(ext) for ext in ARCHIVE_EXTENSIONS)
-            is_py = path.suffix in ALLOWED_PYTHON_EXTENSIONS or is_python_file_no_extension(path)
+            is_archive = path.suffix in ARCHIVE_EXT or any(path.name.endswith(ext) for ext in ARCHIVE_EXT)
+            is_py = path.suffix in ALLOWED_PYTHON_EXT or is_python_file_no_extension(path)
             if is_archive or is_py:
                 files_to_process.append(str(path))
     if not files_to_process:

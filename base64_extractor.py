@@ -420,7 +420,7 @@ _ASSET_PATTERNS: dict[str, re.Pattern[str]] = {
 }
 
 
-@dataclass
+@dataclass(slots=True)
 class AssetHit:
     path: Path
     start: int

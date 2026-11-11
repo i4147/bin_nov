@@ -38,7 +38,7 @@ except ImportError:
     HAS_ZSTD = False
 
 
-@dataclass
+@dataclass(slots=True)
 class UnusedImport:
     lineno: int
     col_offset: int
@@ -46,7 +46,7 @@ class UnusedImport:
     unused_names: list[str]
 
 
-@dataclass
+@dataclass(slots=True)
 class FileReport:
     path: str
     unused: list[UnusedImport] = field(default_factory=list)

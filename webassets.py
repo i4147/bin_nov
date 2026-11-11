@@ -116,7 +116,7 @@ def require_tool(tool: str, hint: str = "") -> None:
         raise RuntimeError(msg)
 
 
-@dataclass
+@dataclass(slots=True)
 class Result:
     path: Path
     original_size: int

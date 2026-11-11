@@ -31,7 +31,7 @@ KEY_LEFT: Final[str] = "\x1b[D"
 KEY_ESC: Final[str] = "\x1b"
 
 
-@dataclass
+@dataclass(slots=True)
 class FSItem:
     path: Path
     name: str

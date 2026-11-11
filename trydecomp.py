@@ -72,7 +72,7 @@ except ImportError:
     _lzo_mod = None
 
 
-@dataclass
+@dataclass(slots=True)
 class Detection:
     name: str
     kind: str

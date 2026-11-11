@@ -23,7 +23,7 @@ try:
 except ImportError:
     sys.stderr.write("Missing dependency: pip install deep-translator\n")
     raise
-DEFAULT_EXTENSIONS: tuple[str, ...] = (
+DEFAULT_EXT: tuple[str, ...] = (
     ".txt",
     ".md",
     ".py",
@@ -703,7 +703,7 @@ def _add_common(p: argparse.ArgumentParser) -> None:
     p.add_argument(
         "--extensions",
         nargs="+",
-        default=list(DEFAULT_EXTENSIONS),
+        default=list(DEFAULT_EXT),
         help="File extensions to process.",
     )
     p.add_argument("--exclude", nargs="+", default=[], help="Paths to exclude.")

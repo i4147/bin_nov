@@ -309,8 +309,8 @@ def parse_python_source(source: str, virtual_path: str) -> tuple[list[Entity], l
     return (visitor.entities, all_imports)
 
 
-PYTHON_EXTENSIONS: set[str] = {".py"}
-ARCHIVE_EXTENSIONS: set[str] = {".zip", ".whl", ".tar", ".gz", ".tgz", ".zst", ".xz"}
+PYTHON_EXT: set[str] = {".py"}
+ARCHIVE_EXT: set[str] = {".zip", ".whl", ".tar", ".gz", ".tgz", ".zst", ".xz"}
 
 
 def _looks_like_python(data: bytes) -> bool:

@@ -93,7 +93,7 @@ def _worker_gzip_file(args: tuple[str, int, int]) -> tuple[str, bool, int, int, 
         return (path_str, False, 0, 0, str(exc))
 
 
-@dataclass
+@dataclass(slots=True)
 class Config:
     algo: str
     level: int

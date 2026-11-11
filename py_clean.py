@@ -29,7 +29,7 @@ from libcst.helpers import get_full_name_for_node
 from loguru import logger
 
 
-SUPPORTED_EXTENSIONS = frozenset({".py", ".pyw"})
+SUPPORTED_EXT = frozenset({".py", ".pyw"})
 IGNORE_FILENAME: str = ".ignore"
 DEFAULT_IGNORES = frozenset({"__pycache__", ".git"})
 TYPING_MODULES = frozenset({"typing", "typing_extensions"})
@@ -395,7 +395,7 @@ def decode_file(raw_bytes: bytes) -> DecodedFile:
 
 
 def is_python_file(path: Path) -> bool:
-    if path.suffix in SUPPORTED_EXTENSIONS:
+    if path.suffix in SUPPORTED_EXT:
         return True
     if path.suffix:
         return False
@@ -603,7 +603,7 @@ class PoolExecutor:
                     callback(queue.popleft().get())
 
 
-@dataclass
+@dataclass(slots=True)
 class StatsTracker:
     scanned: int = 0
     changed: int = 0

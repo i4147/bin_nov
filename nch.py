@@ -7,6 +7,7 @@ import stat as st
 import sys
 import time
 from typing import Iterator, Optional, Sequence
+from dh import SKIP_DIRS
 
 DIR_MODE: int = 0o775
 FILE_MODE: int = 0o644
@@ -28,19 +29,6 @@ DEFAULT_EXEC_DIRS: frozenset[str] = frozenset({
     "libexec",
     "scripts",
     "tools",
-})
-DEFAULT_SKIP_DIRS: frozenset[str] = frozenset({
-    ".git",
-    ".hg",
-    ".svn",
-    "__pycache__",
-    ".pytest_cache",
-    ".venv",
-    "venv",
-    "env",
-    "node_modules",
-    "dist",
-    "build",
 })
 DEFAULT_SUFFIX_EXEC: tuple[str, ...] = (".sh", ".so")
 DEFAULT_DEEXEC_PATTERNS: tuple[str, ...] = ("*.py",)
@@ -150,7 +138,7 @@ class Config:
         self,
         root: Path,
         exec_dirs: frozenset[str] = DEFAULT_EXEC_DIRS,
-        skip_dirs: frozenset[str] = DEFAULT_SKIP_DIRS,
+        skip_dirs: frozenset[str] = SKIP_DIRS,
         suffix_exec: tuple[str, ...] = DEFAULT_SUFFIX_EXEC,
         preserve_existing_exec: bool = True,
         dir_mode: int = DIR_MODE,
@@ -388,7 +376,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def build_config(args: argparse.Namespace) -> Config:
-    skip = frozenset(args.skip_dir) if args.skip_dir else DEFAULT_SKIP_DIRS
+    skip = frozenset(args.skip_dir) if args.skip_dir else SKIP_DIRS
     execd = frozenset(args.exec_dir) if args.exec_dir else DEFAULT_EXEC_DIRS
 
     if args.suffix_exec:

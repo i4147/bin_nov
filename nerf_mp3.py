@@ -39,7 +39,7 @@ class Colors:
     CLEAR_LINE: str = "\033[2K\r"
 
 
-@dataclass
+@dataclass(slots=True)
 class ConversionStats:
     path: Path
     original_bitrate: int

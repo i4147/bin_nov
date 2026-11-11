@@ -384,7 +384,7 @@ def cmd_delete(args: argparse.Namespace) -> int:
     return 0
 
 
-@dataclass
+@dataclass(slots=True)
 class SymlinkOp:
     symlink: str
     target: str

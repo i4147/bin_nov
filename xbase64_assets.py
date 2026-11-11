@@ -21,7 +21,7 @@ from dh import WORKERS
 from loguru import logger
 
 
-SUPPORTED_EXTENSIONS: set[str] = {".html", ".css", ".js", ".jsx", ".tsx", ".ts"}
+SUPPORTED_EXT: set[str] = {".html", ".css", ".js", ".jsx", ".tsx", ".ts"}
 ASSETS_DIR: Path = Path("assets")
 CHUNK_SIZE: int = 8192
 MAX_FILE_SIZE: int = 100 * 1024 * 1024
@@ -42,7 +42,7 @@ BASE64_SIGNATURES: dict[str, tuple[bytes, str, str]] = {
 }
 
 
-@dataclass
+@dataclass(slots=True)
 class Base64Match:
     path: Path
     start_pos: int
@@ -52,7 +52,7 @@ class Base64Match:
     match_type: str
 
 
-@dataclass
+@dataclass(slots=True)
 class ExtractedAsset:
     original_file: Path
     asset_path: Path
@@ -61,7 +61,7 @@ class ExtractedAsset:
     extracted_bytes: bytes
 
 
-@dataclass
+@dataclass(slots=True)
 class ProcessingResult:
     path: Path
     success: bool
@@ -418,7 +418,7 @@ class FileDiscovery:
                     logger.warning(f"Path not found: {path}")
                     continue
                 if path.is_file():
-                    if path.suffix.lower() in SUPPORTED_EXTENSIONS:
+                    if path.suffix.lower() in SUPPORTED_EXT:
                         discovered.append(path)
                 else:
                     futures.append(executor.submit(FileDiscovery._discover_in_directory, path))
@@ -443,7 +443,7 @@ class FileDiscovery:
                     continue
                 if item.is_symlink():
                     continue
-                if item.is_file() and item.suffix.lower() in SUPPORTED_EXTENSIONS:
+                if item.is_file() and item.suffix.lower() in SUPPORTED_EXT:
                     files.append(item)
         except Exception as e:
             logger.error(f"Error discovering files in {directory}: {e}")

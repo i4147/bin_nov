@@ -29,7 +29,7 @@ _DASH_COLLAPSE: re.Pattern[str] = re.compile(r"-+")
 _SANITIZE: re.Pattern[str] = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
 
 
-@dataclass
+@dataclass(slots=True)
 class CleanConfig:
     rules: list[tuple[str, str]] = field(default_factory=lambda: list(DEFAULT_RULES))
     trailing_only: bool = False
@@ -51,7 +51,7 @@ class CleanConfig:
     log_path: Optional[Path] = None
 
 
-@dataclass
+@dataclass(slots=True)
 class RenameResult:
     source: Path
     target: Optional[Path]

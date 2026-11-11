@@ -15,7 +15,7 @@ import sys
 from typing import Any, Optional, Sequence
 
 
-@dataclass
+@dataclass(slots=True)
 class CommitInfo:
     sha: str
     subject: str

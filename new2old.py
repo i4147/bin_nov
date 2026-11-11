@@ -17,7 +17,7 @@ PYPROJECT_PATH: Path = Path("pyproject.toml")
 SETUP_PATH: Path = Path("setup.py")
 
 
-@dataclass
+@dataclass(slots=True)
 class ProjectInfo:
     config: dict[str, Any]
     project: dict[str, Any]

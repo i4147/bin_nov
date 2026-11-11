@@ -24,6 +24,7 @@ from typing import Any
 from atomicio import atomic_write_file
 from loguru import logger
 
+from dh import MAX_WORKERS, SKIP_DIRS
 
 try:
     import libcst as cst
@@ -445,9 +446,7 @@ def discover_files(targets: list[Path]) -> list[Path]:
                 found.append(target)
         elif target.is_dir():
             for root, dirs, files in os.walk(target):
-                dirs[:] = [
-                    d for d in dirs if not d.startswith(".") and d not in ("__pycache__", "venv", "build", "dist")
-                ]
+                dirs[:] = [d for d in dirs if not d.startswith(".") and d not in SKIP_DIRS]
                 for file_name in files:
                     file_path = Path(root) / file_name
                     if is_python_file(file_path):
@@ -518,10 +517,9 @@ def run_pipeline(paths: list[Path], options: StripOptions) -> None:
     options_dict = options.to_dict()
     tasks = [(str(p), options_dict) for p in files]
 
-    num_workers = 8
     async_results = []
 
-    with multiprocessing.Pool(processes=num_workers) as pool:
+    with multiprocessing.Pool(processes=MAX_WORKERS) as pool:
         for task in tasks:
             res = pool.apply_async(process_file_worker, (task,))
             async_results.append(res)

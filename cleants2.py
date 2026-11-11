@@ -18,7 +18,7 @@ from tree_sitter import Language, Node, Parser
 PathLike = str | Path
 
 
-@dataclass
+@dataclass(slots=True)
 class ProcessResult:
     path: Path
     success: bool

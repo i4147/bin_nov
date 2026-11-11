@@ -63,7 +63,7 @@ IFISH: set[str] = {"if", "elif", "else", "except", "finally"}
 SCOPED: set[str] = {"for", "with", "ndef"}
 
 
-@dataclass
+@dataclass(slots=True)
 class Tok:
     kind: str
     s: str
@@ -82,7 +82,7 @@ def lex(src: str) -> list[Tok]:
     return toks
 
 
-@dataclass
+@dataclass(slots=True)
 class Stmt:
     toks: list[Tok]
     header: bool = False
@@ -252,7 +252,7 @@ def header_names(st: Stmt) -> set[str]:
     return out
 
 
-@dataclass
+@dataclass(slots=True)
 class Frame:
     kind: str
     names: set

@@ -46,7 +46,7 @@ def ts_parser() -> Parser:
     return Parser(Language(tspy.language()))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Options:
     full: bool = False
     docs: bool = False

@@ -77,7 +77,7 @@ def read_action() -> str:
     return classify(line[:1] if line else "") or ""
 
 
-@dataclass
+@dataclass(slots=True)
 class Document:
     name: str
     docstring: str | None = None

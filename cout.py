@@ -97,7 +97,7 @@ COMMENT_MAP: dict[str, str] = {
 }
 
 
-@dataclass
+@dataclass(slots=True)
 class ChunkResult:
     lines: list[str]
     commented: int = 0

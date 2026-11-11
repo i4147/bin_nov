@@ -25,7 +25,7 @@ PRESERVED_COMMENT_MARKERS: tuple[str, ...] = ("# fmt", "# type")
 DEFAULT_POOL_SIZE: int = 8
 
 
-@dataclass
+@dataclass(slots=True)
 class FileResult:
     path: str
     comments_removed: int = 0

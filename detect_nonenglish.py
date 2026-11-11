@@ -30,7 +30,7 @@ from typing import Any, Optional, Sequence, TextIO
 from dh import MAX_WORKERS, SKIP_DIRS
 
 
-DEFAULT_EXTENSIONS: frozenset[str] = frozenset({
+DEFAULT_EXT: frozenset[str] = frozenset({
     ".txt",
     ".csv",
     ".tsv",
@@ -87,7 +87,7 @@ SAMPLE_CHARS: int = 10_000
 MIN_LINE_LEN: int = 3
 
 
-@dataclass
+@dataclass(slots=True)
 class LineFinding:
     line_num: int
     text: str
@@ -95,7 +95,7 @@ class LineFinding:
     confidence: float
 
 
-@dataclass
+@dataclass(slots=True)
 class FileResult:
     path: str
     language: Optional[str] = None
@@ -520,7 +520,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             file=sys.stderr,
         )
         return 2
-    extensions = set(DEFAULT_EXTENSIONS)
+    extensions = set(DEFAULT_EXT)
     extensions.update(ext.lower() for ext in args.extensions)
     exclude_dirs = set(SKIP_DIRS) | set(args.exclude_dirs)
     print(f"Scanning with backend: {args.backend}", file=sys.stderr)

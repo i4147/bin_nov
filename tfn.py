@@ -4,7 +4,7 @@
 import argparse
 from pathlib import Path
 
-from dh import FONT_EXTENSIONS, unique_path
+from dh import FONT_EXT, unique_path
 from fontTools.ttLib import TTFont
 
 
@@ -101,7 +101,7 @@ def process_directory(directory: Path, recursive: bool = True, apply: bool = Fal
     directory = Path(directory)
     renamed_count = 0
     for item in directory.iterdir():
-        if item.is_file() and item.suffix.lower() in FONT_EXTENSIONS:
+        if item.is_file() and item.suffix.lower() in FONT_EXT:
             original_name, new_name = rename_font_file(item, apply)
             if original_name and new_name:
                 if apply:

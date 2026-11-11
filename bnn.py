@@ -18,7 +18,7 @@ from joblib import Parallel, delayed
 from loguru import logger
 
 
-@dataclass
+@dataclass(slots=True)
 class FileStats:
     path: Path
     success: bool

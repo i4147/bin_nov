@@ -52,7 +52,7 @@ except ImportError:
 log = logger
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Codec:
     name: str
     ext: str

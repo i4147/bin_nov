@@ -6,7 +6,7 @@ import re
 
 
 # Text-based file extensions to scan
-TEXT_EXTENSIONS: set[str] = {".txt", ".md", ".csv", ".json", ".xml", ".html", ".htm", ".log", ".py", ".yaml", ".yml"}
+TEXT_EXT: set[str] = {".txt", ".md", ".csv", ".json", ".xml", ".html", ".htm", ".log", ".py", ".yaml", ".yml"}
 
 # Match sentences ending with Persian or English question marks
 QUESTION_PATTERN = re.compile(r"[^؟?]*[؟?]")
@@ -19,7 +19,7 @@ def main() -> None:
         if not path.is_file():
             continue
 
-        if path.name == "q.txt" or path.suffix.lower() not in TEXT_EXTENSIONS:
+        if path.name == "q.txt" or path.suffix.lower() not in TEXT_EXT:
             continue
 
         try:

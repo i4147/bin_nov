@@ -24,7 +24,7 @@ from loguru import logger
 
 PRAGMA_PREFIXES: Final[tuple[str, ...]] = ("# type:", "# fmt:", "# fmt: skip", "# noqa")
 SHEBANG_PREFIX: Final[str] = "#!"
-PY_EXTENSIONS: Final[frozenset[str]] = frozenset({".py", ".pyi", ".pyw"})
+PY_EXT: Final[frozenset[str]] = frozenset({".py", ".pyi", ".pyw"})
 PY_SHEBANG_HINTS: Final[tuple[str, ...]] = ("python",)
 
 
@@ -73,7 +73,7 @@ def _is_extensionless_python_file(path: Path) -> bool:
 def is_python_file(path: Path) -> bool:
     if not path.is_file():
         return False
-    if path.suffix in PY_EXTENSIONS:
+    if path.suffix in PY_EXT:
         return True
     if path.suffix == "":
         return _is_extensionless_python_file(path)

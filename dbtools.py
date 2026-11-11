@@ -678,14 +678,14 @@ _SQL_INT_RE = re.compile(r"^[+-]?\d+$")
 _SQL_FLOAT_RE = re.compile(r"^[+-]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][+-]?\d+)?$")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class SqlJob:
     source: Path
     destination: Path
     overwrite: bool
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class SqlResult:
     source: Path
     destination: Path

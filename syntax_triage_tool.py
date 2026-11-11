@@ -16,10 +16,7 @@ import shutil
 import subprocess
 import sys
 from typing import Any, Iterable
-
-
-DEFAULT_WORKERS: int = 8
-SKIP_DIRS: frozenset[str] = frozenset({".git", "__pycache__", "venv", ".venv"})
+from dh import MAX_WORKERS, SKIP_DIRS
 
 
 def unique_destination(dest: Path) -> Path:

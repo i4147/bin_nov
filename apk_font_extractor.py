@@ -20,11 +20,11 @@ from loguru import logger
 
 
 DEFAULT_OUTPUT_DIR: Path = Path("/sdcard/_static/fonts")
-FONT_EXTENSIONS: frozenset[str] = frozenset({".ttf", ".woff", ".woff2"})
+FONT_EXT: frozenset[str] = frozenset({".ttf", ".woff", ".woff2"})
 APK_TIMEOUT_SECONDS: int = 600
 
 
-@dataclass
+@dataclass(slots=True)
 class FontInfo:
     family_name: str
     style_name: str
@@ -35,7 +35,7 @@ class FontInfo:
 
 
 class APKFontExtractor:
-    FONT_EXTENSIONS: frozenset[str] = FONT_EXTENSIONS
+    FONT_EXT: frozenset[str] = FONT_EXT
 
     def __init__(self, output_dir: Path = DEFAULT_OUTPUT_DIR) -> None:
         self.output_dir: Path = Path(output_dir)
@@ -66,7 +66,7 @@ class APKFontExtractor:
             with zipfile.ZipFile(apk_path, "r") as zip_ref:
                 for file_info in zip_ref.filelist:
                     internal_path = Path(file_info.filename)
-                    if internal_path.suffix.lower() not in self.FONT_EXTENSIONS:
+                    if internal_path.suffix.lower() not in self.FONT_EXT:
                         continue
                     try:
                         font_data: bytes = zip_ref.read(file_info.filename)

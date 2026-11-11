@@ -31,7 +31,7 @@ C_EXEC: str = "\x1b[1;32m"
 ANSI_RE: re.Pattern[str] = re.compile(r"\x1b\[[0-9;]*m")
 
 
-@dataclass
+@dataclass(slots=True)
 class LsOptions:
     recursive: bool = False
     sort_by: str = "name"

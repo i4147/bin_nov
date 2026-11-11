@@ -60,7 +60,7 @@ DEFAULT_EXTS_BY_TOOL: dict[str, set[str]] = {
 }
 
 
-@dataclass
+@dataclass(slots=True)
 class FileResult:
     path: Path
     success: bool

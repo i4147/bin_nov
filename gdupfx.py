@@ -80,7 +80,7 @@ def get_full_hashlib_md5(filepath: str) -> tuple[str, Optional[str]]:
         return filepath, None
 
 
-@dataclass
+@dataclass(slots=True)
 class Finder:
     path: Path
     same_content: dict[str, list[str]] = field(default_factory=dict)

@@ -39,7 +39,7 @@ BOX_TL, BOX_TR, BOX_BL, BOX_BR = "╭", "╮", "╰", "╯"
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 
 
-@dataclass
+@dataclass(slots=True)
 class BatConfig:
     files: list = field(default_factory=list)
     language: str | None = None

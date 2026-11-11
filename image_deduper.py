@@ -13,7 +13,7 @@ from PIL import Image
 
 
 DRY_RUN: bool = True
-IMAGE_EXTENSIONS: tuple[str, ...] = (".webp", ".jpg", ".jpeg", ".png", ".tiff", ".tif")
+IMAGE_EXT: tuple[str, ...] = (".webp", ".jpg", ".jpeg", ".png", ".tiff", ".tif")
 
 
 def main() -> None:
@@ -22,7 +22,7 @@ def main() -> None:
     image_count = 0
     for root, dirs, files in os.walk("."):
         for file_name in files:
-            if file_name.lower().endswith(IMAGE_EXTENSIONS):
+            if file_name.lower().endswith(IMAGE_EXT):
                 image_count += 1
                 file_path = Path(root).joinpath(file_name)
                 try:

@@ -17,7 +17,7 @@ PackageInfo = dict[str, str]
 DEFAULT_DEST: str = "empty_wheels"
 DEFAULT_METHOD: str = "basic"
 VALID_METHODS: set[str] = {"basic", "record", "ext"}
-CODE_EXTENSIONS: set[str] = {".py", ".so", ".pyi", ".pyd", ".pyx"}
+CODE_EXT: set[str] = {".py", ".so", ".pyi", ".pyd", ".pyx"}
 
 
 def is_empty_wheel_basic(wheel_path: Path) -> bool:
@@ -70,7 +70,7 @@ def is_empty_wheel_ext(wheel_path: Path) -> bool:
     try:
         with zipfile.ZipFile(wheel_path, "r") as zf:
             for file_name in zf.namelist():
-                if Path(file_name).suffix.lower() in CODE_EXTENSIONS:
+                if Path(file_name).suffix.lower() in CODE_EXT:
                     return False
     except zipfile.BadZipFile:
         print(f"Warning: {wheel_path} is not a valid ZIP file. Skipping.")

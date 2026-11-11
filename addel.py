@@ -94,7 +94,7 @@ def git(repo: Path, *args: str) -> str:
     return proc.stdout
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Commit:
     sha: str
     short: str
@@ -134,7 +134,7 @@ def list_commits(repo: Path, revision: str, first_parent: bool = False) -> list[
     return [parse_commit_header(line) for line in git(repo, *args).splitlines() if UNIT_SEP in line]
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Change:
     status: str
     path: str
@@ -144,7 +144,7 @@ class Change:
         return self.status == "A"
 
 
-@dataclass
+@dataclass(slots=True)
 class CommitEntry:
     commit: Commit
     added: list[str] = field(default_factory=list)
@@ -300,7 +300,7 @@ def walk_ledger(
     return entries
 
 
-@dataclass
+@dataclass(slots=True)
 class Verification:
     tracked_now: int
     ghosts: list[str] = field(default_factory=list)
@@ -336,7 +336,7 @@ def directory_of(path: str, depth: int = 2) -> str:
     return "/".join(parts[:depth]) if len(parts) > depth else "/".join(parts[:-1])
 
 
-@dataclass
+@dataclass(slots=True)
 class Summary:
     commits: int
     active_commits: int

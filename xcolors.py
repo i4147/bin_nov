@@ -74,7 +74,7 @@ class Options:
     unique: bool
 
 
-@dataclass
+@dataclass(slots=True)
 class Summary:
     files: int = 0
     with_colors: int = 0

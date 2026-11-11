@@ -104,7 +104,7 @@ def colored(
     return Color._build_code(text, fg, bg, attrs)
 
 
-MIME_TO_EXTENSIONS: Final[dict[str, list[str]]] = {
+MIME_TO_EXT: Final[dict[str, list[str]]] = {
     "application/pdf": [".pdf"],
     "application/msword": [".doc"],
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
@@ -361,17 +361,17 @@ MIME_TO_EXTENSIONS: Final[dict[str, list[str]]] = {
     "application/vnd.sqlite3": [".db", ".sqlite", ".sqlite3"],
     "application/octet-stream": [".bin", ".o"],
 }
-SKIP_EXTENSIONS: Final[set[str]] = {".css", ".js", ".ts", ".jsx", ".tsx"}
+SKIP_EXT: Final[set[str]] = {".css", ".js", ".ts", ".jsx", ".tsx"}
 SKIP_MIME_TYPES: Final[set[str]] = {"text/plain", "application/octet-stream"}
 
 
-@dataclass
+@dataclass(slots=True)
 class MimeResult:
     mime_type: str | None
     error: str | None = None
 
 
-@dataclass
+@dataclass(slots=True)
 class MismatchResult:
     path: Path
     current_ext: str
@@ -440,7 +440,7 @@ def safe_rename(old_path: Path, new_path: Path) -> bool:
 
 
 def detect_mismatch(base_dir: Path, path: Path) -> MismatchResult | None:
-    if path.suffix.lower() in SKIP_EXTENSIONS:
+    if path.suffix.lower() in SKIP_EXT:
         return None
     current_ext: str = path.suffix.lower()
     shebang_ext: str | None = fix_by_shebang(path)
@@ -459,7 +459,7 @@ def detect_mismatch(base_dir: Path, path: Path) -> MismatchResult | None:
     mime_type: str | None = mime_result.mime_type
     if not mime_type or mime_type in SKIP_MIME_TYPES:
         return None
-    expected_exts: list[str] = MIME_TO_EXTENSIONS.get(mime_type, [])
+    expected_exts: list[str] = MIME_TO_EXT.get(mime_type, [])
     if not expected_exts:
         return None
     expected_ext: str = expected_exts[0].lower()

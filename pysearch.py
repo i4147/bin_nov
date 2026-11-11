@@ -57,7 +57,7 @@ TEXT_EXT_DEFAULT: set[str] = {
     ".yml",
     ".yaml",
 }
-BINARY_EXTENSIONS_DEFAULT: set[str] = {".pyc", ".bak"}
+BINARY_EXT_DEFAULT: set[str] = {".pyc", ".bak"}
 ARCHIVE_SUFFIXES: tuple[str, ...] = (
     ".tar.gz",
     ".tar.xz",
@@ -96,7 +96,7 @@ def walk_files(
     blocked_exts: Optional[set[str]] = None,
 ) -> Iterator[Path]:
     skip = SKIP_DIRS if skip_dirs is None else skip_dirs
-    blocked = BINARY_EXTENSIONS_DEFAULT if blocked_exts is None else blocked_exts
+    blocked = BINARY_EXT_DEFAULT if blocked_exts is None else blocked_exts
 
     def ok(p: Path) -> bool:
         try:

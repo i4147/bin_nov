@@ -239,7 +239,7 @@ class Progress:
             self.stream.flush()
 
 
-@dataclass
+@dataclass(slots=True)
 class StreamInfo:
     status: int
     total_length: int | None

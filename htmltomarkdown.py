@@ -576,7 +576,7 @@ TAG_CLS: dict[str, type[Tag]] = {
 }
 
 
-@dataclass
+@dataclass(slots=True)
 class ParserState:
     tag_stack: list[Tag] = field(default_factory=list)
     unhandeld_tags: list[str] = field(default_factory=list)

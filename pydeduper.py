@@ -68,14 +68,14 @@ KIND_TO_FILE_DEFAULT: dict[str, str] = {"func": "funcs.py", "class": "classes.py
 TYPEVAR_NAMES: set[str] = {"TypeVar", "NewType", "ParamSpec", "TypeVarTuple"}
 
 
-@dataclass
+@dataclass(slots=True)
 class Source:
     origin: str
     text: str
     path: Optional[Path] = None
 
 
-@dataclass
+@dataclass(slots=True)
 class Definition:
     kind: str
     name: str

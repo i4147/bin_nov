@@ -46,7 +46,7 @@ SUFFIX_TYPES: tuple[tuple[str, str], ...] = (
     (".lz4", "lz4"),
     (".7z", "7z"),
 )
-SUPPORTED_EXTENSIONS: set[str] = {suffix for suffix, _ in SUFFIX_TYPES}
+SUPPORTED_EXT: set[str] = {suffix for suffix, _ in SUFFIX_TYPES}
 TARFILE_MODES: dict[str, str] = {"tar": "r:", "gz": "r:gz", "xz": "r:xz", "bz2": "r:bz2"}
 STREAM_BACKENDS: dict[str, str] = {
     "tar.zst": "zstd",
@@ -191,7 +191,7 @@ def check_integrity(archive_path: Path) -> bool:
 
 def scan_archives(directory: Path) -> list[Path]:
     found: set[Path] = set()
-    for pattern in SUPPORTED_EXTENSIONS:
+    for pattern in SUPPORTED_EXT:
         found.update(path for path in directory.rglob(f"*{pattern}") if path.is_file())
     return sorted(found)
 
@@ -269,7 +269,7 @@ def main() -> None:
         archives = find_archives()
     if not archives:
         print("No archive files found or specified.")
-        print(f"Supported formats: {', '.join(sorted(SUPPORTED_EXTENSIONS))}")
+        print(f"Supported formats: {', '.join(sorted(SUPPORTED_EXT))}")
         print("Usage: python extractor.py [archive1.tar archive2.zip ...]")
         sys.exit(1)
     print(f"Found {len(archives)} archive(s) to process")

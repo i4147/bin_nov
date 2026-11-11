@@ -35,7 +35,7 @@ try:
 except ImportError:
     REGEX_AVAILABLE = False
     regex = re
-SUPPORTED_EXTENSIONS: set[str] = {".html", ".htm"}
+SUPPORTED_EXT: set[str] = {".html", ".htm"}
 CHUNK_SIZE: int = 8192
 MAX_FILE_SIZE: int = 50 * 1024 * 1024
 MIN_TITLE_LENGTH: int = 2
@@ -281,7 +281,7 @@ TRANSLITERATION_MAPS: list[dict[str, str]] = [
 ]
 
 
-@dataclass
+@dataclass(slots=True)
 class HtmlFile:
     path: Path
     title: str | None = None
@@ -290,7 +290,7 @@ class HtmlFile:
     error: str | None = None
 
 
-@dataclass
+@dataclass(slots=True)
 class ProcessingResult:
     path: Path
     original_name: str
@@ -641,7 +641,7 @@ class FileDiscovery:
                     logger.warning(f"Path not found: {path}")
                     continue
                 if path.is_file():
-                    if path.suffix.lower() in SUPPORTED_EXTENSIONS:
+                    if path.suffix.lower() in SUPPORTED_EXT:
                         discovered.append(path)
                 else:
                     futures.append(executor.submit(FileDiscovery._discover_in_directory, path))
@@ -666,7 +666,7 @@ class FileDiscovery:
                     continue
                 if item.is_symlink():
                     continue
-                if item.is_file() and item.suffix.lower() in SUPPORTED_EXTENSIONS:
+                if item.is_file() and item.suffix.lower() in SUPPORTED_EXT:
                     files.append(item)
         except Exception as e:
             logger.error(f"Error discovering files in {directory}: {e}")

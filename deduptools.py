@@ -58,7 +58,7 @@ def slice_lines(lines: Sequence[str], start: int, end: int) -> str:
     return "".join(lines[start - 1 : end])
 
 
-@dataclass
+@dataclass(slots=True)
 class Declaration:
     kind: str
     name: str

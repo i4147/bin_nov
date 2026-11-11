@@ -300,7 +300,7 @@ def is_identity_translation(original: str, translated: str, threshold: float = 0
     return ratio >= threshold
 
 
-@dataclass
+@dataclass(slots=True)
 class TranslationState:
     source_file: str
     source_lang: str

@@ -49,7 +49,7 @@ CLI_ART_INTEGRITY: str = r"""
 /_/  |_/_/   \___/_/ /_//_/ |___/\___/ /____/\___/\__,_/_/ /_/
   [ INTEGRITY VALIDATION & EXTRACTED SIZE SCANNER v1.4.2 ]
 """
-SUPPORTED_EXTENSIONS: tuple[str, ...] = (
+SUPPORTED_EXT: tuple[str, ...] = (
     ".tar",
     ".tar.gz",
     ".tgz",
@@ -107,7 +107,7 @@ ARCHIVE_TYPES: dict[str, str] = {
 
 def get_archive_type_info(path: Path):
     fname = str(path).lower()
-    for ext in sorted(SUPPORTED_EXTENSIONS, key=len, reverse=True):
+    for ext in sorted(SUPPORTED_EXT, key=len, reverse=True):
         if fname.endswith(ext):
             type_label = ARCHIVE_TYPES.get(ext, f"Archive ({ext})")
             return ext, type_label

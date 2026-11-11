@@ -24,7 +24,7 @@ DEFAULT_OLD_USERNAME: str = "i4147"
 DEFAULT_OLD_EMAIL: str = "yesnacoc@gmail.com"
 DEFAULT_NEW_USERNAME: str = "i4147"
 DEFAULT_NEW_EMAIL: str = "yesnacoc@gmail.com"
-TEXT_EXTENSIONS: set[str] = {
+TEXT_EXT: set[str] = {
     ".py",
     ".toml",
     ".cfg",
@@ -94,7 +94,7 @@ def should_skip_dir(dirname: str) -> bool:
 def matches_target_file(path: Path) -> bool:
     if path.name in TEXT_FILENAMES:
         return True
-    return path.suffix in TEXT_EXTENSIONS
+    return path.suffix in TEXT_EXT
 
 
 def backup_file(path: Path) -> Path:

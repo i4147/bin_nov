@@ -236,7 +236,7 @@ def split_text_sentences(
     return [p for p in parts if p]
 
 
-@dataclass
+@dataclass(slots=True)
 class SplitCharsConfig:
     algorithm: str
     min_chars: int

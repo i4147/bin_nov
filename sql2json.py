@@ -58,14 +58,14 @@ INTEGER_RE = re.compile(r"^[+-]?\d+$")
 FLOAT_RE = re.compile(r"^[+-]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][+-]?\d+)?$")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Job:
     source: Path
     destination: Path
     overwrite: bool
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Result:
     source: Path
     destination: Path
