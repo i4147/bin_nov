@@ -1,6 +1,4 @@
 #!/data/data/com.termux/files/usr/bin/env python
-from __future__ import annotations
-
 import json
 import os
 import shutil
@@ -24,11 +22,11 @@ DEFAULT_ENV_FILE = Path.home() / ".env"
 DEFAULT_GLOBAL_GITIGNORE = Path.home() / ".gitignore"
 DEFAULT_USERNAME = "i4147"
 DEFAULT_GIT_USER = "i4147"
-DEFAULT_GIT_EMAIL = "adnanonagh@gmail.com"
+DEFAULT_GIT_EMAIL = "yesnacoc@gmail.com"
 DEFAULT_BRANCH = "main"
 DEFAULT_DESCRIPTION = "created with python"
 
-LOG_DIR = Path.home() / ".local" / "share" / "ghrepo"
+LOG_DIR = Path.home() / "tmp" / "apps" / "ghrepo"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 logger.remove()
 logger.add(

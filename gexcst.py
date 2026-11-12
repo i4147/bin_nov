@@ -16,6 +16,7 @@ import zipfile
 
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
+from dh import unique_path
 
 OUTPUT_DIR: Path = Path("output")
 ARCHIVE_EXT: tuple[str, ...] = (
@@ -118,26 +119,13 @@ class EntityExtractor(cst.CSTVisitor):
         self.scope_depth -= 1
 
 
-def get_unique_path(base_path: Path) -> Path:
-    if not base_path.exists():
-        return base_path
-    name = base_path.stem
-    suffix = base_path.suffix
-    i = 1
-    while True:
-        new_path = base_path.with_name(f"{name}_{i}{suffix}")
-        if not new_path.exists():
-            return new_path
-        i += 1
-
-
 def save_entity(entity: dict[str, Any]) -> None:
     filename_base = f"{entity['full_name']}.py"
     output_path_base = OUTPUT_DIR / entity["type"] / filename_base
     output_path_base.parent.mkdir(parents=True, exist_ok=True)
     comment = f"# Original path: {entity['path']}\n"
     content = comment + entity["code"]
-    final_py_path = get_unique_path(output_path_base)
+    final_py_path = unique_path(output_path_base)
     try:
         with open(final_py_path, "w", encoding="utf-8") as f:
             f.write(content)

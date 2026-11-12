@@ -17,6 +17,7 @@ import re
 from typing import Any, Generator
 import unicodedata
 import uuid
+from dh import unique_path
 
 
 class PathRenamer:
@@ -89,20 +90,6 @@ class PathRenamer:
 
     def clean_unique_stem(self, stem: str) -> str:
         return re.sub(r"(_\d+)+$", "", stem)
-
-    def get_unique_path(self, target_path: Path) -> Path:
-        if not target_path.exists():
-            return target_path
-        parent = target_path.parent
-        suffix = target_path.suffix
-        clean_stem = self.clean_unique_stem(target_path.stem)
-        counter = 1
-        while True:
-            new_name = f"{clean_stem}_{counter}{suffix}"
-            new_path = parent / new_name
-            if not new_path.exists():
-                return new_path
-            counter += 1
 
     def transliterate_text(self, text: str) -> str:
         norm = unicodedata.normalize("NFKD", text)
@@ -232,7 +219,7 @@ class PathRenamer:
                 elif getattr(self.args, "backup", False):
                     backup_path = path.parent / f"{new_path.stem}.bak{new_path.suffix}"
                     if backup_path.exists():
-                        backup_path = self.get_unique_path(backup_path)
+                        backup_path = unique_path(backup_path)
                     if not self.args.dry_run:
                         new_path.rename(backup_path)
                 elif getattr(self.args, "interactive", False):
@@ -240,7 +227,7 @@ class PathRenamer:
                     if resp != "y":
                         continue
                 else:
-                    new_path = self.get_unique_path(new_path)
+                    new_path = unique_path(new_path)
             if self.args.dry_run:
                 if not self.args.quiet:
                     print(f"[DRY RUN] {path} -> {new_path.name}")
