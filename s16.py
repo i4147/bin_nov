@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Split text files into chunks of at most ~16 000 characters.
 Cuts each file at a sentence or line boundary near the ``CHUNKSIZE`` limit (15 850 characters) and writes the parts as separate files, which keeps every chunk inside a model's context window.
-Usage: s16 [files ...] Examples: $ s16 article.txt Runs as a script (``python s16.py``) in the directory it should act on; the module can also be imported."""
+Usage: s16 [files ...] Examples: $ s16 article.txt Runs as a script (``python s16.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys
 
 from dh import mpf_map
-
 
 CHUNKSIZE: int = 15_850
 

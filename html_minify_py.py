@@ -2,7 +2,8 @@
 """Minify HTML files in place with lxml.
 Parses the document with lxml, drops comments, collapses whitespace between tags and optionally removes attribute quotes before rewriting the file.
 ``HTMLMinifier`` exposes the same transformation as a class.
-Usage: html_minify_py [paths ...] Examples: $ html_minify_py site/ Runs as a script (``python html_minify_py.py``) in the directory it should act on; the module can also be imported."""
+Usage: html_minify_py [paths ...] Examples: $ html_minify_py site/ Runs as a script (``python html_minify_py.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re

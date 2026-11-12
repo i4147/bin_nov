@@ -2,7 +2,8 @@
 """Format JavaScript, CSS, HTML, JSON and TypeScript files with prettier.
 Walks the current directory for the supported extensions (``.min.js``/``.min.css``/``.d.ts`` excluded), runs prettier on each file with a timeout in a worker pool, and moves the files that fail into an ``error`` folder with a unique name.
 A summary of changed/failed files is printed at the end.
-Usage: pret2 Examples: $ pret2 Runs as a script (``python pret2.py``) in the directory it should act on; the module can also be imported."""
+Usage: pret2 Examples: $ pret2 Runs as a script (``python pret2.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from multiprocessing.pool import Pool
 from pathlib import Path
@@ -12,7 +13,6 @@ from typing import Final, NamedTuple
 
 from dh import MAX_WORKERS
 from loguru import logger
-
 
 PRETTIER_TIMEOUT_SECONDS: Final[int] = 900
 ERROR_DIR_NAME: Final[str] = "error"

@@ -17,7 +17,6 @@ from dh import MAX_WORKERS, fsz, gsz
 from loguru import logger
 from xxhash import xxh64
 
-
 CHUNKSIZE: int = 32768
 SKIP_PARTS: tuple[str, ...] = (".git", "__pycache__", ".mypy_cache", ".ruff_cache")
 POOL_METHODS: tuple[str, ...] = ("map", "starmap", "imap_unordered", "apply_async")

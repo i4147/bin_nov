@@ -18,7 +18,6 @@ from typing import Any
 
 import pycurl
 
-
 IMAGE_EXTS: set[str] = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".svg", ".tif", ".tiff", ".ico", ".avif"}
 USER_AGENT: str = "Mozilla/5.0 (compatible; ImageCrawler/1.0)"
 SAFE_RE = re.compile(r"[^A-Za-z0-9._-]+")

@@ -16,7 +16,6 @@ from pathlib import Path
 import sys
 from typing import Any, Iterable, Sequence
 
-
 DEFAULT_PACKAGE: str = "dh"
 DEFAULT_DIR = Path.home() / "bin"
 DEFAULT_OUTPUT = Path.home() / "dh_usage.txt"

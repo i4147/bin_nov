@@ -2,7 +2,8 @@
 """Slim Python sources down for pasting into a prompt.
 Drops the comments and docstrings with :mod:`tokenize` and shortens the local variable names that only occur once, so the file keeps its structure while taking fewer tokens.
 Files are handled in parallel.
-Usage: rprompt [paths ...] Examples: $ rprompt script.py Rewrites the sources in place, so keep a copy before shrinking a file for a prompt."""
+Usage: rprompt [paths ...] Examples: $ rprompt script.py Rewrites the sources in place, so keep a copy before shrinking a file for a prompt.
+"""
 
 import io
 from pathlib import Path

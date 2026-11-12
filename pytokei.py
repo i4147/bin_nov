@@ -15,7 +15,6 @@ from pathlib import Path
 import re
 from typing import Any, Sequence
 
-
 LANGUAGE_EXT: dict[str, list[str]] = {
     "python": [".py", ".pyi"],
     "javascript": [".js"],

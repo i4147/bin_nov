@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Move files (or glob matches) into ``~/.local/bin``.
 Accepts file paths, shell globs and a ``-f LISTFILE`` with one pattern per line, resolves the matches, gives a unique name to the collisions and moves each file into ``~/.local/bin``, printing the new names.
-Usage: tolo [-f LISTFILE] [files ...] Examples: $ tolo tool.py $ tolo -f scripts.txt Runs as a script (``python tolo.py``) in the directory it should act on; the module can also be imported."""
+Usage: tolo [-f LISTFILE] [files ...] Examples: $ tolo tool.py $ tolo -f scripts.txt Runs as a script (``python tolo.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import glob
 from pathlib import Path
@@ -9,7 +10,6 @@ import shutil
 import sys
 
 from dh import unique_path
-
 
 h = Path.home() / ".local" / "bin"
 

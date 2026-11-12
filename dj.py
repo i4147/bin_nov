@@ -2,14 +2,14 @@
 """Delete junk files from directories that are not under version control.
 Reads extra junk names from ``/sdcard/data/junk``, combines them with the built-in suffix list (``.pyc``, ``.tmp``, ``.log``, ``.bak``, ``.exe``, ``.dll`` ...) and removes matching files and caches.
 Git metadata (``.gitignore``, ``.gitkeep``, ``.github``) is preserved and nothing is touched inside a repository unless the rules allow it.
-Usage: dj [paths ...] Examples: $ dj ~/tmp Runs as a script (``python dj.py``) in the directory it should act on; the module can also be imported."""
+Usage: dj [paths ...] Examples: $ dj ~/tmp Runs as a script (``python dj.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import shutil
 import sys
 
 from rignore import walk as _walk
-
 
 JUNK_FILE: Path = Path("/sdcard/data/junk")
 

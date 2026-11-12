@@ -5,7 +5,8 @@ Analysis / deduplication ------------------------ - ``asteval.py`` (AST parse, c
 - ``luaeval.py`` does the same job for Lua via tree-sitter -> ``--language lua`` (optional deps: ``tree-sitter``, ``tree-sitter-lua``).
 - Hardcoded pool size 8 -> ``-j/--workers``; ``error``/``ok`` dir names are options.
 The private ``dh`` walker is stdlib ``pathlib`` now.
-Examples -------- python3 syntax_triage_tool.py triage --dry-run python3 syntax_triage_tool.py triage src/ --layout split --action move python3 syntax_triage_tool.py triage --checker black --layout split python3 syntax_triage_tool.py triage --language lua"""
+Examples -------- python3 syntax_triage_tool.py triage --dry-run python3 syntax_triage_tool.py triage src/ --layout split --action move python3 syntax_triage_tool.py triage --checker black --layout split python3 syntax_triage_tool.py triage --language lua
+"""
 
 import argparse
 import ast

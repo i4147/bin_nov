@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Unpack the ``.whl``/``.zip`` archives of a directory in place.
 Extracts every wheel below the given directory into the same folder and deletes the archive, keeping the original when it is not a valid ZIP or cannot be written.
-Usage: uzz [DIRECTORY] Examples: $ uzz ~/wheels Runs as a script (``python uzz.py``) in the directory it should act on; the module can also be imported."""
+Usage: uzz [DIRECTORY] Examples: $ uzz ~/wheels Runs as a script (``python uzz.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 from zipfile import BadZipFile, ZipFile

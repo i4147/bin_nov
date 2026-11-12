@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Compare the encoding guesses of several detectors for the local files.
 Runs the BOM/tokenize heuristics plus chardet, charset_normalizer, cchardet, UnicodeDammit, libmagic and ``ced`` (each when installed) over the files below the current directory and prints the results as a table.
-Usage: showenc Examples: $ showenc Runs as a script (``python showenc.py``) in the directory it should act on; the module can also be imported."""
+Usage: showenc Examples: $ showenc Runs as a script (``python showenc.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from pathlib import Path
 import sys
 import tokenize
-
 
 try:
     import chardet

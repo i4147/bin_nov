@@ -30,17 +30,16 @@ import tempfile
 import tokenize
 from typing import TYPE_CHECKING, Final, Literal, get_args
 
-from dh import NUM_WORKERS
+from dh import MAX_WORKERS
 import libcst as cst
 from loguru import logger
-
 
 if TYPE_CHECKING:
     from multiprocessing.pool import AsyncResult
 """Exact number of worker processes in the pool (a hard requirement)."""
 CHUNKSIZE: Final[int] = 16
 """Chunk size for map-like pool methods; amortises IPC overhead on big trees."""
-MAX_IN_FLIGHT: Final[int] = NUM_WORKERS * 8
+MAX_IN_FLIGHT: Final[int] = MAX_WORKERS * 8
 """Upper bound of outstanding tasks for ``apply_async`` (bounds memory use)."""
 TARGET_PYTHON: Final[str] = "3.12"
 TARGET_VERSION: Final[tuple[int, int]] = (3, 12)
@@ -537,13 +536,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     logger.info(
         "Processing {} target(s) with {} workers (method={}{})",
         len(targets),
-        NUM_WORKERS,
+        MAX_WORKERS,
         args.pool_method,
         ", dry-run" if options.dry_run else "",
     )
     interrupted = False
     try:
-        with mp.Pool(processes=NUM_WORKERS, initializer=_init_worker) as pool:
+        with mp.Pool(processes=MAX_WORKERS, initializer=_init_worker) as pool:
             paths = iter_python_files(targets, excludes)
             for result in iter_results(pool, args.pool_method, paths, options):
                 summary.add(result)

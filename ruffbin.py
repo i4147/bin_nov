@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Run ``ruff format`` on the extension-less scripts below the current directory.
 Walks the tree, skips symlinks and ``.git`` and formats every file without a suffix (the usual Python scripts in a ``bin`` folder) with ruff.
-Usage: ruffbin Examples: $ ruffbin Runs as a script (``python ruffbin.py``) in the directory it should act on; the module can also be imported."""
+Usage: ruffbin Examples: $ ruffbin Runs as a script (``python ruffbin.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 

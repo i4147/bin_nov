@@ -15,7 +15,6 @@ import zipfile
 from dh import SKIP_DIRS
 from loguru import logger
 
-
 POOL_SIZE: Final[int] = 8
 
 

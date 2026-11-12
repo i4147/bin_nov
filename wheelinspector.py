@@ -11,7 +11,6 @@ import sysconfig
 from typing import Any, Optional
 import zipfile
 
-
 WheelInfo = dict[str, object]
 PackageInfo = dict[str, str]
 DEFAULT_DEST: str = "empty_wheels"

@@ -12,7 +12,6 @@ from typing import Any, Callable, Iterable
 
 from loguru import logger
 
-
 VOID_ELEMENTS: set[str] = {
     "area",
     "base",

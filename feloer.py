@@ -31,7 +31,6 @@ import warnings
 from dh import SKIP_DIRS
 from loguru import logger
 
-
 FELO_CLI: Path = Path(environ.get("FELO_CLI", "/data/data/com.termux/files/home/bashbin/felo-sa.mjs"))
 TIMEOUT: int = int(environ.get("FELO_TIMEOUT", "300"))
 MAX_SIZE: int = 80 * 1024

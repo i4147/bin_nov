@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Normalize the shebang of every Python file below the current directory.
 Rewrites ``#!...python2/3`` lines to ``#!/data/data/com.termux/files/usr/bin/env python`` and processes the files in a worker pool, reporting how many shebangs were changed.
-Usage: fixshebang [paths ...] Examples: $ fixshebang Runs as a script (``python fixshebang.py``) in the directory it should act on; the module can also be imported."""
+Usage: fixshebang [paths ...] Examples: $ fixshebang Runs as a script (``python fixshebang.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from multiprocessing import Pool
 from pathlib import Path
 import re
 from typing import Any, Final
-
 
 SHEBANG_PATTERN: Final[re.Pattern[str]] = re.compile(r"^#!.*python[23]?(?:\.\d+)?(?:[ \t]+.*)?$", re.MULTILINE)
 PY_SHEBANG: Final[str] = "#!/data/data/com.termux/files/usr/bin/env python"

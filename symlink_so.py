@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Create the ``.so.0``/``.so.1`` symlinks of the libraries in ``~/.local/lib``.
 Skips the files that are already symlinks or carry a version suffix, derives the ``libfoo.so`` base name, repairs the wrong links and points ``libfoo.so.0`` and ``libfoo.so.1`` at it, which is what the loaders of the Termux builds expect.
-Usage: symlink_so Examples: $ symlink_so Runs as a script (``python symlink_so.py``) in the directory it should act on; the module can also be imported."""
+Usage: symlink_so Examples: $ symlink_so Runs as a script (``python symlink_so.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import glob
 import os

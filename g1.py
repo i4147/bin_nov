@@ -19,7 +19,6 @@ from github.GithubException import GithubException, UnknownObjectException
 from github.Repository import Repository
 from loguru import logger
 
-
 LARGE_REPO_THRESHOLD_MB: Final[float] = 5.0
 DEFAULT_BRANCH_FALLBACK: Final[str] = "master"
 GITHUB_SSH_PREFIX: Final[str] = "git@github.com:"

@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Compare what several encoding detectors think the local text files use.
 Runs chardet, charset_normalizer, cchardet, BeautifulSoup's UnicodeDammit, libmagic and the standard ``tokenize``/BOM heuristics (each one only when installed) over the files below the current directory and prints the guesses side by side, flagging files where the detectors disagree.
-Usage: detect_encoding Examples: $ detect_encoding Runs as a script (``python detect_encoding.py``) in the directory it should act on; the module can also be imported."""
+Usage: detect_encoding Examples: $ detect_encoding Runs as a script (``python detect_encoding.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from collections import Counter
 import json
 from pathlib import Path
 import sys
 import tokenize
-
 
 try:
     import chardet

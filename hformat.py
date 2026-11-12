@@ -2,7 +2,8 @@
 """Re-indent HTML files with BeautifulSoup's pretty printer.
 Parses each file (the arguments, or every ``.html`` file below the current directory) and rewrites it with ``soup.prettify()`` only when the formatting changed.
 Files are handled in parallel.
-Usage: hformat [files ...] Examples: $ hformat index.html Runs as a script (``python hformat.py``) in the directory it should act on; the module can also be imported."""
+Usage: hformat [files ...] Examples: $ hformat index.html Runs as a script (``python hformat.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

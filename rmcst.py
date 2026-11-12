@@ -16,7 +16,6 @@ from typing import Any, Iterable, Iterator, Sequence
 from dh import NUM_WORKERS, SKIP_DIRS
 import libcst as cst
 
-
 CHUNKSIZE: int = 4
 
 

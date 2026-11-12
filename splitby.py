@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Put every occurrence of a delimiter on its own line.
 Splits the file on the delimiter, strips each part and rewrites the file with one part per line followed by the delimiter.
-Usage: splitby FILE DELIMITER Examples: $ splitby tags.txt , Runs as a script (``python splitby.py``) in the directory it should act on; the module can also be imported."""
+Usage: splitby FILE DELIMITER Examples: $ splitby tags.txt , Runs as a script (``python splitby.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract the plain text of HTML files.
 Parses the markup with :mod:`html.parser`, drops the scripts, styles and head content, turns the block-level tags into line breaks and writes the extracted text back or to the chosen output, processing whole trees in parallel.
-Usage: strip_html_tags [paths ...] Examples: $ strip_html_tags pages/ Runs as a script (``python strip_html_tags.py``) in the directory it should act on; the module can also be imported."""
+Usage: strip_html_tags [paths ...] Examples: $ strip_html_tags pages/ Runs as a script (``python strip_html_tags.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from html.parser import HTMLParser
 import multiprocessing as mp
@@ -10,7 +11,6 @@ from pathlib import Path
 import sys
 from tempfile import NamedTemporaryFile
 from typing import Any
-
 
 SKIP_CONTENT_TAGS: set[str] = {"script", "style", "noscript", "template", "head"}
 BLOCK_TAGS: set[str] = {

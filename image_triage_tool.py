@@ -5,14 +5,14 @@ Analysis / deduplication ------------------------ - ``bw.py`` (mostly-dark/brigh
 - ``isnude.py`` (``nude`` lib -> ``nude/``) and ``isporn.py`` (``NudeNet`` -> ``safe/``/``sexy/``/``porn/``) -> ``nsfw --detector nude|nudenet``; both now default to report-only and need ``--move`` to relocate files.
 - ``boxfaces.py`` (draw face boxes on a video) -> ``box-faces``.
 Dependencies per subcommand: Pillow (brightness), opencv-python (faces/box-faces/isnude sizing), ``nude`` or ``nudenet`` (nsfw).
-Examples -------- python3 image_triage_tool.py brightness photo.jpg python3 image_triage_tool.py faces ~/Pictures --move-to ~/noface python3 image_triage_tool.py nsfw ~/Pictures --detector nudenet python3 image_triage_tool.py box-faces in.mp4 out.mp4"""
+Examples -------- python3 image_triage_tool.py brightness photo.jpg python3 image_triage_tool.py faces ~/Pictures --move-to ~/noface python3 image_triage_tool.py nsfw ~/Pictures --detector nudenet python3 image_triage_tool.py box-faces in.mp4 out.mp4
+"""
 
 import argparse
 from collections.abc import Sequence
 from pathlib import Path
 import shutil
 import sys
-
 
 IMAGE_SUFFIXES: frozenset[str] = frozenset({".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"})
 CASCADE_NAMES: tuple[str, ...] = (

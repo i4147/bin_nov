@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Restore every file that was ever deleted in the repository history.
 Reads ``git log --diff-filter=D`` to find the deletions and the commit that removed each file, checks out the version from the parent commit, stages it and finally commits everything with the message ``removed files``.
-Usage: restore_all_historical_deletions Examples: $ restore_all_historical_deletions Runs as a script (``python restore_all_historical_deletions.py``) in the directory it should act on; the module can also be imported."""
+Usage: restore_all_historical_deletions Examples: $ restore_all_historical_deletions Runs as a script (``python restore_all_historical_deletions.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import subprocess

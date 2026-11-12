@@ -12,7 +12,6 @@ from typing import Iterator
 from dotenv import load_dotenv
 from telethon import TelegramClient
 
-
 PATTERN_PRESETS: dict[str, str] = {
     "coc": r"https://link\.clashofclans\.com/[a-zA-Z0-9\?\=\&_]+",
     "general": r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",

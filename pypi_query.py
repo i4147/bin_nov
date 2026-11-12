@@ -4,7 +4,8 @@ Analysis / deduplication ------------------------ - ``get_latest_pkgs_added_to_p
 (Note the feeds differ: *packages* = brand-new projects, *updates* = new releases.) - ``psearch.py`` downloads the whole ``pypi.org/pypi/_/json`` index and substring-filters locally -> ``search`` (plus ``info`` for one exact package via the normal JSON API, which is what most searches actually want).
 - ``pypistats.py`` -> ``stats``; its disabled TLS verification (``ssl.CERT_NONE``) was removed, and its import-time ``PACKAGE = sys.argv[1]`` crash is gone.
 HTTP uses ``requests`` when installed, stdlib ``urllib`` otherwise.
-Examples -------- python3 pypi_query_tool.py latest --limit 20 python3 pypi_query_tool.py latest --feed packages --format json -o new.json python3 pypi_query_tool.py search requests --limit 5 python3 pypi_query_tool.py info requests python3 pypi_query_tool.py stats requests --period month"""
+Examples -------- python3 pypi_query_tool.py latest --limit 20 python3 pypi_query_tool.py latest --feed packages --format json -o new.json python3 pypi_query_tool.py search requests --limit 5 python3 pypi_query_tool.py info requests python3 pypi_query_tool.py stats requests --period month
+"""
 
 import argparse
 from collections import defaultdict
@@ -17,7 +18,6 @@ from pathlib import Path
 import sys
 import urllib.request
 import xml.etree.ElementTree as ET
-
 
 FEEDS: dict[str, str] = {
     "updates": "https://pypi.org/rss/updates.xml",

@@ -17,7 +17,6 @@ from typing import Any, Callable, Iterable, Iterator
 from atomicio import atomic_write
 from dh import SKIP_DIRS, BINARY_EXT
 
-
 CWD = Path.cwd()
 DICT_PATH = Path.home() / ".personal_dict"
 JSON_PATH = CWD / "word_freq.json"

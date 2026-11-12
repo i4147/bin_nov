@@ -44,7 +44,6 @@ import subprocess
 import sys
 from typing import Any, Iterable, Iterator, Sequence
 
-
 BINARY_EXTS: tuple[str, ...] = (".so", ".pyd", ".dll", ".dylib")
 GIT_HOSTS: tuple[str, ...] = (
     "github.com",

@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Remove comments from sources of many languages using the matching tree-sitter grammar.
 Maps each file extension to its tree-sitter language (JavaScript/TypeScript, Python, Rust, Lua, TOML, CSS, HTML, Vim script and others), deletes comments with the grammar and processes the files in parallel, printing a per-file and total summary.
-Usage: cleants2 [paths ...] Examples: $ cleants2 project/ Runs as a script (``python cleants2.py``) in the directory it should act on; the module can also be imported."""
+Usage: cleants2 [paths ...] Examples: $ cleants2 project/ Runs as a script (``python cleants2.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from dataclasses import dataclass
 import importlib
@@ -13,7 +14,6 @@ import time
 from typing import Any, Iterable
 
 from tree_sitter import Language, Node, Parser
-
 
 PathLike = str | Path
 

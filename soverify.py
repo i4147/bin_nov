@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Verify that the shared objects below the current directory actually load.
 Loads each ``.so`` file with ctypes, reports the failures and writes a JSON report to ``/sdcard/soverify.log``; a Python-API wrapper around the process keeps the interpreter stable while the libraries are probed.
-Usage: soverify [paths ...] Examples: $ soverify $PREFIX/lib Runs as a script (``python soverify.py``) in the directory it should act on; the module can also be imported."""
+Usage: soverify [paths ...] Examples: $ soverify $PREFIX/lib Runs as a script (``python soverify.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import ctypes
 from pathlib import Path
@@ -10,7 +11,6 @@ import sys
 
 from dh import cprint, get_files
 from loguru import logger
-
 
 logger.remove()
 logger.add("/data/data/com.termux/files/home/tmp/apps/soverify.log")

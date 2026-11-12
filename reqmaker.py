@@ -16,7 +16,6 @@ import sys
 import time
 from typing import Any, Iterable
 
-
 REQ: Path = Path("requirements.txt")
 CACHE_FILE: Path = Path(".installed_packages_cache.txt")
 BLACKLIST: set[str] = {

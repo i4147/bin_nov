@@ -28,7 +28,6 @@ import libcst as cst
 from libcst.helpers import get_full_name_for_node
 from loguru import logger
 
-
 SUPPORTED_EXT = frozenset({".py", ".pyw"})
 IGNORE_FILENAME: str = ".ignore"
 DEFAULT_IGNORES = frozenset({"__pycache__", ".git"})

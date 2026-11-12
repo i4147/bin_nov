@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Cut each line of a file after the first occurrence of a marker character.
 Keeps everything after the marker, leaves lines without it untouched and drops empty lines before rewriting the file in place.
-Usage: delbefor FILE MARKER Examples: $ delbefor list.txt '=' Runs as a script (``python delbefor.py``) in the directory it should act on; the module can also be imported."""
+Usage: delbefor FILE MARKER Examples: $ delbefor list.txt '=' Runs as a script (``python delbefor.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

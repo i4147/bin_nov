@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """OCR every page of a PDF and print the extracted text.
 Opens the document with PyMuPDF, renders each page through its OCR text page (English, 300 dpi) in a pool of four workers and joins the page texts with newlines.
-Usage: ocrpdf FILE.pdf Examples: $ ocrpdf scan.pdf > scan.txt Runs as a script (``python ocrpdf.py``) in the directory it should act on; the module can also be imported."""
+Usage: ocrpdf FILE.pdf Examples: $ ocrpdf scan.pdf > scan.txt Runs as a script (``python ocrpdf.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import multiprocessing as mp
 from pathlib import Path
 from typing import Optional
 
 import pymupdf
-
 
 _DOC: Optional[pymupdf.Document] = None
 

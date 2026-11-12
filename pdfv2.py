@@ -18,7 +18,6 @@ import termios
 import tty
 from typing import Any, Sequence
 
-
 RESET: str = "\x1b[0m"
 HOME: str = "\x1b[H"
 CLEAR: str = "\x1b[2J"

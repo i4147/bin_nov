@@ -27,7 +27,6 @@ from typing import TypeAlias
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
-
 try:
     from concurrent.futures import InterpreterPoolExecutor as _IPE
 

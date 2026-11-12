@@ -2,7 +2,8 @@
 """Browse a Persian↔English dictionary interactively in the terminal.
 Loads the JSON mapping from ``/sdcard/dic/dic.json`` into both directions, then offers a prompt with lookup, ``:list``, ``:stats``, ``:export`` (CSV), ``:random`` and fuzzy suggestions for near misses.
 New or edited entries are written back to the same JSON file.
-Usage: faen [DICTIONARY.json] Examples: $ faen Runs as a script (``python faen.py``) in the directory it should act on; the module can also be imported."""
+Usage: faen [DICTIONARY.json] Examples: $ faen Runs as a script (``python faen.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 import os

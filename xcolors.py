@@ -18,7 +18,6 @@ from typing import Final, TextIO
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 __version__: Final[str] = "2.0.0"
 READ_SIZE: Final[int] = 1 << 20
 BINARY_PROBE: Final[int] = 8192

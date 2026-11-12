@@ -16,7 +16,6 @@ from typing import Any, Optional, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     from bs4 import BeautifulSoup
 
@@ -345,12 +344,12 @@ def discover_files(paths: Sequence[Path], exts: Sequence[str]) -> list[Path]:
 
 def print_result(r: Result, report: str) -> None:
     if r.error:
-        print(f"ERROR: {r.path}: {r.error}")
+        print(f"ERROR: {r.path.name}: {r.error}")
         return
     if r.removed_refs > 0:
-        print(f"Updated: {r.path} ({r.removed_refs} removed)")
+        print(f"Updated: {r.path.name} ({r.removed_refs} removed)")
     elif report == "simple":
-        print(f"Skipped (no changes): {r.path}")
+        print(f"Skipped (no changes): {r.path.name}")
 
 
 def print_summary(results: Sequence[Result]) -> None:

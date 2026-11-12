@@ -15,7 +15,6 @@ from typing import Any, Iterable, Optional, Sequence
 
 from loguru import logger
 
-
 LOG = logger
 FONT_EXTS: frozenset[str] = frozenset({
     ".ttf",

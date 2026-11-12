@@ -13,7 +13,6 @@ import sys
 from dh import SKIP_DIRS
 from isbinary import is_binary
 
-
 MAX_CONTEXT_DISPLAY: int = 3
 
 

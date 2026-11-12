@@ -15,7 +15,6 @@ from string import Template
 import sys
 from typing import Any, Optional
 
-
 try:
     from dh import cprint
 except ImportError:

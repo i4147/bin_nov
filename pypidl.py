@@ -21,7 +21,6 @@ import urllib.request
 
 from dh import MAX_WORKERS
 
-
 try:
     import requests
 except ImportError:

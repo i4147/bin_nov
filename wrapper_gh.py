@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Wrap the ``gh`` CLI so every invocation is logged.
 Finds the real ``gh`` binary, appends the command, the arguments, the exit status and the duration to a dated log file under ``~/tmp/log/apps`` and passes the output through unchanged.
-Usage: wrapper_gh [gh arguments ...] Examples: $ wrapper_gh pr list Meant to shadow ``gh`` on ``PATH``; keep the real binary reachable at the path it probes."""
+Usage: wrapper_gh [gh arguments ...] Examples: $ wrapper_gh pr list Meant to shadow ``gh`` on ``PATH``; keep the real binary reachable at the path it probes.
+"""
 
 from __future__ import annotations
 
@@ -12,7 +13,6 @@ import subprocess
 import sys
 import time
 from typing import Any
-
 
 LOG_DIR = Path.home() / "tmp" / "log" / "apps"
 REAL_GH: str = "/data/data/com.termux/files/usr/bin/gh"

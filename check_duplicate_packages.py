@@ -2,7 +2,8 @@
 """Report Python packages installed both system-wide and in the user site directory.
 Scans every ``site-packages`` directory known to :mod:`site`, matches packages by name across the system and user locations and prints the version of each copy, flagging version mismatches.
 Scanning of the two sets runs in parallel threads.
-Usage: check_duplicate_packages Examples: $ check_duplicate_packages Runs as a script (``python check_duplicate_packages.py``) in the directory it should act on; the module can also be imported."""
+Usage: check_duplicate_packages Examples: $ check_duplicate_packages Runs as a script (``python check_duplicate_packages.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import concurrent.futures
 import pathlib

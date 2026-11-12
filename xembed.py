@@ -21,7 +21,6 @@ from urllib.parse import quote
 from atomicio import atomic_write
 from dh import MAX_WORKERS
 
-
 PATTERN: Final[re.Pattern[str]] = re.compile(
     r"(?<![A-Za-z0-9_+/-])"
     r"data:"
@@ -470,7 +469,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         dry_run=args.dry_run,
         manifest=args.manifest,
         verbose=args.verbose,
-        workers=max(1, MAX_WORKERS),
+        #        workers=max(1, MAX_WORKERS),
         overwrite=args.overwrite,
         max_passes=max(1, args.max_passes),
     )

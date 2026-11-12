@@ -5,7 +5,8 @@ The original ``"boostraped 100%"`` typo is preserved as the default ``--until`` 
 - **Copy changed files somewhere**: ``dw -c``, ``where.py`` (watchdog, extension filters, debouncing) and ``wtmp.py`` (watchdog, archive suffixes, startup scan) -> ``watch --copy-to DIR`` with ``--extensions/--exclude-extensions``.
 Polling was kept over watchfiles/watchdog so the tool needs zero third-party packages.
 Examples -------- python3 file_watch_tool.py watch src/ python3 file_watch_tool.py watch .
---copy-to ~/tmp/tmp -e py,txt python3 file_watch_tool.py tail ~/.tor/tor.log --until "100% (done)" python3 file_watch_tool.py watch ~/Downloads --once # single scan"""
+--copy-to ~/tmp/tmp -e py,txt python3 file_watch_tool.py tail ~/.tor/tor.log --until "100% (done)" python3 file_watch_tool.py watch ~/Downloads --once # single scan
+"""
 
 import argparse
 from collections.abc import Sequence
@@ -13,7 +14,6 @@ from pathlib import Path
 import shutil
 import sys
 import time
-
 
 ARCHIVE_SUFFIXES: tuple[str, ...] = (
     ".tar.gz",

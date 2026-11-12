@@ -6,7 +6,6 @@ from html import escape
 from pathlib import Path
 from typing import Any
 
-
 OUTPUT: Path = Path("font_preview.html")
 FONT_FORMATS: dict[str, tuple[Any, ...]] = {
     ".ttf": ("font/ttf", "truetype"),
@@ -40,8 +39,7 @@ def main() -> None:
         encoded_font = b64encode(path.read_bytes()).decode("ascii")
         relative_path = path.relative_to(root).as_posix()
 
-        font_faces.append(
-            f"""
+        font_faces.append(f"""
             @font-face {{
                 font-family: '{family}';
                 src: url('data:{mime_type};base64,{encoded_font}')
@@ -49,10 +47,8 @@ def main() -> None:
                 font-style: normal;
                 font-weight: 100 900;
             }}
-            """
-        )
-        cards.append(
-            f"""
+            """)
+        cards.append(f"""
             <section class="font-card">
                 <div class="font-name">{escape(relative_path)}</div>
                 <div class="sample" style="font-family: '{family}', sans-serif">
@@ -60,8 +56,7 @@ def main() -> None:
                     0123456789 &mdash; Aa Bb Cc
                 </div>
             </section>
-            """
-        )
+            """)
 
     page = f"""<!doctype html>
 <html lang="en">

@@ -14,7 +14,6 @@ import re
 import sys
 from typing import Literal
 
-
 DEFAULT_EXCLUDES: tuple[str, ...] = (
     ".git",
     "__pycache__",

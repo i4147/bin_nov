@@ -29,7 +29,6 @@ from atomicio import atomic_save
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 Translator = Callable[[str], str]
 FALLBACK_BACKENDS: tuple[str, ...] = (
     "deepl",

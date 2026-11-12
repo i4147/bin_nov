@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Summarise a text file with TextRank and save the summary next to it.
 Runs ``summa``'s summarizer at a 70 % ratio, writes the result to ``<name>_summsry.txt`` and prints it.
-Usage: summar FILE Examples: $ summar article.txt The entry point refers to ``syd.argv`` instead of ``sys.argv``, so running the script directly raises ``NameError`` until that typo is fixed; use :func:`summarize_with_summa` programmatically."""
+Usage: summar FILE Examples: $ summar article.txt The entry point refers to ``syd.argv`` instead of ``sys.argv``, so running the script directly raises ``NameError`` until that typo is fixed; use :func:`summarize_with_summa` programmatically.
+"""
 
 from pathlib import Path
 import sys

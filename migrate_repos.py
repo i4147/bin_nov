@@ -22,7 +22,6 @@ from typing import Any
 from dh import SKIP_DIRS
 from loguru import logger
 
-
 DEFAULT_OLD_USERNAME: str = "i4147"
 DEFAULT_OLD_EMAIL: str = "yesnacoc@gmail.com"
 DEFAULT_NEW_USERNAME: str = "i4147"

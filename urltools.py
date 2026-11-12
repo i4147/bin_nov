@@ -16,7 +16,6 @@ import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
-
 try:
     from loguru import logger as _loguru_logger
 except ImportError:

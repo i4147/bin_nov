@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Re-encode every text file below the current directory as UTF-8 with LF line endings.
 Walks plain files and the members of the archives it can open (through ``archive_walker``), skips binary data (NUL bytes), decodes as UTF-8 with a Latin-1 fallback, normalizes CRLF/CR to LF and writes the file back only when something changed.
-Usage: dos2utf-8 Examples: $ dos2utf-8 Runs as a script (``python dos2utf-8.py``) in the directory it should act on; the module can also be imported."""
+Usage: dos2utf-8 Examples: $ dos2utf-8 Runs as a script (``python dos2utf-8.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import sys
 
 from archive_walker import AdvancedWalker, VirtualFile
 from loguru import logger
-
 
 logger.remove()
 logger.add(sys.stderr, level="INFO", format="{time:YYYY-MM-DD HH:mm:ss} | {level:<8} | {message}")

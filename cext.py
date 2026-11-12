@@ -19,7 +19,6 @@ import zipfile
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
-
 if TYPE_CHECKING:
     from collections.abc import Callable
 

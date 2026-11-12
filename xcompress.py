@@ -24,7 +24,6 @@ import zlib
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     import zstandard as zstd
 except ImportError:
@@ -42,9 +41,9 @@ try:
 except ImportError:
     py7zr = None
 try:
-    import blosc2
+    import blosc
 except ImportError:
-    blosc2 = None
+    blosc = None
 try:
     import cramjam as cj
 except ImportError:
@@ -151,12 +150,12 @@ def _build_codecs() -> dict[str, Codec]:
             16,
             16,
         )
-    if blosc2:
-        cs["blosc2"] = Codec(
-            "blosc2",
-            ".blosc2",
-            lambda d, l: blosc2.compress(d, codec=blosc2.Codec.zstd, clevel=l),
-            blosc2.decompress,
+    if blosc:
+        cs["blosc"] = Codec(
+            "blosc",
+            ".blosc",
+            lambda d, l: blosc.compress(d, codec=blosc.Codec.zstd, clevel=l),
+            blosc.decompress,
             1,
             9,
             9,

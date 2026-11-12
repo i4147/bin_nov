@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Delete a member from a ``.tar.zst`` archive.
 Streams the archive through zstandard into a temporary tar, drops the requested member, and replaces the original archive with the rebuilt one without disturbing the other entries.
-Usage: rm_from_archive ARCHIVE.tar.zst MEMBER Examples: $ rm_from_archive pkg.tar.zst pkg/tests.py Runs as a script (``python rm_from_archive.py``) in the directory it should act on; the module can also be imported."""
+Usage: rm_from_archive ARCHIVE.tar.zst MEMBER Examples: $ rm_from_archive pkg.tar.zst pkg/tests.py Runs as a script (``python rm_from_archive.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path

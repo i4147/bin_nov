@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Remove invisible and bidirectional control characters from text files.
 Strips zero-width spaces and joiners, non-breaking spaces, soft hyphens, the BOM and the bidi overrides from each text file (default: every non-binary file below the current directory) and reports how many characters went away.
-Usage: rmi [files ...] Examples: $ rmi page.html Runs as a script (``python rmi.py``) in the directory it should act on; the module can also be imported."""
+Usage: rmi [files ...] Examples: $ rmi page.html Runs as a script (``python rmi.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys
 
 from dh import get_nobinary
-
 
 INVISIBLE_CHARS: set[str] = {
     "\u200b",

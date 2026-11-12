@@ -23,7 +23,6 @@ from typing import Any, Iterable
 
 from dh import MAX_WORKERS, runcmd
 
-
 OUTPUT_FILE: Path = Path("compressed.txt")
 COMPRESSION_NOTE: str = (
     "# NOTE: This code is compressed. Standard library imports have been removed. "

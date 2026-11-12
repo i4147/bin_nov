@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract the RAR archives below a directory, including their split parts.
 Finds the ``.rar`` files, resolves the ``.partN.rar``/``.rNN`` companions, extracts each of them in a process pool into a folder next to the archive and reports the resulting size.
-Usage: xrar [DIRECTORY] Examples: $ xrar ~/Downloads Runs as a script (``python xrar.py``) in the directory it should act on; the module can also be imported."""
+Usage: xrar [DIRECTORY] Examples: $ xrar ~/Downloads Runs as a script (``python xrar.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import contextlib
 import multiprocessing as mp

@@ -16,9 +16,8 @@ import tempfile
 import time
 from typing import Any
 
-from dh import SKIP_DIRS, WORKERS
+from dh import SKIP_DIRS, MAX_WORKERS
 from loguru import logger
-
 
 try:
     import tomllib
@@ -200,7 +199,7 @@ def main() -> int:
         print("No setup.py or pyproject.toml found.")
         return 1
     tasks = [(str(project), relpath(project, root)) for project in projects]
-    print(f"Found {len(tasks)} project(s); building with {WORKERS} workers.\n")
+    print(f"Found {len(tasks)} project(s); building with {MAX_WORKERS} workers.\n")
     worker = functools.partial(
         build_one,
         out_root=out_root,
@@ -211,7 +210,7 @@ def main() -> int:
     failed: list[str] = []
     skipped: list[str] = []
     try:
-        with mp.Pool(processes=WORKERS) as pool:
+        with mp.Pool(processes=MAX_WORKERS) as pool:
             for result in pool.imap_unordered(worker, tasks):
                 if result.status == "ok":
                     ok.append(result.rel)

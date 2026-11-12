@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Rename SVG font files after their ``<font id="...">`` attribute.
 Reads each ``.svg`` file, extracts the font id, sanitises the characters that cannot appear in a file name and renames the file to ``<font-id>.svg``, refusing to overwrite an existing target.
-Usage: rename_svg_fonts [FILE.svg | DIRECTORY] Examples: $ rename_svg_fonts fonts/ Runs as a script (``python rename_svg_fonts.py``) in the directory it should act on; the module can also be imported."""
+Usage: rename_svg_fonts [FILE.svg | DIRECTORY] Examples: $ rename_svg_fonts fonts/ Runs as a script (``python rename_svg_fonts.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from __future__ import annotations
 

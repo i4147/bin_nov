@@ -18,7 +18,6 @@ from typing import TYPE_CHECKING, Final
 from dh import MAX_WORKERS
 import libcst as cst
 
-
 if TYPE_CHECKING:
     from multiprocessing.pool import AsyncResult
 PRESERVE_PREFIXES: Final[tuple[str, ...]] = ("#!", "# type:", "# fmt:")

@@ -3,14 +3,14 @@
 Analysis / deduplication ------------------------ - ``htnew.py`` ("Hello, World!" page) and ``mkhtml.py`` (page linking ``style.css``/``script.js``; it crashed without an argument because ``Path(sys.argv[1]) or ...`` evaluates argv first) are one ``new`` command with ``--style minimal|linked``.
 - ``codepener.py`` wraps a CodePen fragment in a full document; its f-string was line-broken inside the braces, so the file never parsed - the ``wrap`` command implements the same template.
 - ``make_template_html.py`` merges every HTML file in a tree into one ``template.html`` (shared head tags + body sections + TOC); here the same job is done with the stdlib parser instead of BeautifulSoup, and the output never feeds back into itself.
-Examples -------- python3 html_template_tool.py new # ./index.html python3 html_template_tool.py new page.html --title "Hi" --style linked python3 html_template_tool.py wrap pen.html -o full.html python3 html_template_tool.py merge site/ -o template.html"""
+Examples -------- python3 html_template_tool.py new # ./index.html python3 html_template_tool.py new page.html --title "Hi" --style linked python3 html_template_tool.py wrap pen.html -o full.html python3 html_template_tool.py merge site/ -o template.html
+"""
 
 import argparse
 from collections.abc import Sequence
 import html.parser
 from pathlib import Path
 import sys
-
 
 PAGE_CSS: str = (
     "body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; "

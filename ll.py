@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Print an ``ls``-style listing of the current directory with sizes and colours.
 Shows the modification time, size (directories report their total) and name of every entry, colourising symlinks differently and sorting by size (``-r`` reverses the order).
-Usage: ll [-r] Examples: $ ll $ ll -r Runs as a script (``python ll.py``) in the directory it should act on; the module can also be imported."""
+Usage: ll [-r] Examples: $ ll $ ll -r Runs as a script (``python ll.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import datetime as dt
 from os import scandir as _scandir
 from pathlib import Path
 import sys
-
 
 # from dh import gsz2
 

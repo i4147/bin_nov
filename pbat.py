@@ -25,7 +25,6 @@ from pygments.lexers import TextLexer, get_all_lexers, get_lexer_by_name, get_le
 from pygments.styles import get_all_styles, get_style_by_name
 from pygments.util import ClassNotFound
 
-
 RESET: str = "\x1b[0m"
 GRID_COLOR: str = "\x1b[38;5;238m"
 HEADER_COLOR: str = "\x1b[38;5;81m"

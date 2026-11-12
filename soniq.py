@@ -2,7 +2,8 @@
 """Sort a text file and remove the duplicate lines.
 Reads the file (optionally only the ``START_LINE``..``END_LINE`` range), sorts and deduplicates the lines, using an mmap and chunked processing for large files, and writes the result back in place.
 ``--quiet`` suppresses the progress output.
-Usage: soniq FILE [START_LINE END_LINE] [--quiet] Examples: $ soniq words.txt $ soniq dump.txt 100 2000 -q Runs as a script (``python soniq.py``) in the directory it should act on; the module can also be imported."""
+Usage: soniq FILE [START_LINE END_LINE] [--quiet] Examples: $ soniq words.txt $ soniq dump.txt 100 2000 -q Runs as a script (``python soniq.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import mmap
 from multiprocessing import Pool, cpu_count
@@ -11,7 +12,6 @@ import sys
 from typing import Any, Iterable
 
 from dh import is_binary
-
 
 THRESHOLD: int = 1024 * 1024
 

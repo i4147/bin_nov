@@ -11,7 +11,6 @@ from pathlib import Path
 import shutil
 import sys
 
-
 FORMAT_SUFFIX: dict[str, str] = {
     "tar": ".tar",
     "gztar": ".tar.gz",

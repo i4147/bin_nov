@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Reflow the module docstrings of Python files to a fixed width.
 Locates the module docstring with :mod:`tokenize`, rewraps its prose while keeping paragraphs and lists intact and writes the file back only when the text changed.
-Usage: reformat_module_docstring [paths ...] Examples: $ reformat_module_docstring src/ Runs as a script (``python reformat_module_docstring.py``) in the directory it should act on; the module can also be imported."""
+Usage: reformat_module_docstring [paths ...] Examples: $ reformat_module_docstring src/ Runs as a script (``python reformat_module_docstring.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import ast
 from pathlib import Path

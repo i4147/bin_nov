@@ -15,7 +15,6 @@ from typing import TYPE_CHECKING
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     from tree_sitter import Language, Node, Parser
     import tree_sitter_html as ts_html

@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Strip selected tags and attributes from HTML with BeautifulSoup.
 A click CLI that removes the tags by bundle (``hs`` for the headings, ``metadata``, ``structure`` ...) or by name, can keep only the ``href``/``alt``/``meta`` attributes, drops the hidden elements and rewrites the document with normalised whitespace.
-Usage: striptags [options] FILE.html Examples: $ striptags page.html --remove hs $ striptags --help Runs as a script (``python striptags.py``) in the directory it should act on; the module can also be imported."""
+Usage: striptags [options] FILE.html Examples: $ striptags page.html --remove hs $ striptags --help Runs as a script (``python striptags.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import re
 from typing import Any, Iterable, Optional, TextIO
 
 from bs4 import BeautifulSoup, Comment, NavigableString
 import click
-
 
 NEWLINE_ELEMENTS: tuple[str, ...] = (
     "address",

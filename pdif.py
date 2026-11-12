@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Compare two text files and report the differing line numbers.
 Prints the line count of both files, how many lines they share and the one-based numbers of the lines that only occur in one of them.
-Usage: pdif FILE1 FILE2 Examples: $ pdif old.txt new.txt Runs as a script (``python pdif.py``) in the directory it should act on; the module can also be imported."""
+Usage: pdif FILE1 FILE2 Examples: $ pdif old.txt new.txt Runs as a script (``python pdif.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

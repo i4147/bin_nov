@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Report the encoding of the files below the current directory as detected by several tools.
 Cross-checks the BOM, ``tokenize``, chardet, charset_normalizer, cchardet, UnicodeDammit, libmagic and ``ced`` guesses (each used only when installed) and prints the results per file, so the common encoding of a tree can be established.
-Usage: getenc Examples: $ getenc Runs as a script (``python getenc.py``) in the directory it should act on; the module can also be imported."""
+Usage: getenc Examples: $ getenc Runs as a script (``python getenc.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from pathlib import Path
 import sys
 import tokenize
-
 
 try:
     import chardet

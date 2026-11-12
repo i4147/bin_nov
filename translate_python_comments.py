@@ -20,7 +20,6 @@ from atomicio import atomic_write
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 DEFAULT_CHUNK_SIZE: Final[int] = 2500
 DEFAULT_DELAY: Final[float] = 1.5
 DEFAULT_TIMEOUT: Final[float] = 60.0

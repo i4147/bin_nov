@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Trim ``.dist-info`` directories down to the standard metadata files.
 Keeps ``METADATA``, ``RECORD``, ``WHEEL`` and ``top_level.txt`` and removes the extra files that packagers leave behind (``INSTALLER``, ``REQUESTED``, ``direct_url.json``, license and author files, ``LICENSE`` copies ...).
-Usage: distinfo2 [paths ...] Examples: $ distinfo2 site-packages/ Runs as a script (``python distinfo2.py``) in the directory it should act on; the module can also be imported."""
+Usage: distinfo2 [paths ...] Examples: $ distinfo2 site-packages/ Runs as a script (``python distinfo2.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import shutil
 import sys
 
 from dh import cprint
-
 
 major, minor, _, _, _ = sys.version_info
 py_version: str = f"{major}.{minor}"

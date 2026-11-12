@@ -27,7 +27,6 @@ from typing import BinaryIO, Callable, Final, Literal, TypeVar, cast
 
 from dh import MAX_WORKERS
 
-
 Compressor = Literal["xz", "gz", "bz2", "zstd", "lz4", "snappy"]
 Method = Literal["mp-map", "mp-imap", "process-pool", "thread-pool"]
 Status = Literal["ok", "skipped", "error"]
@@ -132,9 +131,9 @@ def archive_format(archive: Path) -> tuple[Compressor, str]:
 def check_dependencies(compressor: Compressor) -> None:
     if compressor == "zstd":
         try:
-            from compression import zstd
+            import zstandard as zstd
         except ImportError:
-            import zstandard
+            import zstandard as zstd
     elif compressor == "lz4":
         import lz4.frame
     elif compressor == "snappy":

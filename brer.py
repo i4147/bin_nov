@@ -35,7 +35,6 @@ import brotli
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     from loguru import logger
 

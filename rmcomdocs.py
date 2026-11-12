@@ -12,7 +12,6 @@ from typing import Any, Iterable, Sequence
 
 from dh import MAX_WORKERS
 
-
 try:
     from tree_sitter import Language, Node, Parser, Query, QueryCursor
     import tree_sitter_python as _tspython

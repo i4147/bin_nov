@@ -31,7 +31,6 @@ from typing import Any, Iterable, Optional, Sequence
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
-
 try:
     from PIL import Image, UnidentifiedImageError
 

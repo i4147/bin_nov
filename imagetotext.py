@@ -2,7 +2,8 @@
 """OCR the images below the current directory and keep only readable results.
 Runs Tesseract with the English, Persian and Russian data (several page-segmentation settings), keeps the output only when it looks like real words and writes ``<image>.txt`` next to the image.
 Existing text files are skipped unless ``OVERWRITE`` is enabled; the images are processed in parallel.
-Usage: imagetotext Examples: $ imagetotext Runs as a script (``python imagetotext.py``) in the directory it should act on; the module can also be imported."""
+Usage: imagetotext Examples: $ imagetotext Runs as a script (``python imagetotext.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from multiprocessing import Pool
 from pathlib import Path
@@ -11,7 +12,6 @@ from typing import Any
 
 from PIL import Image
 import pytesseract
-
 
 TESSDATA = str(Path.home() / ".local" / "share" / "tessdata")
 LANGS: str = "eng+fas+rus"

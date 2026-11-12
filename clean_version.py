@@ -8,7 +8,6 @@ import argparse
 from pathlib import Path
 import re
 
-
 PKG_NAME_RE = re.compile(
     r"""
     ^\s*

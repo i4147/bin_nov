@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert a CSV file into a JSON list of row objects.
 Reads the CSV with :class:`csv.DictReader` and writes ``<name>.json`` next to the input, indented by four spaces.
-Usage: csvtojson INPUT.csv Examples: $ csvtojson table.csv Runs as a script (``python csvtojson.py``) in the directory it should act on; the module can also be imported."""
+Usage: csvtojson INPUT.csv Examples: $ csvtojson table.csv Runs as a script (``python csvtojson.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import csv
 import json

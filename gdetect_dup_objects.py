@@ -2,7 +2,8 @@
 """Detect duplicate top-level objects across Python files, ignoring annotations and formatting.
 Canonicalizes each function, class and constant (annotations stripped, docstrings and whitespace normalised), hashes it and prints the objects that appear in more than one file.
 Works on the files below the current directory and uses a process pool for the parsing.
-Usage: gdetect_dup_objects Examples: $ gdetect_dup_objects Runs as a script (``python gdetect_dup_objects.py``) in the directory it should act on; the module can also be imported."""
+Usage: gdetect_dup_objects Examples: $ gdetect_dup_objects Runs as a script (``python gdetect_dup_objects.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import ast
 import json

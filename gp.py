@@ -11,7 +11,6 @@ import subprocess
 import sys
 from typing import Any, Literal, Protocol, Sequence
 
-
 try:
     import git as gitpython
 

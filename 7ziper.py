@@ -17,7 +17,6 @@ from dh import MAX_WORKERS
 from loguru import logger
 import py7zr
 
-
 try:
     from loguru import logger as _log
 except ImportError:

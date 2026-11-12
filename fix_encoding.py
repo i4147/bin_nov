@@ -30,7 +30,6 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-
 UTF8_NAMES: frozenset[str] = frozenset({"utf-8", "utf-8-sig"})
 
 

@@ -22,7 +22,6 @@ from rich.text import Text
 from tree_sitter import Language, Node, Parser
 import tree_sitter_python as tspy
 
-
 Edit = tuple[int, int, bytes]
 DIRECTIVE = re.compile(
     r"(?:^|#)\s*(?:noqa\b|type\s*:|pylint:|pyright:|pyre-|pytype:|mypy:|ruff:|flake8:|"

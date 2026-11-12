@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Generate ``print-style.css``: a print stylesheet with the fonts embedded as base64.
 Reads ``Inter-Regular.ttf``, ``Inter-Bold.ttf``, ``Inter-Italic.ttf``, ``Inter-BoldItalic.ttf`` and ``JetBrainsMono-Regular.ttf`` from the current directory, turns each one into a ``@font-face`` rule with a data URI (falling back to the system fonts when a file is missing) and writes the complete CSS to ``print-style.css``.
-Usage: compile_precise2 Examples: $ compile_precise2 Runs as a script (``python compile_precise2.py``) in the directory it should act on; the module can also be imported."""
+Usage: compile_precise2 Examples: $ compile_precise2 Runs as a script (``python compile_precise2.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import base64
 from pathlib import Path

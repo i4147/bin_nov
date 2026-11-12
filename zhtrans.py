@@ -13,7 +13,6 @@ from deep_translator import GoogleTranslator, single_detection
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 CHINESE_RE = re.compile(
     "[\u4e00-\u9fff"
     "\u3400-\u4dbf"

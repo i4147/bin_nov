@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert an HTML file to Markdown.
 Builds a small document tree from the HTML and renders the supported tags (headings, lists, links, images, emphasis, tables, pre/code blocks with language detection) as Markdown.
-Usage: htmltomarkdown INPUT.html [OUTPUT.md] Examples: $ htmltomarkdown page.html page.md Runs as a script (``python htmltomarkdown.py``) in the directory it should act on; the module can also be imported."""
+Usage: htmltomarkdown INPUT.html [OUTPUT.md] Examples: $ htmltomarkdown page.html page.md Runs as a script (``python htmltomarkdown.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from abc import ABCMeta
 from dataclasses import dataclass, field
@@ -10,7 +11,6 @@ from html.parser import HTMLParser
 import re
 import sys
 from typing import Final, Optional, Union, cast
-
 
 SELF_CLOSING_TAGS: Final[list[str]] = [
     "area",

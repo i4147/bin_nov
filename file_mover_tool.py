@@ -18,7 +18,6 @@ import shutil
 import site
 import sys
 
-
 DEFAULT_TESTS_OUT: Path = Path.home() / "tmp" / "tests"
 DEFAULT_MOVE_LOG: Path = Path.home() / "tmp" / "moved_files.json"
 DEFAULT_EXCLUDED_PKGS: tuple[str, ...] = ("numpy", "pandas", "scipy", "numba")

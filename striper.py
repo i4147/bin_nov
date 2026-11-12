@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Strip the leading and trailing whitespace of every line of a file.
 Rewrites the file with each line stripped on both sides, printing ``<file> cleaned.`` or the error when the file is missing.
-Usage: striper FILE Examples: $ striper notes.txt Runs as a script (``python striper.py``) in the directory it should act on; the module can also be imported."""
+Usage: striper FILE Examples: $ striper notes.txt Runs as a script (``python striper.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 from sys import argv

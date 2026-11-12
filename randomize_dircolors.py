@@ -1,12 +1,12 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Write a ``~/.ls_colors`` file with a random true-colour for every file extension.
 Keeps a list of common extensions, picks a bright colour for each one, builds the ``LS_COLORS`` string with 24-bit codes and saves the shell snippet to ``/data/data/com.termux/files/home/.ls_colors`` for sourcing.
-Usage: randomize_dircolors Examples: $ randomize_dircolors Runs as a script (``python randomize_dircolors.py``) in the directory it should act on; the module can also be imported."""
+Usage: randomize_dircolors Examples: $ randomize_dircolors Runs as a script (``python randomize_dircolors.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 from random import choice as random_choice
 from typing import Any
-
 
 extensions: list[str] = [
     ".Z",

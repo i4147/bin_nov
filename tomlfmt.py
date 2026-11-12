@@ -14,7 +14,6 @@ from typing import Any, Iterator, Sequence
 
 from dh import SKIP_DIRS, WORKERS, atomic_write
 
-
 try:
     import tomllib
 except ModuleNotFoundError:

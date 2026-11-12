@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Check that the installed packages import and report the ones with newer releases.
 Imports every installed distribution, lists the failures with their error and queries PyPI for the latest versions, printing the packages that are out of date.
-Usage: sanity-check Examples: $ sanity-check Runs as a script (``python sanity-check.py``) in the directory it should act on; the module can also be imported."""
+Usage: sanity-check Examples: $ sanity-check Runs as a script (``python sanity-check.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import sys
 

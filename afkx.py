@@ -21,7 +21,6 @@ import zipfile
 
 from dh import MAX_WORKERS
 
-
 try:
     import zstandard as zstd
 

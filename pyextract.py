@@ -41,7 +41,6 @@ import zipfile
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
-
 try:
     import tree_sitter
     import tree_sitter_python

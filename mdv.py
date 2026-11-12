@@ -11,7 +11,6 @@ import sys
 from rich.console import Console
 from rich.markdown import Markdown
 
-
 try:
     from readchar import (
         key as RKEY,

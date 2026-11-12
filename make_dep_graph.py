@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Dump the dependency graph of the installed distributions as JSON.
 Reads the ``METADATA`` of every ``.dist-info`` directory in the first ``site-packages`` on ``sys.path``, collects the ``Requires-Dist`` entries (versions and markers stripped) and writes ``package_dependencies.json``.
-Usage: make_dep_graph Examples: $ make_dep_graph Runs as a script (``python make_dep_graph.py``) in the directory it should act on; the module can also be imported."""
+Usage: make_dep_graph Examples: $ make_dep_graph Runs as a script (``python make_dep_graph.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 import os

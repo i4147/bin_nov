@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """List the packages that are installed with more than one version.
 Reads the ``.dist-info``/``.egg-info`` directory names of every ``site-packages`` location and prints the packages whose name appears with several versions, so leftovers from earlier installs become visible.
-Usage: distinfo Examples: $ distinfo Runs as a script (``python distinfo.py``) in the directory it should act on; the module can also be imported."""
+Usage: distinfo Examples: $ distinfo Runs as a script (``python distinfo.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from collections import defaultdict
 import contextlib

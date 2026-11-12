@@ -14,7 +14,6 @@ import re
 import sys
 from typing import Any, Iterator
 
-
 if sys.version_info >= (3, 10):
     _STDLIB: set[str] | None = set(sys.stdlib_module_names)
 else:

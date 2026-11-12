@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Folderize a whole tree by file extension and report the per-extension totals.
 Walks the current directory recursively, moves every file into a top-level folder named after its lower-case extension (``no_extension`` when absent), removes the emptied directories and prints a table of file counts and sizes per extension.
-Usage: foldext Examples: $ foldext Runs as a script (``python foldext.py``) in the directory it should act on; the module can also be imported."""
+Usage: foldext Examples: $ foldext Runs as a script (``python foldext.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import contextlib
 from pathlib import Path

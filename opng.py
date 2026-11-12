@@ -27,7 +27,6 @@ from typing import TYPE_CHECKING, Final, NamedTuple
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
-
 PNG_SUFFIXES: Final[frozenset[str]] = frozenset({".png"})
 PNG_MAGIC: Final[bytes] = b"\x89PNG\r\n\x1a\n"
 WALK_CHUNK: Final[int] = 512

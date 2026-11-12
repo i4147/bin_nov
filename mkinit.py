@@ -13,7 +13,6 @@ import fnmatch
 from pathlib import Path
 import sys
 
-
 LINE_LIMIT: int = 88
 
 

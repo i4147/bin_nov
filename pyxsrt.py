@@ -11,7 +11,6 @@ from pathlib import Path
 import subprocess
 import sys
 
-
 SRT_CODEC_NAMES: frozenset[str] = frozenset({"subrip", "srt"})
 PROBE_ENTRIES: str = "stream=index,codec_name:stream_tags=language,title:stream_disposition=forced"
 

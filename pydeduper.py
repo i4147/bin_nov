@@ -24,7 +24,6 @@ import zipfile
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
-
 try:
     from loguru import logger
 

@@ -37,7 +37,6 @@ import zipfile
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 log = logger
 DEFAULT_EXT: tuple[str, ...] = (".py",)
 DEFAULT_FIXER_MODULE: str = "lib2to3.fixes"

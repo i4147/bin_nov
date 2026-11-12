@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Render a PDF to PNG files with ``pdftoppm``.
 Calls poppler's ``pdftoppm`` for the given file at the requested dpi (200 by default), writes the images into the output directory (named after the PDF when omitted) and renumbers them as ``<name>_page_NNN.png``.
-Usage: pdf2png FILE.pdf [OUTPUT_DIR] [DPI] Examples: $ pdf2png report.pdf pages/ 150 Runs as a script (``python pdf2png.py``) in the directory it should act on; the module can also be imported."""
+Usage: pdf2png FILE.pdf [OUTPUT_DIR] [DPI] Examples: $ pdf2png report.pdf pages/ 150 Runs as a script (``python pdf2png.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path

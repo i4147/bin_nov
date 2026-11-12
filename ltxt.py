@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING, TypeAlias
 from dh import BINARY_EXT, MAX_WORKERS
 from loguru import logger
 
-
 EXCLUDED_EXT: frozenset[str] = frozenset(BINARY_EXT)
 POOL_METHODS: tuple[str, ...] = ("map", "starmap", "imap_unordered", "apply_async")
 LineCounter: TypeAlias = Counter[str]

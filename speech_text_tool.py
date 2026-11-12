@@ -10,7 +10,6 @@ import sys
 import tempfile
 from urllib.request import pathname2url
 
-
 DEFAULT_OUTPUT: str = "out.txt"
 DEFAULT_CHUNK_SECONDS: int = 30
 DEFAULT_MAX_CHARS: int = 3000

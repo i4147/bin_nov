@@ -2,7 +2,8 @@
 """Run SQL queries defined in YAML/JSON config files and export the results to JSON or CSV.
 Reads the connection and query definitions (a config file or the ``queries`` folder), binds the parameters and the date placeholders (``CURRENT_DATE`` and the month/year boundaries), executes the statements in a read-only transaction with SQLAlchemy and writes the rows as JSON, NDJSON or CSV.
 The CLI is driven by ``fire``.
-Usage: sqltojson run_query CONFIG --params '{"key": "value"}' Examples: $ sqltojson run_query reports.yml --params '{"year": 2024}' Runs as a script (``python sqltojson.py``) in the directory it should act on; the module can also be imported."""
+Usage: sqltojson run_query CONFIG --params '{"key": "value"}' Examples: $ sqltojson run_query reports.yml --params '{"year": 2024}' Runs as a script (``python sqltojson.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from __future__ import absolute_import, annotations
 import calendar
@@ -21,7 +22,6 @@ from dateutil.relativedelta import relativedelta
 import fire
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
-
 
 __version__: str = "0.0.0"
 DATE_FIELDS: list[str] = [

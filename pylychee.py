@@ -19,7 +19,6 @@ import urllib.request
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 if TYPE_CHECKING:
     from collections.abc import Iterable
 EXT_IMAGE: Final[frozenset[str]] = frozenset({

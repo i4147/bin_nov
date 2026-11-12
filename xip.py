@@ -10,7 +10,6 @@ from dh import cyan, reset
 from dotenv import load_dotenv
 import ipinfo
 
-
 if __name__ == "__main__":
     env_path = Path.home() / ".env"
     load_dotenv(env_path)

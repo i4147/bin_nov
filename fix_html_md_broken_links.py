@@ -2,12 +2,12 @@
 """Repair relative links in Markdown and HTML files against a static directory.
 Walks the current directory, and for every ``href`` whose target does not exist locally but does exist under ``/sdcard/_static`` rewrites the link to the absolute path.
 The original file is kept as ``.bak``.
-Usage: fix_html_md_broken_links Examples: $ fix_html_md_broken_links Runs as a script (``python fix_html_md_broken_links.py``) in the directory it should act on; the module can also be imported."""
+Usage: fix_html_md_broken_links Examples: $ fix_html_md_broken_links Runs as a script (``python fix_html_md_broken_links.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path
 import re
-
 
 static_dir: str = "/sdcard/_static"
 

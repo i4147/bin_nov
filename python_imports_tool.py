@@ -6,7 +6,8 @@ The AST flavour is stdlib-only and strictly more accurate, so tree-sitter was dr
 - ``fimport.py`` (imports with top-level vs nested context) -> ``modules --details``.
 - ``import_collector.py`` + ``importz.py`` (third-party detection with the import->pip name map and an install script) -> ``requirements`` (writes ``requirements.txt`` + ``install_deps.sh`` for missing ones).
 Extension-less files with a python shebang count as Python, as in ``importz.py``.
-Examples -------- python3 python_imports_tool.py modules ~/project python3 python_imports_tool.py lines ~/project -o imports_out/ python3 python_imports_tool.py requirements ~/project"""
+Examples -------- python3 python_imports_tool.py modules ~/project python3 python_imports_tool.py lines ~/project -o imports_out/ python3 python_imports_tool.py requirements ~/project
+"""
 
 import argparse
 import ast
@@ -18,7 +19,6 @@ from pathlib import Path
 import sys
 
 from dh import MAX_WORKERS, SKIP_DIRS
-
 
 STDLIB: frozenset[str] = frozenset(sys.stdlib_module_names)
 PACKAGE_MAPPING: dict[str, str] = {

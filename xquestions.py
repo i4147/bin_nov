@@ -4,7 +4,6 @@
 from pathlib import Path
 import re
 
-
 # Text-based file extensions to scan
 TEXT_EXT: set[str] = {".txt", ".md", ".csv", ".json", ".xml", ".html", ".htm", ".log", ".py", ".yaml", ".yml"}
 

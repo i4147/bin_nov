@@ -19,7 +19,6 @@ from typing import Any, Sequence
 
 from loguru import logger
 
-
 try:
     STDLIB = set(sys.stdlib_module_names)
 except AttributeError:

@@ -2,7 +2,8 @@
 """Bundle the scripts of each folder into one generated dispatcher module.
 For every top-level folder the ``.py`` files are embedded as source constants in ``<folder>.py`` together with a ``...Unified`` tool class that exposes each script as a subcommand (``info`` lists them).
 The generated module is compiled and checked for missing annotations before being written and made executable.
-Usage: generate_unified Examples: $ generate_unified Runs as a script (``python generate_unified.py``) in the directory it should act on; the module can also be imported."""
+Usage: generate_unified Examples: $ generate_unified Runs as a script (``python generate_unified.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import ast
 import os
@@ -10,7 +11,6 @@ from pathlib import Path
 import re
 
 from dh import unique_path
-
 
 ROOT = Path.cwd().resolve()
 

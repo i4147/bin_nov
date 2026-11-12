@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Delete a range of lines from a file.
 Without an end line everything from the start line to the end of the file is removed; line numbers are one-based and the file is rewritten in place, printing how many lines remained.
-Usage: dll FILE START_LINE [END_LINE] Examples: $ dll notes.txt 10 20 Runs as a script (``python dll.py``) in the directory it should act on; the module can also be imported."""
+Usage: dll FILE START_LINE [END_LINE] Examples: $ dll notes.txt 10 20 Runs as a script (``python dll.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

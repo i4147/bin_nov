@@ -2,7 +2,8 @@
 """Rank the function and class names used in a tree by how often they are referenced.
 Scans Python sources, wheels and tarballs (including ``.tar.zst``), collects the defined functions/classes and every name or attribute use, and writes ``func.json`` and ``class.json`` sorted by usage count.
 Generic names such as ``main`` or ``run`` are ignored.
-Usage: funclass_names Examples: $ funclass_names Runs as a script (``python funclass_names.py``) in the directory it should act on; the module can also be imported."""
+Usage: funclass_names Examples: $ funclass_names Runs as a script (``python funclass_names.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import ast
 from collections import defaultdict
@@ -17,7 +18,6 @@ import zipfile
 from dh import WorkerResult
 from rich.console import Console
 from rich.progress import BarColumn, MofNCompleteColumn, Progress, TextColumn, TimeElapsedColumn, TimeRemainingColumn
-
 
 SKIP_NAMES: set[str] = {
     "main",

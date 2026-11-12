@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Rename a project by replacing its old name in file names, text files and Hatch/pyproject metadata.
 Walks the tree, replaces the old project name in the text-like files (README, license, requirements, makefiles, dotfiles, Python sources ...) and renames the matching files and directories, skipping the files that do not look textual.
-Usage: rename-project OLD_NAME NEW_NAME Examples: $ rename-project oldpkg newpkg Runs as a script (``python rename-project.py``) in the directory it should act on; the module can also be imported."""
+Usage: rename-project OLD_NAME NEW_NAME Examples: $ rename-project oldpkg newpkg Runs as a script (``python rename-project.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path
@@ -10,7 +11,6 @@ import sys
 from typing import Any
 
 from dh import SKIP_DIRS, TEXT_EXT
-
 
 TEXT_PREFIXES: tuple[str, ...] = (
     "readme",

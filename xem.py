@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract the ``data:`` URIs of HTML files into ``extracted_base64``.
 Finds the base64 data URLs, decodes them, names the files after a content hash with the extension inferred from the MIME type and writes them to ``extracted_base64``, skipping the duplicates.
-Usage: xem [html files ...] Examples: $ xem page.html Runs as a script (``python xem.py``) in the directory it should act on; the module can also be imported."""
+Usage: xem [html files ...] Examples: $ xem page.html Runs as a script (``python xem.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import base64
 import hashlib
@@ -11,7 +12,6 @@ import sys
 from typing import Any, Iterator
 
 from dh import MIME2EXT, get_nobinary
-
 
 OUTPUT_DIR: Path = Path("extracted_base64")
 DATA_URL_RE = re.compile(r"data:(?P<mime>[-\w.+/]+);base64,(?P<data>[A-Za-z0-9+/=\s]+)", re.IGNORECASE)

@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Create and push a ``<month>_<year>`` branch in ``~/bin``.
 Builds the branch name from the current month, checks whether it exists locally or on the remote, and otherwise fetches, updates ``main``, branches off it and pushes the new branch with upstream tracking before switching back to ``main``.
-Usage: create_monthly_branch Examples: $ create_monthly_branch The repository path (``~/bin``) and base branch (``main``) are module constants; edit them for other layouts."""
+Usage: create_monthly_branch Examples: $ create_monthly_branch The repository path (``~/bin``) and base branch (``main``) are module constants; edit them for other layouts.
+"""
 
 from datetime import datetime
 from pathlib import Path
 import subprocess
 import sys
-
 
 REPO_PATH = Path.home() / "bin"
 MAIN_BRANCH: str = "main"

@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Turn a one-item-per-line file into a Python set literal and copy it to the clipboard.
 Quotes each line (choosing the quote character that does not clash with the content) and writes ``{"a", "b", ...}`` back to the file, then sends the text to ``termux-clipboard-set`` when that command is available.
-Usage: f2l FILE Examples: $ f2l words.txt Runs as a script (``python f2l.py``) in the directory it should act on; the module can also be imported."""
+Usage: f2l FILE Examples: $ f2l words.txt Runs as a script (``python f2l.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import subprocess

@@ -2,7 +2,8 @@
 """Shrink PDF files with Ghostscript's screen profile.
 Runs ``gs`` with 85 dpi downsampling and font subsetting into a temporary file and replaces the original only when the result is smaller, printing the before/after sizes and the space saved.
 Files are processed in parallel.
-Usage: spdf [pdfs ...] Examples: $ spdf scans/ Runs as a script (``python spdf.py``) in the directory it should act on; the module can also be imported."""
+Usage: spdf [pdfs ...] Examples: $ spdf scans/ Runs as a script (``python spdf.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

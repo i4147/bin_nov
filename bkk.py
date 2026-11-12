@@ -1,10 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Delete every ``*.bak`` file under the current directory.
 Walks the tree, prints each backup file relative to the current directory and unlinks it.
-Usage: bkk Examples: $ bkk Runs as a script (``python bkk.py``) in the directory it should act on; the module can also be imported."""
+Usage: bkk Examples: $ bkk Runs as a script (``python bkk.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
-
 
 if __name__ == "__main__":
     cwd = Path.cwd()

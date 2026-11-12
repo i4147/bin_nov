@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Run ``ruff`` over the Python files below the current directory.
 Includes the extension-less files whose first line looks like a Python script, skips binaries and caches, and invokes ``ruff check`` (optionally with the arguments given on the command line).
-Usage: pyruf [ruff arguments ...] Examples: $ pyruf --fix Runs as a script (``python pyruf.py``) in the directory it should act on; the module can also be imported."""
+Usage: pyruf [ruff arguments ...] Examples: $ pyruf --fix Runs as a script (``python pyruf.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import subprocess

@@ -3,14 +3,14 @@
 Analysis / deduplication ------------------------ Four near-identical truecolor half-block renderers (``imgviewer.py``, ``pycatimg.py``, ``timg.py``, ``termimg0.py``) plus ``termimage.py`` (same idea hand-rolled for PPM) collapse into one ``show --mode blocks`` renderer; ``pycatimg``'s SVG support (via cairosvg) and background compositing survive as options.
 ``img2asci.py`` (ascii-magic) is ``show --mode ascii`` with a built-in grayscale-ramp fallback when ascii-magic is not installed, so the tool always works with just Pillow.
 Requires Pillow; SVG additionally needs cairosvg.
-Examples -------- python3 terminal_image_tool.py show photo.png python3 terminal_image_tool.py show photos/ -W 100 python3 terminal_image_tool.py show logo.svg --dpi 150 python3 terminal_image_tool.py show photo.png --mode ascii -W 80"""
+Examples -------- python3 terminal_image_tool.py show photo.png python3 terminal_image_tool.py show photos/ -W 100 python3 terminal_image_tool.py show logo.svg --dpi 150 python3 terminal_image_tool.py show photo.png --mode ascii -W 80
+"""
 
 import argparse
 from collections.abc import Sequence
 from pathlib import Path
 import shutil
 import sys
-
 
 IMAGE_SUFFIXES: frozenset[str] = frozenset({
     ".png",

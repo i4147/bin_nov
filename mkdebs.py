@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Repackage installed apt packages as ``.deb`` files.
 Uses python-apt to list the installed packages and their file lists, rebuilds a ``control`` file and a ``data.tar.xz`` from the files on disk and assembles a real ``.deb`` with ``unix_ar`` under ``~/debs``.
-Usage: mkdebs [packages ...] Examples: $ mkdebs bash curl Runs as a script (``python mkdebs.py``) in the directory it should act on; the module can also be imported."""
+Usage: mkdebs [packages ...] Examples: $ mkdebs bash curl Runs as a script (``python mkdebs.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import contextlib
 import os
@@ -12,7 +13,6 @@ import tarfile
 import apt
 import apt_pkg
 import unix_ar
-
 
 BASE_DIR = Path.home() / "debs"
 BASE_DIR.mkdir(parents=True, exist_ok=True)

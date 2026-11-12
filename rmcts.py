@@ -13,7 +13,6 @@ from loguru import logger
 from tree_sitter import Language, Node, Parser
 import tree_sitter_python as tsp
 
-
 if TYPE_CHECKING:
     from multiprocessing.pool import AsyncResult
 PY_EXTS: set[str] = {".py"}

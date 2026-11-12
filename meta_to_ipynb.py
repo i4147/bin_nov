@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Turn a package ``METADATA`` file into a Jupyter notebook.
 Parses the core metadata header, splits the remaining description into Markdown text and fenced code blocks and writes ``<package>.ipynb`` with a title cell followed by one Markdown or code cell per section.
-Usage: meta_to_ipynb METADATA Examples: $ meta_to_ipynb pkg/METADATA Runs as a script (``python meta_to_ipynb.py``) in the directory it should act on; the module can also be imported."""
+Usage: meta_to_ipynb METADATA Examples: $ meta_to_ipynb pkg/METADATA Runs as a script (``python meta_to_ipynb.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from pathlib import Path

@@ -40,7 +40,6 @@ from typing import Any, Iterable, Optional
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 with contextlib.suppress(ImportError):
     from loguru import logger
 

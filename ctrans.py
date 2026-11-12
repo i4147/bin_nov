@@ -21,7 +21,6 @@ import tempfile
 import threading
 from typing import Any, Callable, Iterator, Optional, TextIO
 
-
 try:
     from loguru import logger
 except ImportError:

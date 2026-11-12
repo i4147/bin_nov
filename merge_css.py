@@ -11,7 +11,6 @@ import subprocess
 import sys
 from typing import Optional
 
-
 GOOGLE_FONTS_RE = re.compile(r"@import\s+url\([^)]+fonts\.googleapis[^)]+\);?", re.IGNORECASE)
 FONT_URL_RE = re.compile(r'url\((["\']?)(https?://[^)]+?\.(?:woff2?|ttf|otf|eot))\1\)', re.IGNORECASE)
 

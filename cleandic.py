@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Drop the untranslated entries from a translation dictionary and log them to ``failed.txt``.
 Reads a JSON mapping (or a list of ``{"orig", "translated"}`` objects), keeps only the records whose translation differs from the source, rewrites the file with the kept records and appends the untranslated keys to ``failed.txt`` for a retry.
-Usage: cleandic DICTIONARY.json Examples: $ cleandic words.json Runs as a script (``python cleandic.py``) in the directory it should act on; the module can also be imported."""
+Usage: cleandic DICTIONARY.json Examples: $ cleandic words.json Runs as a script (``python cleandic.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from pathlib import Path

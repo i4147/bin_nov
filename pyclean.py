@@ -21,7 +21,6 @@ from typing import Any, Optional, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     import libcst as cst
 

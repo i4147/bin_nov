@@ -15,14 +15,8 @@ import termios
 import tty
 from typing import Any
 
+import pymupdf
 
-try:
-    import fitz
-except ImportError:
-    try:
-        import pymupdf as fitz
-    except ImportError:
-        sys.exit("PyMuPDF is required:  pip install pymupdf")
 RESET: str = "\x1b[0m"
 HOME: str = "\x1b[H"
 CLEAR: str = "\x1b[2J"
@@ -62,7 +56,7 @@ class Viewer:
 
     def __init__(self, path: str, page: int = 1, zoom: float = 1.0) -> None:
         self.path = path
-        self.doc = fitz.open(path)
+        self.doc = pymupdf.open(path)
         if self.doc.page_count == 0:
             msg = "document contains no pages"
             raise ValueError(msg)
@@ -100,8 +94,8 @@ class Viewer:
         page = self.doc[index]
         scale = width / page.rect.width if page.rect.width else 1.0
         pm = page.get_pixmap(
-            matrix=fitz.Matrix(scale, scale),
-            colorspace=fitz.csRGB,
+            matrix=pymupdf.Matrix(scale, scale),
+            colorspace=pymupdf.csRGB,
             alpha=False,
         )
         data = (pm.width, pm.height, pm.samples)

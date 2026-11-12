@@ -22,7 +22,6 @@ from dh import MAX_WORKERS, SKIP_DIRS, fsz
 from loguru import logger
 import zstandard as zstd
 
-
 ZSTD_LEVEL: int = 19
 BROTLI_QUALITY: int = 11
 LZMA_LEVEL: int = 9

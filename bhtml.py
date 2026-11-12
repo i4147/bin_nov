@@ -20,7 +20,6 @@ from typing import Iterable, Iterator
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
-
 BEAUTIFIER: tuple[str, ...] = ("html-beautify", "--quiet")
 DEFAULT_SUFFIXES: tuple[str, ...] = (".html", ".htm", ".xhtml")
 DEFAULT_JOBS: int = 8

@@ -7,7 +7,6 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-
 EXTENSIONS: set[str] = {".txt", ".md", ".csv", ".json", ".xml", ".html", ".htm", ".log"}
 
 AUXILIARIES: tuple[str, ...] = (

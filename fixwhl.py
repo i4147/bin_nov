@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Rename wheels that were mangled by a bulk rename back to their canonical name.
 Opens each ``.whl`` in the current directory, reads ``Name``/``Version`` from the bundled ``METADATA`` and renames the file to ``name-version-pyX-none-any.whl``, refusing to overwrite an existing file.
-Usage: fixwhl Examples: $ fixwhl Runs as a script (``python fixwhl.py``) in the directory it should act on; the module can also be imported."""
+Usage: fixwhl Examples: $ fixwhl Runs as a script (``python fixwhl.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from collections import defaultdict
 from email.parser import Parser

@@ -16,7 +16,6 @@ import libcst as cst
 from rich.console import Console
 from rich.text import Text
 
-
 TYPE_COMMENT_RE: re.Pattern[str] = re.compile(r"#\s*type:\s*(?!ignore\b)")
 NUM_WIDTH: int = 10
 SUFFIX: str = ""

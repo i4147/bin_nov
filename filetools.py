@@ -21,7 +21,6 @@ from typing import Final, Sequence
 from dh import MAX_WORKERS
 from tqdm import tqdm
 
-
 SECONDS_PER_MINUTE: Final[float] = 60.0
 SECONDS_24H: Final[float] = 24 * 60 * 60
 EXCLUDE_DIRS: Final[frozenset[str]] = frozenset({".git"})

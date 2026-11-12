@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert a vCard file to JSON.
 Parses the ``BEGIN:VCARD`` blocks, unfolds the continued lines, decodes the quoted-printable values and writes the contacts as a JSON list.
-Usage: vcf2json CONTACTS.vcf Examples: $ vcf2json contacts.vcf Runs as a script (``python vcf2json.py``) in the directory it should act on; the module can also be imported."""
+Usage: vcf2json CONTACTS.vcf Examples: $ vcf2json contacts.vcf Runs as a script (``python vcf2json.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from pathlib import Path

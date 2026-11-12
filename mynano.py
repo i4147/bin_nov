@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """A small Textual-based text editor with readline tab completion.
 Opens the file given on the command line (or an empty buffer), provides quit, save and save-as actions plus a key binding list, and hooks ``readline`` with ``rlcompleter`` for the completion popup.
-Usage: mynano [FILE] Examples: $ mynano notes.txt Runs as a script (``python mynano.py``) in the directory it should act on; the module can also be imported."""
+Usage: mynano [FILE] Examples: $ mynano notes.txt Runs as a script (``python mynano.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import readline

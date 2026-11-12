@@ -25,7 +25,6 @@ import re
 
 from dh import SKIP_DIRS
 
-
 UNIT_SEP: str = "\x1f"
 DIFF_FILTER: str = "AD"
 RESET: str = "\033[0m"

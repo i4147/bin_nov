@@ -3,14 +3,14 @@
 Walks the tree, picks the files whose name or extension is in the allow-list (``Makefile``, ``Dockerfile``, ``.env*``, ``.ini``, ``.conf``, ``requirements.txt``, shell dialects ...) and removes the full-line comments while leaving shebangs, ``#!`` lines and code-only ``#`` characters untouched.
 Python, YAML and other languages are skipped.
 Usage: frmc [paths ...] Examples: $ frmc .
-$ frmc ~/dotfiles Runs as a script (``python frmc.py``) in the directory it should act on; the module can also be imported."""
+$ frmc ~/dotfiles Runs as a script (``python frmc.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path
 import sys
 
 from dh import SKIP_DIRS
-
 
 SKIP_EXTS: frozenset[str] = frozenset({
     ".yaml",

@@ -25,7 +25,6 @@ import zipfile
 
 from dh import SKIP_DIRS
 
-
 try:
     import libcst as cst
 

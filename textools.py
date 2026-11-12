@@ -14,7 +14,6 @@ from typing import Any, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
-
 try:
     import nltk
     from nltk.corpus import stopwords as _nltk_stopwords

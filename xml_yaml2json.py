@@ -10,7 +10,6 @@ from typing import Any, Optional
 
 from dh import MAX_WORKERS
 
-
 try:
     import toml
 except ImportError:

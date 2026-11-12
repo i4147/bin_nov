@@ -16,7 +16,6 @@ import sys
 import urllib.parse
 from typing import Any, Iterable, Sequence
 
-
 try:
     import requests
 except ImportError:

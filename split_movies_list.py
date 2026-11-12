@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Group a list of movie URLs into one text file per movie.
 Reads the URLs from the given file, takes the name that follows ``/series/`` in each URL and writes the URLs of each movie to ``split_movies/<movie>.txt`` with a sanitised file name.
-Usage: split_movies_list MOVIES.txt Examples: $ split_movies_list links.txt Runs as a script (``python split_movies_list.py``) in the directory it should act on; the module can also be imported."""
+Usage: split_movies_list MOVIES.txt Examples: $ split_movies_list links.txt Runs as a script (``python split_movies_list.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re

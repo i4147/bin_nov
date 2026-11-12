@@ -16,7 +16,6 @@ from atomicio import atomic_replace
 from dh import SKIP_DIRS
 import libcst as cst
 
-
 POOL_PROCESSES: int = 8
 CHUNK_SIZE: int = 4
 PY_SUFFIXES: tuple[str, str] = (".py", ".pyi")

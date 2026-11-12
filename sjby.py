@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Rewrite a JSON object with its keys sorted by length.
 Loads the file, sorts the items by key length (or by the length of the value list with ``-v``), re-serialises with two-space indentation and writes it back after a round-trip validation.
-Usage: sjby [-v] FILE.json Examples: $ sjby words.json Runs as a script (``python sjby.py``) in the directory it should act on; the module can also be imported."""
+Usage: sjby [-v] FILE.json Examples: $ sjby words.json Runs as a script (``python sjby.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from pathlib import Path

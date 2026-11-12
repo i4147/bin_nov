@@ -15,7 +15,6 @@ from typing import TYPE_CHECKING, Final, TypeAlias
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 POOL_METHODS: Final[tuple[str, ...]] = (
     "map",
     "starmap",

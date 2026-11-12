@@ -4,7 +4,8 @@ Analysis / deduplication ------------------------ - ``renm.py``, ``renneng.py`` 
 They are one ``translate`` command that caches translations, renames deepest paths first (so parent dirs can be renamed too), and is dry-run by default - the originals renamed immediately.
 - ``finglish.py`` transliterates Persian filenames to Finglish (Latin) locally with no network -> ``finglish`` command.
 Translation needs the optional ``deep-translator`` package and network access; transliteration is fully local.
-Examples -------- python3 filename_translate_tool.py translate ~/Downloads python3 filename_translate_tool.py translate ~/Downloads --apply python3 filename_translate_tool.py finglish ~/Music --apply"""
+Examples -------- python3 filename_translate_tool.py translate ~/Downloads python3 filename_translate_tool.py translate ~/Downloads --apply python3 filename_translate_tool.py finglish ~/Music --apply
+"""
 
 import argparse
 from collections.abc import Sequence
@@ -15,7 +16,6 @@ import sys
 import unicodedata
 
 from dh import MAX_WORKERS
-
 
 NON_ASCII: re.Pattern[str] = re.compile(r"[^\x00-\x7F]")
 

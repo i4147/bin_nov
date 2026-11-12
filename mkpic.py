@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Compile Python files to bytecode, optionally deleting the sources.
 Runs ``compileall`` over the files or directories given (default: every ``.py`` below the current directory, in a worker pool) with the chosen ``--optimize`` level; ``--legacy`` writes the ``.pyc`` next to the source instead of ``__pycache__`` and ``REMOVE_ORIG`` deletes the ``.py`` afterwards.
-Usage: mkpic [-o LEVEL] [-l] [paths ...] Examples: $ mkpic -o 2 pkg/ Runs as a script (``python mkpic.py``) in the directory it should act on; the module can also be imported."""
+Usage: mkpic [-o LEVEL] [-l] [paths ...] Examples: $ mkpic -o 2 pkg/ Runs as a script (``python mkpic.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import compileall
 import os
@@ -9,7 +10,6 @@ from pathlib import Path
 import sys
 
 from dh import get_pyfiles, mpf
-
 
 REMOVE_ORIG: bool = False
 LEGACY_MODE: bool = False

@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Collect the emoji used by the files of the current directory into ``emojis.json``.
 Scans the files (20 MB limit, UTF-8 only) with a regex that covers the pictographic blocks, the variation selectors, the skin tones, the ZWJ sequences and the regional indicators and writes the sorted ``U+XXXX`` keys with their glyph to ``emojis.json``.
-Usage: xemoji Examples: $ xemoji Runs as a script (``python xemoji.py``) in the directory it should act on; the module can also be imported."""
+Usage: xemoji Examples: $ xemoji Runs as a script (``python xemoji.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from multiprocessing import Pool
 from pathlib import Path
 import re
-
 
 _BASE: str = (
     "\U0001f300-\U0001f5ff"

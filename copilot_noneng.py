@@ -22,7 +22,6 @@ import gcld3
 from langdetect import DetectorFactory, detect_langs
 import pycld2 as cld2
 
-
 DetectorFactory.seed = 0
 _print_lock = threading.Lock()
 _results_lock = threading.Lock()

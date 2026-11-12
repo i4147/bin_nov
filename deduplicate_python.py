@@ -24,7 +24,6 @@ from typing import Any, Iterable
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     from tree_sitter import Parser
     import tree_sitter_python

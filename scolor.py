@@ -1,10 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Show random 24-bit terminal colours, fifty at a time.
 Prints fifty random background colours with their RGB values in three rounds, asking between the rounds whether to continue.
-Usage: python scolor.py Examples: $ python scolor.py Runs its loop at import time; there is no command-line interface."""
+Usage: python scolor.py Examples: $ python scolor.py Runs its loop at import time; there is no command-line interface.
+"""
 
 from secrets import randbelow
-
 
 RESET: str = "\033[0m;"
 

@@ -24,7 +24,6 @@ from packaging.utils import (
 from packaging.version import InvalidVersion, Version
 from rich.progress import BarColumn, DownloadColumn, Progress, TextColumn, TimeRemainingColumn, TransferSpeedColumn
 
-
 PYPI: str = "https://pypi.org/simple/"
 ACCEPT: str = "application/vnd.pypi.simple.v1+json"
 CHUNK: int = 1024 * 1024

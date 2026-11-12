@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Pick a random font from ``/sdcard/font`` and set it as the Termux font.
 Chooses a ``.woff2`` file larger than 400 KB without ``italic`` in its name, converts it with fontTools (the decompressed ``.ttf`` already lying next to it is reused) and installs it as ``~/.termux/font.ttf``.
-Usage: random_font Examples: $ random_font Runs as a script (``python random_font.py``) in the directory it should act on; the module can also be imported."""
+Usage: random_font Examples: $ random_font Runs as a script (``python random_font.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import secrets

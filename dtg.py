@@ -17,7 +17,6 @@ import time
 import tokenize
 from typing import Any, Callable
 
-
 STRING_RE = re.compile(r'^([rufbRUFB]*)([\'"]{3}|[\'"]{1})(.*)\2$', flags=re.DOTALL)
 COMMENT_RE = re.compile(r"^(#+)(\s*)(.*)$", flags=re.DOTALL)
 STATE_FILE: Path = Path(".translation_state.json")

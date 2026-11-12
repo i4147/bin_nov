@@ -1,11 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Flag ``.py`` file names that shadow a standard-library or installed third-party module.
 Compares the stem of every Python file below the current directory against :data:`sys.stdlib_module_names` and against the distribution names listed in ``/sdcard/data/pip.txt`` (``pip freeze`` output), and exits with status 1 when a conflict is found.
-Usage: check_fname_conflict Examples: $ check_fname_conflict Runs as a script (``python check_fname_conflict.py``) in the directory it should act on; the module can also be imported."""
+Usage: check_fname_conflict Examples: $ check_fname_conflict Runs as a script (``python check_fname_conflict.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys
-
 
 PIP_LIST: Path = Path("/sdcard/data/pip.txt")
 TARGET_DIR = Path.cwd()

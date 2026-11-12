@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Translate text files in place with ChatGPT (Gemini fallback).
 Loads the API key from ``.env``, collects the files of ``-e`` extensions (``txt``/``md`` by default), translates each of them into ``-l`` language and overwrites the original.
-Usage: inplace_translator [-e txt,md] [-l LANGUAGE] Options: -e, --extensions Comma-separated file extensions to look for (default: txt,md) -l, --lang Target translation destination language (default: English) Examples: $ inplace_translator -e md -l English Needs an OpenAI or Gemini API key and replaces the content of the source files."""
+Usage: inplace_translator [-e txt,md] [-l LANGUAGE] Options: -e, --extensions Comma-separated file extensions to look for (default: txt,md) -l, --lang Target translation destination language (default: English) Examples: $ inplace_translator -e md -l English Needs an OpenAI or Gemini API key and replaces the content of the source files.
+"""
 
 import argparse
 import glob
@@ -9,7 +10,6 @@ import os
 from pathlib import Path
 import sys
 from typing import Any
-
 
 try:
     from openai import OpenAI

@@ -16,7 +16,6 @@ import shutil
 import sys
 from typing import Any, Iterable, Iterator, Optional, Sequence
 
-
 _WIN_EXTS: set[str] = {".exe", ".dll", ".bat", ".com", ".msi", ".vbs", ".ps1"}
 _MAC_EXTS: set[str] = {".dmg", ".app", ".ds_store", ".plist", ".pkg"}
 _DARWIN_NAMES: set[str] = {

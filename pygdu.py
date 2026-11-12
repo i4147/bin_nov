@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Interactive disk-usage browser in the terminal.
 Scans the given directory with a worker pool, shows the entries as a navigable list with size bars and lets you descend into folders or go back with the arrow keys and Enter/Escape.
-Usage: pygdu [DIRECTORY] Examples: $ pygdu ~ Runs as a script (``python pygdu.py``) in the directory it should act on; the module can also be imported."""
+Usage: pygdu [DIRECTORY] Examples: $ pygdu ~ Runs as a script (``python pygdu.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from dataclasses import dataclass, field
 from multiprocessing import Pool
@@ -13,7 +14,6 @@ from typing import Final
 
 from dh import fsz
 from loguru import logger
-
 
 POOL_SIZE: Final[int] = 8
 BAR_WIDTH: Final[int] = 10

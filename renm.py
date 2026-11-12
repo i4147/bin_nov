@@ -20,7 +20,6 @@ from dh import MAX_WORKERS, unique_path
 from loguru import logger
 from tqdm import tqdm
 
-
 DIRECTORY: Final[str] = "."
 POOL_METHODS: Final[tuple[str, ...]] = (
     "map",

@@ -18,7 +18,6 @@ from PIL import Image, ImageGrab
 from pyperclip import copy as copy2clipboard
 import upyun
 
-
 SYSTEM = platform.system()
 CONFIG_PATH = Path(Path("~").expanduser()).joinpath(".upimg_config.pkl")
 CONFIG_FIELDS: list[str] = ["service", "username", "password", "upload_path", "url_base"]

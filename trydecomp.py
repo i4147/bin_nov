@@ -2,7 +2,8 @@
 """Detect and extract an archive or compressed file whatever its format.
 Sniffs the magic bytes, ranks the candidate decoders and tries them in order: libarchive, the stream decompressors (gzip, bz2, lzma, brotli, zstd, lzma, cramjam), tarfile, zipfile, py7zr, rarfile, acefile, cabarchive and pycdlib, with a pickle fallback.
 Members are written under a safe path.
-Usage: trydecomp FILE [OUTDIR] Examples: $ trydecomp mystery.bin out/ Runs as a script (``python trydecomp.py``) in the directory it should act on; the module can also be imported."""
+Usage: trydecomp FILE [OUTDIR] Examples: $ trydecomp mystery.bin out/ Runs as a script (``python trydecomp.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import bz2
 import contextlib
@@ -16,7 +17,6 @@ import tarfile
 from typing import Callable
 import zipfile
 import zlib
-
 
 try:
     import brotli as _brotli_mod

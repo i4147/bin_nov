@@ -2,12 +2,12 @@
 """Turn raw terminal log captures into plain text.
 Applies carriage-return overwrites and backspaces the way a terminal would, strips ANSI escape sequences and remaining control characters and collapses long runs of blank lines.
 Without arguments every ``.txt``/``.log`` file below the current directory is processed.
-Usage: cleanlog [files ...] Examples: $ cleanlog build.log Runs as a script (``python cleanlog.py``) in the directory it should act on; the module can also be imported."""
+Usage: cleanlog [files ...] Examples: $ cleanlog build.log Runs as a script (``python cleanlog.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re
 import sys
-
 
 ANSI_ESCAPE_RE = re.compile(
     r"""

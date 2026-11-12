@@ -21,7 +21,6 @@ from typing import Any
 from dh import MAX_WORKERS
 import lz4.frame
 
-
 DEFAULT_SKIP_EXT: set[str] = {".gz", ".br", ".xz", ".zst", ".bz2", ".zip", ".whl", ".lz4", ".7z", ".rar"}
 DEFAULT_MIN_SIZE: int = 1024
 DEFAULT_CHUNK_SIZE: int = 32768

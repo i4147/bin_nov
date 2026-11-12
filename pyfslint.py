@@ -22,7 +22,6 @@ import subprocess
 import sys
 from typing import Any, Iterable, Sequence, TYPE_CHECKING
 
-
 RESET: str = "\x1b[0m"
 BOLD: str = "\x1b[1m"
 RED: str = "\x1b[31m"

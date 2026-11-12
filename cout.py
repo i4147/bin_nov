@@ -31,7 +31,6 @@ from typing import Any, Iterable, TYPE_CHECKING
 
 from loguru import logger
 
-
 POOL_SIZE: int = 8
 CHUNK_SIZE: int = 10_000
 SMALL_FILE_BYTES: int = 1 << 20

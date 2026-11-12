@@ -13,7 +13,6 @@ import re
 import sys
 from typing import Any, Iterable, Sequence
 
-
 _S: str = r'(?:"""(?:\\.|[^\\])*?"""' r"|'''(?:\\.|[^\\])*?'''" r'|"(?:\\.|[^"\\\n])*"' r"|'(?:\\.|[^'\\\n])*')"
 TOKEN_RE = re.compile(
     "|".join([

@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Distribute the files below a directory into folders grouped by file size.
 Collects the files (skipping the usual noise directories), sorts them by size and moves them into numbered folders that each hold a similar number of files and a similar size range, so batches of comparable size can be processed together.
-Usage: foldesiz Examples: $ foldesiz Runs as a script (``python foldesiz.py``) in the directory it should act on; the module can also be imported."""
+Usage: foldesiz Examples: $ foldesiz Runs as a script (``python foldesiz.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import operator
 from pathlib import Path

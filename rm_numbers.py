@@ -17,7 +17,6 @@ from uuid import uuid4
 
 from dh import MAX_WORKERS
 
-
 DEFAULT_RULES: list[tuple[str, str]] = [
     (r"_\d+", ""),
     (r"\(\d+\)", ""),

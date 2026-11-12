@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Join all non-empty lines of a file into a single line.
 Strips the line endings, concatenates the remaining text and appends one final newline, rewriting the file in place.
-Usage: joinlines FILE Examples: $ joinlines words.txt Runs as a script (``python joinlines.py``) in the directory it should act on; the module can also be imported."""
+Usage: joinlines FILE Examples: $ joinlines words.txt Runs as a script (``python joinlines.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 from sys import argv

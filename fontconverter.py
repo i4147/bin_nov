@@ -19,7 +19,6 @@ from typing import Any, Callable, Iterable, Sequence
 
 from dh import MAX_WORKERS
 
-
 try:
     from fontTools.pens.ttGlyphPen import TTGlyphPen
     from fontTools.ttLib import TTFont, woff2

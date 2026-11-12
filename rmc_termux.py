@@ -33,7 +33,6 @@ from codeutils import ASTStripper, CSTStripper, TSStripper
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
-
 LOGGER = logger
 _COOKIE_RE = re.compile(rb"coding[:=]\s*[-\w.]+")
 

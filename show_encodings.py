@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Print the detected encoding of a file.
 Reads the raw bytes, asks chardet for a guess and falls back to charset_normalizer when the confidence is low; empty files report ``utf-8``.
-Usage: show_encodings FILE Examples: $ show_encodings legacy.txt Runs as a script (``python show_encodings.py``) in the directory it should act on; the module can also be imported."""
+Usage: show_encodings FILE Examples: $ show_encodings legacy.txt Runs as a script (``python show_encodings.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

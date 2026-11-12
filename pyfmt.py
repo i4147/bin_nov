@@ -36,10 +36,10 @@ from typing import Any, Optional, TYPE_CHECKING
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
 
-
 LOG = logger
 HTML_EXTS: set[str] = {".html", ".htm", ".xhtml"}
 JSBEAUTIFIER_EXTS: set[str] = {".js", ".css", ".html", ".htm", ".json"}
+
 PRETTIER_EXTS: set[str] = {
     ".js",
     ".css",
@@ -297,44 +297,6 @@ def _beautify_jsbeautifier(
     return FileResult(path, success=True, modified=modified, bytes_processed=len(src))
 
 
-def _beautify_prettier(
-    path: Path,
-    *,
-    use_npx: bool = False,
-    translate_path: bool = False,
-    timeout: int = 300,
-) -> FileResult:
-    target = str(path)
-    if translate_path:
-        target = target.replace("/storage/emulated/0", "/sdcard")
-    cmd = (["npx", "prettier", "--write"] if use_npx else ["prettier", "--write"]) + [target]
-    try:
-        before = path.stat().st_mtime_ns
-    except OSError:
-        before = 0
-    try:
-        proc = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-        )
-    except FileNotFoundError as exc:
-        return FileResult(path, success=False, error=f"prettier not found: {exc}")
-    except subprocess.TimeoutExpired:
-        return FileResult(path, success=False, error="Timeout")
-    except Exception as exc:
-        return FileResult(path, success=False, error=str(exc))
-    if proc.returncode != 0:
-        err = (proc.stderr or proc.stdout or "Unknown error").strip()
-        return FileResult(path, success=False, error=err)
-    try:
-        after = path.stat().st_mtime_ns
-    except OSError:
-        after = before
-    return FileResult(path, success=True, modified=(before != after))
-
-
 def _beautify_prettify(path: Path) -> FileResult:
     src = read_text(path)
     if src is None:
@@ -461,13 +423,6 @@ def _make_worker(args: argparse.Namespace) -> Callable[[Path], FileResult]:
             indent_size=args.indent_size,
             json_indent=args.json_indent,
         )
-    if tool == "prettier":
-        return partial(
-            _beautify_prettier,
-            use_npx=args.npx,
-            translate_path=args.translate_path,
-            timeout=args.timeout,
-        )
     if tool == "prettify":
         return _beautify_prettify
     msg = f"Unknown tool: {tool}"
@@ -524,17 +479,6 @@ def build_parser() -> argparse.ArgumentParser:
         prog="fmt",
         description="Unified HTML/CSS/JS/JSON formatter (merges 8 scripts).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=(
-            "Original-script mapping:\n"
-            "  bightml.py     -> list-large --min-size-mb 1\n"
-            "  htmlformat.py  -> format --tool treesitter\n"
-            "  pret3.py       -> format --tool jsbeautifier --ext .js .css .html\n"
-            "  pret4.py       -> format --tool prettier --move-errors-to error\n"
-            "  pretp.py       -> format --tool prettier --npx --progress --executor thread\n"
-            "  pretret.py     -> format --tool prettier --translate-path\n"
-            "  prettify.py    -> format --tool prettify\n"
-            "  pypret.py      -> format --tool jsbeautifier --ext .js .html .css .json"
-        ),
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable debug logging.")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -569,7 +513,7 @@ def build_parser() -> argparse.ArgumentParser:
     fmt.add_argument(
         "--tool",
         required=True,
-        choices=["treesitter", "jsbeautifier", "prettier", "prettify"],
+        choices=["treesitter", "jsbeautifier", "prettify"],
         help="Formatting backend.",
     )
     fmt.add_argument(

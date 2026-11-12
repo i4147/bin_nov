@@ -7,7 +7,6 @@ Rewrite only if lines match."""
 from pathlib import Path
 import sys
 
-
 if __name__ == "__main__":
     fn = Path(sys.argv[1])
     content = fn.read_text(encoding="utf-8")

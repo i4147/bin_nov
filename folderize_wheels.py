@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Sort .whl files in a directory into `installed/` and `not_installed/`.
-A wheel is considered "installed" if a package with the same (canonical) name is present in the current Python environment, regardless of version."""
+A wheel is considered "installed" if a package with the same (canonical) name is present in the current Python environment, regardless of version.
+"""
 
 from importlib import metadata
 from pathlib import Path
 import re
 import shutil
 import sys
-
 
 try:
     from packaging.utils import canonicalize_name, parse_wheel_filename

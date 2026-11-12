@@ -19,7 +19,6 @@ import subprocess
 import sys
 from typing import Sequence
 
-
 DEFAULT_EXCLUDES: frozenset[str] = frozenset({".mypy_cache", ".ruff_cache", ".git", "__pycache__"})
 ICON_IMAGE_EXTS: frozenset[str] = frozenset({"png", "jpg", "jpeg", "gif", "webp"})
 ICON_CODE_EXTS: frozenset[str] = frozenset({"py", "sh"})

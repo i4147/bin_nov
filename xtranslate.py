@@ -17,7 +17,6 @@ from dh import MAX_WORKERS
 from atomicio import atomic_write
 from loguru import logger
 
-
 try:
     from deep_translator import GoogleTranslator
 except ImportError:

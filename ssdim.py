@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Group similar files by their ssdeep fuzzy hashes.
 Hashes every file below the current directory with ssdeep, clusters the files whose compare score exceeds the threshold and can copy or move each cluster into a ``groupNNN`` directory, writing a CSV/JSON report of the similarity matrix.
-Usage: ssdim [--copy] [threshold] Examples: $ ssdim 60 Runs as a script (``python ssdim.py``) in the directory it should act on; the module can also be imported."""
+Usage: ssdim [--copy] [threshold] Examples: $ ssdim 60 Runs as a script (``python ssdim.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import csv
 import json
@@ -12,7 +13,6 @@ import sys
 from typing import Any, Iterable
 
 import ssdeep
-
 
 try:
     from tabulate import tabulate

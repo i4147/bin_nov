@@ -2,7 +2,8 @@
 """List the Python repositories of a GitHub user and save them as JSON.
 Queries the GitHub API for the user's repositories, keeps those written in Python and writes ``<user>_python_repos.json``.
 Without an argument it walks the currently trending users and writes ``trending_github_python_users.json`` instead.
-Usage: getpyrepos [USERNAME] Examples: $ getpyrepos psf Runs as a script (``python getpyrepos.py``) in the directory it should act on; the module can also be imported."""
+Usage: getpyrepos [USERNAME] Examples: $ getpyrepos psf Runs as a script (``python getpyrepos.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from datetime import datetime, timedelta
 import json

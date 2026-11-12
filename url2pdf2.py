@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Save a web page as PDF with pdfkit, named after the site.
 Takes the URL on the command line, derives a safe file name from the host (``www.`` removed) and writes ``<host>.pdf`` through ``pdfkit.from_url``.
-Usage: url2pdf2 URL Examples: $ url2pdf2 https://example.com/docs Runs as a script (``python url2pdf2.py``) in the directory it should act on; the module can also be imported."""
+Usage: url2pdf2 URL Examples: $ url2pdf2 https://example.com/docs Runs as a script (``python url2pdf2.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import re
 import sys

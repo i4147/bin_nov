@@ -1,12 +1,12 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Re-publish every local repository under a new GitHub account.
 For each repository below the current directory it stages and commits the pending changes, creates ``<NEW_USER>/<repo>`` as a private repository with ``gh repo create``, rewrites ``origin`` to the SSH URL of the new owner and pushes all branches and tags.
-Usage: migrate2newaccount Examples: $ migrate2newaccount Runs as a script (``python migrate2newaccount.py``) in the directory it should act on; the module can also be imported."""
+Usage: migrate2newaccount Examples: $ migrate2newaccount Runs as a script (``python migrate2newaccount.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path
 import subprocess
-
 
 NEW_USER: str = "i4147"
 IGNORE: set[str] = {"cpython", "neovim-source", ".git"}

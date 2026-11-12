@@ -11,7 +11,6 @@ from pathlib import Path
 import shutil
 import sys
 
-
 DEFAULT_COMMENT: str = "#"
 COMMENT_TOKENS: dict[str, tuple[str, str]] = {
     ".py": ("#", ""),

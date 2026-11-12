@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Render a ``setup.py`` from ``pyproject.toml`` for the detected build backend.
 Reads the PEP 621 metadata plus the backend-specific tables (flit, hatchling, maturin, meson, pdm, poetry, scikit-build, setuptools), normalises the dependencies, authors, README and license and writes a ``setup.py`` that reproduces the project without ``pyproject.toml``.
-Usage: new2old Examples: $ new2old Runs as a script (``python new2old.py``) in the directory it should act on; the module can also be imported."""
+Usage: new2old Examples: $ new2old Runs as a script (``python new2old.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from dataclasses import dataclass
 from pathlib import Path
 import sys
 from typing import Any, Callable, Iterable
-
 
 if sys.version_info < (3, 11):
     import tomli as tomllib

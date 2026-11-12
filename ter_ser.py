@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Minify JavaScript files in place with terser.
 Runs ``terser --compress --mangle`` over the ``.js``/``.jsx``/``.jsm``/``.jsc`` files, skipping the ones that are already ``.min.js`` or the notebook bundles, and prints the size reduction for each of them in parallel.
-Usage: ter_ser [paths ...] Examples: $ ter_ser static/js Runs as a script (``python ter_ser.py``) in the directory it should act on; the module can also be imported."""
+Usage: ter_ser [paths ...] Examples: $ ter_ser static/js Runs as a script (``python ter_ser.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys
 
 from dh import get_files, gsz, mpf, rrs, runcmd
-
 
 EXT: list[str] = [".js", ".jsx", ".jsm", ".jsc"]
 

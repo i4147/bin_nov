@@ -47,7 +47,6 @@ import lz4.frame
 import py7zr
 import zstandard as zstd
 
-
 CHUNK: int = 1024 * 1024
 """Read/write block size for streaming codecs (matches originals)."""
 """Default worker count (matches the originals' `c` / `q4`)."""

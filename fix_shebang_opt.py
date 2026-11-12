@@ -1,12 +1,12 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Point the shebangs of Python scripts at the current interpreter path.
 Rewrites ``#!...python`` lines (``env``, ``/usr/bin``, Homebrew or Termux prefixes) to ``#!$PREFIX/bin/python3.14`` and restores the executable bit, skipping files whose shebang already matches.
-Usage: fix_shebang_opt Examples: $ fix_shebang_opt Runs as a script (``python fix_shebang_opt.py``) in the directory it should act on; the module can also be imported."""
+Usage: fix_shebang_opt Examples: $ fix_shebang_opt Runs as a script (``python fix_shebang_opt.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path
 import stat
-
 
 HOME = Path.home()
 cwd = Path.cwd()

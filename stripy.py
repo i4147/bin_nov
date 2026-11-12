@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Strip the docstrings from Python files with libcst.
 Removes the module, class and function docstrings (optionally only the short ones), collapses the emptied bodies to ``pass``, keeps the formatting of the rest of the code intact and processes the tree in a worker pool with a per-file report.
-Usage: stripy [paths ...] Examples: $ stripy pkg/ Runs as a script (``python stripy.py``) in the directory it should act on; the module can also be imported."""
+Usage: stripy [paths ...] Examples: $ stripy pkg/ Runs as a script (``python stripy.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import ast
 from dataclasses import dataclass

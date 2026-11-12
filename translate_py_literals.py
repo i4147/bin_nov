@@ -9,7 +9,6 @@ import re
 import sys
 from typing import Any, Iterable
 
-
 try:
     from translate import Translator
 except ImportError:

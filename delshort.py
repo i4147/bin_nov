@@ -1,12 +1,12 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Delete tiny text files below the current directory.
 Binary files are skipped; a text file is removed when it is under 100 bytes or has fewer than three lines, which clears placeholder and accidental files.
-Usage: delshort Examples: $ delshort Runs as a script (``python delshort.py``) in the directory it should act on; the module can also be imported."""
+Usage: delshort Examples: $ delshort Runs as a script (``python delshort.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 
 from dh import get_files, is_binary
-
 
 SIZE_THRESHOLD: int = 100
 LINE_THRESHOLD: int = 3

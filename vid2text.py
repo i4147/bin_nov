@@ -14,7 +14,6 @@ from dh import MAX_WORKERS
 from PIL import Image
 import pytesseract
 
-
 _ANSI: dict[str, str] = {"cyan": "\033[36m", "blue": "\033[34m", "reset": "\033[0m"}
 
 

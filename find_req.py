@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Find the installed distributions that depend on a given package.
 Scans the ``METADATA`` files of the user ``site-packages`` for a ``Requires-Dist:`` line mentioning the package name and prints the distribution directory names that match.
-Usage: find_req PACKAGE Examples: $ find_req requests The scan root is the module constant ``cwd``; adjust it for other Python versions."""
+Usage: find_req PACKAGE Examples: $ find_req requests The scan root is the module constant ``cwd``; adjust it for other Python versions.
+"""
 
 from pathlib import Path
 import sys

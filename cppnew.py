@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Create a competitive-programming C++ file from a template and open it in ``$EDITOR``.
 Writes a skeleton with ``bits/stdc++.h``, fast I/O and an empty ``main`` to the requested path (refusing to overwrite an existing file), then launches the editor named by ``EDITOR`` (``nano`` by default).
-Usage: cppnew FILE.cpp Examples: $ cppnew a.cpp Runs as a script (``python cppnew.py``) in the directory it should act on; the module can also be imported."""
+Usage: cppnew FILE.cpp Examples: $ cppnew a.cpp Runs as a script (``python cppnew.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import subprocess
 import sys
 from typing import Any
-
 
 TEMPLATE: str = """\
 #include <bits/stdc++.h>

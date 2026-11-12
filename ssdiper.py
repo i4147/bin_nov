@@ -15,7 +15,6 @@ from typing import Any, Callable, Optional, Sequence, TextIO
 
 from dh import get_files
 
-
 try:
     import tlsh
 except ImportError:

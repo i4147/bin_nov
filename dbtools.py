@@ -52,7 +52,6 @@ from typing import Any, Iterable, Sequence, TYPE_CHECKING
 from dh import MAX_WORKERS, SQL_MAX_WORKERS
 from loguru import logger
 
-
 try:
     import py7zr
 except ImportError:

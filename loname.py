@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Normalize the file names of the current directory to lowercase snake style.
 Lower-cases the stem, drops punctuation other than ``_``/``-``, replaces spaces with underscores, collapses repeats and lower-cases the extension, keeping the existing files under a unique name when a rename would collide.
-Usage: loname Examples: $ loname Runs as a script (``python loname.py``) in the directory it should act on; the module can also be imported."""
+Usage: loname Examples: $ loname Runs as a script (``python loname.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re
@@ -9,7 +10,6 @@ import string
 import sys
 
 from dh import unique_path
-
 
 recursive: bool = "-r" in sys.argv
 

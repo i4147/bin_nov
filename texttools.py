@@ -12,7 +12,6 @@ import tempfile
 from typing import Final, Sequence
 import unicodedata
 
-
 MAX_LEN: Final[int] = 120
 BREAK_PUNCTS: Final[list[str]] = [",", ";", ":", "?"]
 WS_PATTERN: Final[re.Pattern[str]] = re.compile(r"[\u00A0\u2000-\u200F\u2028\u2029\u202F\u205F\u3000\uFEFF]")

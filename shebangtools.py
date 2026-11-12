@@ -12,7 +12,6 @@ from typing import Any, Iterator, Optional, Sequence
 
 from dh import MAX_WORKERS
 
-
 TERMUX_PREFIX: str = "/data/data/com.termux/files/usr"
 DEFAULT_SHEBANG_FIX: str = "#!/data/data/com.termux/usr"
 DEFAULT_SHEBANG_ADD: str = f"#!{TERMUX_PREFIX}/bin/env python"

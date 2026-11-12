@@ -19,7 +19,6 @@ import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
 from loguru import logger
 
-
 VERSION: str = "1.0.0"
 UTF8_BOM: bytes = b"\xef\xbb\xbf"
 CODING_PATTERN = re.compile(r"^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)")

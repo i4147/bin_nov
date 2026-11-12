@@ -36,7 +36,6 @@ from typing import Any, Callable, Iterable, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     import cv2
 

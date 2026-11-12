@@ -14,7 +14,6 @@ import shutil
 import sys
 import tempfile
 
-
 THRESHOLD: int = 500 * 1024
 CHUNK_SIZE: int = 1024 * 1024
 ARCHIVE_SUFFIXES: dict[str, str] = {

@@ -29,7 +29,6 @@ from dh import MAX_WORKERS
 from loguru import logger
 import requests
 
-
 try:
     from loguru import logger
 

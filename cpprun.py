@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Compile a C or C++ source with clang and run the resulting binary.
 Picks clang/clang++ (falling back to gcc/g++) based on the extension, compiles with ``-Wall -Wextra -O2`` and ``-std=c17``/``-std=c++17`` into the temporary directory, makes the binary executable and runs it with the remaining arguments, forwarding stdin/stdout/stderr and the exit status.
-Usage: cpprun SOURCE [args ...] Examples: $ cpprun main.cpp < input.txt Runs as a script (``python cpprun.py``) in the directory it should act on; the module can also be imported."""
+Usage: cpprun SOURCE [args ...] Examples: $ cpprun main.cpp < input.txt Runs as a script (``python cpprun.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path
@@ -10,7 +11,6 @@ import sys
 from typing import Any, Iterable
 
 import sh
-
 
 COMPILERS: dict[str, tuple[Any, ...]] = {
     ".c": ("clang", ("clang", "gcc")),

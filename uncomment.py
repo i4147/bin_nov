@@ -26,7 +26,6 @@ from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 from tree_sitter import Language, Node, Parser
 
-
 Status = Literal["stripped", "unchanged", "skipped", "error"]
 PoolMethod = Literal["imap_unordered", "imap", "map", "starmap", "apply_async", "apply"]
 Veto = Callable[[Node, bytes], bool]

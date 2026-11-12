@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Check that every installed distribution can still be imported.
 Imports each package reported by ``importlib.metadata.distributions()`` and prints the failures (with the exception) plus a summary of how many packages import cleanly.
-Usage: pip_sanity_check Examples: $ pip_sanity_check Runs as a script (``python pip_sanity_check.py``) in the directory it should act on; the module can also be imported."""
+Usage: pip_sanity_check Examples: $ pip_sanity_check Runs as a script (``python pip_sanity_check.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import importlib
 import importlib.metadata
 import sys
 
 from dh import PKG_MAPPING as pkg_mapping
-
 
 GREEN: str = "\033[32m"
 YELLOW: str = "\033[33m"

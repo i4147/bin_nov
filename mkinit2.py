@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Rebuild the ``__init__.py`` of a package from its modules' public names.
 Collects the public definitions per module in a process pool, merges them with the declarations already present in ``__init__.py`` and writes a new file that imports everything (backing up the previous version).
-Usage: mkinit2 [package_dir] Examples: $ mkinit2 mypkg/ Runs as a script (``python mkinit2.py``) in the directory it should act on; the module can also be imported."""
+Usage: mkinit2 [package_dir] Examples: $ mkinit2 mypkg/ Runs as a script (``python mkinit2.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import ast
 import multiprocessing as mp

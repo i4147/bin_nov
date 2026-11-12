@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Write the English side of a bilingual JSON list to a text file.
 Loads the JSON records, writes the ``en`` field of each entry, one per line, to a ``.txt`` file next to the input and prints the path.
-Usage: save_en FILE.json Examples: $ save_en pairs.json Runs as a script (``python save_en.py``) in the directory it should act on; the module can also be imported."""
+Usage: save_en FILE.json Examples: $ save_en pairs.json Runs as a script (``python save_en.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from pathlib import Path

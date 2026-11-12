@@ -26,7 +26,6 @@ from typing import Any, Iterable, Optional, Self, Sequence, TextIO
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     from deep_translator import GoogleTranslator
 except ImportError:

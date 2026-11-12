@@ -21,7 +21,6 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-
 ENV_FILE = Path.home() / ".env"
 GITHUB_API_BASE: str = "https://api.github.com"
 GIT_LOCAL_TIMEOUT: int = 30

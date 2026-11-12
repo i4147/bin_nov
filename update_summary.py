@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Regenerate ``SUMMARY.md`` from the Markdown files of a book tree.
 Collects every ``.md`` file below the current directory, turns the paths into chapter titles and rewrites ``SUMMARY.md`` with the sorted link list below the existing header.
-Usage: update_summary Examples: $ update_summary Runs as a script (``python update_summary.py``) in the directory it should act on; the module can also be imported."""
+Usage: update_summary Examples: $ update_summary Runs as a script (``python update_summary.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 

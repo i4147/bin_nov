@@ -16,7 +16,6 @@ import zipfile
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 WHEEL_SUFFIX: Final[str] = ".whl"
 METADATA_SUFFIX: Final[str] = ".dist-info/METADATA"
 WHEEL_METADATA_SUFFIX: Final[str] = ".dist-info/WHEEL"

@@ -2,7 +2,8 @@
 """Build every Python package directory below the current directory into wheels.
 A directory counts as a package when it holds ``setup.py``, ``setup.cfg`` or ``pyproject.toml``.
 Wheels are written to ``./wheels`` by ``python -m build --wheel``, one worker per package, with a success/failure summary at the end.
-Usage: autobuild Examples: $ autobuild Runs as a script (``python autobuild.py``) in the directory it should act on; the module can also be imported."""
+Usage: autobuild Examples: $ autobuild Runs as a script (``python autobuild.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from multiprocessing import Pool
 from pathlib import Path
@@ -10,7 +11,6 @@ import subprocess
 import sys
 
 from dh import MAX_WORKERS
-
 
 CURRENT_DIR = Path.cwd()
 OUTPUT_DIR = CURRENT_DIR / "wheels"

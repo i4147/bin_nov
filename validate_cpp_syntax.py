@@ -1,15 +1,15 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Syntax-check C and C++ sources and headers with the compiler.
 Chooses gcc or g++ by suffix, runs ``-fsyntax-only`` on each file of the tree (or of the given paths) in a process pool and prints the files that fail.
-Usage: validate_cpp_syntax [paths ...] Examples: $ validate_cpp_syntax src/ Runs as a script (``python validate_cpp_syntax.py``) in the directory it should act on; the module can also be imported."""
+Usage: validate_cpp_syntax [paths ...] Examples: $ validate_cpp_syntax src/ Runs as a script (``python validate_cpp_syntax.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import multiprocessing as mp
 from pathlib import Path
 import subprocess
 import sys
 
-from dh import NUM_WORKERS
-
+from dh import MAX_WORKERS
 
 CPP_EXTS: set[str] = {".cpp", ".cc", ".cxx"}
 C_EXTS: set[str] = {".c"}
@@ -87,9 +87,9 @@ def main() -> int:
     if not files:
         print("No C/C++/header files found.", file=sys.stderr)
         return 0
-    print(f"Checking {len(files)} file(s) with {NUM_WORKERS} workers...", file=sys.stderr)
+    print(f"Checking {len(files)} file(s) with {MAX_WORKERS} workers...", file=sys.stderr)
     failures = 0
-    with mp.Pool(processes=NUM_WORKERS) as pool:
+    with mp.Pool(processes=MAX_WORKERS) as pool:
         for path, ok, output in pool.imap_unordered(check_file, files):
             if not ok:
                 failures += 1

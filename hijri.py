@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Print today's date in the Jalali calendar with Persian digits.
 Converts the current Gregorian date to Jalali with the classic day-number algorithm and prints the Persian weekday, day, month name and year (through ``faprint`` for right-to-left rendering).
-Usage: hijri Examples: $ hijri Runs as a script (``python hijri.py``) in the directory it should act on; the module can also be imported."""
+Usage: hijri Examples: $ hijri Runs as a script (``python hijri.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import datetime as dt
 

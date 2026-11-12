@@ -14,7 +14,6 @@ from dh import MAX_WORKERS, is_binary
 from elftools.common.exceptions import ELFError
 from elftools.elf.elffile import ELFFile
 
-
 ELF_TYPES: dict[str, str] = {
     "ET_NONE": "no file type",
     "ET_REL": "relocatable object",

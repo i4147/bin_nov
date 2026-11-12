@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Save a web page as PDF with pdfkit, reporting the errors.
 Normalises the URL, names the output after the sanitised domain, converts it with pdfkit and returns a non-zero exit status when the conversion fails.
-Usage: url2pdf3 URL Examples: $ url2pdf3 example.com Runs as a script (``python url2pdf3.py``) in the directory it should act on; the module can also be imported."""
+Usage: url2pdf3 URL Examples: $ url2pdf3 example.com Runs as a script (``python url2pdf3.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import sys
 from urllib.parse import urlparse

@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Merge Persian↔English translation pairs and keep the untranslated words aside.
 Pairs the input files, loads the existing translations, merges the new entries and appends the words that could not be matched to the failed list, logging progress with loguru and saving as it goes.
-Usage: merge_faen Examples: $ merge_faen Runs as a script (``python merge_faen.py``) in the directory it should act on; the module can also be imported."""
+Usage: merge_faen Examples: $ merge_faen Runs as a script (``python merge_faen.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 import os

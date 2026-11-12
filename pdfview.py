@@ -28,7 +28,6 @@ from typing import TYPE_CHECKING, Iterable, Iterator, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 if TYPE_CHECKING:
     import os
 PDF_SUFFIXES: frozenset[str] = frozenset({".pdf"})
@@ -172,7 +171,7 @@ def usable_python_backends() -> list[str]:
         result.append("pdfminer")
     if importable("pypdf"):
         result.append("pypdf")
-    if importable("fitz"):
+    if importable("pymupdf"):
         result.append("pymupdf")
     return result
 
@@ -197,7 +196,7 @@ def resolve_backend(requested: str) -> str:
         return requested
     if requested == "pypdf" and importable("pypdf"):
         return requested
-    if requested == "pymupdf" and importable("fitz"):
+    if requested == "pymupdf" and importable("pymupdf"):
         return requested
     if requested == "system" and usable_system_backend():
         return requested
@@ -227,9 +226,9 @@ def page_count_pypdf(path: Path) -> int:
 
 
 def page_count_pymupdf(path: Path) -> int:
-    import fitz
+    import pymupdf
 
-    document = fitz.open(str(path))
+    document = pymupdf.open(str(path))
     try:
         return document.page_count
     finally:
@@ -302,9 +301,9 @@ def extract_pypdf_page(path: Path, page_number: int) -> str:
 
 
 def extract_pymupdf_page(path: Path, page_number: int) -> str:
-    import fitz
+    import pymupdf
 
-    document = fitz.open(str(path))
+    document = pymupdf.open(str(path))
     try:
         page = document.load_page(page_number - 1)
         return page.get_text("text") or ""

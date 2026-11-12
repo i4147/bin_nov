@@ -38,7 +38,6 @@ from dh import MAX_WORKERS
 from loguru import logger
 from tqdm import tqdm
 
-
 FARSI_RE: re.Pattern[str] = re.compile(r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]")
 TOFA_MARKERS: tuple[str, ...] = (
     "\n",

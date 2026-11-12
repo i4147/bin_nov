@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Download helpers built on ``requests``.
 ``get_resource`` fetches a URL (or a local path/``file:`` URI) and returns its bytes, ``save_file`` stores it under the name derived from the URL (with a checksum for the duplicates) and the ``SaveToDisk`` stream wrapper adds a progress report while writing.
-Usage: from urldownloader import get_resource, save_file Examples: import urldownloader path = urldownloader.save_file('https://example.com/a.zip') Library module without a ``__main__`` entry point; importing it does nothing."""
+Usage: from urldownloader import get_resource, save_file Examples: import urldownloader path = urldownloader.save_file('https://example.com/a.zip') Library module without a ``__main__`` entry point; importing it does nothing.
+"""
 
 from hashlib import sha224
 from pathlib import Path
@@ -12,7 +13,6 @@ from time import sleep
 from typing import Any, Callable, Optional
 
 from requests import Response, get
-
 
 __all__: list[str] = ["SaveToDisk", "get_resource", "save_file"]
 __version__: str = "1.0.5"

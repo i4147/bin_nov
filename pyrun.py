@@ -20,7 +20,6 @@ from typing import Any
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 DEFAULT_TIMEOUT: float = 30.0
 MAX_ERROR_MSG_LEN: int = 200
 

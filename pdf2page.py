@@ -1,22 +1,22 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract every PDF page into its own text file.
-Chooses between pdfminer, pypdf, PyMuPDF and pdfplumber (``-b``), writes one file per page into ``<pdf_dir>/<stem>/`` with a configurable name template, uses threads for the fitz/plumber backends and processes the rest, with ``--skip-existing`` for the resumes.
-Usage: pdf2page [inputs ...] [-b pdfminer|fitz|pypdf|pdfplumber] [--name-template T] Positional arguments: inputs ...
+Chooses between pdfminer, pypdf, PyMuPDF and pdfplumber (``-b``), writes one file per page into ``<pdf_dir>/<stem>/`` with a configurable name template, uses threads for the pymupdf/plumber backends and processes the rest, with ``--skip-existing`` for the resumes.
+Usage: pdf2page [inputs ...] [-b pdfminer|pymupdf|pypdf|pdfplumber] [--name-template T] Positional arguments: inputs ...
 PDF files and/or directories (default: cwd).
 Options: -b, --backend PDF library backend (default: pdfminer).
 -o, --output-dir Base output directory (default: <pdf_dir>/<stem>/).
--P, --parallel Parallelism mode (default: auto — thread for fitz/plumber, process for pypdf/pypdf2/pdfminer).
+-P, --parallel Parallelism mode (default: auto — thread for pymupdf/plumber, process for pypdf/pypdf2/pdfminer).
 --name-template Output filename template.
 Placeholders: {stem} {page} {total} {w}.
 Default: page_{page:0{w}d}.txt -e, --encoding Output file encoding (default: utf-8).
 --skip-existing Skip pages whose output file already exists.
 --no-recursive Do not descend into subdirectories.
---sort Sort text blocks top-to-bottom/left-to-right (fitz backend only).
+--sort Sort text blocks top-to-bottom/left-to-right (pymupdf backend only).
 --password Password for encrypted PDFs (pdfminer backend).
 -m, --maxpages Maximum pages per PDF (0 = all).
 ...
 plus 9 more; run ``pdf2page --help`` for the full list.
-Examples: $ pdf2page book.pdf -b fitz Command-line script: run ``python pdf2page.py`` or the ``pdf2page`` command.
+Examples: $ pdf2page book.pdf -b pymupdf Command-line script: run ``python pdf2page.py`` or the ``pdf2page`` command.
 The module is importable as well."""
 
 import argparse
@@ -46,12 +46,12 @@ def _extract_plumber(pdf_path: str, page_indices: Sequence[int], opts: dict) -> 
     return out
 
 
-def _extract_fitz(pdf_path: str, page_indices: Sequence[int], opts: dict) -> list[tuple[int, str]]:
-    import fitz
+def _extract_pymupdf(pdf_path: str, page_indices: Sequence[int], opts: dict) -> list[tuple[int, str]]:
+    import pymupdf
 
     sort = bool(opts.get("sort", False))
     out: list[tuple[int, str]] = []
-    doc = fitz.open(pdf_path)
+    doc = pymupdf.open(pdf_path)
     try:
         for idx in page_indices:
             try:
@@ -145,12 +145,12 @@ def _extract_pdfminer(pdf_path: str, page_indices: Sequence[int], opts: dict) ->
 
 _BACKENDS: dict[str, Any] = {
     "plumber": _extract_plumber,
-    "fitz": _extract_fitz,
+    "pymupdf": _extract_pymupdf,
     "pypdf": _extract_pypdf,
     "pypdf2": _extract_pypdf2,
     "pdfminer": _extract_pdfminer,
 }
-_THREAD_BACKENDS: set[str] = {"fitz", "plumber"}
+_THREAD_BACKENDS: set[str] = {"pymupdf", "plumber"}
 
 
 def _extract_chunk(pdf_path: str, page_indices: Sequence[int], backend: str, opts: dict) -> list[tuple[int, str]]:
@@ -163,10 +163,10 @@ def _page_count(pdf_path: str, backend: str, password: str = "") -> int:
 
         with pdfplumber.open(pdf_path) as pdf:
             return len(pdf.pages)
-    if backend == "fitz":
-        import fitz
+    if backend == "pymupdf":
+        import pymupdf
 
-        doc = fitz.open(pdf_path)
+        doc = pymupdf.open(pdf_path)
         try:
             return len(doc)
         finally:
@@ -346,7 +346,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--parallel",
         choices=["auto", "thread", "process", "none"],
         default="auto",
-        help="Parallelism mode (default: auto — thread for fitz/plumber, process for pypdf/pypdf2/pdfminer).",
+        help="Parallelism mode (default: auto — thread for pymupdf/plumber, process for pypdf/pypdf2/pdfminer).",
     )
     p.add_argument(
         "--name-template",
@@ -372,7 +372,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--sort",
         action="store_true",
-        help="Sort text blocks top-to-bottom/left-to-right (fitz backend only).",
+        help="Sort text blocks top-to-bottom/left-to-right (pymupdf backend only).",
     )
     p.add_argument(
         "--password",

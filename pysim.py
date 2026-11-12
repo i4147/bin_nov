@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Find Python files with similar definitions by hashing their AST nodes.
 Extracts the functions and classes of each file, hashes the normalized syntax trees and compares the resulting sets pairwise, printing the files whose definitions overlap and the similarity they share.
-Usage: pysim Examples: $ pysim Runs as a script (``python pysim.py``) in the directory it should act on; the module can also be imported."""
+Usage: pysim Examples: $ pysim Runs as a script (``python pysim.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import ast
 import hashlib

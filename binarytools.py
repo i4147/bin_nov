@@ -21,7 +21,6 @@ from typing import Any, Iterable, Iterator, Optional, Sequence
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
-
 MISSING_LIB_PATTERNS: tuple[str, ...] = (
     "error while loading shared libraries",
     "cannot open shared object file",

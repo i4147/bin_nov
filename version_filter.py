@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Delete the outdated and the unwanted wheel files of the current directory.
 Parses the ``name-version-python-tag.whl`` names, keeps only the newest dated build of each package and also removes the ``py3-none-any`` builds of the packages on the blocklist (pycryptodome, matplotlib), printing every deletion.
-Usage: version_filter Examples: $ cd ~/wheels && version_filter Runs as a script (``python version_filter.py``) in the directory it should act on; the module can also be imported."""
+Usage: version_filter Examples: $ cd ~/wheels && version_filter Runs as a script (``python version_filter.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path
 import re
 from typing import Any, Iterable
-
 
 WHL_DIRECTORY: Path = Path()
 WHL_PATTERN = re.compile(

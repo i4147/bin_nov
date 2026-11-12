@@ -21,7 +21,6 @@ import shutil
 import string
 import sys
 
-
 DEFAULT_THRESHOLD: int = 1024 * 1024
 TELEGRAM_CACHE: Path = Path("/sdcard/Android/data/org.telegram.messenger/cache")
 UNITS: tuple[str, ...] = ("B", "KB", "MB", "GB", "TB", "PB")

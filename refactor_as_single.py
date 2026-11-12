@@ -13,7 +13,6 @@ from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS
 
-
 LOGURU_LOGFORMAT: str = "{time:YYYY-MM-DD HH:mm:ss.SSS} {level} {file.name}:{line} {message}"
 MERGED_FILE_HEADER_RE = re.compile(r"^#\s*File:\s*(.+?)\s*$", re.MULTILINE)
 

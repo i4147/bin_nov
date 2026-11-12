@@ -16,7 +16,6 @@ from typing import Any, Iterable, Optional, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 ANDROID_RE = re.compile(r"/([^/]+)-(\d+\.\d+\.\d+)-py3-none-android_24_([^/]+)\.whl")
 LINUX_RE = re.compile(r"/([^/]+)-(\d+\.\d+\.\d+(?:\.\d+)?)-cp\d+-cp\d+-linux_([^/]+)\.whl")
 PY_RE = re.compile(r"python3\.(\d+)")

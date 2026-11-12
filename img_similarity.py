@@ -17,7 +17,6 @@ from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS
 
-
 SUPPORTED_EXTS: set[str] = {
     ".jpg",
     ".jpeg",

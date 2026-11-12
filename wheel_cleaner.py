@@ -12,7 +12,6 @@ import textwrap
 from typing import Any, Callable, Iterable, Optional, Sequence
 import zipfile
 
-
 __all__: list[str] = ["main"]
 DEFAULT_DEST: str = "empty_wheels"
 DEFAULT_DETECTOR: str = "dist-info-only"

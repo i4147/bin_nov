@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Reinstall a list of apt packages with resumable progress.
 Reads the package names, keeps the completed ones in a ``.progress`` JSON file so an interrupted run can continue, clears the cached ``.deb`` files after each install and retries the ``apt install --reinstall`` failures.
-Usage: system_pkgs_reinstaller PACKAGE_LIST Examples: $ system_pkgs_reinstaller pkgs.txt Runs as a script (``python system_pkgs_reinstaller.py``) in the directory it should act on; the module can also be imported."""
+Usage: system_pkgs_reinstaller PACKAGE_LIST Examples: $ system_pkgs_reinstaller pkgs.txt Runs as a script (``python system_pkgs_reinstaller.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import glob
 import json
@@ -11,7 +12,6 @@ import sys
 from typing import Any
 
 from dh import runcmd
-
 
 PROGRESS_SUFFIX: str = ".progress"
 APT_ARCHIVES: Path = Path("/data/data/com.termux/cache/apt/archives")

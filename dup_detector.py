@@ -17,7 +17,6 @@ from pathlib import Path
 import sys
 from typing import Any, TextIO
 
-
 try:
     from rapidfuzz import fuzz
     import ssdeep

@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Reorder the top-level statements of a Python script.
 Parses the module with :mod:`ast`, sorts its top-level statements (imports and definitions included) and rewrites the file while keeping the original source segments.
-Usage: sort_pyfile SCRIPT.py Examples: $ sort_pyfile tool.py Reordering top-level statements can break a script whose body depends on its order."""
+Usage: sort_pyfile SCRIPT.py Examples: $ sort_pyfile tool.py Reordering top-level statements can break a script whose body depends on its order.
+"""
 
 import ast
 from pathlib import Path

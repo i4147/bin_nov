@@ -2,7 +2,8 @@
 """Extract archives in many formats, including nested ones.
 Handles ``.tar``/``.tar.gz``/``.tar.xz``/``.tar.bz2``, ``.zip``, ``.7z``, ``.zst``, ``.br`` and ``.lz4`` (raw streams as well as tar containers).
 Integrity is checked first; archives that are found inside extracted output are picked up again so a single run can unwrap several layers.
-Usage: arx [directory] Examples: $ arx $ arx ~/Downloads Runs as a script (``python arx.py``) in the directory it should act on; the module can also be imported."""
+Usage: arx [directory] Examples: $ arx $ arx ~/Downloads Runs as a script (``python arx.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from contextlib import contextmanager
 import gzip
@@ -21,7 +22,6 @@ import lz4.block
 import lz4.frame
 import py7zr
 import zstandard
-
 
 try:
     import brotli

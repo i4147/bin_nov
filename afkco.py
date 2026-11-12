@@ -18,7 +18,6 @@ from typing import Any, Iterable
 
 from dh import MAX_WORKERS
 
-
 try:
     import zstandard as zstd
 

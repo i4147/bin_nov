@@ -2,7 +2,8 @@
 """Remove ``from __future__ import annotations`` from Python files.
 Walks the tree (honouring ``.gitignore`` through rignore) and deletes just that import statement, dropping the now-empty import line as well.
 Useful when a code base has moved to a Python version where the import is no longer needed.
-Usage: clean_future [paths ...] Examples: $ clean_future $ clean_future src/ Runs as a script (``python clean_future.py``) in the directory it should act on; the module can also be imported."""
+Usage: clean_future [paths ...] Examples: $ clean_future $ clean_future src/ Runs as a script (``python clean_future.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re
@@ -12,7 +13,6 @@ from typing import Iterable, Iterator
 from atomicio import atomic_write
 from dh import SKIP_DIRS
 import rignore
-
 
 FUTURE_ANNOTATIONS_RE = re.compile(
     r"""^[ \t]*

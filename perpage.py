@@ -20,7 +20,6 @@ from dh import MAX_WORKERS
 from loguru import logger
 from pypdf import PdfReader, PdfWriter
 
-
 POOL_METHODS: Final[tuple[str, ...]] = (
     "map",
     "starmap",

@@ -15,7 +15,6 @@ from typing import TYPE_CHECKING, Any
 
 from loguru import logger
 
-
 POOL_SIZE: int = 8
 
 

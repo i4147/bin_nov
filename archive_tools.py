@@ -44,7 +44,6 @@ import zipfile
 
 from dh import MAX_WORKERS
 
-
 try:
     import py7zr
 except ImportError:

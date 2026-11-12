@@ -19,7 +19,6 @@ from typing import Any, Iterable, Iterator, Sequence
 from dh import SKIP_DIRS, WORKERS
 from loguru import logger
 
-
 CHUNK_SIZE: int = 64 * 1024
 DETECTION_SIZE: int = 4000
 MIN_LETTERS: int = 20

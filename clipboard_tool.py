@@ -6,7 +6,8 @@ Original ``tcs -s`` selection is ``copy --lines 3,7,9``.
 ``tcg3`` detects the language from content when the extension is unknown and has the correct python shebang, so its behaviour (plus ``tcg``'s rust support and ``-a`` archiving) is the merged ``paste`` command.
 - ``f2l.py`` rewrites a file's lines as ``{"a", "b"}`` and copies it: the ``to-list`` command.
 Clipboard commands default to Termux (``termux-clipboard-get/set``) as in the originals; on desktop Linux pass ``--get-cmd wl-paste`` / ``--set-cmd wl-copy`` or ``xclip -o`` / ``xclip -selection clipboard``.
-Examples -------- python3 clipboard_tool.py copy notes.txt # whole file python3 clipboard_tool.py copy notes.txt 10 20 # lines 10-20 python3 clipboard_tool.py copy notes.txt --lines 1,5 python3 clipboard_tool.py paste myscript.py python3 clipboard_tool.py to-list names.txt"""
+Examples -------- python3 clipboard_tool.py copy notes.txt # whole file python3 clipboard_tool.py copy notes.txt 10 20 # lines 10-20 python3 clipboard_tool.py copy notes.txt --lines 1,5 python3 clipboard_tool.py paste myscript.py python3 clipboard_tool.py to-list names.txt
+"""
 
 import argparse
 from collections.abc import Sequence
@@ -15,7 +16,6 @@ import shlex
 import shutil
 import subprocess
 import sys
-
 
 DEFAULT_GET_CMD: str = "termux-clipboard-get"
 DEFAULT_SET_CMD: str = "termux-clipboard-set"

@@ -5,7 +5,8 @@ Analysis / deduplication ------------------------ - ``cleaner.py`` strips real A
 - ``mchist.py`` (Midnight Commander ``[cmdline]`` history appended to ``.bash_history``, Termux paths) -> ``mc-import``.
 - ``last5minutes.py`` is misfiled here: it trims the tail of an audio file with moviepy (and used 230 s for "5 minutes").
 It is ``trim-audio --minutes 5`` (300 s; adds an ffmpeg fallback).
-Examples -------- python3 log_clean_tool.py transcript session.log python3 log_clean_tool.py logs ~/logs --dry-run python3 log_clean_tool.py history python3 log_clean_tool.py mc-import python3 log_clean_tool.py trim-audio lecture.mp3 --minutes 5"""
+Examples -------- python3 log_clean_tool.py transcript session.log python3 log_clean_tool.py logs ~/logs --dry-run python3 log_clean_tool.py history python3 log_clean_tool.py mc-import python3 log_clean_tool.py trim-audio lecture.mp3 --minutes 5
+"""
 
 import argparse
 from collections.abc import Sequence
@@ -15,7 +16,6 @@ import re
 import shutil
 import subprocess
 import sys
-
 
 ANSI_RE: re.Pattern[str] = re.compile(r"\x1b(?:\[[0-9;]*[A-Za-z]|\][^\x07]*\x07|[()][AB012])")
 CONTROL_RE: re.Pattern[str] = re.compile(r"[\x01-\x08\x0b\x0c\x0e-\x1f\x7f]")

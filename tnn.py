@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Replace the tabs of text files with four spaces.
 Walks the given paths (or all non-binary files below the current directory), rewrites the files that contain a tab and reports the ones that were updated.
-Usage: tnn [paths ...] Examples: $ tnn src/ Runs as a script (``python tnn.py``) in the directory it should act on; the module can also be imported."""
+Usage: tnn [paths ...] Examples: $ tnn src/ Runs as a script (``python tnn.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

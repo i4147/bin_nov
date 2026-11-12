@@ -17,7 +17,6 @@ from typing import Any, Iterator
 
 from dh import MAX_WORKERS
 
-
 MIN_ARCHIVE_BYTES: int = 300
 TARGET_GLOBS: tuple[str, str, str] = ("*.tar.gz", "*.whl", "*.zip")
 METADATA_NAMES: set[str] = {

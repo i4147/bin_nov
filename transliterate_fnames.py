@@ -10,7 +10,6 @@ from typing import Any
 
 from dh import SKIP_DIRS
 
-
 try:
     from pypinyin import lazy_pinyin
 except ImportError:
@@ -25,6 +24,7 @@ try:
     from unidecode import unidecode
 except ImportError:
     unidecode = None
+
 MAX_NAME: int = 255
 KANA = re.compile(r"[\u3040-\u30ff\u31f0-\u31ff]")
 HAN = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\U00020000-\U0002ebef]+")

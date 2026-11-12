@@ -21,7 +21,6 @@ from typing import TYPE_CHECKING, Final, TypeAlias
 from dh import MAX_WORKERS, get_files, is_binary, runcmd
 from loguru import logger
 
-
 POOL_METHODS: Final[tuple[str, ...]] = (
     "starmap",
     "map",

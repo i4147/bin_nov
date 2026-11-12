@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert a Persian date to Gregorian and say how long ago it was.
 Takes day, month and year in the Persian calendar, converts them with the bundled ``PersianDateConverter`` (including leap-year handling) and prints the Persian and Gregorian dates, the weekday and the number of days since that date.
-Usage: since DAY MONTH YEAR Examples: $ since 10 12 1404 Runs as a script (``python since.py``) in the directory it should act on; the module can also be imported."""
+Usage: since DAY MONTH YEAR Examples: $ since 10 12 1404 Runs as a script (``python since.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import datetime as dt
 import sys

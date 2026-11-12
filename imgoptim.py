@@ -23,7 +23,6 @@ import xml.etree.ElementTree as ET
 
 from dh import MAX_WORKERS, walker
 
-
 GREEN: str = "\033[32m"
 DIM: str = "\033[2m"
 RESET: str = "\033[0m"

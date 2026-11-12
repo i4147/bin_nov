@@ -15,7 +15,6 @@ from typing import Iterator
 from dh import SKIP_DIRS
 import ssdeep
 
-
 BOLD_BLUE: str = "\033[1;34m"
 RESET: str = "\033[0m"
 

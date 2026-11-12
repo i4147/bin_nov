@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Plot a mathematical expression and save it as ``plot.png``.
 Accepts ``f(x)=<expression>`` on the command line, evaluates it over ``-10..10`` with numpy (sin, cos, tan, sqrt, exp, log, pi and e are available) and renders a labelled Matplotlib figure to ``plot.png`` at 300 dpi.
-Usage: plotter 'f(x)=EXPRESSION' Examples: $ plotter 'f(x)=sin(x)/x' Runs as a script (``python plotter.py``) in the directory it should act on; the module can also be imported."""
+Usage: plotter 'f(x)=EXPRESSION' Examples: $ plotter 'f(x)=sin(x)/x' Runs as a script (``python plotter.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from multiprocessing import Pool
 import sys
@@ -10,7 +11,6 @@ from typing import Any
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-
 
 mpl.use("Agg")
 _FUNCTION_EXPR: str = ""

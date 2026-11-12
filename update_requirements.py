@@ -8,10 +8,9 @@ import re
 import sys
 from typing import Final
 
-from dh import _MAX_WORKERS, MAX_WORKERS
+from dh import MAX_WORKERS
 from packaging.version import InvalidVersion, Version
 import requests
-
 
 _TIMEOUT: Final[float] = 10.0
 _DEFAULT_INPUT: Final[str] = "requirements.txt"
@@ -57,7 +56,7 @@ def fetch_latest(session: requests.Session, name: str) -> tuple[str, str | None]
 def find_upgradable(
     installed: dict[str, str],
     *,
-    max_workers: int = _MAX_WORKERS,
+    max_workers: int = MAX_WORKERS,
 ) -> dict[str, tuple[str, str]]:
     if not installed:
         return {}

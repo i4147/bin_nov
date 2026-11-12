@@ -2,7 +2,8 @@
 """Interactive text-art generator for English and Arabic text.
 Reads text lines from the terminal, detects whether the script is Arabic or Latin and renders the characters as block art (large glyph maps for both scripts).
 ``clear`` clears the screen and ``quit``/``exit`` stops the loop.
-Usage: mkart Examples: $ mkart Runs as a script (``python mkart.py``) in the directory it should act on; the module can also be imported."""
+Usage: mkart Examples: $ mkart Runs as a script (``python mkart.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from typing import Any, Iterable

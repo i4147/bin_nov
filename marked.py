@@ -2,7 +2,8 @@
 """A pure-Python port of the JavaScript ``marked`` Markdown parser.
 Exposes the ``Marked`` class plus ``Renderer``, ``Tokenizer``, ``Lexer``, ``Parser`` and ``Token`` so Markdown can be rendered to HTML programmatically.
 The module-level ``marked`` object is ready to use: ``marked.parse(text)``.
-Usage: python -c "import marked; print(marked.marked.parse('# hi'))" Examples: $ python -c "from marked import marked; print(marked.parse('**bold**'))" Library module: import ``marked`` rather than running it; there is no command-line entry point."""
+Usage: python -c "import marked; print(marked.marked.parse('# hi'))" Examples: $ python -c "from marked import marked; print(marked.parse('**bold**'))" Library module: import ``marked`` rather than running it; there is no command-line entry point.
+"""
 
 from dataclasses import dataclass, field
 import re

@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Reformat CSS files in place with ``cleancss`` and report the space that was saved.
 Runs ``cleancss --format beautify`` over the files named on the command line, or over every ``.css`` file below the current directory, and prints the size difference per file plus the total freed.
-Usage: bcss [files ...] Examples: $ bcss styles.min.css Runs as a script (``python bcss.py``) in the directory it should act on; the module can also be imported."""
+Usage: bcss [files ...] Examples: $ bcss styles.min.css Runs as a script (``python bcss.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

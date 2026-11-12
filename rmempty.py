@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Delete the empty files below the current directory.
 Collects the zero-byte files (``__init__.py`` excluded), lists them and removes them, printing how many were deleted and how many failed.
-Usage: rmempty Examples: $ rmempty Runs as a script (``python rmempty.py``) in the directory it should act on; the module can also be imported."""
+Usage: rmempty Examples: $ rmempty Runs as a script (``python rmempty.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

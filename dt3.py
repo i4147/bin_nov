@@ -20,7 +20,6 @@ from typing import Callable, TypeAlias
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 Translator: TypeAlias = Callable[[str], str]
 LANGUAGE_CODES: dict[str, str] = {
     "auto": "auto",

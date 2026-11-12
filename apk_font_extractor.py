@@ -18,7 +18,6 @@ from dh import MAX_WORKERS
 from fontTools.ttLib import TTFont
 from loguru import logger
 
-
 DEFAULT_OUTPUT_DIR: Path = Path("/sdcard/_static/fonts")
 FONT_EXT: frozenset[str] = frozenset({".ttf", ".woff", ".woff2"})
 APK_TIMEOUT_SECONDS: int = 600

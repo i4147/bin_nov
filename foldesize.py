@@ -6,7 +6,6 @@ import re
 import shutil
 import sys
 
-
 SKIP: set[str] = {".git", ".gitignore"}
 RANGE_RE = re.compile(r"^(empty(_\d+)?|\d+(?:\.\d+)?[a-z]+-\d+(?:\.\d+)?[a-z]+(_\d+)?)$")
 

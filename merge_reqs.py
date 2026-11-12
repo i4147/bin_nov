@@ -26,7 +26,6 @@ import zipfile
 
 from dh import MAX_WORKERS
 
-
 try:
     from tqdm import tqdm as _tqdm
 except Exception:

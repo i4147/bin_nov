@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Move a range of lines from one file to the end of another.
 Appends lines ``start`` through ``end`` (one-based, inclusive) to the destination file and removes them from the source, both edited in place.
-Usage: mvl SRC_FILE START_LINE END_LINE DEST_FILE Examples: $ mvl notes.txt 10 20 archive.txt Runs as a script (``python mvl.py``) in the directory it should act on; the module can also be imported."""
+Usage: mvl SRC_FILE START_LINE END_LINE DEST_FILE Examples: $ mvl notes.txt 10 20 archive.txt Runs as a script (``python mvl.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import sys
 

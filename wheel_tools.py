@@ -16,7 +16,6 @@ import zipfile
 
 from dh import MAX_WORKERS
 
-
 try:
     from packaging.tags import parse_tag
     from packaging.utils import canonicalize_name

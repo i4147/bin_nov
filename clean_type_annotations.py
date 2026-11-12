@@ -2,7 +2,8 @@
 """Strip type annotations from Python files in place with LibCST.
 Parameter, return and variable annotations are removed while the code itself stays byte-identical elsewhere; files are processed in a worker pool and written atomically.
 Non-Python files are skipped.
-Usage: clean_type_annotations [paths ...] Examples: $ clean_type_annotations src/ Runs as a script (``python clean_type_annotations.py``) in the directory it should act on; the module can also be imported."""
+Usage: clean_type_annotations [paths ...] Examples: $ clean_type_annotations src/ Runs as a script (``python clean_type_annotations.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from collections.abc import Iterable, Sequence
 import contextlib

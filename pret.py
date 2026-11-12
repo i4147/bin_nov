@@ -2,7 +2,8 @@
 """Format web and Markdown files in place with prettier.
 Runs ``prettier -w`` over the given files, or over every ``.html``/``.js``/``.ts``/``.tsx``/``.md``/``.scss``/``.coffee`` file below the current directory, skipping empty and single-line files and rewriting the Android ``/storage/emulated/0`` prefix to ``/sdcard``.
 Files are processed in parallel.
-Usage: pret [files ...] Examples: $ pret src/ Runs as a script (``python pret.py``) in the directory it should act on; the module can also be imported."""
+Usage: pret [files ...] Examples: $ pret src/ Runs as a script (``python pret.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

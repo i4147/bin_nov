@@ -2,7 +2,8 @@
 """Decode the base64 lines of a file into binary files and keep only the failures in the source.
 Every non-empty line is decoded, after stripping a leading ``base64,`` data-URI prefix when present, and written to ``<sha256>.bin``.
 Lines that fail are printed with their line number and left in the input file, so a repeated run continues where it stopped.
-Usage: b642f FILE Examples: $ b642f payloads.txt Runs as a script (``python b642f.py``) in the directory it should act on; the module can also be imported."""
+Usage: b642f FILE Examples: $ b642f payloads.txt Runs as a script (``python b642f.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import base64
 from pathlib import Path

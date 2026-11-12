@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """List the files that were added during the last N commits.
 Runs ``git log -n N --name-status --diff-filter=A`` in the current repository, skips symlinks and prints the paths of the created files.
-Usage: lastncommits N Examples: $ lastncommits 10 Runs as a script (``python lastncommits.py``) in the directory it should act on; the module can also be imported."""
+Usage: lastncommits N Examples: $ lastncommits 10 Runs as a script (``python lastncommits.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import subprocess

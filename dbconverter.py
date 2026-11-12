@@ -15,7 +15,6 @@ from typing import Any, Iterable
 
 import pandas as pd
 
-
 SQLITE_MAGIC: bytes = b"SQLite format 3\x00"
 
 

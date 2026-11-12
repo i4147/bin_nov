@@ -2,7 +2,8 @@
 """Uninstall pip packages by name or by substring.
 Matches the arguments against the installed distribution names and calls ``pip uninstall -y`` for the matches.
 ``-w`` treats the arguments as substrings instead of exact names.
-Usage: piu [-w] PATTERN [PATTERN ...] Examples: $ piu requests $ piu -w numpy Runs as a script (``python piu.py``) in the directory it should act on; the module can also be imported."""
+Usage: piu [-w] PATTERN [PATTERN ...] Examples: $ piu requests $ piu -w numpy Runs as a script (``python piu.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from importlib.metadata import distributions
 import sys

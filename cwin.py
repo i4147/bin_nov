@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Delete macOS and Windows clutter files from a directory tree.
 Matches the usual artefacts (``.DS_Store``, ``._*``, ``.Trashes``, ``Thumbs.db``, ``desktop.ini``, ``*.exe``, ``*.dll``, ``*.lnk`` ...) while walking the given paths, and removes them or lists them in dry-run mode.
-Usage: cwin [paths ...] Examples: $ cwin ~/downloads --dry-run Runs as a script (``python cwin.py``) in the directory it should act on; the module can also be imported."""
+Usage: cwin [paths ...] Examples: $ cwin ~/downloads --dry-run Runs as a script (``python cwin.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys
 from typing import Any, Iterable, Iterator
 
 from dh import fsz
-
 
 DARWIN_PATTERNS: set[str] = {
     ".DS_Store",

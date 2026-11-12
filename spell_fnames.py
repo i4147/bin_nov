@@ -9,7 +9,6 @@ from typing import Any, Iterable
 
 import hunspell
 
-
 DICT_PATHS: list[tuple[Any, ...]] = [
     (
         "/data/data/com.termux/files/usr/share/hunspell/en_US.dic",

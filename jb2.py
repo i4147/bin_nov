@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Reformat every JSON file below the current directory with two-space indentation.
 Parses each file, writes it back through :func:`json.dump` (``ensure_ascii`` off) and reports the size change per file plus the total freed, using a worker pool.
-Usage: jb2 Examples: $ jb2 Runs as a script (``python jb2.py``) in the directory it should act on; the module can also be imported."""
+Usage: jb2 Examples: $ jb2 Runs as a script (``python jb2.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from pathlib import Path

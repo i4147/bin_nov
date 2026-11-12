@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Merge English→Persian translation files into one dictionary.
 Reads the JSON translation files it finds, merges the mappings (first value wins) and writes the combined dictionary back to disk.
-Usage: merge_enfa Examples: $ merge_enfa Runs as a script (``python merge_enfa.py``) in the directory it should act on; the module can also be imported."""
+Usage: merge_enfa Examples: $ merge_enfa Runs as a script (``python merge_enfa.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import json
 from pathlib import Path

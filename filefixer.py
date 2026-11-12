@@ -44,7 +44,6 @@ import zipfile
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     import puremagic
 except Exception:

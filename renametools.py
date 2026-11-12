@@ -37,7 +37,6 @@ from typing import Any, Iterable, Iterator, Optional, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 log = logger
 
 

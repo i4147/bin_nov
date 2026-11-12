@@ -2,7 +2,8 @@
 """Invert the colours of image files in place.
 Negates the RGB channels while keeping the alpha channel and the EXIF/ICC/DPI metadata, and replaces each file atomically (JPEG saved at quality 95).
 Files it cannot decode are reported and the exit status becomes 1.
-Usage: neg IMAGE [IMAGE ...] Examples: $ neg photo.jpg scan.png Runs as a script (``python neg.py``) in the directory it should act on; the module can also be imported."""
+Usage: neg IMAGE [IMAGE ...] Examples: $ neg photo.jpg scan.png Runs as a script (``python neg.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import io
 from pathlib import Path
@@ -11,7 +12,6 @@ from typing import Any
 
 from atomicio import atomic_write
 from PIL import Image, ImageOps, UnidentifiedImageError
-
 
 DIRECT_MODES: set[str] = {"L", "RGB", "CMYK"}
 

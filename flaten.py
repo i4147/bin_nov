@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Flatten a directory tree, moving every file into one folder.
 Moves all files from the sub-directories into the target directory, renaming on collision so nothing is overwritten, and removes the directories that became empty.
-Usage: flaten [SOURCE_DIR] [TARGET_DIR] Examples: $ flaten ~/downloads ~/flat Runs as a script (``python flaten.py``) in the directory it should act on; the module can also be imported."""
+Usage: flaten [SOURCE_DIR] [TARGET_DIR] Examples: $ flaten ~/downloads ~/flat Runs as a script (``python flaten.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import shutil

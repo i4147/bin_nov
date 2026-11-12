@@ -11,7 +11,6 @@ from pathlib import Path
 import sys
 from typing import Any, Callable
 
-
 DetectionResult = tuple[str, float]
 
 

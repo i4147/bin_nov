@@ -5,10 +5,7 @@ from pathlib import Path
 
 from loguru import logger
 
-
-VERSION_SUFFIX: re.Pattern[str] = re.compile(
-    r"[-_]v?\d+(?:\.\d+)+(?:[-+][0-9A-Za-z.-]+)?$"
-)
+VERSION_SUFFIX: re.Pattern[str] = re.compile(r"[-_]v?\d+(?:\.\d+)+(?:[-+][0-9A-Za-z.-]+)?$")
 
 
 def rename_readme(source: Path) -> tuple[Path, Path, str]:
@@ -33,9 +30,7 @@ def rename_readme(source: Path) -> tuple[Path, Path, str]:
 
 def main() -> None:
     files: list[Path] = [
-        path
-        for path in Path(".").rglob("*")
-        if path.is_file() and path.name in {"README.md", "README.rst"}
+        path for path in Path(".").rglob("*") if path.is_file() and path.name in {"README.md", "README.rst"}
     ]
     files.sort(key=lambda path: path.as_posix())
 
@@ -44,9 +39,7 @@ def main() -> None:
         return
 
     with InterpreterPoolExecutor(max_workers=4) as executor:
-        results: list[tuple[Path, Path, str]] = list(
-            executor.map(rename_readme, files)
-        )
+        results: list[tuple[Path, Path, str]] = list(executor.map(rename_readme, files))
 
     for source, destination, status in results:
         if status == "renamed":

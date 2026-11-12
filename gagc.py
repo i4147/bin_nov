@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Commit the current directory and push it to GitHub with one command.
 Initializes a repository when needed, updates submodules, stages everything, commits with an ``Auto-commit: <timestamp>`` message and then pushes to the existing ``origin`` — creating a new public GitHub repository with ``gh repo create`` or forking the upstream when the current user does not own it.
-Usage: gagc Examples: $ gagc Runs as a script (``python gagc.py``) in the directory it should act on; the module can also be imported."""
+Usage: gagc Examples: $ gagc Runs as a script (``python gagc.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from datetime import datetime
 import os

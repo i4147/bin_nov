@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Sort the lines of a file by their length.
 Reads the file keeping the line endings, sorts the lines by length (``-r`` for the longest first) and writes them back in place.
-Usage: sortbylen [-r] FILE Examples: $ sortbylen words.txt -r Runs as a script (``python sortbylen.py``) in the directory it should act on; the module can also be imported."""
+Usage: sortbylen [-r] FILE Examples: $ sortbylen words.txt -r Runs as a script (``python sortbylen.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

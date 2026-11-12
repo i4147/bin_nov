@@ -21,7 +21,6 @@ import urllib.request
 
 from dh import MAX_WORKERS
 
-
 __version__: str = "2.0.0"
 CHUNK: int = 64 * 1024
 BIG_FILE: int = 50 * 1024 * 1024

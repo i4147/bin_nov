@@ -38,7 +38,6 @@ from typing import Any, Callable, Iterable, Iterator, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
-
 DEFAULT_PATTERN_FILE: Path = Path("/sdcard/lic")
 DEFAULT_JOBS: int = 8
 DEFAULT_HEADER_REGEX: str = r"^# Author\s*:.*\n# Email\s*:.*\n# Time\s*:.*\n\n?"

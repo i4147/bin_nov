@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Sort a Persian word-list file in Persian alphabetical order.
 Reads the lines of the file, sorts them with a Persian collation key (letter order and diacritic handling) and writes the sorted list back to the same file.
-Usage: fasort FILE Examples: $ fasort words.txt Runs as a script (``python fasort.py``) in the directory it should act on; the module can also be imported."""
+Usage: fasort FILE Examples: $ fasort words.txt Runs as a script (``python fasort.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import sys
 from typing import Any, Iterable

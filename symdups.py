@@ -10,7 +10,6 @@ from typing import Any
 
 from xxhash import xxh64
 
-
 BACKUP_FILE: str = ".symlink_backup.json"
 MIN_FILE_SIZE: int = 1
 

@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Find Python packages and wheels that contain no importable code.
 Scans the given directories (or the current one) for ``.whl`` files whose ``RECORD`` lists nothing outside ``.dist-info`` and for installed ``*.dist-info`` directories without a module, then prints them, optionally writing the list to a CSV.
-Usage: emptypkg [paths ...] Examples: $ emptypkg ~/wheels Runs as a script (``python emptypkg.py``) in the directory it should act on; the module can also be imported."""
+Usage: emptypkg [paths ...] Examples: $ emptypkg ~/wheels Runs as a script (``python emptypkg.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import csv
 from pathlib import Path

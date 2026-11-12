@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Print a Persian (Jalali) calendar with the current day highlighted.
 Converts the Gregorian date with its own Jalali arithmetic, prints the month grid with Persian month names, Persian digits and right-to-left alignment (through ``faprint``) and marks today.
-Usage: facal Examples: $ facal Runs as a script (``python facal.py``) in the directory it should act on; the module can also be imported."""
+Usage: facal Examples: $ facal Runs as a script (``python facal.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from datetime import date
 import sys
 
 from faprint import faprint
-
 
 _PERSIAN_DIGITS: dict[int, str] = str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹")
 _JALALI_MONTHS_FA: list[str] = [

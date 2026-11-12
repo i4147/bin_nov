@@ -14,7 +14,6 @@ from typing import TYPE_CHECKING, Final, Protocol
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 EXCLUDED_SUFFIXES: Final[frozenset[str]] = frozenset({
     ".py",
     ".h",

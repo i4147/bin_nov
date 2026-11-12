@@ -3,7 +3,8 @@
 Reads one ``owner/repo`` per line from the file given on the command line, looks up each repository size through the GitHub API (cached for a week in ``repo_sizes.json``) and clones only the repositories no larger than 5 MB.
 Names containing django, flask, torch, tensor, llm or mcp are skipped.
 A ``GITHUB_TOKEN`` in ``~/.env`` raises the API rate limit.
-Usage: autoclone REPOS_FILE Examples: $ autoclone repos.txt Runs as a script (``python autoclone.py``) in the directory it should act on; the module can also be imported."""
+Usage: autoclone REPOS_FILE Examples: $ autoclone repos.txt Runs as a script (``python autoclone.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from datetime import datetime, timedelta
 import json
@@ -15,7 +16,6 @@ from typing import Any
 
 from dotenv import load_dotenv
 import requests
-
 
 env_path = Path.home() / ".env"
 if env_path.exists():

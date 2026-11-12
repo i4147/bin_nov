@@ -2,7 +2,8 @@
 """Crawl a website two levels deep, cache the pages in SQLite and collect e-mail addresses.
 Starts at the URL given on the command line, follows same-host links, stores each page in ``data/crawler.sqlite`` and its HTML in ``data/html/``, then writes the harvested addresses to ``data/emails.csv`` and the domains to ``data/domains.csv``.
 Logs go to ``logs/``.
-Usage: email_crawler URL Examples: $ email_crawler https://example.com Runs as a script (``python email_crawler.py``) in the directory it should act on; the module can also be imported."""
+Usage: email_crawler URL Examples: $ email_crawler https://example.com Runs as a script (``python email_crawler.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re
@@ -15,7 +16,6 @@ from typing import Any
 
 from loguru import logger
 from sqlalchemy import Boolean, Column, Integer, MetaData, Table, Unicode, create_engine, select
-
 
 DEBUG: bool = True
 DATABASE_NAME: str = "data/crawler.sqlite"

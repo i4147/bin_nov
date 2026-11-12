@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Compare every available compression codec on one file or folder.
 Runs gzip, bz2, xz, zip, brotli, zstandard, lz4, 7z, lzma, snappy, zopfli, PPMd and deflate64 at several levels (each codec only when its package is installed), prints size/ratio/time for every combination, then copies the smallest result next to the input.
-Usage: compression_benchmark FILE_OR_FOLDER Examples: $ compression_benchmark dump.sql Runs as a script (``python compression_benchmark.py``) in the directory it should act on; the module can also be imported."""
+Usage: compression_benchmark FILE_OR_FOLDER Examples: $ compression_benchmark dump.sql Runs as a script (``python compression_benchmark.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import bz2
 import gzip
@@ -14,7 +15,6 @@ import tempfile
 import time
 from typing import Callable, Optional
 import zipfile
-
 
 try:
     import brotli

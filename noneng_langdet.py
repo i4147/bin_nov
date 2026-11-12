@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING, Any
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 try:
     from langdet import LanguageDetector
 except ImportError:

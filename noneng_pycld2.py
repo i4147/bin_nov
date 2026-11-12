@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Detect the language of every text file with pycld2.
 Walks the current directory (hidden entries ignored), guesses the language of each readable file with pycld2 and prints a table of file, language, probability and a short snippet.
-Usage: python noneng_pycld2.py Examples: $ python noneng_pycld2.py Runs its scan at import time, so start it in the tree to inspect."""
+Usage: python noneng_pycld2.py Examples: $ python noneng_pycld2.py Runs its scan at import time, so start it in the tree to inspect.
+"""
 
 import os
 from pathlib import Path

@@ -3,7 +3,8 @@
 The first argument is the extension to match, the second the command to execute; the remaining arguments are passed through before the file path.
 Files are processed in a process pool (75% of the cores) and a success/failure summary is printed, e.g.
 ``svgo`` for ``.svg`` files.
-Usage: forfin EXTENSION COMMAND [args ...] Examples: $ forfin .svg svgo -o out/ Runs as a script (``python forfin.py``) in the directory it should act on; the module can also be imported."""
+Usage: forfin EXTENSION COMMAND [args ...] Examples: $ forfin .svg svgo -o out/ Runs as a script (``python forfin.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from functools import partial
 from multiprocessing import Pool, cpu_count

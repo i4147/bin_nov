@@ -41,7 +41,6 @@ from packaging.tags import Tag, compatible_tags, cpython_tags, generic_tags, int
 from packaging.utils import InvalidWheelFilename, canonicalize_name, parse_wheel_filename
 from packaging.version import InvalidVersion, Version
 
-
 __all__: list[str] = [
     "Link",
     "Package",

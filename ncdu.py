@@ -22,7 +22,6 @@ from typing import Any, Iterator, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 __version__: str = "2.0.0"
 PROGNAME: str = "ncdu2.py"
 LOG = logger

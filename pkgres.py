@@ -13,7 +13,6 @@ from typing import Any
 
 from dh import MAX_WORKERS, SKIPPED_DIRS
 
-
 REPLACEMENTS: list[tuple[re.Pattern[str], str, bool, bool]] = [
     (
         re.compile(r"pkg_resources\.get_distribution\(\s*([^)]+?)\s*\)\.version"),

@@ -2,7 +2,8 @@
 """Preprocess images so that Tesseract reads them reliably.
 Deskews each scan, binarises it (OpenCV, scikit-image or Pillow depending on what is installed), removes noise and writes the cleaned image next to the original, in parallel.
 A quick Tesseract pass decides which variant is kept.
-Usage: ocr_ready Examples: $ ocr_ready Runs as a script (``python ocr_ready.py``) in the directory it should act on; the module can also be imported."""
+Usage: ocr_ready Examples: $ ocr_ready Runs as a script (``python ocr_ready.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import multiprocessing
 from pathlib import Path
@@ -13,7 +14,6 @@ from loguru import logger
 import numpy as np
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 import pytesseract
-
 
 try:
     import cv2

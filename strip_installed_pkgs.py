@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Remove the already-installed packages and the stdlib names from a requirements file.
 Normalises the requirement names, drops the ones that are installed or part of the standard library, sorts the result and rewrites the file in place, printing how many entries were removed.
-Usage: strip_installed_pkgs [requirements.txt] Examples: $ strip_installed_pkgs Runs as a script (``python strip_installed_pkgs.py``) in the directory it should act on; the module can also be imported."""
+Usage: strip_installed_pkgs [requirements.txt] Examples: $ strip_installed_pkgs Runs as a script (``python strip_installed_pkgs.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

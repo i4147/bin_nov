@@ -16,7 +16,6 @@ import warnings
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
-
 VALID_ESCAPES: frozenset[str] = frozenset("\\'\"abfnrtv\n\r01234567xNuU")
 HAS_FSTRING_TOKENS: bool = hasattr(tokenize, "FSTRING_START")
 SELF_PATH: Path = Path(__file__).resolve()

@@ -6,7 +6,8 @@ Analysis / deduplication ------------------------ Three different mergers existe
 This is the sound approach, so ``merge --mode bundle`` (default) keeps it (simplified, typed, ``# File:`` section per module).
 ``merge --mode concat`` reproduces ``mergepy`` for flat script piles and is exactly what ``split`` (ex-``unmerger.py``) can undo: files are separated by ``# File: <relpath>`` headers.
 Relative-import rewriting in concat mode uses AST source segments instead of regexes, so multi-line imports survive.
-Examples -------- python3 python_bundle_tool.py merge mypkg/ -o mypkg_single.py python3 python_bundle_tool.py merge scripts/ --mode concat -o all.py python3 python_bundle_tool.py split all.py -o restored/"""
+Examples -------- python3 python_bundle_tool.py merge mypkg/ -o mypkg_single.py python3 python_bundle_tool.py merge scripts/ --mode concat -o all.py python3 python_bundle_tool.py split all.py -o restored/
+"""
 
 import argparse
 import ast
@@ -16,7 +17,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import re
 import sys
-
 
 FILE_HEADER: re.Pattern[str] = re.compile(r"^# File: (.+?)$", re.MULTILINE)
 DEFAULT_MAX_FILES: int = 10

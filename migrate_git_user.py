@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Switch the local git identity to a new user name, e-mail and SSH key.
 Updates ``~/.gitconfig``, removes the old SSH keys, generates a new ed25519 key, writes ``~/.ssh/config`` and the agent setup, then rewrites the old identity in git configuration files, repository remotes and source files across the home directory.
-Usage: migrate_git_user Examples: $ migrate_git_user Highly destructive: it regenerates SSH keys and rewrites git remotes; edit the identity constants first."""
+Usage: migrate_git_user Examples: $ migrate_git_user Highly destructive: it regenerates SSH keys and rewrites git remotes; edit the identity constants first.
+"""
 
 import contextlib
 import os
 from pathlib import Path
 import re
 import subprocess
-
 
 OLD_USERNAME: str = "iho147"
 OLD_EMAIL: str = "isaacaunegh@gmail.com"

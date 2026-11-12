@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert an ``.m4a`` audio file to MP3 with ffmpeg.
 Transcodes the input with ``libmp3lame`` at 64 kbit/s (video streams dropped), writes ``<name>.mp3`` next to it and prints the input/output sizes and their ratio.
-Usage: m4a2mp3 SONG.m4a Examples: $ m4a2mp3 podcast.m4a Runs as a script (``python m4a2mp3.py``) in the directory it should act on; the module can also be imported."""
+Usage: m4a2mp3 SONG.m4a Examples: $ m4a2mp3 podcast.m4a Runs as a script (``python m4a2mp3.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import subprocess

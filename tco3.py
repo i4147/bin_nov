@@ -16,7 +16,6 @@ from atomicio import atomic_save
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 Translator = Callable[[str], str]
 REQUEST_LOCK = threading.Lock()
 GOOGLETRANS_LOCK = threading.Lock()

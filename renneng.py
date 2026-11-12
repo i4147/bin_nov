@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Translate the non-English file and directory names of the current directory to English.
 Walks the tree bottom-up, translates every name that contains non-ASCII characters with Google Translate and renames the entry, adding a numeric suffix when the translated name already exists.
-Usage: renneng Examples: $ renneng Runs as a script (``python renneng.py``) in the directory it should act on; the module can also be imported."""
+Usage: renneng Examples: $ renneng Runs as a script (``python renneng.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 from pathlib import Path
 import re
 
 from deep_translator import GoogleTranslator
-
 
 DIRECTORY: str = "."
 non_english_pattern = re.compile(r"[^\x00-\x7F]")

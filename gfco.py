@@ -19,7 +19,6 @@ from pathlib import Path
 import sys
 from typing import Any, Optional
 
-
 try:
     from fontTools.ttLib import TTFont
 except ImportError:

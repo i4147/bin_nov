@@ -34,7 +34,6 @@ from typing import Final, Iterator, NamedTuple, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
-
 JS_SUFFIXES: Final[frozenset[str]] = frozenset({".js", ".mjs", ".cjs"})
 WALK_CHUNK: Final[int] = 512
 IMAP_CHUNKSIZE: Final[int] = 4

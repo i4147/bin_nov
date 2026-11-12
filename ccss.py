@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Shrink CSS files in place with ``cleancss`` and report the space that was freed.
 Runs ``cleancss -O2`` (keeping only duplicate-rule removal) over the files named on the command line, or over every ``.css`` file below the current directory, skipping single-line files, and prints the size difference per file plus the total.
-Usage: ccss [files ...] Examples: $ ccss styles.css Runs as a script (``python ccss.py``) in the directory it should act on; the module can also be imported."""
+Usage: ccss [files ...] Examples: $ ccss styles.css Runs as a script (``python ccss.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

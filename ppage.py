@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Split PDFs into one file per page, or extract their text page by page.
 Uses PyMuPDF on the PDFs named on the command line (or below the current directory) and writes the pages concurrently; ``-t`` writes the per-page text instead of single-page PDFs.
-Usage: ppage [pdfs ...] [-t] Examples: $ ppage book.pdf $ ppage book.pdf -t Runs as a script (``python ppage.py``) in the directory it should act on; the module can also be imported."""
+Usage: ppage [pdfs ...] [-t] Examples: $ ppage book.pdf $ ppage book.pdf -t Runs as a script (``python ppage.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path

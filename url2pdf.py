@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Render a web page to PDF with WeasyPrint.
 Passes the URL straight to ``weasyprint.HTML`` and writes the PDF; the entry point uses the fixed ``https://example.com`` demo values, so import :func:`convert_url_to_pdf` to convert another page.
-Usage: python url2pdf.py Examples: $ python url2pdf.py Runs as a script (``python url2pdf.py``) in the directory it should act on; the module can also be imported."""
+Usage: python url2pdf.py Examples: $ python url2pdf.py Runs as a script (``python url2pdf.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import sys
 

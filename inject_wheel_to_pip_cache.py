@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Put a local wheel into pip's HTTP cache so pip can install it offline.
 Copies the wheel into the ``pip cache dir`` layout that matches a ``file://`` URL, computes the sha224 cache key pip expects and writes the JSON metadata next to it, extracted from the wheel's ``METADATA`` file.
-Usage: inject_wheel_to_pip_cache WHEEL.whl Examples: $ inject_wheel_to_pip_cache dist/pkg-1.0-py3-none-any.whl Runs as a script (``python inject_wheel_to_pip_cache.py``) in the directory it should act on; the module can also be imported."""
+Usage: inject_wheel_to_pip_cache WHEEL.whl Examples: $ inject_wheel_to_pip_cache dist/pkg-1.0-py3-none-any.whl Runs as a script (``python inject_wheel_to_pip_cache.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from email import policy
 from email.parser import Parser

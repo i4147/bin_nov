@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Build a wheel for every ``setup.py`` found below the current directory.
 Runs ``python setup.py bdist_wheel`` in the parent directory of each ``setup.py`` with a worker pool and finally lists the ``.whl`` files that were produced.
-Usage: buildr Examples: $ buildr Runs as a script (``python buildr.py``) in the directory it should act on; the module can also be imported."""
+Usage: buildr Examples: $ buildr Runs as a script (``python buildr.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from os import chdir as os_chdir
 from pathlib import Path

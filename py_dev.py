@@ -2,7 +2,8 @@
 """Scaffold a new Python project with linting, tests and CI.
 Creates the package layout, ``pyproject.toml``, ``.gitignore``, a pre-commit configuration (ruff, black, isort, mypy, the standard hooks), a pytest test and a GitHub Actions workflow, then installs the development requirements and initialises the virtual environment.
 The project directory can be passed as the first argument, otherwise the prompts ask for it.
-Usage: py_dev [PROJECT_NAME] Examples: $ py_dev mylib Runs as a script (``python py_dev.py``) in the directory it should act on; the module can also be imported."""
+Usage: py_dev [PROJECT_NAME] Examples: $ py_dev mylib Runs as a script (``python py_dev.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import subprocess

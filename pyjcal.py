@@ -2,7 +2,8 @@
 """Print a Jalali (Persian) calendar, or convert a date to Jalali.
 Without arguments the current month is rendered as a calendar grid; ``jdate`` prints today's Jalali date and accepts a format string (``-f``), a language (``-l``) and an explicit Gregorian date to convert.
 The date arithmetic lives in the ``JalaliDate``/``JalaliCalendar``/``JalaliDateFormatter`` classes.
-Usage: pyjcal [jdate [-f FORMAT] [-l LANG] [YYYY-MM-DD]] Examples: $ pyjcal $ pyjcal jdate -f '%Y/%m/%d' Runs as a script (``python pyjcal.py``) in the directory it should act on; the module can also be imported."""
+Usage: pyjcal [jdate [-f FORMAT] [-l LANG] [YYYY-MM-DD]] Examples: $ pyjcal $ pyjcal jdate -f '%Y/%m/%d' Runs as a script (``python pyjcal.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from datetime import datetime
 

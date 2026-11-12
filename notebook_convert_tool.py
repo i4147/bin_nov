@@ -15,7 +15,6 @@ import sys
 
 from dh import MAX_WORKERS
 
-
 MAGIC_PREFIXES: tuple[str, ...] = ("%", "!", "%%")
 CELL_MARKER: re.Pattern[str] = re.compile(r"^#\s*%%.*$")
 CODE_FENCE: re.Pattern[str] = re.compile(r"```(?:python|py|shell|bash|sh)\s*\n(.*?)```", re.DOTALL)

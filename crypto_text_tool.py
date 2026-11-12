@@ -22,7 +22,6 @@ import sys
 import time
 import zipfile
 
-
 AES_BLOCK_SIZE: int = 16
 KEY_ALPHABET: str = string.ascii_letters + string.digits
 DEFAULT_BATCH: int = 2000

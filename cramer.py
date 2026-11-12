@@ -14,7 +14,6 @@ from pathlib import Path
 import sys
 from typing import Any
 
-
 try:
     import cramjam as cj
 except ImportError:

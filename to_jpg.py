@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert the PNG/WebP/BMP/TIFF/GIF images below the current directory to JPEG.
 Flattens the transparency on white, saves each image as a quality-70 ``.jpg`` next to the original and deletes the source; existing ``.jpg`` targets are skipped and the run ends with the converted/error counts.
-Usage: to_jpg Examples: $ to_jpg Destructive: the original images are removed after conversion, so back them up first."""
+Usage: to_jpg Examples: $ to_jpg Destructive: the original images are removed after conversion, so back them up first.
+"""
 
 from pathlib import Path
 

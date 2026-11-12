@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Syntax-check C and C++ sources with clang in parallel.
 Runs ``clang -fsyntax-only`` for ``.c``/``.h``/``.inc`` files and ``clang++ -fsyntax-only`` for the C++ extensions, over the files on the command line or below the current directory, and prints one OK/error line per file from a spawn-based pool.
-Usage: pycppcheck [files ...] Examples: $ pycppcheck src/ Runs as a script (``python pycppcheck.py``) in the directory it should act on; the module can also be imported."""
+Usage: pycppcheck [files ...] Examples: $ pycppcheck src/ Runs as a script (``python pycppcheck.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from collections import deque
 from multiprocessing import get_context
@@ -9,7 +10,6 @@ from pathlib import Path
 import sys
 
 from dh import cprint, get_files
-
 
 c_files: set[str] = {".c", ".h", ".inc"}
 cpp_files: set[str] = {".cpp", ".cc", ".cxx", ".hpp", ".hpp11", ".hh", ".hxx"}

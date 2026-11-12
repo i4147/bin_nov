@@ -18,7 +18,6 @@ import lz4.frame
 import py7zr
 import zstandard as zstd
 
-
 CHUNK_SIZE: int = 1024 * 1024
 COMPRESSORS: dict[str, Any] = {}
 

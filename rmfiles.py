@@ -1,11 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Delete the top-level files named in a list file.
 Reads ``list.txt`` (or the file given as the argument), deletes the matching files of the current directory, ignores entries that point outside it and finally removes the list file itself.
-Usage: rmfiles [LIST.txt] Examples: $ rmfiles list.txt Runs as a script (``python rmfiles.py``) in the directory it should act on; the module can also be imported."""
+Usage: rmfiles [LIST.txt] Examples: $ rmfiles list.txt Runs as a script (``python rmfiles.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys
-
 
 DEFAULT_LIST: str = "list.txt"
 

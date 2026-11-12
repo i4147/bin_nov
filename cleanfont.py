@@ -3,7 +3,8 @@
 Usage: cleanfont [FILE_OR_DIR ...] Each font is rewritten in place (atomically, via a temp file in the same directory).
 Directories are walked recursively; only .ttf/.otf/.woff/.woff2 files are picked up from directories (explicitly named files are attempted regardless of extension).
 With no arguments, processes the current directory ('.').
-Examples: $ cleanfont # walk '.' recursively $ cleanfont NotoSans.ttf # single file $ cleanfont fonts/ ~/Downloads # several dirs/files"""
+Examples: $ cleanfont # walk '.' recursively $ cleanfont NotoSans.ttf # single file $ cleanfont fonts/ ~/Downloads # several dirs/files
+"""
 
 import contextlib
 import os
@@ -13,7 +14,6 @@ import tempfile
 from typing import Any
 
 from fontTools import subset
-
 
 # Unicode blocks that carry Chinese (and CJK-shared) glyphs.
 CJK_BLOCKS: list[tuple[Any, ...]] = [

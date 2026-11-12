@@ -18,7 +18,6 @@ from atomicio import atomic_write
 from dh import MAX_WORKERS, SKIP_DIRS
 import rignore
 
-
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
 
@@ -74,9 +73,7 @@ SMALL_WORDS: Final[frozenset[str]] = frozenset({
 })
 CLOSERS: Final[str] = "\"'”’)\\]"
 OPENERS: Final[str] = "\"'“‘(\\["
-SENTENCE_END: Final[re.Pattern[str]] = re.compile(
-    rf"([.!?…]+[{CLOSERS}]*)\s+(?=[{OPENERS}]*[A-Z0-9À-ÖØ-Þ])"
-)
+SENTENCE_END: Final[re.Pattern[str]] = re.compile(rf"([.!?…]+[{CLOSERS}]*)\s+(?=[{OPENERS}]*[A-Z0-9À-ÖØ-Þ])")
 LIST_MARKER: Final[re.Pattern[str]] = re.compile(
     r"^(?P<indent>\s*)"
     r"(?P<marker>"
@@ -91,23 +88,14 @@ LIST_MARKER: Final[re.Pattern[str]] = re.compile(
     r")\s+(?P<text>\S.*)$"
 )
 FENCE: Final[re.Pattern[str]] = re.compile(r"^\s*(?:```|~~~)")
-VERBATIM: Final[re.Pattern[str]] = re.compile(
-    r"^\s*(?:\||>)|^\s*([-*_=])(?:\s*\1){2,}\s*$"
-)
+VERBATIM: Final[re.Pattern[str]] = re.compile(r"^\s*(?:\||>)|^\s*([-*_=])(?:\s*\1){2,}\s*$")
 SETEXT_UNDERLINE: Final[re.Pattern[str]] = re.compile(r"^\s*(?:={2,}|-{2,})\s*$")
-MD_HEADING: Final[re.Pattern[str]] = re.compile(
-    r"^\s{0,3}(?P<hashes>#{1,6})\s+(?P<text>\S.*)$"
-)
+MD_HEADING: Final[re.Pattern[str]] = re.compile(r"^\s{0,3}(?P<hashes>#{1,6})\s+(?P<text>\S.*)$")
 NUMBER_PREFIX: Final[re.Pattern[str]] = re.compile(r"^\s*(\d+(?:\.\d+)+)")
-EMPH_DOUBLE: Final[re.Pattern[str]] = re.compile(
-    r"^\s*(\*\*|__)\s*(?P<t>[^*_\s].*?)\s*\1\s*[:.]?\s*$"
-)
-EMPH_SINGLE: Final[re.Pattern[str]] = re.compile(
-    r"^\s*(\*|_)(?=\S)(?P<t>[^*_].*?)(?<=\S)\1\s*[:.]?\s*$"
-)
+EMPH_DOUBLE: Final[re.Pattern[str]] = re.compile(r"^\s*(\*\*|__)\s*(?P<t>[^*_\s].*?)\s*\1\s*[:.]?\s*$")
+EMPH_SINGLE: Final[re.Pattern[str]] = re.compile(r"^\s*(\*|_)(?=\S)(?P<t>[^*_].*?)(?<=\S)\1\s*[:.]?\s*$")
 CHAPTER: Final[re.Pattern[str]] = re.compile(
-    r"^\s*(?i:chapter|section|part|appendix|article|book|lesson|unit)"
-    r"\s+(?:\d+[\d.]*|[IVXLC]+)\b.*$"
+    r"^\s*(?i:chapter|section|part|appendix|article|book|lesson|unit)" r"\s+(?:\d+[\d.]*|[IVXLC]+)\b.*$"
 )
 NUMBERED_HEADING: Final[re.Pattern[str]] = re.compile(r"^\s*\d+(?:\.\d+)+\.?\s+[A-Z].*$")
 TERMINAL: Final[re.Pattern[str]] = re.compile(rf"[.!?:;…][{CLOSERS}]*$")
@@ -754,10 +742,7 @@ def summarize(results: Sequence[Result], options: Options, color: bool) -> list[
     after = sum(result.after for result in measured)
     delta = after - before
     percent = f", {delta / before * 100:+.1f}%" if before else ""
-    space = (
-        f"space: {human_size(before)} -> {human_size(after)} "
-        f"({paint(signed_size(delta) + percent, GREEN, color)})"
-    )
+    space = f"space: {human_size(before)} -> {human_size(after)} ({paint(signed_size(delta) + percent, GREEN, color)})"
 
     if options.to_markdown and not options.remove:
         space += " originals kept"

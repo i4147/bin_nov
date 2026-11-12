@@ -18,7 +18,6 @@ from dh import NUM_WORKERS, fsz
 import ffmpeg
 from loguru import logger
 
-
 MIN_BITRATE_KBPS: Final[int] = 8
 STDERR_PREVIEW_LEN: Final[int] = 100
 MP3_GLOBS: Final[tuple[str, ...]] = ("*.mp3", "*.MP3", "*.Mp3")

@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert WOFF2 fonts to WOFF.
 Re-saves each font with the ``woff`` flavour through fontTools, gives a unique name when the target exists, deletes the source and converts in parallel.
-Usage: woff22woff [fonts ...] Examples: $ woff22woff fonts/ Runs as a script (``python woff22woff.py``) in the directory it should act on; the module can also be imported."""
+Usage: woff22woff [fonts ...] Examples: $ woff22woff fonts/ Runs as a script (``python woff22woff.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys
 
 from dh import cprint, get_files, mpf, unique_path
 from fontTools.ttLib import TTFont
-
 
 cwd = Path.cwd()
 

@@ -2,10 +2,10 @@
 """Create extension-less symlinks for the scripts in the personal bin folders.
 For ``~/bashbin`` (``.sh``) and ``~/bin`` plus ``~/.local/bin`` (``.py``) it adds a symlink without the extension pointing at the script, so the tools can be called by name.
 Existing non-symlink entries with the same name are replaced.
-Usage: csym Examples: $ csym Runs as a script (``python csym.py``) in the directory it should act on; the module can also be imported."""
+Usage: csym Examples: $ csym Runs as a script (``python csym.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
-
 
 BASHBIN: Path = Path.home() / "bashbin"
 BIN: Path = Path.home() / "bin"
@@ -29,6 +29,6 @@ def process_dir(cwd: Path, ext: str) -> None:
 
 
 if __name__ == "__main__":
-    process_dir(BASHBIN, "sh")
+    process_dir(BASHBIN, "zsh")
     process_dir(BIN, "py")
     process_dir(LOBIN, "py")

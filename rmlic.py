@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Remove license header blocks from source files.
 Loads the known license patterns from ``/sdcard/lic``, deletes the matching blocks (with the surrounding blank lines) from the files below the current directory and reports what changed.
-Usage: rmlic [paths ...] Examples: $ rmlic src/ Runs as a script (``python rmlic.py``) in the directory it should act on; the module can also be imported."""
+Usage: rmlic [paths ...] Examples: $ rmlic src/ Runs as a script (``python rmlic.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re
 from typing import Any, Iterable
 
 from dh import cprint, fsz, get_nobinary, gsz, mpf
-
 
 LIC_FILE: Path = Path("/sdcard/lic")
 MIN_BLANK_LINES: int = 3

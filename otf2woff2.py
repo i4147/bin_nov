@@ -2,14 +2,14 @@
 """Convert OpenType fonts to WOFF2.
 Loads each ``.otf`` file with fontTools, sets the ``woff2`` flavour and saves ``<name>.woff2`` next to it (a unique name when that file already exists).
 Files named on the command line or found below the current directory are converted in parallel.
-Usage: otf2woff2 [fonts ...] Examples: $ otf2woff2 fonts/ Runs as a script (``python otf2woff2.py``) in the directory it should act on; the module can also be imported."""
+Usage: otf2woff2 [fonts ...] Examples: $ otf2woff2 fonts/ Runs as a script (``python otf2woff2.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys
 
 from dh import cprint, get_files, mpf, unique_path
 from fontTools.ttLib import TTFont
-
 
 cwd = Path.cwd()
 

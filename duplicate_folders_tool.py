@@ -20,7 +20,6 @@ import sys
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
-
 CHUNK_SIZE: int = 1 << 20
 
 

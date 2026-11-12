@@ -4,7 +4,8 @@ Analysis / deduplication ------------------------ - ``collect_env_vars.py`` and 
 - ``secretleak.py`` -> ``scan-secrets`` (stdlib only; the loguru reporting became plain output, the magic "skip signature" hack is an explicit ``--allow`` substring list instead).
 - ``to.env.py`` (harvest ``sk-…`` tokens from a markdown file, map models to variable names, append to ``~/.env`` files) -> ``extract-tokens``.
 Matches are *never printed in full* by default in ``scan-secrets`` (first 12 chars shown).
-Examples -------- python3 env_secret_tool.py collect-vars ~/project python3 env_secret_tool.py scan-secrets ~/project python3 env_secret_tool.py extract-tokens README.md"""
+Examples -------- python3 env_secret_tool.py collect-vars ~/project python3 env_secret_tool.py scan-secrets ~/project python3 env_secret_tool.py extract-tokens README.md
+"""
 
 import argparse
 from collections import defaultdict
@@ -15,11 +16,9 @@ from pathlib import Path
 import re
 import sys
 
-
 ENV_ASSIGN: re.Pattern[str] = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*)=")
 ENV_CODE: re.Pattern[str] = re.compile(
-    r"""os\.(?:environ(?:\.get)?\[?\(?|getenv\()\s*["']([A-Z_][A-Z0-9_]*)"""
-    r"""|\$\{?([A-Z_][A-Z0-9_]*)\}?"""
+    r"""os\.(?:environ(?:\.get)?\[?\(?|getenv\()\s*["']([A-Z_][A-Z0-9_]*)""" r"""|\$\{?([A-Z_][A-Z0-9_]*)\}?"""
 )
 SKIP_DIRS: frozenset[str] = frozenset({".git", ".venv", "venv", "__pycache__", "node_modules"})
 SKIP_SUFFIXES: frozenset[str] = frozenset({

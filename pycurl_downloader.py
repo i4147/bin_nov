@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Download the URLs of a list into ``downloads/`` with pycurl.
 Reads the URLs from a file, fetches them concurrently with pycurl (30 s timeout, browser user agent), derives the file name from the URL and writes the failures to a ``failed`` list for a retry.
-Usage: pycurl_downloader URLS.txt Examples: $ pycurl_downloader urls.txt Runs as a script (``python pycurl_downloader.py``) in the directory it should act on; the module can also be imported."""
+Usage: pycurl_downloader URLS.txt Examples: $ pycurl_downloader urls.txt Runs as a script (``python pycurl_downloader.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import multiprocessing as mp
 from pathlib import Path
@@ -10,7 +11,6 @@ from urllib.parse import unquote, urlparse
 
 from dh import MAX_WORKERS
 import pycurl
-
 
 OUTPUT_DIR: Path = Path("downloads")
 TIMEOUT: int = 30

@@ -11,7 +11,6 @@ from typing import Any
 from rich.console import Console
 from weasyprint import CSS, HTML
 
-
 console = Console(stderr=True)
 PAPER: dict[str, tuple[float, float]] = {
     "A3": (297, 420),

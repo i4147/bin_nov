@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Print the ``Requires-Dist`` entries of an installed package, or dump them all.
 With a package name the declared dependencies are printed one per line; without arguments every installed distribution is read and the mapping is written to ``requirements.json``.
-Usage: get_req [PACKAGE] Examples: $ get_req requests $ get_req Runs as a script (``python get_req.py``) in the directory it should act on; the module can also be imported."""
+Usage: get_req [PACKAGE] Examples: $ get_req requests $ get_req Runs as a script (``python get_req.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from importlib.metadata import PackageNotFoundError, distributions, metadata
 import json

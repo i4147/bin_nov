@@ -18,7 +18,6 @@ from typing import Any, Callable, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS
 
-
 try:
     from rcssmin import cssmin as _rcssmin
 except ImportError:

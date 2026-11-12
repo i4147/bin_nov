@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING, Final
 from dh import MAX_WORKERS, is_binary, should_skip
 from loguru import logger
 
-
 if TYPE_CHECKING:
     from multiprocessing.pool import AsyncResult
 ANSI_RESET: Final[str] = "\x1b[0m"

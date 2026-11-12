@@ -2,7 +2,8 @@
 """Print the family names of the given font files and rename them accordingly.
 Reads the name table with fontTools, picks the best family/subfamily combination, sanitises it into a file-name-safe string and renames the font file to ``<family>-<style>.ttf``.
 Usage: tell_font_name FONT [...
-] Examples: $ tell_font_name ~/fonts/*.ttf Runs as a script (``python tell_font_name.py``) in the directory it should act on; the module can also be imported."""
+] Examples: $ tell_font_name ~/fonts/*.ttf Runs as a script (``python tell_font_name.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from __future__ import annotations
 

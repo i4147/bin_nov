@@ -16,7 +16,6 @@ from typing import Any, Iterable
 
 from dh import SKIP_DIRS
 
-
 DEFAULT_INFO = Path.home() / ".myinfo"
 TARGET_FILENAMES: set[str] = {
     "setup.py",

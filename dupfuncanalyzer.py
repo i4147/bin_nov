@@ -12,7 +12,6 @@ from multiprocessing import Pool
 from pathlib import Path
 from typing import Any
 
-
 POOL_SIZE: int = 8
 DEFAULT_OUTPUT_NAME: str = "repeated_functions.py"
 IMPORT_MODULE_NAME: str = "dh"

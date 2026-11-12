@@ -1,12 +1,12 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract the Python fenced code blocks of Markdown files into ``ex01.py``-style files.
 Reads the ``.md`` files given on the command line (or all of them in the current directory), matches the ```python / ```py fences and writes each block to a numbered script next to them.
-Usage: xfenced [markdown files ...] Examples: $ xfenced tutorial.md Runs as a script (``python xfenced.py``) in the directory it should act on; the module can also be imported."""
+Usage: xfenced [markdown files ...] Examples: $ xfenced tutorial.md Runs as a script (``python xfenced.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re
 import sys
-
 
 CODE_BLOCK_RE = re.compile(
     r"^```(?:python|py)\b\s*\n(.*?)^```[ \t]*$",

@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Generate ``.pyi`` stub files for Python modules with ``stubgen``.
 Runs ``stubgen`` on the files named on the command line, or on every ``.py`` file below the current directory, skipping modules whose stub already exists and summarising the files that still have no stub.
-Usage: create_stub [files ...] Examples: $ create_stub pkg/ Runs as a script (``python create_stub.py``) in the directory it should act on; the module can also be imported."""
+Usage: create_stub [files ...] Examples: $ create_stub pkg/ Runs as a script (``python create_stub.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import subprocess

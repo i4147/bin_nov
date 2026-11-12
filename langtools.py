@@ -30,7 +30,6 @@ import shutil
 import sys
 from typing import Any, Iterator, Optional, Sequence
 
-
 try:
     import pycld2
 except ImportError:

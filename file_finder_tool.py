@@ -4,7 +4,8 @@ Analysis / deduplication ------------------------ - ``lkk.py`` (name substring, 
 - ``bkk.py`` listed *and unconditionally deleted* every ``*.bak``: now ``find --name .bak --files-only [-r]`` lists them; deletion needs the explicit ``--delete`` flag (use ``--dry-run`` first).
 - ``extinfo.py`` (count+size of one extension) and ``extz.py`` (count of every extension) -> ``ext-stats [EXT]`` (always shows sizes too).
 - ``find_scripts.py`` (extension-less Python scripts via private ``dh`` helpers) -> ``scripts`` using a shebang/content sniff.
-Examples -------- python3 file_finder_tool.py find --name test -r python3 file_finder_tool.py find --prefix IMG_ ~/Pictures python3 file_finder_tool.py find --name .bak -r --delete --dry-run python3 file_finder_tool.py ext-stats python3 file_finder_tool.py scripts ~/bin"""
+Examples -------- python3 file_finder_tool.py find --name test -r python3 file_finder_tool.py find --prefix IMG_ ~/Pictures python3 file_finder_tool.py find --name .bak -r --delete --dry-run python3 file_finder_tool.py ext-stats python3 file_finder_tool.py scripts ~/bin
+"""
 
 import argparse
 from collections import Counter
@@ -12,7 +13,6 @@ from collections.abc import Iterator, Sequence
 import fnmatch
 from pathlib import Path
 import sys
-
 
 UNITS: tuple[str, ...] = ("B", "KB", "MB", "GB", "TB", "PB")
 

@@ -17,7 +17,6 @@ import textwrap
 
 from dh import MAX_WORKERS
 
-
 OUTPUT_DIR: Path = Path.home() / "isaac" / "may" / "q1" / "prompts"
 MAX_LINE: int = 80
 LIVEDOC_RE: re.Pattern[str] = re.compile(r"^LiveDoc:\s*https?://\S+\s*$")

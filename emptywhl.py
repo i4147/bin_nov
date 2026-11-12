@@ -3,7 +3,8 @@
 A wheel counts as empty when its ``RECORD`` only mentions files inside the ``.dist-info`` directory, i.e.
 the package ships metadata but no importable code.
 Corrupt archives are ignored.
-Usage: emptywhl Examples: $ emptywhl Runs as a script (``python emptywhl.py``) in the directory it should act on; the module can also be imported."""
+Usage: emptywhl Examples: $ emptywhl Runs as a script (``python emptywhl.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import csv
 from pathlib import Path

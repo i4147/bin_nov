@@ -21,7 +21,6 @@ import libcst as cst
 from libcst import BaseStatement, ClassDef, EmptyLine, FunctionDef, Module, SimpleStatementLine, TrailingWhitespace
 from loguru import logger
 
-
 PRAGMA_PREFIXES: Final[tuple[str, ...]] = ("# type:", "# fmt:", "# fmt: skip", "# noqa")
 SHEBANG_PREFIX: Final[str] = "#!"
 PY_EXT: Final[frozenset[str]] = frozenset({".py", ".pyi", ".pyw"})

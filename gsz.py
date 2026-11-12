@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Print the size of a GitHub repository.
 Accepts ``owner/repo`` or a full ``https://github.com/...`` URL, asks the GitHub API for the repository metadata and prints the size in megabytes.
-Usage: gsz owner/repo Examples: $ gsz i4147/bin_oct Runs as a script (``python gsz.py``) in the directory it should act on; the module can also be imported."""
+Usage: gsz owner/repo Examples: $ gsz i4147/bin_oct Runs as a script (``python gsz.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import re
 import sys

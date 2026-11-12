@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Reinstall a list of apt packages one by one, logging the failures.
 Reads the package names from the given file and runs ``apt install --reinstall -y`` for each of them, appending the packages that fail to ``~/reinstall_failed.txt``.
-Usage: reinstall_system_pkgs PACKAGE_LIST Examples: $ reinstall_system_pkgs packages.txt Runs as a script (``python reinstall_system_pkgs.py``) in the directory it should act on; the module can also be imported."""
+Usage: reinstall_system_pkgs PACKAGE_LIST Examples: $ reinstall_system_pkgs packages.txt Runs as a script (``python reinstall_system_pkgs.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import subprocess

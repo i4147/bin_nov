@@ -1,11 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Delete Python build leftovers below the current directory.
 Removes ``build``, ``dist`` and ``target`` directories, ``*.egg-info`` directories, stray ``PKG-INFO`` files and auto-generated ``setup.cfg`` files (the ones that only contain an empty ``[egg_info]`` section).
-Usage: bbc Examples: $ bbc Runs as a script (``python bbc.py``) in the directory it should act on; the module can also be imported."""
+Usage: bbc Examples: $ bbc Runs as a script (``python bbc.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import shutil
-
 
 L1: str = "[egg_info]"
 L2: str = "tag_build = "

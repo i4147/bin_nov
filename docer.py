@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Move a document into ``/sdcard/doc``.
 Copies the given file into ``/sdcard/doc`` (creating the directory when needed) and deletes the original; an existing destination aborts the move instead of overwriting.
-Usage: docer FILE Examples: $ docer invoice.pdf Runs as a script (``python docer.py``) in the directory it should act on; the module can also be imported."""
+Usage: docer FILE Examples: $ docer invoice.pdf Runs as a script (``python docer.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import sys

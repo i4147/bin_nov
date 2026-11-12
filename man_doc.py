@@ -2,7 +2,8 @@
 """Render man pages to HTML with ``mandoc``.
 Finds the man pages below the current directory (sections 1, 3, 4, 5, 7, 8 and the ``.3*``/``.n`` variants, gzipped or not), converts each one with ``mandoc -T html``, writes ``<name>.html`` and deletes the original.
 Files are processed in parallel.
-Usage: man_doc [files ...] Examples: $ man_doc /usr/share/man/man1/ Runs as a script (``python man_doc.py``) in the directory it should act on; the module can also be imported."""
+Usage: man_doc [files ...] Examples: $ man_doc /usr/share/man/man1/ Runs as a script (``python man_doc.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from collections import deque
 import gzip

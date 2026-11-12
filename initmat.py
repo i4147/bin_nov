@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Scaffold a PyO3/maturin Rust extension project in the current directory.
 Writes ``Cargo.toml``, ``src/lib.rs`` (a ``sum_as_string`` example bound with pyo3) and ``pyproject.toml`` configured for the maturin build backend, deriving the crate name from the argument or the directory name.
-Usage: initmat [PACKAGE_NAME] Examples: $ initmat fastsum Runs as a script (``python initmat.py``) in the directory it should act on; the module can also be imported."""
+Usage: initmat [PACKAGE_NAME] Examples: $ initmat fastsum Runs as a script (``python initmat.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re

@@ -17,7 +17,6 @@ from typing import Any, Callable, TextIO
 from dh import MAX_WORKERS
 from loguru import logger
 
-
 logger.remove()
 logger.add(
     "translate_words.log",

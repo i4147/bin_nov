@@ -11,7 +11,6 @@ import re
 import sys
 from typing import Any, Callable, Iterable
 
-
 NODE_MARKERS: tuple[str, str, str, str] = ("\u251c\u2500\u2500", "\u2514\u2500\u2500", "|--", "`--")
 FOOTER_RE = re.compile(r"^\d+\s+(directories|files|dirs|items)(,\s*\d+\s+(directories|files|dirs|items))?$")
 JUNK_LINE_CHARS = set(" \u2502\u251c\u2514\u2500|+-`")

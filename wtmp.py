@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Copy the new archives dropped into a directory to ``~/tmp/tgz``.
 Scans the watched directory (``$PREFIX/tmp`` by default) once, then uses watchdog to copy every newly created or modified ``.tar.gz``/``.tar.xz``/``.tar.bz2``/``.zip``/``.whl`` file into ``~/tmp/tgz``.
-Usage: wtmp [DIRECTORY] Examples: $ wtmp ~/tmp Runs as a script (``python wtmp.py``) in the directory it should act on; the module can also be imported."""
+Usage: wtmp [DIRECTORY] Examples: $ wtmp ~/tmp Runs as a script (``python wtmp.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import os
 import pathlib
@@ -13,7 +14,6 @@ from typing import Any
 
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
-
 
 DEST_DIR = pathlib.Path("~/tmp/tgz").expanduser()
 ALLOWED_EXT: tuple[str, ...] = (

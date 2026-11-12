@@ -11,7 +11,6 @@ from typing import Optional, Sequence
 
 from dh import MAX_WORKERS
 
-
 SHIFT_RE = re.compile(r"(\d{2,3}:\d{2}:\d{2},\d{3})\s*-->\s*(\d{2,3}:\d{2}:\d{2},\d{3})")
 FALLBACK_ENCODINGS: tuple[str, ...] = ("utf-8", "cp1252", "latin1")
 

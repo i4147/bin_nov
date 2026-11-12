@@ -17,7 +17,6 @@ from pathlib import Path
 import secrets
 import sys
 
-
 HTML_SUFFIXES: frozenset[str] = frozenset({".html", ".htm", ".xhtml"})
 MAX_FILE_BYTES: int = 50 * 1024 * 1024
 

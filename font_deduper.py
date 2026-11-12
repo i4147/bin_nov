@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Find fonts that share the same PostScript name and keep only one copy.
 Groups the ``.ttf``/``.woff``/``.woff2`` files below the current directory by the PostScript name read from their ``name`` table with fontTools and reports (or with ``DRY_RUN = False`` deletes) the duplicates.
-Usage: font_deduper Examples: $ font_deduper Runs as a script (``python font_deduper.py``) in the directory it should act on; the module can also be imported."""
+Usage: font_deduper Examples: $ font_deduper Runs as a script (``python font_deduper.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from __future__ import annotations
 
@@ -9,7 +10,6 @@ import os
 from pathlib import Path
 
 from fontTools.ttLib import TTFont
-
 
 DRY_RUN: bool = False
 FONT_EXT: tuple[str, str, str] = (".ttf", ".woff2", ".woff")

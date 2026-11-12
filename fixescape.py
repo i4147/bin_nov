@@ -16,7 +16,6 @@ import tokenize
 import warnings
 from typing import Any
 
-
 RED: str = "\033[91m"
 CYAN: str = "\033[96m"
 RESET: str = "\033[0m"

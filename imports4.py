@@ -29,7 +29,6 @@ import requests
 from yarg import json2package
 from yarg.exceptions import HTTPError
 
-
 PYPI_INDEX_PATH: str = "/sdcard/data/pip.json"
 CACHE_DIR = Path.home() / ".cache" / "piplist"
 CACHE_TTL: int = 86400

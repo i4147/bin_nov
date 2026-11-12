@@ -1,10 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Move every ``.whl`` below the current directory to ``/sdcard/whl``.
 Finds the wheels recursively, overwrites the targets of the same name in ``/sdcard/whl`` and deletes the source copies.
-Usage: www Examples: $ www Runs as a script (``python www.py``) in the directory it should act on; the module can also be imported."""
+Usage: www Examples: $ www Runs as a script (``python www.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
-
 
 if __name__ == "__main__":
     cwd = Path.cwd()

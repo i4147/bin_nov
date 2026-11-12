@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Move wheels that contain no code into an ``empty_wheels`` folder.
 A ``.whl`` is empty when it has no ``.py``/``.pyi``/``.so`` member; those files are reported and moved into ``./empty_wheels``, invalid archives are skipped with a warning.
-Usage: find_empty_wheels Examples: $ find_empty_wheels Runs as a script (``python find_empty_wheels.py``) in the directory it should act on; the module can also be imported."""
+Usage: find_empty_wheels Examples: $ find_empty_wheels Runs as a script (``python find_empty_wheels.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import zipfile

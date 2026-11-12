@@ -2,7 +2,8 @@
 """Reduce each sub-directory of the current directory to its single ``.whl`` file.
 Looks for a wheel in the sub-directory or its ``dist/`` folder, moves it up when needed and deletes every other file and folder in that sub-directory, leaving one wheel per project.
 Sub-directories without a wheel are skipped.
-Usage: justwhl Examples: $ justwhl Deletes the build leftovers of each sub-directory, so review the tree before running it."""
+Usage: justwhl Examples: $ justwhl Deletes the build leftovers of each sub-directory, so review the tree before running it.
+"""
 
 from __future__ import annotations
 

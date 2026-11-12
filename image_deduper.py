@@ -2,7 +2,8 @@
 """Find visually duplicate images with perceptual hashing and keep the largest copy.
 Computes the ``imagehash`` pHash of every JPEG/PNG/WebP/TIFF below the current directory, groups the images whose hashes match, keeps the one with the most pixels and deletes the rest.
 ``DRY_RUN`` is on by default, so only the report is printed until it is turned off.
-Usage: image_deduper Examples: $ image_deduper Runs as a script (``python image_deduper.py``) in the directory it should act on; the module can also be imported."""
+Usage: image_deduper Examples: $ image_deduper Runs as a script (``python image_deduper.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from collections import defaultdict
 import os
@@ -10,7 +11,6 @@ from pathlib import Path
 
 import imagehash
 from PIL import Image
-
 
 DRY_RUN: bool = True
 IMAGE_EXT: tuple[str, ...] = (".webp", ".jpg", ".jpeg", ".png", ".tiff", ".tif")

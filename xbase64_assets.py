@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract the base64-encoded assets of HTML/CSS/JS sources into the ``assets`` folder.
 Detects the ``data:`` URIs with tree-sitter or regexes, guesses the MIME type from the decoded signature, writes the assets into per-kind subdirectories with content-hashed names and can replace the URIs with the new paths, processing the tree concurrently with a JSON report.
-Usage: xbase64_assets [paths ...] Examples: $ xbase64_assets dist/ Runs as a script (``python xbase64_assets.py``) in the directory it should act on; the module can also be imported."""
+Usage: xbase64_assets [paths ...] Examples: $ xbase64_assets dist/ Runs as a script (``python xbase64_assets.py``) in the directory it should act on; the module can also be imported.
+"""
 
 import base64
 from concurrent.futures import ThreadPoolExecutor
@@ -17,9 +18,8 @@ import shutil
 import sys
 from typing import Any
 
-from dh import WORKERS
+from dh import MAX_WORKERS
 from loguru import logger
-
 
 SUPPORTED_EXT: set[str] = {".html", ".css", ".js", ".jsx", ".tsx", ".ts"}
 ASSETS_DIR: Path = Path("assets")
@@ -410,7 +410,7 @@ class FileDiscovery:
     def discover_files(paths: list[str]) -> list[Path]:
         discovered: list[Path] = []
         seen: set[Path] = set()
-        with ThreadPoolExecutor(max_workers=4) as executor:
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             futures = []
             for path_str in paths:
                 path = Path(path_str).resolve()
@@ -472,9 +472,9 @@ class Base64AssetExtractor:
             logger.warning("No supported files found")
             return
         print(f"Found {len(files):,} supported files")
-        print(f"Processing with {WORKERS} workers...")
+        print(f"Processing with {MAX_WORKERS} workers...")
         tasks = [(f, self.asset_extractor) for f in files]
-        with Pool(WORKERS) as pool:
+        with Pool(MAX_WORKERS) as pool:
             async_results = []
             for task in tasks:
                 result = pool.apply_async(process_file_task, (task,))

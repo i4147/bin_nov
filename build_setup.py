@@ -1,12 +1,12 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Generate a ``setup.py`` for an existing package directory.
 Finds the importable package inside the given folder (a directory with ``__init__.py`` or a single module file), scrapes ``__version__``/``__author__``/``__email__``/``__url__``/``__license__`` from ``__init__.py`` and writes a ready-to-run ``setup.py`` next to it that reads the README for the long description.
-Usage: build_setup PACKAGE_FOLDER [VERSION] Examples: $ build_setup ./mypkg 1.4.7 Runs as a script (``python build_setup.py``) in the directory it should act on; the module can also be imported."""
+Usage: build_setup PACKAGE_FOLDER [VERSION] Examples: $ build_setup ./mypkg 1.4.7 Runs as a script (``python build_setup.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from pathlib import Path
 import re
 import sys
-
 
 DEFAULT_VERSION: str = "1.4.7"
 

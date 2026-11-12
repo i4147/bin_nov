@@ -2,7 +2,8 @@
 """Fetch a license text for an author and year and cache the answer.
 Looks the license kind up in the local cache (``~/.license``), validates the author and year, inserts them into the template fetched with ``gh api`` and prints the result.
 Driven by :mod:`click` options ``--author``, ``--year`` (default: this year) and ``--kind``.
-Usage: get_lic [-a AUTHOR] [-y YEAR] [-k KIND] Examples: $ get_lic -a 'Jane Doe' -k mit Runs as a script (``python get_lic.py``) in the directory it should act on; the module can also be imported."""
+Usage: get_lic [-a AUTHOR] [-y YEAR] [-k KIND] Examples: $ get_lic -a 'Jane Doe' -k mit Runs as a script (``python get_lic.py``) in the directory it should act on; the module can also be imported.
+"""
 
 from datetime import date
 import os

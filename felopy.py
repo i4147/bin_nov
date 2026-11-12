@@ -3,7 +3,8 @@
 Calls the external ``felo`` command with the query and the timeout, extracts the fenced Python blocks of the output and writes them to ``~/tmp/apps/felo_<timestamp>.py``, printing the path.
 Usage: felopy [--timeout SECONDS] QUERY ...
 Positional arguments: query ...
-Query string to pass to felo superagent Options: --timeout Timeout in seconds for the felo command (default: 300) Examples: $ felopy write a csv deduplicator Requires the ``felo`` CLI on ``PATH``."""
+Query string to pass to felo superagent Options: --timeout Timeout in seconds for the felo command (default: 300) Examples: $ felopy write a csv deduplicator Requires the ``felo`` CLI on ``PATH``.
+"""
 
 import argparse
 from datetime import datetime
@@ -12,7 +13,6 @@ from pathlib import Path
 import re
 import subprocess
 import sys
-
 
 SAVE_DIR = Path("~/tmp/apps").expanduser()
 

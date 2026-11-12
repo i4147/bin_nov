@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Zip an installed package and install a loader stub for it.
 Locates the package in the user ``site-packages``, copies its files into a ``.zip`` (compiling them first when possible), removes the original directory and writes a loader stub so the import still resolves through the archive.
-Usage: pyzpkg PACKAGE [PACKAGE ...] Examples: $ pyzpkg requests Modifies the installed package in place; keep a backup of ``site-packages``."""
+Usage: pyzpkg PACKAGE [PACKAGE ...] Examples: $ pyzpkg requests Modifies the installed package in place; keep a backup of ``site-packages``.
+"""
 
 import compileall
 import csv

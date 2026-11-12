@@ -20,7 +20,6 @@ from bs4 import BeautifulSoup
 from loguru import logger
 import requests
 
-
 logger.remove()
 logger.add(sys.stderr, level="WARNING", format="<red>{level}</red> | <cyan>{message}</cyan>")
 IMAGE_EXT: set[str] = {

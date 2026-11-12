@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING
 from dh import MAX_WORKERS
 import pymupdf
 
-
 MERGED_NAME: str = "merged.pdf"
 UNSAFE: re.Pattern[str] = re.compile(r"[^A-Za-z0-9._-]+")
 

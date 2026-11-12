@@ -12,7 +12,6 @@ import sys
 import time
 from typing import Any
 
-
 LOG_DIR = Path.home() / "tmp" / "log" / "apps"
 CLIPBOARD_MAX_BYTES: int = 1 * 1024 * 1024
 COLORS: dict[str, str] = {
