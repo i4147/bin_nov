@@ -5,8 +5,6 @@ Scores and ranks the lines read from stdin (or a built-in demo list) while you t
 Usage: pfzf [--filter QUERY] Examples: $ ls | pfzf $ pfzf --filter btn Runs as a script (``python pfzf.py``) in the directory it should act on; the module can also be imported.
 """
 
-from __future__ import annotations
-
 import os
 import select
 import sys

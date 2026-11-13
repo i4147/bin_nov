@@ -4,8 +4,6 @@ Decodes each text file, classifies the lines above the minimum length with ``py3
 Usage: noneng_langid Examples: $ noneng_langid Runs as a script (``python noneng_langid.py``) in the directory it should act on; the module can also be imported.
 """
 
-from __future__ import annotations
-
 import math
 from pathlib import Path
 import sys

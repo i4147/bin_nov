@@ -14,7 +14,6 @@ Usage:
 If -o is omitted, INPUT.py is overwritten.
 """
 
-from __future__ import annotations
 import argparse
 import ast
 import io

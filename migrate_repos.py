@@ -8,8 +8,6 @@ Without this flag the script is dry-run only.
 Examples: $ migrate_repos --skip-ssh --apply Command-line script: run ``python migrate_repos.py`` or the ``migrate_repos`` command.
 The module is importable as well."""
 
-from __future__ import annotations
-
 import argparse
 from datetime import datetime
 import os

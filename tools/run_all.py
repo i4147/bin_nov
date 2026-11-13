@@ -12,8 +12,6 @@ audit tools to make sure nothing was broken.
 The tool is idempotent: running it twice changes nothing the second time.
 """
 
-from __future__ import annotations
-
 import argparse
 import fnmatch
 import json

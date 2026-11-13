@@ -5,7 +5,6 @@ The user's home directory is exempt for .gitignore (~/.gitignore is preserved, s
 Prints the total space freed at the end.
 Usage: python clean_gitignore_and_github.py # delete python clean_gitignore_and_github.py --dry-run # preview only"""
 
-from __future__ import annotations
 import argparse
 from pathlib import Path
 import shutil

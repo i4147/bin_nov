@@ -4,8 +4,6 @@ Hashes every function, class and constant (ast or tree-sitter, archives included
 Usage: dduper [-m|-c] [paths ...] Options: -m, --move Move duplicate objects to utils.py and add imports -c, --copy Copy duplicate objects to utils.py without changing source files Examples: $ dduper -m src/ Command-line script: run ``python dduper.py`` or the ``dduper`` command.
 The module is importable as well."""
 
-from __future__ import annotations
-
 import argparse
 import ast
 import bz2

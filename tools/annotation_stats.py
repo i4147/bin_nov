@@ -10,8 +10,6 @@ and PEP 673 say instance and class method receivers stay unannotated, so they
 would otherwise dominate the numbers.
 """
 
-from __future__ import annotations
-
 import argparse
 import ast
 import json

@@ -47,8 +47,6 @@ CLI examples (state defaults to ~/.sortplan):
     python sortplan.py explain ~/Downloads/example.pdf --config sort.toml
 """
 
-from __future__ import annotations
-
 import argparse
 import contextlib
 import datetime as dt

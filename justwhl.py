@@ -5,8 +5,6 @@ Sub-directories without a wheel are skipped.
 Usage: justwhl Examples: $ justwhl Deletes the build leftovers of each sub-directory, so review the tree before running it.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 import shutil
 

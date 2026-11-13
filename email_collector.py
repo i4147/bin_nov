@@ -5,8 +5,6 @@ Follows links on the same hostname (two levels deep) for the given start URL, ke
 Usage: email_collector URL | --emails Examples: $ email_collector https://example.com $ email_collector --emails Runs as a script (``python email_collector.py``) in the directory it should act on; the module can also be imported.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 import re
 import sys

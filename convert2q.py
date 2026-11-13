@@ -1,9 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert declarative sentences found in text files into questions written to qmade.txt."""
 
-from __future__ import annotations
-
-
 from pathlib import Path
 import re
 

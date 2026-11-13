@@ -67,20 +67,21 @@ class ProcessingStats:
 
 def remove_blank_lines(path: Path, remove_spaces: bool = False) -> tuple[int, int]:
     try:
-        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+        with path.open("r", encoding="utf-8", errors="ignore") as f:
             lines = f.readlines()
     except OSError as e:
         msg = f"Failed to read file: {e}"
         raise OSError(msg) from e
     total_lines: int = len(lines)
+    filtered: list[str] = []
     if remove_spaces:
-        filtered: list[str] = [line for line in lines if line.strip()]
+        filtered = [line for line in lines if line.strip()]
     else:
         filtered = [line for line in lines if line not in ("\n", "\r\n", "\r")]
     removed_lines: int = total_lines - len(filtered)
     if removed_lines > 0:
         try:
-            with open(path, "w", encoding="utf-8") as f:
+            with path.open("w", encoding="utf-8") as f:
                 f.writelines(filtered)
         except OSError as e:
             msg = f"Failed to write file: {e}"

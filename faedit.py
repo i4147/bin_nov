@@ -4,8 +4,6 @@ Opens the file in urwid, curses, prompt_toolkit or textual (``-b``), shows the r
 Usage: faedit FILE [-b urwid|curses|prompt_toolkit|textual] Positional arguments: file Options: -b, --backend Examples: $ faedit notes.txt -b textual Command-line script: run ``python faedit.py`` or the ``faedit`` command.
 The module is importable as well."""
 
-from __future__ import annotations
-
 import argparse
 import os
 from pathlib import Path

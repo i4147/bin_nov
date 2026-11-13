@@ -16,8 +16,6 @@ Three checks, each of which must come back clean before the changes are kept:
     python arena/audit_annotations.py --rev HEAD~1 --paths '*.py'
 """
 
-from __future__ import annotations
-
 import argparse
 import ast
 import builtins

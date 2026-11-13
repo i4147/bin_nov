@@ -4,8 +4,6 @@ Opens each archive of the current directory and flags the ones without code (no 
 Usage: detect_empty_pkgs [-a] Options: -a, --apply Actually move the archives (default is dry-run) Examples: $ detect_empty_pkgs -a Command-line script: run ``python detect_empty_pkgs.py`` or the ``detect_empty_pkgs`` command.
 The module is importable as well."""
 
-from __future__ import annotations
-
 import argparse
 import ast
 import multiprocessing as mp

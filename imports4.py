@@ -7,8 +7,6 @@ plus 5 more; run ``imports4 --help`` for the full list.
 Examples: $ imports4 -p ~/project --pin $ imports4 --stdout > requirements.txt Command-line script: run ``python imports4.py`` or the ``imports4`` command.
 The module is importable as well."""
 
-from __future__ import annotations
-
 import argparse
 import ast
 import concurrent.futures

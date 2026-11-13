@@ -4,8 +4,6 @@ Finds the real ``gh`` binary, appends the command, the arguments, the exit statu
 Usage: wrapper_gh [gh arguments ...] Examples: $ wrapper_gh pr list Meant to shadow ``gh`` on ``PATH``; keep the real binary reachable at the path it probes.
 """
 
-from __future__ import annotations
-
 import datetime as dt
 import os
 from pathlib import Path

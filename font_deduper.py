@@ -4,8 +4,6 @@ Groups the ``.ttf``/``.woff``/``.woff2`` files below the current directory by th
 Usage: font_deduper Examples: $ font_deduper Runs as a script (``python font_deduper.py``) in the directory it should act on; the module can also be imported.
 """
 
-from __future__ import annotations
-
 import os
 from pathlib import Path
 

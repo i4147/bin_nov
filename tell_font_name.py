@@ -5,8 +5,6 @@ Usage: tell_font_name FONT [...
 ] Examples: $ tell_font_name ~/fonts/*.ttf Runs as a script (``python tell_font_name.py``) in the directory it should act on; the module can also be imported.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 import re
 import sys

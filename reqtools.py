@@ -1,8 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Unified command-line tool for cleaning requirements.txt files and inspecting installed packages."""
 
-from __future__ import annotations
-
 import argparse
 from concurrent.futures import ProcessPoolExecutor
 import csv

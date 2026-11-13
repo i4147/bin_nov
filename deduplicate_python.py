@@ -4,8 +4,6 @@ Hashes the top-level definitions (ast or tree-sitter, archives included), writes
 Usage: deduplicate_python [-m|-c] [paths ...] Options: -m, --move Move duplicate objects to utils.py and add imports -c, --copy Copy duplicate objects to utils.py without changing source files Examples: $ deduplicate_python -c src/ Command-line script: run ``python deduplicate_python.py`` or the ``deduplicate_python`` command.
 The module is importable as well."""
 
-from __future__ import annotations
-
 import argparse
 import ast
 import bz2

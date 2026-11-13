@@ -5,8 +5,6 @@ Usage: migrate_git --old-username U --new-username U [--apply] Options: --apply 
 --old-username Old GitHub username --old-email Old GitHub email --new-username New GitHub username --new-email New GitHub email --home-dir Home directory to scan --ssh-dir SSH directory --key-path Path for new SSH key Examples: $ migrate_git --old-email old@example.com --new-email new@example.com --apply Command-line script: run ``python migrate_git.py`` or the ``migrate_git`` command.
 The module is importable as well."""
 
-from __future__ import annotations
-
 import argparse
 from datetime import datetime
 import os

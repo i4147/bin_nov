@@ -5,7 +5,6 @@ Usage: xentity [paths ...] [-b auto|ast|libcst|tree-sitter] Positional arguments
 Options: -b, --backend --const --class --function --import Examples: $ xentity src/ --function --class Command-line script: run ``python xentity.py`` or the ``xentity`` command.
 The module is importable as well."""
 
-from __future__ import annotations
 import argparse
 import ast
 from collections import defaultdict

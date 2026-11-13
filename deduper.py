@@ -4,8 +4,6 @@ Extracts the definitions with ast or tree-sitter (also from the zip, tar, gzip, 
 Usage: deduper [-m|-c] [--log-level LEVEL] Options: -m, --move Move duplicate objects to utils.py and add imports -c, --copy Copy duplicate objects to utils.py without modifying source files --log-level DEBUG, INFO, WARNING, ERROR Examples: $ deduper -m Command-line script: run ``python deduper.py`` or the ``deduper`` command.
 The module is importable as well."""
 
-from __future__ import annotations
-
 import argparse
 import ast
 from ast import Assign, AsyncFunctionDef, ClassDef, FunctionDef

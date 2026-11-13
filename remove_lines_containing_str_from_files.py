@@ -5,8 +5,6 @@ Work is spread over a process pool.
 Usage: remove_lines_containing_str_from_files [files ...] STRING Examples: $ remove_lines_containing_str_from_files src/ 'DEBUG' Runs as a script (``python remove_lines_containing_str_from_files.py``) in the directory it should act on; the module can also be imported.
 """
 
-from __future__ import annotations
-
 from multiprocessing import Pool
 from pathlib import Path
 import sys

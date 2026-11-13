@@ -4,8 +4,6 @@ Reads each ``.svg`` file, extracts the font id, sanitises the characters that ca
 Usage: rename_svg_fonts [FILE.svg | DIRECTORY] Examples: $ rename_svg_fonts fonts/ Runs as a script (``python rename_svg_fonts.py``) in the directory it should act on; the module can also be imported.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 import re
 import sys

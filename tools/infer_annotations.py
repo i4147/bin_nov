@@ -43,8 +43,6 @@ Notes
 * ``self`` / ``cls`` are never annotated (PEP 484/673).
 """
 
-from __future__ import annotations
-
 import argparse
 import ast
 import io

@@ -4,8 +4,6 @@ Detects the ``.whl`` files without code members, extracts their name and version
 Usage: ewhl2 [directory] [-d DEST] [--auto-move-all] Positional arguments: directory Directory containing .whl files (default: current directory) Options: -d, --dest Destination subdirectory name (default: 'empty_wheels') --no-install-check Skip checking installed packages --auto-move-all Automatically move all empty wheels without prompting Examples: $ ewhl2 ~/wheels --auto-move-all Command-line script: run ``python ewhl2.py`` or the ``ewhl2`` command.
 The module is importable as well."""
 
-from __future__ import annotations
-
 import argparse
 from pathlib import Path
 import shutil

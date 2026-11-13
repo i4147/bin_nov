@@ -1,8 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Convert .zip archives to .tar.xz, preserving metadata and verifying the result."""
 
-from __future__ import annotations
-
 import calendar
 import os
 import sys

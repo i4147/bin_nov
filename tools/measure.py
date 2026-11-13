@@ -19,8 +19,6 @@ human could infer from context simply disappear.
     python arena/measure.py --files addel.py valhtml.py --show-misses
 """
 
-from __future__ import annotations
-
 import argparse
 import ast
 import copy
