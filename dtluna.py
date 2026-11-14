@@ -2,7 +2,7 @@
 """Translate a text file in independently resumable chunks.
 Supports deep_translator, DeepL, translate, Bing, googletrans, pygoogletranslation, boto3, Azure, Baidu, Alibaba and Watson, maps the language codes per backend, throttles the requests, saves the results atomically and logs the run.
 Usage: dtluna -i input.txt [-o out.json] [-s auto] [-t en] Options: -i, --input -o, --output --failed -s, --source -t, --target -b, --backend -d, --delay --chunk-size --save-every --no-continue Examples: $ dtluna -i article.txt -t en -b deep_translator Command-line script: run ``python dtluna.py`` or the ``dtluna`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed

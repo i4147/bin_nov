@@ -17,7 +17,7 @@ Options: -v, --verbose Enable debug logging.
 ...
 plus 7 more; run ``py3migrate --help`` for the full list.
 Examples: $ py3migrate refactor src/ --diff-mode compact $ py3migrate fixprint -a src/ Command-line script: run ``python py3migrate.py`` or the ``py3migrate`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

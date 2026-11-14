@@ -3,7 +3,7 @@
 The ``create`` subcommand packs each given folder as tar, tar.gz, tar.bz2, tar.xz or zip (``-f``), names the archive after the folder, deletes the source with ``--cleanup`` and previews with ``--dry-run``.
 Usage: folder_archiver create [folders ...] [-f FORMAT] [-o ARCHIVE] [--cleanup] Positional arguments: folders ...
 Folder(s) to archive Subcommands: create Archive a folder Options: -f, --format Archive format (default: tar) -o, --output Output archive path (single folder only) --cleanup Delete each folder after archiving (default: keep) -n, --dry-run Only show what would happen Examples: $ folder_archiver create project --format gztar --cleanup Command-line script: run ``python folder_archiver.py`` or the ``folder_archiver`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

@@ -3,7 +3,7 @@
 Subcommands: ``chat-export`` turns a JSON conversation list into per-chat Markdown, ``info-to-md`` shells out to the ``info`` reader, ``man-to-md`` renders a roff page, ``md-to-html`` writes styled HTML with Tailwind and KaTeX, ``rst-to-html`` goes through docutils, ``mobi-to-html`` extracts a ``.mobi``, ``pptx-to-txt`` pulls the slide text and ``rst-to-md`` uses pandoc.
 Usage: doctools {chat-export,info-to-md,man-to-md,md-to-html,rst-to-html,mobi-to-html,pptx-to-txt,rst-to-md} [options] Positional arguments: input Input JSON file (list of conversations) paths ...
 Files or directories to convert Subcommands: chat-export JSON conversations -> per-chat Markdown files info-to-md Convert .info files to .md via `info` CLI man-to-md Convert a man page (roff) to Markdown md-to-html Markdown -> styled HTML (Tailwind/KaTeX) rst-to-html .rst / .txt / .md -> HTML via docutils mobi-to-html Extract a .mobi to HTML pptx-to-txt Extract text from a .pptx rst-to-md Convert .rst files to .md via pandoc Options: -o, --output Output directory (default: exported) -d, --directory Directory to scan (default: .) --out-dir Temp output directory (default: /sdcard/tmp) --asset-base Base URL for CSS/JS assets (default: /sdcard/_static/katex) --force Force re-conversion even if HTML is newer -r, --recursive Recurse into directories --no-backup Do not create .rst.bak backups --remove-original Delete the original .rst files after conversion Examples: $ doctools md-to-html README.md $ doctools man-to-md ls.1 Command-line script: run ``python doctools.py`` or the ``doctools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor

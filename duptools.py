@@ -5,7 +5,7 @@ Hashing is xxhash (with a quick pre-filter), the keeper is selectable and ``--js
 Usage: duptools {report,delete,symlink,restore} [options] Subcommands: report Show duplicate groups (no changes) delete Delete duplicates, keep one per group symlink Move master copies to a stash and symlink the rest restore Reverse the symlink operation from a manifest Options: -d, --directory Directory to scan (default: .) -r, --recursive --no-recursive Do not scan recursively --algorithm Hash algorithm (default: xxhash; falls back to blake2b) --min-size Skip files smaller than N bytes (default: 1) --chunk-size --follow-symlinks Follow symlinks when scanning --quick-hash Use dupfx.py's head+tail quick-hash pre-filter --exclude Directory names to skip (default: .git __pycache__ ...) --json Export the found groups to a JSON file ...
 plus 7 more; run ``duptools --help`` for the full list.
 Examples: $ duptools report -d ~/photos --json dupes.json Command-line script: run ``python duptools.py`` or the ``duptools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

@@ -2,7 +2,7 @@
 """Translate a text file in chunks with resume support and detailed logging.
 Smart-chunks the text, runs the workers against the first usable backend in the fallback order, retries with backoff, saves the state atomically, handles an interruption gracefully and logs to ``<output>.debug.log``; ``--list-backends`` prints what is available.
 Usage: dt5 INPUT [-o OUT.json] [-s LANG] [-t LANG] [--backends LIST] Positional arguments: input Input text file Options: -o, --output Output JSON file (default: <input>.translations.json) -s, --source Source language code (ISO 639-1) -t, --target Target language code (ISO 639-1) --backends --chunk-size Chunk size in characters --save-every Save state every N chunks --debug-log Path to debug log file (default: <output>.debug.log) --quiet Suppress error output to stderr --list-backends List known backends and exit Examples: $ dt5 article.txt -t de --list-backends Command-line script: run ``python dt5.py`` or the ``dt5`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed

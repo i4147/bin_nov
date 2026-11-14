@@ -4,7 +4,7 @@ Packs each subdirectory into a tar with xz, gz, bz2, zstd, lz4 or snappy (``-c``
 Usage: compress_subdirs -c xz [-C DIR] [--min SIZE] [--max SIZE] Options: -C, --directory Target root directory -c, --compressor Compression algorithm -d, --decompress Decompress recognized archives -f, --force Replace existing archives when compressing; never overwrite extracted directories -k, --keep Keep source directories or archives --remove-source Remove sources after successful completion --min Skip directories smaller than this recursive regular-file size --max, -max Skip directories larger than this recursive regular-file size --include Include matching top-level names; repeatable --exclude Exclude matching top-level names; repeatable ...
 plus 4 more; run ``compress_subdirs --help`` for the full list.
 Examples: $ compress_subdirs -c zstd -C ~/projects --remove-source Command-line script: run ``python compress_subdirs.py`` or the ``compress_subdirs`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import bz2
@@ -25,7 +25,7 @@ import tarfile
 import tempfile
 from typing import BinaryIO, Callable, Final, Literal, TypeVar, cast
 
-from dh import MAX_WORKERS
+from dh import MAX_WORKERS, fsz
 
 Compressor = Literal["xz", "gz", "bz2", "zstd", "lz4", "snappy"]
 Method = Literal["mp-map", "mp-imap", "process-pool", "thread-pool"]
@@ -87,16 +87,6 @@ def parse_size(value: str) -> int:
         "TIB": 1024**4,
     }
     return int(Decimal(match.group(1)) * units[(match.group(2) or "B").upper()])
-
-
-def format_size(size: int) -> str:
-    amount = float(size)
-    for unit in ("B", "KiB", "MiB", "GiB", "TiB"):
-        if amount < 1024 or unit == "TiB":
-            return f"{amount:.1f} {unit}"
-        amount /= 1024
-    msg = "Unreachable"
-    raise AssertionError(msg)
 
 
 def directory_size(directory: Path) -> int:
@@ -546,10 +536,10 @@ def main() -> None:
                     scan_errors += 1
                     continue
                 if ns.min_size is not None and size < ns.min_size:
-                    print(f"skipped: {path}: {format_size(size)} below minimum")
+                    print(f"skipped: {path}: {fsz(size)} below minimum")
                     continue
                 if ns.max_size is not None and size > ns.max_size:
-                    print(f"skipped: {path}: {format_size(size)} above maximum")
+                    print(f"skipped: {path}: {fsz(size)} above maximum")
                     continue
 
             targets.append(path)

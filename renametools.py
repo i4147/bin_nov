@@ -23,7 +23,7 @@ or # (default); 'param' strips only ?key=value patterns.
 ...
 plus 6 more; run ``renametools --help`` for the full list.
 Examples: $ renametools images --dry-run ~/photos $ renametools clean-names ~/media --apply Command-line script: run ``python renametools.py`` or the ``renametools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

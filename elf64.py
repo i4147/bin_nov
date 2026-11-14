@@ -2,7 +2,7 @@
 """Recursively find the 64-bit ELF binaries of a directory.
 Parses the ELF headers with pyelftools, prints each 64-bit binary with its type, machine, entry point and section summary and with ``-r`` deletes the matches; ``-L`` follows the symlinks.
 Usage: elf64 DIRECTORY [-r] [-L] Positional arguments: directory Directory to scan Options: -r, --remove Delete each 64-bit ELF binary that is found -L, --follow-symlinks Follow symlinks during traversal Examples: $ elf64 ./lib Command-line script: run ``python elf64.py`` or the ``elf64`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import multiprocessing as mp

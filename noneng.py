@@ -7,7 +7,7 @@ Defaults to the current directory.
 Options: -b, --backend Language-detection backend.
 Defaults to pycld2.
 Examples: $ noneng docs/ -b gcld3 Command-line script: run ``python noneng.py`` or the ``noneng`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import codecs

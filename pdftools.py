@@ -3,7 +3,7 @@
 ``-p`` writes the per-page text, ``-s`` splits the pages into single-page PDFs, ``-m`` merges the inputs into ``merged.pdf`` and ``-x`` extracts the embedded images, fonts and attachments into ``<stem>/images``, ``fonts`` and ``<stem>/attachments``; the work runs in parallel.
 Usage: pdftools INPUT.pdf [...] [-p] [-s] [-m] [-x] [-o OUTDIR] Positional arguments: inputs ...
 One or more input PDF files Options: -p, --per-page Extract the text of every page into separate .txt files in a folder named after the input stem -s, --split Split every input into one PDF per page, in a folder named after the input stem -m, --merge -x, --extract Extract embedded images, fonts and attached files into <stem>/images, fonts and attachments -o, --output-dir Base output directory Examples: $ pdftools book.pdf -p -x Command-line script: run ``python pdftools.py`` or the ``pdftools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

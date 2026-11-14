@@ -2,7 +2,7 @@
 """Report the files whose encoding is not UTF-8.
 Detects the encoding from the BOM or by decoding attempts, prints the non-UTF-8 files and with ``-a`` converts them to UTF-8 in place.
 Usage: nonutf8 [-a] [paths ...] Options: -a, --apply Convert detected non-UTF-8 files to UTF-8 in place Examples: $ nonutf8 -a docs/ Command-line script: run ``python nonutf8.py`` or the ``nonutf8`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import codecs

@@ -3,7 +3,7 @@
 The ``check`` subcommand reports the files without a guard, ``fix`` either moves the top-level code into a ``main()`` (``--strategy ast``) or appends the guard with a placeholder ``main()`` (``--strategy template``); ``--exclude``, ``--dry-run`` and ``--indent`` tune the run.
 Usage: addmainguard {check,fix} [options] [paths ...] Positional arguments: paths ...
 Files or directories (default: current directory) Subcommands: check Report files missing a main guard fix Add main guards to files missing them Options: --exclude Extra directory name to exclude (repeatable) --no-default-excludes Do not apply the built-in exclusion list -v, --verbose Verbose logging --detect Detection backend (default: ast) --strategy Fix strategy: 'ast' moves top-level code into main(); 'template' inserts a placeholder main() (default: ast) --dry-run Preview without writing --indent Examples: $ addmainguard check src/ $ addmainguard fix src/ --dry-run Command-line script: run ``python addmainguard.py`` or the ``addmainguard`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

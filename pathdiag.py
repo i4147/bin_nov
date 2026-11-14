@@ -3,7 +3,7 @@
 Lists the entries of ``PATH`` with duplicate detection, hashes the executables it finds, and extracts the aliases and functions defined by the shell rc file (``~/.bashrc`` by default).
 ``--fix-dedup`` rewrites the rc file without the repeated entries.
 Usage: pathdiag [--fix-dedup] [--rc-file FILE] [--alias-file FILE] [--func-file FILE] Options: --fix-dedup Deduplicate PATH and update shell rc --rc-file Path to shell rc file --alias-file Path to aliases file --func-file Path to functions file Examples: $ pathdiag --fix-dedup Command-line script: run ``python pathdiag.py`` or the ``pathdiag`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

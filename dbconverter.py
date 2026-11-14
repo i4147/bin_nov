@@ -3,7 +3,7 @@
 Sniffs the input format (with the SQLite header check), reads it into a table list and writes the target format inferred from ``-d`` or ``-o``, defaulting the output name to the input path with the new extension.
 Usage: dbconverter INPUT -d FORMAT [-o OUTPUT] Positional arguments: input Input file path Options: -d, --dest Target extension, e.g.
 csv, .json, sqlite, pkl -o, --output Output path (default: input path with new extension) Examples: $ dbconverter dump.json -d sqlite Command-line script: run ``python dbconverter.py`` or the ``dbconverter`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import json

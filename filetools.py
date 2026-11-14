@@ -2,7 +2,7 @@
 """Query and move files by age, size and extension with one subcommand CLI.
 ``scan-ctime`` reports files created in the last N minutes, ``filter``/``filter-recursive`` list files by extension, size and age, ``recent-modified`` and ``same-day`` select by mtime, ``move`` relocates matches into a destination directory, and ``newest``/``oldest``/``btime`` show the extremes (birth time is read through ``statx`` where available).
 Usage: filetools {scan-ctime,filter,filter-recursive,recent-modified,same-day,move,newest,oldest,btime} [options] Positional arguments: minutes filename path Subcommands: scan-ctime filter filter-recursive recent-modified same-day move newest oldest btime Options: --dir --minutes --ext --min-size --non-recursive --old --dest -r, --recursive -n, --count Examples: $ filetools recent-modified --minutes 30 $ filetools move --ext .py --dest ../src Command-line script: run ``python filetools.py`` or the ``filetools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ctypes

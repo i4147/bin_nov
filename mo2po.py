@@ -2,7 +2,7 @@
 """Convert the ``.mo`` translation catalogues back to ``.po``.
 Runs ``msgunfmt`` on each ``.mo`` file (or uses a pure-Python fallback with ``--fallback``), writes the ``.po`` next to it and deletes the original unless ``-k`` is given; ``-r`` walks the directories.
 Usage: mo2po PATH [-k] [-r] [--fallback] Positional arguments: path Path to .mo file or directory containing .mo files Options: -k, --keep Keep original .mo files (don't remove) -r, --recursive Process directories recursively -v, --verbose Show detailed progress messages --fallback Use pure Python fallback method (doesn't require gettext utilities) Examples: $ mo2po locale/ -r -k Command-line script: run ``python mo2po.py`` or the ``mo2po`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

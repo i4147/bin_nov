@@ -2,7 +2,7 @@
 """Rebuild a readable shell script from its flattened Python form.
 Tokenizes the flattened input, splits it back into statements, restores the indentation of the blocks and rewrites the heredocs that had been flattened, optionally formatting the result with black and extracting the heredoc bodies to files.
 Usage: unflatten [flattened.py] [-o script.sh] [--extract] [--no-black] Positional arguments: input Flattened file (default: stdin) Options: -o, --output Restored shell script (default: stdout) --extract Also write each heredoc body as a file --no-black Skip black formatting Examples: $ unflatten flat.py -o restore.sh --extract Command-line script: run ``python unflatten.py`` or the ``unflatten`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

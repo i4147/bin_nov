@@ -2,7 +2,7 @@
 """Translate a text file in chunks while saving the progress.
 Splits the input into 2500-character chunks, translates them with the chosen backend (deep_translator, DeepL, translate, Bing, googletrans, pygoogletranslation), saves ``chunks.json`` every ten chunks, keeps a ``failed.txt`` list and ``--no-continue`` starts from scratch.
 Usage: dt4 [-i input.txt] [-o chunks.json] [-s en] [-t fr] Options: -i, --input Input text file -o, --output Output JSON file --failed Failed chunk indices file -s, --source Source language code -t, --target Target language code -b, --backend Translator backend -d, --delay Delay between requests in seconds --chunk-size Characters per chunk --save-every Save JSON every N chunks --no-continue Start fresh, ignore existing output Examples: $ dt4 -i book.txt -t en Command-line script: run ``python dt4.py`` or the ``dt4`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed

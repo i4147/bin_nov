@@ -7,7 +7,7 @@ Options: -a, --all Process and report dependencies for all installed packages in
 Defaults to 'dependency_report.txt' if no filename given.
 -d, --directory Root path of the site-packages directory to parse (Defaults to current folder '.').
 Examples: $ pkg_deps_reporter requests -w deps.txt Command-line script: run ``python pkg_deps_reporter.py`` or the ``pkg_deps_reporter`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

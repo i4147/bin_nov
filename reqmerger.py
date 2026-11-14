@@ -3,7 +3,7 @@
 Reads every ``<subdir>/requirements.txt``, merges the lines without duplicates into the root ``requirements.txt`` and with ``-r`` deletes the originals.
 Usage: reqmerger [-r] Options: -r, --remove Remove original requirements.txt files after merging.
 Examples: $ reqmerger -r Command-line script: run ``python reqmerger.py`` or the ``reqmerger`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

@@ -2,7 +2,7 @@
 """Move the empty wheels (only ``dist-info``, no code) into a subdirectory.
 Opens each ``.whl``, checks whether it holds any ``.py`` or ``.so`` member and moves the code-less ones into ``empty_wheels`` (``-d`` renames it), printing each move.
 Usage: ewhl [directory] [-d DEST] Positional arguments: directory Directory containing .whl files (default: current directory) Options: -d, --dest Destination subdirectory name (default: 'empty_wheels') -v, --verbose Show detailed output Examples: $ ewhl ~/wheels Command-line script: run ``python ewhl.py`` or the ``ewhl`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

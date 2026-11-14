@@ -16,7 +16,7 @@ Default: directory named after the PDF stem.
 Default: 3 (001, 002, ...).
 --parents Create parent directories for --output-dir if needed.
 Examples: $ pdf2text concat book.pdf -o book.txt $ pdf2text split book.pdf Command-line script: run ``python pdf2text.py`` or the ``pdf2text`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

@@ -8,31 +8,16 @@ from pathlib import Path
 import sys
 from typing import TYPE_CHECKING, Any
 
-from dh import MAX_WORKERS, runcmd
+from dh import MAX_WORKERS, runcmd, get_pyfiles
 
 print_lock = Lock()
 
 
 def walk_files(directory: Path) -> Iterator[Path]:
-    """Yield paths for files found recursively under directory."""
     for root, _dirs, files in directory.walk():
         for name in files:
             yield root / name
 
-
-def is_python_file(path: Path) -> bool:
-    """Recognize .py files or extensionless files with markers in their first 64 bytes."""
-    if path.suffix == ".py":
-        return True
-    if path.suffix == "":
-        try:
-            with path.open("rb") as f:
-                head = f.read(64)
-                if b"python" in head and b"#!" in head:
-                    return True
-        except Exception:
-            return False
-    return False
 
 
 def process_file(path: Path) -> None:

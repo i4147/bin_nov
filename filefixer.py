@@ -22,7 +22,7 @@ Options: --debug Enable debug logging.
 ...
 plus 7 more; run ``filefixer --help`` for the full list.
 Examples: $ filefixer fix --apply ~/Downloads Command-line script: run ``python filefixer.py`` or the ``filefixer`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Iterator, Sequence

@@ -3,7 +3,7 @@
 Renders the Markdown (tables, magic links, better emphasis, fenced code; extras and a JSON config are accepted), styles it with the given CSS (``.xz`` supported, default ``/sdcard/_static/css/markdown.css.xz``) and writes one PDF per input, in parallel.
 Usage: markdowntopdf FILE.md [more.md ...] [-o OUT.pdf] [--css STYLE.css] Positional arguments: md ...
 Markdown input file(s) Options: -o, --output PDF output file (only with single input) --css CSS file to style the PDF (supports .xz) --extras Extra markdown extensions --config JSON configuration for extensions Examples: $ markdowntopdf notes.md -o notes.pdf Command-line script: run ``python markdowntopdf.py`` or the ``markdowntopdf`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor

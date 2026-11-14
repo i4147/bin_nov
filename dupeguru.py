@@ -3,7 +3,7 @@
 Sizes the files, then hashes a 64 KB prefix and the full content in a pool, groups the identical ones and reports the space that could be freed; ``-a`` deletes the duplicates (dry run by default), ``-m`` sets the minimum size.
 Usage: dupeguru [-a] [-m MIN_BYTES] [paths ...] Positional arguments: paths ...
 Files or directories to scan (default: current directory) Options: -a, --apply Delete the duplicates (default: dry run) -m, --min-size Ignore files smaller than this many bytes (default: 1) -q, --quiet Suppress progress messages Examples: $ dupeguru ~/Downloads $ dupeguru -a ~/Downloads Command-line script: run ``python dupeguru.py`` or the ``dupeguru`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict
@@ -14,20 +14,11 @@ from pathlib import Path
 import sys
 from typing import Any, Iterable, Iterator, Sequence
 
-from dh import MAX_WORKERS, SKIP_DIRS
+from dh import MAX_WORKERS, SKIP_DIRS, fsz
 
 CHUNK_SIZE: int = 1 << 20
 PARTIAL_SIZE: int = 1 << 16
 DIGEST_BYTES: int = 16
-
-
-def human_size(n: int) -> str:
-    x = float(n)
-    for unit in ("B", "KiB", "MiB", "GiB", "TiB", "PiB"):
-        if x < 1024 or unit == "PiB":
-            return f"{int(x)} B" if unit == "B" else f"{x:.2f} {unit}"
-        x /= 1024
-    return f"{n} B"
 
 
 def walk_files(roots: Iterable[Path]) -> Iterator[Path]:
@@ -199,12 +190,12 @@ def main(argv: list[str] | None = None) -> int:
     mode = "APPLY" if args.apply else "DRY-RUN"
     print(
         f"=== {mode}: {len(prepared)} group(s), {total_redundant} redundant "
-        f"file(s), {human_size(total_bytes)} reclaimable ===\n"
+        f"file(s), {fsz(total_bytes)} reclaimable ===\n"
     )
     removed = 0
     reclaimed = 0
     for i, (paths, sz) in enumerate(prepared, 1):
-        print(f"[Group {i}]  {human_size(sz)} each")
+        print(f"[Group {i}]  {fsz(sz)} each")
         print(f"  KEEP     {paths[0]}")
         for p in paths[1:]:
             if args.apply:
@@ -219,7 +210,7 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  REMOVE   {p}")
         print()
     if args.apply:
-        print(f"Removed {removed} file(s), reclaimed {human_size(reclaimed)}.")
+        print(f"Removed {removed} file(s), reclaimed {fsz(reclaimed)}.")
     else:
         print(f"Dry run complete. Re-run with -a/--apply to delete {total_redundant} file(s).")
     return 0

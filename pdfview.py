@@ -10,7 +10,7 @@ The default is pdfminer.
 --no-recursive Do not recursively search directories for PDF files.
 --log-level Loguru log level; default: WARNING.
 Examples: $ pdfview docs/ -b auto Command-line script: run ``python pdfview.py`` or the ``pdfview`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor

@@ -18,7 +18,7 @@ Options: --target -m, --move Extract non-English lines to noneng.txt and edit so
 ...
 plus 9 more; run ``langtools --help`` for the full list.
 Examples: $ langtools find-files docs/ $ langtools filter-lines -m page.txt Command-line script: run ``python langtools.py`` or the ``langtools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import Counter, defaultdict

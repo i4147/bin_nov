@@ -15,7 +15,7 @@ Extension decides the format (.txt/.json).
 --min-confidence --max-size-mb Maximum file size in MB to analyse (default: 10).
 --list-backends List available backends and exit.
 Examples: $ detect_nonenglish -b langdetect -l -o report.json docs/ Command-line script: run ``python detect_nonenglish.py`` or the ``detect_nonenglish`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import Counter

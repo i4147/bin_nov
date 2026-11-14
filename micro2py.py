@@ -6,7 +6,7 @@ Files or directories to refactor (recursively).
 Defaults to '.' if omitted.
 Options: -n, --dry-run Only report what would be changed; touch nothing.
 Examples: $ micro2py firmware/ -n Command-line script: run ``python micro2py.py`` or the ``micro2py`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

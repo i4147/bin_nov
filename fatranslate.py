@@ -14,7 +14,7 @@ Options: --source Source language (default: fa).
 --log-level Log level (default: INFO).
 -o, --output JSON output path (default: <input>.json).
 Examples: $ fatranslate lines notes.txt --max-chars 3000 Command-line script: run ``python fatranslate.py`` or the ``fatranslate`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import json

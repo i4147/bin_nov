@@ -2,7 +2,7 @@
 """Detect duplicate Python code with subinterpreters.
 Normalizes each file's AST (optionally alpha-renaming the variables, ``--disable-fuzzy`` turns that off), ignores the small nodes (``--min-nodes``), reports the duplicates and also writes an HTML report; ``--max-duplicates`` turns the run into a CI check.
 Usage: gdupfunc [--dir DIR] [--min-nodes N] [--max-duplicates N] Options: --dir Root directory to scan recursively --disable-fuzzy Disable variable alpha-renaming matching --min-nodes Minimum AST node count threshold --max-duplicates Max duplicates allowed before exit failure Examples: $ gdupfunc --dir src --max-duplicates 0 Command-line script: run ``python gdupfunc.py`` or the ``gdupfunc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

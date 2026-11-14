@@ -11,7 +11,7 @@ Options: --output --max-colors --max-size --ext File extension to include (repea
 --format --allow-short Allow 3-digit #abc form.
 --count Number of blocks (default: random 1-999).
 Examples: $ colortools extract-show --path css/ $ colortools hex2rgb '#ff8800' Command-line script: run ``python colortools.py`` or the ``colortools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import colorsys

@@ -16,7 +16,7 @@ httpx supports internal parallel range downloads; aria2c uses external parallel 
 ...
 plus 5 more; run ``pkgfetch --help`` for the full list.
 Examples: $ pkgfetch 'requests>=2.28' -d wheels/ Command-line script: run ``python pkgfetch.py`` or the ``pkgfetch`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass, field

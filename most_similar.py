@@ -2,7 +2,7 @@
 """Find the Python scripts of ``~/bin`` that are most similar to a given file.
 Compares the target with every script in the folder using a normalized AST hash, a line-level difflib score and an ssdeep fuzzy score, prints the best ``--top`` matches per method and can report each comparison live with ``-v``.
 Usage: most_similar FILE [--bin-dir DIR] [--top N] [-v] Positional arguments: file Target Python file to compare Options: --bin-dir Directory to search (default: ~/bin) --top Number of results per method (default: 3) -v, --verbose Show each comparison result live as it's computed Examples: $ most_similar tool.py --top 5 Command-line script: run ``python most_similar.py`` or the ``most_similar`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

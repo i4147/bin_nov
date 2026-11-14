@@ -2,7 +2,7 @@
 """Move or copy the repeated top-level Python objects into ``utils.py``.
 Extracts the definitions with ast or tree-sitter (also from the zip, tar, gzip, xz and zstd archives), hashes them, writes the shared ones into ``utils.py`` and, with ``-m``, adds the import to each source after the module docstring; ``-c`` only copies.
 Usage: deduper [-m|-c] [--log-level LEVEL] Options: -m, --move Move duplicate objects to utils.py and add imports -c, --copy Copy duplicate objects to utils.py without modifying source files --log-level DEBUG, INFO, WARNING, ERROR Examples: $ deduper -m Command-line script: run ``python deduper.py`` or the ``deduper`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

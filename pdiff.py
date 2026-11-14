@@ -2,7 +2,7 @@
 """Compare two Python files at the AST, bytecode or disassembly level.
 Modes select the comparison: ``ast`` dumps both syntax trees, ``dis`` shows the disassembly and the default diffs the compiled bytecode opcodes, so files that differ only in formatting or comments compare equal.
 Usage: pdiff FILE1.py FILE2.py [--mode ast|dis|bytecode] Positional arguments: files Files to compare Examples: $ pdiff a.py b.py Command-line script: run ``python pdiff.py`` or the ``pdiff`` command.
-The module is importable as well."""
+"""
 
 import ast
 import contextlib

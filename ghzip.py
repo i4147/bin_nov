@@ -2,7 +2,7 @@
 """Download a GitHub repository as a ZIP archive.
 Normalises ``owner/repo`` or a full URL, resolves the default branch and the size through the API (asking before the large repositories) and downloads the codeload ZIP with subprocess, PyGithub, GitPython or Dulwich (``-b``).
 Usage: ghzip owner/repo [-b BACKEND] Positional arguments: repo Repository in owner/repo or full GitHub URL form Options: -b, --backend Backend to use Examples: $ ghzip psf/requests Command-line script: run ``python ghzip.py`` or the ``ghzip`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import functools

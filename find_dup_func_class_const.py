@@ -3,7 +3,7 @@
 Hashes the top-level definitions with ast, groups the identical ones and with ``-m`` writes them into ``dh.py``, removing the copies from the sources and adding the imports they need.
 Usage: find_dup_func_class_const [-m] Options: -m, --move Consolidate duplicate code blocks into dh.py and update files with required imports.
 Examples: $ find_dup_func_class_const -m Command-line script: run ``python find_dup_func_class_const.py`` or the ``find_dup_func_class_const`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

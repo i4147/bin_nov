@@ -2,7 +2,7 @@
 """Read the text of a PDF in a terminal viewer.
 Extracts the page text with PyMuPDF, wraps it to the terminal width and pages through it in the alternate screen with the arrow/page keys, opening the page given with ``-p``.
 Usage: pdfv FILE.pdf [-p PAGE] Positional arguments: file Path to the PDF file Options: -p, --page Page to open first (1-based, default 1) Examples: $ pdfv book.pdf -p 10 Command-line script: run ``python pdfv.py`` or the ``pdfv`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

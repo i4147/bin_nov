@@ -2,7 +2,7 @@
 """Squash the last N commits with a saved patch, reset and re-apply.
 Combines the patches of the last N commits into one file plus a metadata JSON, resets the branch by N commits, applies the patch again and commits the message of the newest commit; ``--dry-run`` shows the plan and ``--force`` stashes the uncommitted changes first.
 Usage: git_squash_n N [--dry-run] [--force] Positional arguments: N Number of commits to squash (e.g., 3) Options: -b, --backend Backend to use (some backends will fall back to subprocess for missing features) --patch-file Path to write combined patch --meta-file Path to write metadata JSON --force Stash uncommitted changes and proceed --dry-run Show actions without making changes Examples: $ git_squash_n 3 --dry-run Command-line script: run ``python git_squash_n.py`` or the ``git_squash_n`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from datetime import datetime

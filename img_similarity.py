@@ -4,7 +4,7 @@ Hashes the images (perceptual phash/dhash/ahash/whash, colour hash, DCT, HSV his
 Usage: img_similarity {scan,organize,dedup,keep-one,cluster} --method phash [options] Subcommands: scan Find & report similar/duplicate groups (no file changes) organize Group similar images into folders dedup Delete duplicates, keeping first per group keep-one Keep one image per group_*/similar_*/duplicates_* folder cluster HSV-histogram agglomerative clustering into N groups Options: -d, --directory Directory to scan (default: .) --method Feature/hash method (default: phash) --hash-size Hash size (default: 16 for dct-phash, else 8) --threshold Similarity threshold (default: per-method / 0.9 in similarity mode) --mode Threshold interpretation (default: hamming distance) -r, --recursive Scan subdirectories recursively --exclude Subdirectory name to skip (repeatable) --out Output folder prefix (default: _similar_groups) --action How to place images in group folders (default: move) --dry-run Preview only (default) ...
 plus 5 more; run ``img_similarity --help`` for the full list.
 Examples: $ img_similarity scan -d ~/photos --method phash $ img_similarity dedup --threshold 4 Command-line script: run ``python img_similarity.py`` or the ``img_similarity`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor

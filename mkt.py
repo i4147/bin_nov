@@ -2,7 +2,7 @@
 """Generate a structural HTML skeleton template from a URL or a local page.
 Drops the scripts, styles, media and SVGs, keeps the ``class``/``id``/``role`` attributes up to ``--max-depth``, preserves the head CSS for the visual fidelity and writes the template to ``-o`` or prints it.
 Usage: mkt SOURCE [-o OUTDIR] [-d DEPTH] [--print] Positional arguments: source Website URL or path to a local HTML file Options: -o, --out-dir -n, --name Base filename (no extension) -d, --max-depth --print Print to stdout instead of writing a file Examples: $ mkt https://example.com -o skeletons Command-line script: run ``python mkt.py`` or the ``mkt`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from datetime import datetime, timezone

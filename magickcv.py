@@ -6,7 +6,7 @@ Usage: magickcv INPUT OUTPUT [operations ...] Positional arguments: inputs ...
 output +append Options: -identify, --identify -resize -thumbnail -sample -scale -crop -extent -rotate -flip -flop ...
 plus 51 more; run ``magickcv --help`` for the full list.
 Examples: $ magickcv in.jpg out.jpg -resize 800x600 -grayscale -strip Command-line script: run ``python magickcv.py`` or the ``magickcv`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

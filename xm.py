@@ -5,7 +5,7 @@ Usage: xm [--root DIR] [--out-dir DIR] [-j] [-r] Options: -j, --json Additionall
 -r, --remove Remove the module docstring from each source .py file in place.
 --root Directory to scan recursively (default: cwd).
 --out-dir Examples: $ xm --root src --out-dir prompts -j Command-line script: run ``python xm.py`` or the ``xm`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

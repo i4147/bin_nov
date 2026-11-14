@@ -3,7 +3,7 @@
 Parses the ``[YYYY-MM-DD HH:MM:SS] user: message`` lines into per-user message groups, optionally merges consecutive messages of the same user or removes the timestamps, and writes the chosen output format.
 Usage: tchat2json INPUT [--time] [--merge] [--remove] [-o OUTPUT] Positional arguments: input ...
 Options: -t, --time -o, --output -m, --merge -r, --remove Examples: $ tchat2json chat.txt -o chat.json Command-line script: run ``python tchat2json.py`` or the ``tchat2json`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import csv

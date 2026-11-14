@@ -13,7 +13,7 @@ Default: 0.5 --chunk-size Maximum chunk length in characters.
 Default: 2500 --save-every Save after this many completed chunks.
 Default: 10 --no-continue Ignore an existing output file and start from scratch.
 Examples: $ dt1 -i notes.txt -t de Command-line script: run ``python dt1.py`` or the ``dt1`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed

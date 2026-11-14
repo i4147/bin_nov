@@ -2,7 +2,7 @@
 """Render a PDF in the terminal with PyMuPDF.
 Draws the current page as text or as coloured half-blocks with the zoom factor, and handles the paging, the scrolling and the quit keys in the alternate screen.
 Usage: pdfviewer FILE.pdf [-p PAGE] [-z ZOOM] Positional arguments: file Path to the PDF file Options: -p, --page Page to open first (1-based, default 1) -z, --zoom Initial zoom factor (default 1.0) Examples: $ pdfviewer manual.pdf Command-line script: run ``python pdfviewer.py`` or the ``pdfviewer`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import math

@@ -4,7 +4,7 @@ Builds the image-search URL from the query and the extra filters (exact/optional
 Usage: imgdownloader -q QUERY [-l LIMIT] [-o DIR] [--size large] [--type photo] Positional arguments: log-level=3 user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Options: -q, --query Query to search for -l, --limit Max images to download (default: 3) -o, --outputDir Full directory to store images in -c, --chromedriver Full path to the chromedriver binary -b, --backend HTTP backend library to use for downloading images (requests [default], pycurl, httpx) -t, --threads Number of parallel download threads (default: 4) -epq, --exactQuery Words that must be included -oq, --optionalQuery Words that are optional -eq, --exceptQuery Words that must not be included -cs, --customSize Find image of specific size (e.g., 1920*1080) ...
 plus 12 more; run ``imgdownloader --help`` for the full list.
 Examples: $ imgdownloader -q 'red fox' -l 20 -o foxes Command-line script: run ``python imgdownloader.py`` or the ``imgdownloader`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed

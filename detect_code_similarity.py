@@ -2,7 +2,7 @@
 """Detect the identical and similar Python files of a tree.
 Normalizes each file (comments and formatting dropped), hashes it, compares the pairs with difflib and optionally ssdeep/tlsh, and writes a JSON report of the exact duplicates and of the pairs above the similarity threshold (70 % by default).
 Usage: detect_code_similarity [--dir DIR] [--threshold N] [--output report.json] Options: --dir Root directory to scan (default: current folder) --threshold Similarity threshold percentage (default: 70) --mp-method Parallel processing method to use --output Path for JSON output report --exclude-dir Directories to exclude Examples: $ detect_code_similarity --dir src --threshold 85 Command-line script: run ``python detect_code_similarity.py`` or the ``detect_code_similarity`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

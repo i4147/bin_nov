@@ -7,7 +7,7 @@ Defaults to current directory (recursive).
 Options: --dry-run Report what would change without writing any files.
 --verbose Enable verbose (DEBUG-level) logging.
 Examples: $ felormc --dry-run src/ Command-line script: run ``python felormc.py`` or the ``felormc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass

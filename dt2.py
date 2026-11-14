@@ -3,7 +3,7 @@
 Groups the lines into chunks of 2000 characters, translates them with ``deep_translator`` in parallel, saves the progress every ten chunks and on interruption, and writes plain text, JSON or merged source/translation pairs (``-o``).
 Usage: dt2 -i input.txt [-s ru] [-t en] [-o json|text|merged] Options: -i, --input Input text file (one phrase per line) -s, --source Source language code (default: ru) -t, --target Target language code (default: en) -o, --output-type Output type: 'text' (translated lines only), 'json' (structured JSON; failed lines go to a separate file), 'merged' (source line + translation line pairs).
 Default: json --max-chunk-size --save-interval Examples: $ dt2 -i messages.txt -o merged Command-line script: run ``python dt2.py`` or the ``dt2`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import json

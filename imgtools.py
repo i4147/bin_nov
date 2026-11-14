@@ -22,7 +22,7 @@ Default: current directory.
 ...
 plus 16 more; run ``imgtools --help`` for the full list.
 Examples: $ imgtools resize 0.5 photos/ $ imgtools strip-exif shots/ Command-line script: run ``python imgtools.py`` or the ``imgtools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import base64

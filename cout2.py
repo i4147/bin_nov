@@ -3,7 +3,7 @@
 The ``comment`` subcommand picks the token from the extension (``#``, ``//``, ``--``, ``;`` ...) or ``--token``, can undo with ``--undo`` and offers ``--dry-run``, ``--stdout`` and ``--backup``.
 Usage: cout2 comment FILE START [END] [--undo] [--token TOKEN] Positional arguments: file start First line (1-based) end Last line (default: EOF) Subcommands: comment Comment (or --undo) lines START..END Options: --token Comment token override, e.g.
 --token // --undo Uncomment instead of commenting -n, --dry-run Only report how many lines change --stdout Print result instead of writing the file --backup Keep a .bak copy before writing Examples: $ cout2 comment main.rs 5 20 Command-line script: run ``python cout2.py`` or the ``cout2`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

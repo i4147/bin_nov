@@ -2,7 +2,7 @@
 """Find and optionally remove the duplicate functions of a Python file.
 Compares the normalized function bodies with ast, prints each duplicate group and with ``-r`` asks which definition to keep before deleting the others (``--backup`` keeps a copy).
 Usage: dedupfunc FILE.py [-r] [--backup] Positional arguments: file Python file to analyze Options: -r, --remove Remove duplicate functions with user confirmation --backup Create a backup before removing (implies -r) Examples: $ dedupfunc module.py Command-line script: run ``python dedupfunc.py`` or the ``dedupfunc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

@@ -2,7 +2,7 @@
 """Normalise and reflow text files.
 Subcommands: ``clean`` removes the zero-width and exotic space characters, ``normalize-lines`` trims and normalises each line, ``norm-white`` collapses the whitespace and ``reformat-text``/``reformatext`` rewraps the paragraphs to the configured maximum line length, splitting the long sentences at punctuation.
 Usage: texttools {clean,normalize-lines,norm-white,reformat-text,reformatext} FILE Positional arguments: filename Subcommands: clean normalize-lines norm-white reformat-text reformatext Examples: $ texttools reformat-text notes.txt Command-line script: run ``python texttools.py`` or the ``texttools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

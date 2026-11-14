@@ -5,7 +5,7 @@ Requires Python 3.12+.
 Usage: crmc [--diff|--dry-run|--backup] [--pool-method MAP] [paths ...] Positional arguments: paths ...
 Files or directories to process recursively (default: current directory) Options: --pool-method Multiprocessing.Pool dispatch method (default: %(default)s) -n, --stats Report the number of comments and docstrings removed per file -d, --dry-run Show what would change without writing anything --diff Print a unified diff of every change --backup Copy each file to '<name>.bak' before modifying it (never overwrites a .bak) --fallback-encoding Decode files that are not valid UTF-8 with ENCODING (e.g.
 cp1252) and write them back in that encoding; by default such files are skipped --exclude Extra directory name to skip while walking (repeatable) -v, --verbose Debug logging -q, --quiet Only log errors Examples: $ crmc --diff --stats src/ Command-line script: run ``python crmc.py`` or the ``crmc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

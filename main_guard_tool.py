@@ -3,7 +3,7 @@
 The ``check`` subcommand reports the files without a guard and ``fix`` adds one by moving the top-level code into ``main()`` (``--method ast``) or by appending the guard (``--method regex``); ``--dry-run`` and ``--exclude`` are available.
 Usage: main_guard_tool {check,fix} [-m ast|regex] [--dry-run] [paths ...] Positional arguments: paths ...
 Files or directories (default: current dir) Options: -m, --method Fix method (default: ast) --dry-run Preview changes without modifying files --exclude Extra directories to exclude Examples: $ main_guard_tool check src/ $ main_guard_tool fix --dry-run src/ Command-line script: run ``python main_guard_tool.py`` or the ``main_guard_tool`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

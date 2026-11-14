@@ -18,7 +18,7 @@ Omitted by default so terser picks its own.
 --terser Path to the terser executable (default: search PATH).
 --terser-arg Extra argument to pass to terser; may be repeated.
 --timeout Examples: $ pyterser static/js --toplevel Command-line script: run ``python pyterser.py`` or the ``pyterser`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

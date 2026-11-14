@@ -5,7 +5,7 @@ Usage: jsontools {custom2json,freeze2json,jsonl2dict,jsonl2json,lowerkeys,merge-
 directory csv delimiter Subcommands: custom2json freeze2json jsonl2dict jsonl2json lowerkeys merge-json mergejson mime2json sortdict ss2json tojson Options: --input --output --key -o, --output-dir --indent --ensure-ascii --skip-invalid --overwrite -o, --output --score-column ...
 plus 1 more; run ``jsontools --help`` for the full list.
 Examples: $ jsontools jsonl2json data.jsonl -o out/ $ jsontools lowerkeys data.json Command-line script: run ``python jsontools.py`` or the ``jsontools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

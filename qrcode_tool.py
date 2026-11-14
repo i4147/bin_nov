@@ -3,7 +3,7 @@
 The ``read`` subcommand decodes the codes of the given images or directories with pyzbar or OpenCV (``--qr-only``, ``--data-only``, ``--json``) and ``make`` renders a new code from the data with the ``qrcode`` package.
 Usage: qrcode_tool {read,make} [options] Positional arguments: images ...
 data Subcommands: read Decode codes in image file(s)/dir(s) make Generate a QR code image (needs qrcode pkg) Options: --qr-only Ignore non-QR barcodes (qrcoder) --data-only Print payloads only --verbose Also print symbol positions --json JSON output -o, --output --size Force square pixel size Examples: $ qrcode_tool read qr.png $ qrcode_tool make 'hello' -o hello.png Command-line script: run ``python qrcode_tool.py`` or the ``qrcode_tool`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

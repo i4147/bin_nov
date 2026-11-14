@@ -20,7 +20,7 @@ Options: -d, --dir Root directory (alternative to positional `paths`).
 ...
 plus 8 more; run ``pyextract --help`` for the full list.
 Examples: $ pyextract extract -o out/ src/ --layout by-type Command-line script: run ``python pyextract.py`` or the ``pyextract`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

@@ -3,7 +3,7 @@
 Reads the bitrate with ffprobe, re-encodes each file with ffmpeg at 50 % (floor 8 kbps) in a process pool, reports the size change per file and the totals and skips the files that cannot be read.
 Usage: nerf_mp3 [directories ...] [--no-color] Positional arguments: directories ...
 Directories to process (default: current directory) Options: --no-color Disable colored output Examples: $ nerf_mp3 ~/Music Command-line script: run ``python nerf_mp3.py`` or the ``nerf_mp3`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass

@@ -3,7 +3,7 @@
 Reads the name, e-mail and GitHub username (plus the extra fields), applies the substitutions to ``setup.py``, ``setup.cfg``, ``pyproject.toml``, ``MANIFEST.in``, ``tox.ini`` and ``Pipfile`` and offers ``--dry-run`` and ``--diff``.
 Usage: inject-info PROJECT_DIR [--dry-run] [--diff] Positional arguments: project_dir Project directory to update Options: --dry-run Do not write any files, just report --diff Print a unified diff of every change --info Examples: $ inject-info .
 --diff Command-line script: run ``python inject-info.py`` or the ``inject-info`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import difflib

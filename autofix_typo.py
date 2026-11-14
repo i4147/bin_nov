@@ -2,7 +2,7 @@
 """Fix typos in text files with learned substitution patterns.
 Learns the keyboard-adjacency and common-substitution patterns from a JSON database, proposes the corrections for the files of a directory and can apply them, optionally asking for confirmation and learning from each decision; ``--show-patterns`` dumps what was learned.
 Usage: autofix_typo [--apply] [--interactive] [--dir DIR] [--db FILE] Options: --apply Actually apply fixes --interactive Interactive mode (learn from each fix) --dir Directory to process --db Learning database file --show-patterns Show learned patterns and exit Examples: $ autofix_typo --dir notes/ --interactive Command-line script: run ``python autofix_typo.py`` or the ``autofix_typo`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

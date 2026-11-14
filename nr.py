@@ -5,7 +5,7 @@ Usage: nr [-n NAME] [-p] [-d DESCRIPTION] [-m MESSAGE] [-y] Options: -n, --name 
 -f, --force Skip confirmation prompts (same as --yes).
 --no-gitignore Do not copy ~/.gitignore.
 Examples: $ nr -n myproject -p -y Command-line script: run ``python nr.py`` or the ``nr`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import os

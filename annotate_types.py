@@ -9,7 +9,7 @@ Options: -s, --stub-file Path to custom .pyi stub file (defaults to <file>.pyi b
 -n, --dry-run Simulate the transformation without modifying the file.
 -q, --quiet Suppress output messages except errors.
 Examples: $ annotate_types module.py --diff Command-line script: run ``python annotate_types.py`` or the ``annotate_types`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

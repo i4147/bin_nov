@@ -2,7 +2,7 @@
 """Duplicate-file finder with a Textual terminal interface.
 Hashes the files of a directory, groups the duplicates by hash with a filename-fuzzy score and shows them in a Textual results table with the scan progress, letting you inspect the candidates before acting.
 Usage: dupeguru_textual [PATH] Positional arguments: path Directory to scan (default: current directory) Examples: $ dupeguru_textual ~/Pictures Command-line script: run ``python dupeguru_textual.py`` or the ``dupeguru_textual`` command.
-The module is importable as well."""
+"""
 
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -11,7 +11,7 @@ import hashlib
 from pathlib import Path
 import sys
 from typing import Any, Callable, ClassVar, Iterable, Sequence
-
+from dh import fsz
 from textual import on
 from textual.app import App, ComposeResult
 from textual.binding import Binding
@@ -58,15 +58,7 @@ class DuplicateGroup:
 
     @property
     def size_str(self) -> str:
-        return format_size(self.total_size)
-
-
-def format_size(size_bytes: int) -> str:
-    for unit in ["B", "KB", "MB", "GB", "TB"]:
-        if size_bytes < 1024.0:
-            return f"{size_bytes:.2f} {unit}"
-        size_bytes /= 1024.0
-    return f"{size_bytes:.2f} PB"
+        return fsz(self.total_size)
 
 
 def compute_file_hash(path: Path, chunk_size: int = 8192) -> str:
@@ -299,7 +291,7 @@ class ResultsTable(Widget):
             table.add_row(
                 str(i),
                 str(len(group.files)),
-                format_size(sample.size),
+                fsz(sample.size),
                 group.size_str,
                 f"{group.match_score:.1f}%",
                 group.reason,
@@ -495,7 +487,7 @@ class DupeGuruApp(App):
         wasted = sum(g.total_size for g in self.finder.duplicates)
         self.query_one("#stat-files", Label).update(f"Files scanned: {total_files}")
         self.query_one("#stat-dupes", Label).update(f"Duplicate groups: {total_dupes}")
-        self.query_one("#stat-space", Label).update(f"Wasted space: {format_size(wasted)}")
+        self.query_one("#stat-space", Label).update(f"Wasted space: {fsz(wasted)}")
         self.notify(f"Found {total_dupes} duplicate groups", severity="information")
 
     def action_clear(self) -> None:

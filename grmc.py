@@ -9,7 +9,7 @@ Options: -c, --comments Remove all comments except shebang, # type:, and # fmt:.
 -t, --type Remove type annotations.
 -b, --backend Select parsing backend (default: libcst).
 Examples: $ grmc -c -t src/ Command-line script: run ``python grmc.py`` or the ``grmc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

@@ -4,7 +4,7 @@ Packs each directory with tar plus zstd (level 19), brotli (quality 11) or lzma,
 Usage: compsub {-c|-d} {-z|-b|-x} [paths ...] [--level N] Positional arguments: paths ...
 Files/dirs to process (default: .) Options: -c, --compress Compress directories to archives -d, --decompress Decompress archives back to directories -z, --zstd -b, --brotli -x, --lzma --level Override compression level/quality for the selected algorithm --no-recursive Disable recursive scan for inputs Examples: $ compsub -c -z .
 $ compsub -d -z dist/ Command-line script: run ``python compsub.py`` or the ``compsub`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

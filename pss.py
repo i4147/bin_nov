@@ -2,7 +2,7 @@
 """Search a local PyPI package database by substring.
 Uses the SQLite FTS5 trigram index at ``/sdcard/data/pip.db`` to find the package names containing the keyword and prints the best ``-n`` matches.
 Usage: pss KEYWORD [-n LIMIT] Positional arguments: keyword Substring to search for (case-insensitive) Options: -n, --limit Examples: $ pss yaml -n 30 Command-line script: run ``python pss.py`` or the ``pss`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import heapq

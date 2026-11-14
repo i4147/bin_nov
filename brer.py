@@ -21,7 +21,7 @@ Default: keep original when compression does not save space.
 Default process.
 --skip-ext Comma-separated list of extensions to skip.
 Examples: $ brer compress notes.txt $ brer decompress notes.txt.br Command-line script: run ``python brer.py`` or the ``brer`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed

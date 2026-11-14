@@ -4,7 +4,7 @@ Scans the directory in parallel (eight workers, hardlink dedup, optional one-fil
 Usage: ncdu [PATH] [-o export.json] [-f export.json] [-x] [--si] Positional arguments: path Directory to scan Options: -o, --output Export to ncdu JSON v2 and exit (no UI) -f, --file Load a previous export instead of scanning -x, --one-file-system Do not cross filesystem boundaries -L, --follow-symlinks Follow symlinks (dangerous: loops) --exclude Exclude entries with this exact name (repeatable) --apparent-size Show apparent size instead of disk usage --si Use powers of 1000 instead of 1024 -v, --verbose Increase verbosity (-v, -vv, -vvv) -q, --quiet Only warnings/errors --log Log file used while the TUI is active (default: ncdu2.log) ...
 plus 3 more; run ``ncdu --help`` for the full list.
 Examples: $ ncdu ~ -o usage.json Command-line script: run ``python ncdu.py`` or the ``ncdu`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import curses

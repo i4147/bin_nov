@@ -3,7 +3,7 @@
 Similar to :doc:`afkco`, plus ``--autoflake`` to delegate the rewrite to the external autoflake tool with a ``--diff`` preview; archives (wheel, tar.zst) are analysed without being unpacked.
 Usage: afkx [-a|--autoflake] [--dry-run] [paths ...] Positional arguments: paths ...
 File or directory paths to analyze (default: current directory) Options: -a, --autofix Remove unused imports in-place --dry-run Preview changes without writing (implies --autofix) -v, --verbose Show files with zero issues --autoflake Use external autoflake instead of built-in AST analyzer -d, --diff With --autoflake, show unified diff --exclude Regex pattern to exclude files (repeatable) --no-color Disable ANSI colors Examples: $ afkx --autoflake --diff src/ Command-line script: run ``python afkx.py`` or the ``afkx`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

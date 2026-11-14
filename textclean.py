@@ -24,7 +24,7 @@ Repeatable.
 plus 4 more; run ``textclean --help`` for the full list.
 Examples: $ textclean empty-lines src/ $ textclean lines -p TODO -p FIXME .
 Command-line script: run ``python textclean.py`` or the ``textclean`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor

@@ -2,7 +2,7 @@
 """Copy the installed packages into a wheel-like directory structure.
 Finds the packages of the active environment (or of the local scan, ``--skip-scan``), copies their files plus the dist-info metadata into ``~/tmp/repack`` and reports the packages it could not find.
 Usage: repacopy [-o OUTDIR] [-v] [--skip-scan] Options: --output, -o Output directory (default: ~/tmp/repack) --verbose, -v Enable verbose output --skip-scan Skip local scan and use current active environment only Examples: $ repacopy -o ~/tmp/repack Command-line script: run ``python repacopy.py`` or the ``repacopy`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

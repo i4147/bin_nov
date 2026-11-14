@@ -4,7 +4,7 @@ Removes the comment nodes (keeping the shebang), verifies with ast that the resu
 Usage: armc [paths ...] Positional arguments: paths ...
 Files or directories to scan (defaults to recursively checking current directory).
 Examples: $ armc src/ Command-line script: run ``python armc.py`` or the ``armc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

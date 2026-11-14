@@ -2,7 +2,7 @@
 """Benchmark the comment/docstring stripper of ``rmc3`` on a tree of Python files.
 Copies the discovered sources into a temporary directory, runs the ``rmc3`` transform pipeline over the copies with ``MAX_WORKERS`` processes and prints files/s, MiB/s and the error count, so the throughput of the cleaner can be measured without touching the originals.
 Usage: benchrmc [PATH] Positional arguments: path Examples: $ benchrmc ~/code/bin Command-line script: run ``python benchrmc.py`` or the ``benchrmc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

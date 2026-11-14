@@ -23,7 +23,7 @@ Default: auto-generated with timestamp.
 --git-email ...
 plus 1 more; run ``gh_repo --help`` for the full list.
 Examples: $ gh_repo api-push myproject --private Command-line script: run ``python gh_repo.py`` or the ``gh_repo`` command.
-The module is importable as well."""
+"""
 
 
 

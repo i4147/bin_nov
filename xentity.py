@@ -3,7 +3,7 @@
 Parses Python with ast, libcst or tree-sitter (``--backend``), classifies every top-level definition and writes the groups into ``output/`` as ``const.py``, ``classes.py``, ``funcs.py`` and ``imports.py``; the ``--const``/``--class``/``--function``/``--import`` flags restrict the kinds that are extracted.
 Usage: xentity [paths ...] [-b auto|ast|libcst|tree-sitter] Positional arguments: paths ...
 Options: -b, --backend --const --class --function --import Examples: $ xentity src/ --function --class Command-line script: run ``python xentity.py`` or the ``xentity`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

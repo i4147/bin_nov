@@ -2,7 +2,7 @@
 """Browse the module docstrings of a directory in a paged Markdown view.
 Extracts the docstring of each ``.py`` file with ast, renders the documents with rich and pages through them with the space/arrow keys, ``n``/``p`` for the next or previous file and ``q`` to quit.
 Usage: dostring_browser [directory] Positional arguments: directory Directory to scan for .py files (default: current directory) Examples: $ dostring_browser ~/bin Command-line script: run ``python dostring_browser.py`` or the ``dostring_browser`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

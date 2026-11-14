@@ -2,7 +2,7 @@
 """Group the subdirectories of the current directory into N similarly sized parts.
 Measures each subdirectory, sorts them by size, packs them greedily into ``-n`` balanced ``group_*`` folders and moves them there, printing the resulting distribution.
 Usage: group_by_size [-n PARTS] Options: -n, --parts Number of parts/groups to create (default: 3) Examples: $ group_by_size -n 4 Command-line script: run ``python group_by_size.py`` or the ``group_by_size`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

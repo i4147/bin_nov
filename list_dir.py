@@ -5,7 +5,7 @@ Usage: list_dir {stems,dirs,ls} [options] [directory] Positional arguments: dire
 Subcommands: stems Print file stems, truncated at the first '-' dirs Print directory names prefixed with '-' ls List directory contents Options: --sep Separator (default: 3 spaces) -R, --recursive Recurse into subdirectories (files only) --tree Print a tree -l, --long Long listing --json JSON output --git Annotate entries with git status flags --icons Prefix icons -a, --all Include dotfiles --exclude-cache Skip .git/__pycache__/.mypy_cache/.ruff_cache --sort-by ...
 plus 6 more; run ``list_dir --help`` for the full list.
 Examples: $ list_dir ls -l $ list_dir ls --tree --icons ~/bin Command-line script: run ``python list_dir.py`` or the ``list_dir`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass

@@ -2,7 +2,7 @@
 """Keep the newest package files and filter the ARMv7 wheel URLs to the latest versions.
 The ``urls`` subcommand parses the wheel URLs and keeps the newest Android/linux-arm build of each package, ``clean`` deletes the older wheel/deb/tar.gz files of a directory (``--dry-run`` previews, ``--backup-dir`` moves them) and ``metadata`` prunes the older ``.metadata`` files.
 Usage: klv {urls,clean,metadata} [options] [input] Positional arguments: input Input file or URL directory Directory to scan Subcommands: urls Filter latest ARMv7 wheels from URL list clean Keep latest package files in a directory metadata Keep latest .metadata files in a directory Options: --output, -o Output file to save URLs --download Generate download script --arm-keywords Architecture keywords to keep --type, -t Package type to clean --dry-run Simulate deletion --dir Directory to scan --verbose Show detailed information --recursive Scan recursively --backup-dir Move old files to backup directory --batch-size Batch size Examples: $ klv urls urls.txt -o arm_latest.txt $ klv clean --type whl --dry-run Command-line script: run ``python klv.py`` or the ``klv`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

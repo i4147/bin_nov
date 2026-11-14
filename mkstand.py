@@ -3,7 +3,7 @@
 Inlines the local and remote stylesheets, rewrites the ``url(...)`` references as data URIs, embeds the images as base64 and writes the self-contained ``.html``/``.css`` files, fetching the remote resources with a 20-second timeout in a small pool.
 Usage: mkstand [paths ...] Positional arguments: paths ...
 Files or directories to process (default: current directory) Examples: $ mkstand dist/ Command-line script: run ``python mkstand.py`` or the ``mkstand`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import base64

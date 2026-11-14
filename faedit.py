@@ -2,7 +2,7 @@
 """Edit Persian text with a live ``faprint`` preview.
 Opens the file in urwid, curses, prompt_toolkit or textual (``-b``), shows the reshaped Persian rendering of the lines around the cursor and saves and quits with Ctrl+Q.
 Usage: faedit FILE [-b urwid|curses|prompt_toolkit|textual] Positional arguments: file Options: -b, --backend Examples: $ faedit notes.txt -b textual Command-line script: run ``python faedit.py`` or the ``faedit`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import os

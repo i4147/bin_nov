@@ -3,7 +3,7 @@
 Parses each module of the package, collects the public functions, classes and constants (honouring an existing ``__all__``), writes the ``from .module import name`` block within the line limit and skips private or excluded names.
 ``--recursive`` descends into sub-packages, ``--check``/``--dry-run`` only report.
 Usage: mkinit [path] [-r] [--check] [--dry-run] [-e PATTERN] Positional arguments: path Options: -r, --recursive -n, --dry-run --check -e, --exclude --no-constants --upper-only --ignore-all Examples: $ mkinit pkg/ -r $ mkinit pkg/ --check Command-line script: run ``python mkinit.py`` or the ``mkinit`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

@@ -20,7 +20,7 @@ Default: tesseract default (pyocr.py behaviour).
 ...
 plus 3 more; run ``ocrtools --help`` for the full list.
 Examples: $ ocrtools ocr scans/ -l eng -j $ ocrtools grid-search page.png Command-line script: run ``python ocrtools.py`` or the ``ocrtools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import csv

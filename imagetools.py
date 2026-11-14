@@ -21,7 +21,7 @@ Options: -r, --recursive Recurse into subdirectories (default).
 ...
 plus 8 more; run ``imagetools --help`` for the full list.
 Examples: $ imagetools to-jpg --quality 90 photos/ $ imagetools html-to-png page.html Command-line script: run ``python imagetools.py`` or the ``imagetools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed

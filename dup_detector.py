@@ -4,7 +4,7 @@ Hashes the top-level definitions, writes the exact duplicate JSON report, with `
 Usage: dup_detector [-r] [-f] Options: -r, --refactor Move duplicates with >5 appearances to utils.py and update imports.
 -f, --fuzzy Generate a report for objects with >50% similarity using ssdeep and rapidfuzz.
 Examples: $ dup_detector -f Command-line script: run ``python dup_detector.py`` or the ``dup_detector`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

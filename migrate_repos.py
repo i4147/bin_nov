@@ -6,7 +6,7 @@ Without this flag the script is dry-run only.
 --skip-ssh Skip SSH key generation and old-key removal steps.
 --skip-files Skip the home-directory file scan/replace step.
 Examples: $ migrate_repos --skip-ssh --apply Command-line script: run ``python migrate_repos.py`` or the ``migrate_repos`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from datetime import datetime

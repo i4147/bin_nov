@@ -19,7 +19,7 @@ Options: -v, --verbose Enable debug logging.
 ...
 plus 5 more; run ``pyfmt --help`` for the full list.
 Examples: $ pyfmt format --tool prettier dist/ $ pyfmt list-large --min-size-mb 2 Command-line script: run ``python pyfmt.py`` or the ``pyfmt`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Callable, Iterable, Sequence

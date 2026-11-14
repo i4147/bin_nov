@@ -2,7 +2,7 @@
 """CSS merger and minifier.
 The ``join`` subcommand concatenates the CSS files of the given directories into one file and rewrites the Google-Fonts imports and the remote ``@font-face`` URLs to ``--font-dir``, ``minify`` runs the ``cleancss`` utility at the requested ``-l`` optimisation level.
 Usage: merge_css {join,minify} [-i INPUT] [-o OUTPUT] [--font-dir DIR] Subcommands: join Join CSS files and rewrite font URLs minify Minify CSS files using 'cleancss' utility Options: -i, --input Input directories or CSS files -o, --output Output file path --font-dir Local path to rewrite external fonts to -l, --level Optimization level (e.g., 2 for -O2) Examples: $ merge_css join -i static/css -o bundle.css --font-dir fonts/ $ merge_css minify -i bundle.css -l 2 Command-line script: run ``python merge_css.py`` or the ``merge_css`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

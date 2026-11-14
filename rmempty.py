@@ -1,11 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/env python
-"""Delete the empty files below the current directory.
-Collects the zero-byte files (``__init__.py`` excluded), lists them and removes them, printing how many were deleted and how many failed.
-Usage: rmempty Examples: $ rmempty Runs as a script (``python rmempty.py``) in the directory it should act on; the module can also be imported.
-"""
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 from dh import cprint, get_files
 
@@ -23,25 +19,40 @@ def wait_for_keypress(timeout: float) -> bool:
     return False
 
 
+def _size(p: Path) -> int:
+    try:
+        return p.stat().st_size
+    except OSError:
+        return -1
+
+
 def main() -> int:
     cwd = Path.cwd()
     zeroto100 = "-z" in sys.argv
     files = get_files(cwd)
-    empty_files = [p for p in files if p.stat().st_size == 0 and p.name != "__init__.py"]
-    found = len(empty_files)
-    if not found:
-        cprint("no empty files found", "cyan")
-        sys.exit(0)
-    cprint(f"{found} empty files found.", "cyan")
-    for empty_file in empty_files:
-        cprint(f"    - {empty_file.relative_to(cwd)}", "yellow")
-        empty_file.unlink()
 
+    empty_files: list[Path] = [p for p in files if p.name != "__init__.py" and _size(p) == 0]
+
+    small_files: list[Path] = []
     if zeroto100:
-        small_files = [p for p in files if p.stat().st_size and p.stat().st_size < 100]
-    for f in small_files:
-        cprint(f"    - {f.relative_to(cwd)}", "blue")
-        f.unlink()
+        small_files = [p for p in files if p.name != "__init__.py" and 0 < _size(p) < 100]
+
+    if not empty_files and not small_files:
+        cprint("no empty or small files found", "cyan")
+        return 0
+
+    if empty_files:
+        cprint(f"{len(empty_files)} empty files found.", "cyan")
+        for f in empty_files:
+            cprint(f"    - {f.relative_to(cwd)}", "yellow")
+            f.unlink()
+
+    if small_files:
+        cprint(f"{len(small_files)} small files (<100 bytes) found.", "cyan")
+        for f in small_files:
+            cprint(f"    - {f.relative_to(cwd)}", "blue")
+            f.unlink()
+
     return 0
 
 

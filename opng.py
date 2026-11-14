@@ -9,7 +9,7 @@ Options: -q, --quiet Do not print optipng's own stdout/stderr; only summary line
 --optipng Path to the optipng executable (default: search PATH).
 --optipng-arg Extra argument to pass to optipng; may be repeated.
 --timeout Examples: $ opng assets/ -o 7 --strip Command-line script: run ``python opng.py`` or the ``opng`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Iterator, Sequence

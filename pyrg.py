@@ -9,7 +9,7 @@ Does NOT modify files.
 -n, --line-number ...
 plus 28 more; run ``pyrg --help`` for the full list.
 Examples: $ pyrg 'def main' -t py -i $ pyrg TODO -e md --replace 'DONE' Command-line script: run ``python pyrg.py`` or the ``pyrg`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import bisect

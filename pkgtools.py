@@ -23,7 +23,7 @@ Options: -v, --verbose Enable debug logging (for subcommands that use it).
 ...
 plus 8 more; run ``pkgtools --help`` for the full list.
 Examples: $ pkgtools site-copy requests --dest ~/tmp/packages Command-line script: run ``python pkgtools.py`` or the ``pkgtools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import concurrent.futures

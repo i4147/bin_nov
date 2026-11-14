@@ -5,7 +5,7 @@ Usage: xpy_entities {extract,nodes,sexpr,funcnames,constants} [paths ...] Positi
 Files or directories (default: cwd) file Subcommands: extract Extract entities from files/dirs/archives nodes Extract tree-sitter node bodies sexpr Print tree-sitter S-expression funcnames List function names in a file constants Extract module-level UPPER_CASE constants Options: --backend Parsing backend (default: ast) --layout Output directory layout (default: by-type) --format Output format (default: py) --kinds Comma-separated entity types to keep --scope 'all' records methods + nested; 'top-level' only module level -o, --output Output directory (default: ./output) --db-path SQLite path for --format db --global-imports Also write output/global_imports.py --archives Also scan .zip/.whl/.tar/.tar.gz/.tar.zst archives --toc Also write TOC.txt summarising extracted entities ...
 plus 2 more; run ``xpy_entities --help`` for the full list.
 Examples: $ xpy_entities extract src/ --backend libcst Command-line script: run ``python xpy_entities.py`` or the ``xpy_entities`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

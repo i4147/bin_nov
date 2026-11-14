@@ -2,7 +2,7 @@
 """Rename the files and directories by removing, replacing or templating their names.
 ``-r STRING`` removes a substring, ``-s OLD NEW`` replaces one and ``-t TEMPLATE`` renames with sequential numbering; ``--recursive`` descends the tree and ``--dry-run`` previews.
 Usage: pnr [-r STR | -s OLD NEW | -t TEMPLATE] [--recursive] [--dry-run] Options: -r, --remove Remove specified string from file and directory names -s, --replace Replace STR1 with STR2 in file and directory names -t, --template Rename files using template with sequential numbering --dry-run Show what would be renamed without actually doing it --recursive Process directories recursively Examples: $ pnr -s IMG photo --recursive --dry-run Command-line script: run ``python pnr.py`` or the ``pnr`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

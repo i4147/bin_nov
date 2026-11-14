@@ -5,7 +5,7 @@ The large files are read through an mmap.
 Usage: file_cleanup {analyze,sort-dedupe,dedupe-seq,drop-same-char,dedupe-json} [options] Positional arguments: file Text file to analyze Subcommands: analyze Show line statistics for a text file sort-dedupe Sort and/or remove duplicate lines in a text file dedupe-seq Remove sequential (adjacent) duplicate lines drop-same-char Remove lines made of a single repeated character dedupe-json Deduplicate a JSON list of dicts Options: --encoding -o, --output Output file (default: overwrite input) --sort Sort lines (default: on) --no-sort Do not sort lines --unique Remove duplicate lines (default: on) --no-unique Do not remove duplicates -r, --reverse Sort in reverse order -i, --case-insensitive Case-insensitive sorting --skip-empty Skip empty lines when reading --start-line 1-based first line of the range to process (soniq.py) ...
 plus 13 more; run ``file_cleanup --help`` for the full list.
 Examples: $ file_cleanup sort-dedupe words.txt $ file_cleanup drop-same-char notes.txt Command-line script: run ``python file_cleanup.py`` or the ``file_cleanup`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import Counter

@@ -2,7 +2,7 @@
 """Translate a text file in independently resumable chunks with many backends.
 Supports DeepL, deep_translator, translate, Bing, googletrans, pygoogletranslation, boto3, Azure, Baidu, Alibaba and Watson, maps the language codes per backend, atomically saves the chunk results, skips the identity translations and logs to a rotating file.
 Usage: dt3 -i input.txt -o out.json [-s auto] [-t en] [-b BACKEND] Options: -i, --input -o, --output --failed -s, --source -t, --target -b, --backend -d, --delay --chunk-size --save-every --no-continue Examples: $ dt3 -i article.txt -o article.json -t en Command-line script: run ``python dt3.py`` or the ``dt3`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed

@@ -6,7 +6,7 @@ Options: -s, --save Save the report to a file named .dirinfo in the current dire
 -i, --image Save a Matplotlib bar chart of file types and sizes to the specified image file (e.g., chart.png).
 -t, --type Specify the language/type of the Matplotlib chart title and labels (default: english).
 Examples: $ dirinfo -i chart.png ~/projects Command-line script: run ``python dirinfo.py`` or the ``dirinfo`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

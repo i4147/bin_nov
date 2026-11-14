@@ -2,7 +2,7 @@
 """Reinstall the pure-Python packages, or the packages of a list.
 Collects the installed pure-Python distributions (or parses ``-f`` package file), processes them in batches of ten and reinstalls each with ``pip --force-reinstall --no-deps``, reporting the failures.
 Usage: pip_reinstaller [-f requirements.txt] Options: -f, --file Path to a package list file (e.g., requirements.txt) Examples: $ pip_reinstaller -f requirements.txt Command-line script: run ``python pip_reinstaller.py`` or the ``pip_reinstaller`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import importlib.metadata

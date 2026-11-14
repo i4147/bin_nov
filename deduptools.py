@@ -18,7 +18,7 @@ Options: --dup-file Name of the archive file written next to FILE (default: dup_
 --input-dir Directory to scan (default: .).
 --output-dir Output package directory (default: output).
 Examples: $ deduptools ast src/ --output utils.py $ deduptools const script.py Command-line script: run ``python deduptools.py`` or the ``deduptools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

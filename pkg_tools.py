@@ -29,7 +29,7 @@ Options: -y, --no-confirm Skip the confirmation prompt.
 ...
 plus 17 more; run ``pkg_tools --help`` for the full list.
 Examples: $ pkg_tools wheel-install --dir ~/wheels $ pkg_tools pip-uninstall requests Command-line script: run ``python pkg_tools.py`` or the ``pkg_tools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor

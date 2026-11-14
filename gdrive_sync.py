@@ -13,7 +13,7 @@ Default: installed.
 --sanitize Replace filesystem-unsafe characters in names.
 --force Re-download files even if they look up to date.
 Examples: $ gdrive_sync sync --folder Documents --dest ./backup Command-line script: run ``python gdrive_sync.py`` or the ``gdrive_sync`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from datetime import datetime

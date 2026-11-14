@@ -5,7 +5,7 @@ Usage: addel [repo] [--revision RANGE] [--mode diff-tree|walk] [--json PATH] Pos
 plus 3 more; run ``addel --help`` for the full list.
 Examples: $ addel .
 --json ledger.json Command-line script: run ``python addel.py`` or the ``addel`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import Counter

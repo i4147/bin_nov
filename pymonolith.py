@@ -3,7 +3,7 @@
 Fetches the URL (or reads the local file), inlines the stylesheets and scripts, rewrites the ``url(...)`` references as data URIs, keeps the fonts and images inside the page and writes the archive to ``-o`` (with ``-t`` timeout and ``-e`` for the ignored errors).
 Usage: pymonolith SOURCE [-o OUT.html] [-t TIMEOUT] Positional arguments: source URL or local file path of the page to archive Options: -o, --output Output file path (default: stdout) -t, --timeout HTTP request timeout in seconds -e, --ignore-errors Ignore unreachable sub-resources and continue -i, --no-images Strip all <img> elements from the output --encoding Text encoding used for output and local files --css-mode How to embed <link rel=stylesheet>: 'inline' -> <style> block (monolithei); 'data-uri' -> href=data:...
 (pymonolith) --prettify Pretty-print the resulting HTML (pymonolith default) --no-meta-charset Do NOT inject/overwrite <meta charset=...> (pymonolith default) --user-agent User-Agent header to send with requests Examples: $ pymonolith https://example.com -o example.html Command-line script: run ``python pymonolith.py`` or the ``pymonolith`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import base64

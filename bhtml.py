@@ -5,7 +5,7 @@ Usage: bhtml [options] [paths ...] Positional arguments: paths ...
 Files or directories to process Options: --ext Extra file suffix to include (repeatable), e.g.
 --ext .vue -q, --quiet Only log warnings and errors.
 Examples: $ bhtml --ext .vue templates/ Command-line script: run ``python bhtml.py`` or the ``bhtml`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed

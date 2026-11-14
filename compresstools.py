@@ -2,7 +2,7 @@
 """Compress or decompress files and folders with seven codecs.
 Picks the algorithm with the flags (``-z`` zstd, ``-x`` xz, ``-7`` 7z, ``-g`` gzip, ``-b`` bz2, ``-r`` brotli, ``-l`` lz4), compresses the single files in memory or in chunks and the folders asynchronously, and ``-d`` decompresses the archives again.
 Usage: compresstools [-z|-x|-7|-g|-b|-r|-l] [-d] [paths ...] Options: -z, --zstd Use Zstandard compression -x, --xz Use XZ/LZMA compression -7, --7z Use 7-Zip compression -g, --gzip Use Gzip compression -b, --bz2 Use Bzip2 compression -r, --brotli Use Brotli compression -l, --lz4 Use LZ4 compression -d, --decompress Decompress files Examples: $ compresstools -z big.log $ compresstools -x -d big.log.xz Command-line script: run ``python compresstools.py`` or the ``compresstools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import asyncio

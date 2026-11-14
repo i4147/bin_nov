@@ -5,7 +5,7 @@ Usage: mhtm [paths ...] [-b BACKEND] [--pool-method MAP] Positional arguments: p
 Files or directories to process.
 Defaults to the current directory, recursively.
 Options: -b, --backend --pool-method Examples: $ mhtm dist/ Command-line script: run ``python mhtm.py`` or the ``mhtm`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Callable, Generator, Iterable

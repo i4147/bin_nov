@@ -2,7 +2,7 @@
 """Extract the subtitle streams embedded in a video with ffmpeg/ffprobe.
 Subcommands: ``extract`` writes every subtitle stream, ``first`` only the first one as ``<video>.srt`` and ``list`` prints the streams without extracting; the ``--naming`` scheme (indexed, rich or codec) controls the file names and ``--check-ffmpeg`` verifies the tools first.
 Usage: pyxsrt {extract,first,list} VIDEO [-o OUTDIR] [--naming indexed|rich|codec] Positional arguments: video Video file containing subtitle streams Subcommands: extract Extract all subtitle streams first Extract one subtitle stream to <video>.srt list List subtitle streams without extracting Options: --check-ffmpeg Run 'ffmpeg -version' first and abort if missing (exsrt2.py behaviour) --no-overwrite Omit -y so ffmpeg prompts before overwriting existing files (exsrt.py behaviour) -o, --output-dir Output directory (default: video's directory; xsub.py used 'subtitles') --naming Output naming scheme: indexed=stem.sub<i>.<lang>.srt, rich=stem.sub<abs>.<lang>.<Title>.forced.srt, codec=stem.<lang>[.<Title>].<srt|codec> (default: indexed) --on-error Abort at first ffmpeg failure or continue with the next stream (default: abort) --verbose Also print raw and parsed stream details (exsrt3.py behaviour) -o, --output Output .srt path (default: <video>.srt) -n, --stream-index Subtitle stream to map, as 0:s:N (default: 0) Examples: $ pyxsrt list movie.mkv $ pyxsrt extract movie.mkv -o subs/ Command-line script: run ``python pyxsrt.py`` or the ``pyxsrt`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass

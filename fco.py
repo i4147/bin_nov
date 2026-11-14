@@ -5,7 +5,7 @@ Usage: fco [fonts ...] --to ttf|otf|woff|woff2 [-r] [-o OUTDIR] Positional argum
 Input font files or directories (default: current directory, recursive) Options: --to, -t -r, --remove Remove original file after successful conversion -o, --output-dir Output directory (default: alongside each input) -f, --force Overwrite existing output files --dry-run List files that would be converted without converting -v, --verbose Enable verbose (DEBUG) logging --allow-outline-mismatch Allow TTF↔OTF conversions even when outlines do not match the target convention.
 This writes a non-standard font and only changes the sfnt version; outlines are NOT converted.
 Examples: $ fco fonts/*.ttf --to woff2 Command-line script: run ``python fco.py`` or the ``fco`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

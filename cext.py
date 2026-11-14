@@ -2,7 +2,7 @@
 """Extract the functions, classes and constants of Python files and archives.
 Parses the sources with ast or tree-sitter, collects the module-level uppercase constants, writes each entity into a per-type output folder with the imports it needs and a ``global_imports`` module, and also reads the ``.py`` members of zip, wheel, tar and zstd archives in a worker pool.
 Usage: cext [-d DIR] [-t] Options: -t, --tmp Write output to ~/tmp/output/ instead of ./output/ -d, --dir Root directory to scan (default: current directory) Examples: $ cext -d src/ Command-line script: run ``python cext.py`` or the ``cext`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

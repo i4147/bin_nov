@@ -2,7 +2,7 @@
 """Extract the keys of a JSON document into a text file.
 Recurses through the objects and the lists, writes the keys one per line to ``keys.txt`` (or ``-o``) and can sort them (``-s``) and keep only the unique ones (``-u``).
 Usage: getkeys INPUT.json [-o keys.txt] [-s] [-u] Positional arguments: input Path to input JSON file Options: -o, --output Output text file (default: keys.txt) -s, --sort Sort keys alphabetically before writing -u, --unique Write only unique keys Examples: $ getkeys data.json -s -u Command-line script: run ``python getkeys.py`` or the ``getkeys`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import json

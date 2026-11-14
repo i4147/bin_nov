@@ -20,7 +20,7 @@ Options: --root Directory to scan recursively (default: cwd).
 --to Restrict direction when scanning directories.
 -v, --verbose -q, --quiet --legacy-percent Reproduce the original buggy '*40' percent display.
 Examples: $ artools tar-codec xz --root dist/ Command-line script: run ``python artools.py`` or the ``artools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import bz2

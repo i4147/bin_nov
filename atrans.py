@@ -2,7 +2,7 @@
 """Translate a word list into a JSON mapping.
 Reads one word per line, translates each of them with ``translate``, ``deep_translator`` or ``googletrans`` (falling back automatically), retries the failures, throttles the requests, saves the output periodically and collects the words that kept failing in ``failed.txt``.
 Usage: atrans [-i words.txt] [-o words.json] [-s fr] [-t en] Options: -i, --input Input file with one word per line (default: words.txt) -o, --output Output JSON file (default: words.json) --failed File collecting words that failed all retries (default: failed.txt) -s, --source Source language code (default: fr) -t, --target Target language code (default: en) -b, --backend Preferred translation backend (default: translate); falls back automatically if unusable -d, --delay Delay in seconds between requests per worker (default: 0.3) --save-every Save the output file every N words (default: 100) --no-continue Do not resume from a previous job; start from scratch Examples: $ atrans -i words.txt -o words.json Command-line script: run ``python atrans.py`` or the ``atrans`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed

@@ -2,7 +2,7 @@
 """Extract the links of a web page and save them to files.
 Fetches the URL with a browser-like session, parses the ``href``/``src`` attributes with BeautifulSoup, splits the internal and the external links and writes both lists to the current directory.
 Usage: exurls URL Positional arguments: url Target URL Examples: $ exurls https://example.com Command-line script: run ``python exurls.py`` or the ``exurls`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

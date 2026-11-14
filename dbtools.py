@@ -26,7 +26,7 @@ Options: --db Target SQLite database.
 ...
 plus 12 more; run ``dbtools --help`` for the full list.
 Examples: $ dbtools add-files --db files.db --table docs Command-line script: run ``python dbtools.py`` or the ``dbtools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import base64

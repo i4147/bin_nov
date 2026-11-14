@@ -14,7 +14,7 @@ Options: --html_path --pdf_path --summary_path --output_path --check-titles Base
 -o, --output --directory --output-subdir --dpi ...
 plus 6 more; run ``pdftools2 --help`` for the full list.
 Examples: $ pdftools2 outline --summary_path SUMMARY.md --pdf_path book.pdf $ pdftools2 shrink --engine gs-screen book.pdf Command-line script: run ``python pdftools2.py`` or the ``pdftools2`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor

@@ -19,7 +19,7 @@ Repeat for multiple names.
 ...
 plus 6 more; run ``fuzzy_dedup --help`` for the full list.
 Examples: $ fuzzy_dedup scan 80 --root ~/photos Command-line script: run ``python fuzzy_dedup.py`` or the ``fuzzy_dedup`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

@@ -6,7 +6,7 @@ Options: --token GitHub personal access token (increases rate limit).
 -d, --depth Perform a shallow clone with depth 1.
 Without this flag the full history is cloned.
 -b, --backend Examples: $ g1 psf/requests -d Command-line script: run ``python g1.py`` or the ``g1`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

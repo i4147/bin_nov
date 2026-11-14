@@ -2,7 +2,7 @@
 """Remove the comments from source files with tree-sitter, keeping the licences.
 Supports many languages through per-language grammars, preserves the copyright headers, the SPDX lines and the lint directives (also the CGo preamble in Go files), validates each result before writing and offers ``--backup``, ``--dry-run``, ``--verbose``, a pool method and a log file.
 Usage: uncomment [options] [root] Positional arguments: root Options: -b, --backup -n, --dry-run -v, --verbose --pool-method --chunksize --max-size --skip-dir --log-file Examples: $ uncomment -n -v src/ Command-line script: run ``python uncomment.py`` or the ``uncomment`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import Counter

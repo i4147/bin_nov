@@ -2,7 +2,7 @@
 """Extract the keys or the values of a JSON file into a text file.
 Flattens the nested document, writes one key (or one value) per line to ``keys.txt``/``values.txt`` or to ``-o``, sorts them with ``--sort`` and deduplicates the result.
 Usage: get_keys INPUT.json [-k|-v] [-o OUT.txt] [--sort] Positional arguments: input Path to input JSON file Options: -o, --output Output text file (default: keys.txt or values.txt) -k, --keys Extract keys to keys.txt (default) -v, --values Extract values to values.txt --sort Sort output lines Examples: $ get_keys data.json --values --sort Command-line script: run ``python get_keys.py`` or the ``get_keys`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import json

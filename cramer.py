@@ -3,7 +3,7 @@
 Takes a file or a folder, compresses every match (or decompresses the ``.sz``/``.lz4``/``.gz`` files again) with the chosen algorithm, guessing the algorithm from the extension when decompressing.
 ``--keep`` preserves the originals and ``--skip-existing`` avoids overwriting earlier output.
 Usage: cramer PATH [--compress|--decompress] [--algo snappy|lz4|gzip] Positional arguments: path File or folder to process Options: -c, --compress Compress files (default) -d, --decompress Decompress files -a, --algo -k, --keep Keep the original files --dry-run Show what would happen, don't write or delete --skip-existing Skip files whose output already exists Examples: $ cramer data/ --algo lz4 $ cramer data/ --decompress Command-line script: run ``python cramer.py`` or the ``cramer`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

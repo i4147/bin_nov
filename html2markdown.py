@@ -3,7 +3,7 @@
 Subcommands: ``to-md`` converts with an external ``htm2md``, ``html_to_markdown``, pandoc or ``readability`` and can remove the originals, ``to-text`` strips the tags with the stdlib parser and ``fetch`` downloads a URL as text (optionally rendering the JS with pyppeteer and taking a screenshot).
 Usage: html2markdown {to-md,to-text,fetch} [options] [paths ...] Positional arguments: paths ...
 Files or dirs (default: .) url Subcommands: to-md Convert HTML files to Markdown to-text Strip HTML tags to plain text (stdlib) fetch Fetch a URL as text Options: --engine --command External converter (htm2md default) --main-content Readability-extract first (needs readability-lxml) --keep-forms Keep <form> (html_to_markdown engine) -r, --remove-original Delete HTML after success --no-recursive -o, --out-dir Output dir (default: beside source) -o, --output --render Render JS with pyppeteer --screenshot With --render, save a PNG here Examples: $ html2markdown to-md --main-content pages/ $ html2markdown fetch https://example.com -o page.txt Command-line script: run ``python html2markdown.py`` or the ``html2markdown`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

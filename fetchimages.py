@@ -3,7 +3,7 @@
 Breadth-first crawls the pages of the same host (``--all-hosts`` opens it up), bounded by ``--max-pages`` and ``--max-depth``, and saves every image into ``downloads`` (``-o``) under a sanitised name with dedup by content hash.
 Usage: fetchimages URL [-o DIR] [--max-pages N] [--max-depth N] Positional arguments: url Starting URL, e.g.
 https://example.com/ Options: -o, --output Output directory (default: ./downloads) --max-pages Maximum number of HTML pages to crawl --max-depth Maximum link-following depth --all-hosts Follow links to external hosts too --timeout Per-request timeout in seconds Examples: $ fetchimages https://example.com --max-pages 50 Command-line script: run ``python fetchimages.py`` or the ``fetchimages`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import deque

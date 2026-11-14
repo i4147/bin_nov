@@ -4,7 +4,7 @@ Tokenizes each module, detects backslash sequences that are not valid escapes an
 ``--dry-run`` reports the files without writing, ``--quiet`` hides the per-file lines.
 Usage: fix_escape_sequence [options] [paths ...] Positional arguments: paths ...
 Options: -n, --dry-run -q, --quiet Examples: $ fix_escape_sequence src/ --dry-run Command-line script: run ``python fix_escape_sequence.py`` or the ``fix_escape_sequence`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import io

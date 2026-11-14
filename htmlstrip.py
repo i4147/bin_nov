@@ -6,7 +6,7 @@ script, style, iframe) directory Root directory (default: .) file File to proces
 meta Remove <meta ...> tags via regex (rmeta.py).
 all Strip every <...> tag from one file (strip_tags.py).
 Options: --extensions --pattern -w, --write Write changes in place (default: dry-run) --preserve-marker Substring; any line containing it is kept verbatim (repeatable; default: '<:' and '>:') Examples: $ htmlstrip tag script pages/ -w $ htmlstrip all page.html Command-line script: run ``python htmlstrip.py`` or the ``htmlstrip`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

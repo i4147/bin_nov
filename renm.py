@@ -5,7 +5,7 @@ Detects names that contain non-ASCII characters, translates the stem with ``deep
 Usage: renm [--directory DIR] [--pool-method map|starmap|imap_unordered|apply_async] Options: --directory Directory to scan and rename.
 --pool-method Multiprocessing pool method to use for translation.
 Examples: $ renm --directory ~/downloads Command-line script: run ``python renm.py`` or the ``renm`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Iterator, Sequence

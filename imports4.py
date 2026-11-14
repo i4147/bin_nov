@@ -5,7 +5,7 @@ Parses the Python files and notebooks of the target tree, maps the imported modu
 Usage: imports4 [-p PATH] [--pin] [--stdout] [--dry-run] Options: -p, --path Path to target directory --python Python interpreter to query pip from --proxy HTTP(S) proxy for PyPI --pin --exclude --include --ignore-dir --ignore-file --include-optional --keep-installed ...
 plus 5 more; run ``imports4 --help`` for the full list.
 Examples: $ imports4 -p ~/project --pin $ imports4 --stdout > requirements.txt Command-line script: run ``python imports4.py`` or the ``imports4`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

@@ -3,7 +3,7 @@
 Rewrites the regex patterns and the string literals that should be raw, doubles the invalid escapes, fixes the non-ASCII bytes and the ``is`` comparisons with literals (``--no-is`` skips that); ``--check`` makes it a CI gate, ``--diff``/``--backup``/``--dry-run`` control the output.
 Usage: pyenhance [options] [paths ...] Positional arguments: paths ...
 Files or directories (default: current directory, recursive) Options: -s, --select --no-is Do not rewrite `is` comparisons with literals -n, --dry-run Report only, write nothing --check Report only; exit 1 if any file needs fixes (for CI / pre-commit) --diff Print a unified diff for each changed file --backup Keep a .bak copy of each changed file -e, --exclude Directory name to skip (repeatable) Examples: $ pyenhance --check src/ $ pyenhance -s escape --diff src/ Command-line script: run ``python pyenhance.py`` or the ``pyenhance`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

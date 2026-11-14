@@ -4,7 +4,7 @@ Extracts the functions, classes and constants with ast (archives and compressed 
 Usage: pydeduper {report,copy,move} [--dir DIR] [--min-occurs N] Subcommands: report Show duplicate groups without modifying anything copy Copy one representative of each duplicate group into utils/ move Copy into utils/ and patch the originals with imports Options: --dir Root directory to scan (default: current directory) --min-occurs Minimum occurrences to count as duplicate (default: 2) --match-mode How to decide duplicates (default: content) --const-mode Which top-level Assign nodes count as constants (default: all) --no-archives Do not scan zip/tar archives or compressed files --utils-dir Output directory (default: <root>/utils) --func-file File name for functions inside utils/ (default: funcs.py) --class-file File name for classes inside utils/ (default: classes.py) --const-file File name for constants inside utils/ (default: const.py) --log-level Logging level (default: INFO) ...
 plus 2 more; run ``pydeduper --help`` for the full list.
 Examples: $ pydeduper report --dir src $ pydeduper move --min-occurs 3 Command-line script: run ``python pydeduper.py`` or the ``pydeduper`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

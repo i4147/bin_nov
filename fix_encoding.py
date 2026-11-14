@@ -4,7 +4,7 @@ Reads each text file through charset_normalizer/binaryornot, converts the non-UT
 Usage: fix_encoding [root] [-n] [-b] [--strip-bom] [-i GLOB] [-e GLOB] Positional arguments: root Options: -n, --dry-run -b, --backup --no-dos2unix --strip-bom -a, --assume-encoding -c, --candidates -x, --exclude-dir -i, --include -e, --exclude -m, --max-size ...
 plus 3 more; run ``fix_encoding --help`` for the full list.
 Examples: $ fix_encoding docs/ -n $ fix_encoding src/ -b Command-line script: run ``python fix_encoding.py`` or the ``fix_encoding`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import codecs

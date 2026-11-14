@@ -2,7 +2,7 @@
 """Detect the Chinese, Persian, Japanese and Korean text in files.
 Matches the CJK, kana, hangul and Arabic script ranges in the files below a directory (10 MB limit), reports the hits and with ``-c`` copies each file into ``~/tmp/langs/<lang>``; it is a dry run by default.
 Usage: detect_noneng [-c] [directory] Positional arguments: directory Root directory to scan (default: current dir) Options: -c, --copy Copy matched files into ~/tmp/langs/<lang>/ directories Examples: $ detect_noneng -c ~/downloads Command-line script: run ``python detect_noneng.py`` or the ``detect_noneng`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import as_completed

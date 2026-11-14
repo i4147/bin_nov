@@ -2,7 +2,7 @@
 """View a PDF in the terminal, rendered as an image.
 Renders the pages through an external ``pdftoppm``-style helper into PPM, draws them in the alternate screen with the ANSI colour blocks and lets you scroll, change the page and zoom (``-z``) with the keyboard.
 Usage: pdfv2 FILE.pdf [-p PAGE] [-z ZOOM] Positional arguments: file Path to the PDF file Options: -p, --page Page to open first (1-based, default 1) -z, --zoom Initial zoom factor (default 1.0) Examples: $ pdfv2 slides.pdf -z 1.5 Command-line script: run ``python pdfv2.py`` or the ``pdfv2`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

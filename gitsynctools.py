@@ -4,7 +4,7 @@ The ``commit``, ``push`` and ``sync`` subcommands stage the changes (optionally 
 Usage: gitsynctools {commit,push,sync} [options] Subcommands: commit push sync Options: --commit --allow-dirty --repo --search-parent --init-if-missing --remote-name --branch --message --message-prefix --add-mode ...
 plus 22 more; run ``gitsynctools --help`` for the full list.
 Examples: $ gitsynctools sync --message 'update' --set-upstream Command-line script: run ``python gitsynctools.py`` or the ``gitsynctools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

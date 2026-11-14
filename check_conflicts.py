@@ -3,7 +3,7 @@
 Compares the ``.py`` file stems of a directory with the standard-library module names and the packages listed in ``/sdcard/data/pip.json`` (``--installed-only`` limits it to the installed distributions), writes ``conflict_report.json`` and can rename the offenders with ``-a``.
 Usage: check_conflicts [-d DIR] [-a] [-i] [-o REPORT] Options: -a, --autofix Rename conflicting files by inserting '_N' before the extension -o, --output -d, --dir Directory to scan (default: current directory) -i, --installed-only Only report PyPI conflicts for packages installed in this interpreter (stdlib check is unaffected) Examples: $ check_conflicts -d .
 -a Command-line script: run ``python check_conflicts.py`` or the ``check_conflicts`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import json

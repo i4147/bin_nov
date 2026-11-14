@@ -3,7 +3,7 @@
 The ``tar`` and ``tgz`` subcommands both take a folder and write an archive next to it (or to ``--output``).
 ``--keep`` keeps the sources, while ``--cleanup-scope`` decides whether the folder itself or only its contents are removed afterwards.
 Usage: archive_dir {tar,tgz} FOLDER [options] Positional arguments: folder Subcommands: tar tgz Options: --output --keep --quiet --cleanup-scope Examples: $ archive_dir tgz photos --output photos.tar.gz Command-line script: run ``python archive_dir.py`` or the ``archive_dir`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import multiprocessing as mp

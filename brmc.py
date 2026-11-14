@@ -4,7 +4,7 @@ Removes the class and function docstrings with ast-driven source rewriting, vali
 Usage: brmc [paths ...] Positional arguments: targets ...
 Files or directories to process (default: current directory, recursive).
 Examples: $ brmc src/ Command-line script: run ``python brmc.py`` or the ``brmc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

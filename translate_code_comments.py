@@ -19,7 +19,7 @@ Options: --target Target language code; default: en.
 --dry-run Report changes without writing files.
 --max-chars Do not translate individual strings longer than this.
 Examples: $ translate_code_comments ast src/ --target en --dry-run Command-line script: run ``python translate_code_comments.py`` or the ``translate_code_comments`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

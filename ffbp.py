@@ -2,7 +2,7 @@
 """Small file utilities in one CLI.
 Subcommands: ``clean-bak`` deletes the ``.bak`` files recursively, ``extinfo`` counts the files and total size of an extension, ``find-scripts`` finds the Python scripts without an extension and ``prefix``/``search`` list the entries of the current directory by prefix or substring.
 Usage: ffbp {clean-bak,extinfo,find-scripts,prefix,search} [options] Positional arguments: extension File extension to scan for (e.g., 'py' or '.py') prefix Prefix string to match substring Substring to match in filenames Subcommands: clean-bak Recursively delete .bak files extinfo Get file count and total size for an extension find-scripts Find extensionless Python scripts recursively prefix List items in current directory starting with prefix search Search items in current directory containing substring Options: -s, --show-symlinks Include symlinks in the output Examples: $ ffbp extinfo py $ ffbp clean-bak Command-line script: run ``python ffbp.py`` or the ``ffbp`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

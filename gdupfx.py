@@ -7,7 +7,7 @@ Keeps 1 original per set.
 -l, --list List all duplicate file paths found in detail.
 -b, --benchmark Run speed benchmark comparing xxHash against hashlib.
 Examples: $ gdupfx ~/Downloads -l Command-line script: run ``python gdupfx.py`` or the ``gdupfx`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict
@@ -20,7 +20,7 @@ import sys
 import time
 from typing import Optional
 
-from dh import MAX_WORKERS, SKIP_DIRS
+from dh import MAX_WORKERS, SKIP_DIRS, fsz
 
 try:
     import xxhash
@@ -32,18 +32,6 @@ except ImportError:
     sys.exit(1)
 CHUNK_SIZE: int = 128 * 1024
 PARTIAL_SIZE: int = 8 * 1024
-
-
-def format_size(size_bytes: int) -> str:
-    if size_bytes == 0:
-        return "0 B"
-    units = ["B", "KB", "MB", "GB", "TB", "PB"]
-    i = 0
-    size = float(size_bytes)
-    while size >= 1024.0 and i < len(units) - 1:
-        size /= 1024.0
-        i += 1
-    return f"{size:.2f} {units[i]}"
 
 
 def get_partial_hash(filepath: str) -> tuple[str, Optional[str]]:
@@ -169,8 +157,8 @@ class Finder:
 
     def print_summary(self) -> None:
         print("\n=== Scan Complete ===")
-        print(f"Total files scanned: {self.total_files_count} ({format_size(self.total_files_size)})")
-        print(f"Duplicates found:    {self.dup_count} file(s) wasting {format_size(self.dup_size)}")
+        print(f"Total files scanned: {self.total_files_count} ({fsz(self.total_files_size)})")
+        print(f"Duplicates found:    {self.dup_count} file(s) wasting {fsz(self.dup_size)}")
 
     def list_duplicates(self) -> None:
         if not self.same_content:
@@ -229,7 +217,7 @@ class Finder:
             print("\n[BENCHMARK] Could not access sample files for benchmarking.")
             return
         print("\n=== BENCHMARK COMPARISON ===")
-        print(f"Testing on {len(valid_files)} file(s) ({format_size(total_bytes)} total data)...")
+        print(f"Testing on {len(valid_files)} file(s) ({fsz(total_bytes)} total data)...")
         t0 = time.perf_counter()
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             list(executor.map(get_full_hash, valid_files))

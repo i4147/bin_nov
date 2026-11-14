@@ -2,7 +2,7 @@
 """Rebuild a directory tree from a text listing or a screenshot.
 Same as :doc:`mk_tree` (identical implementation): the tree markup or the OCR result is turned into directories and files under ``--base``, with ``--assume-dir``, ``--keep-suffix`` and ``--dry-run``.
 Usage: mktree INPUT [--base DIR] [-d] [-n] Positional arguments: input Text listing or screenshot image Options: --base Directory to build the tree in (default: current directory) -d, --assume-dir Entries without visible children are created as directories (default: files) -n, --dry-run Print the plan without creating anything --engine OCR engine (default: auto) --keep-suffix Keep tree -F suffixes (* @ = |) in names Examples: $ mktree tree.txt --base ./rebuilt Command-line script: run ``python mktree.py`` or the ``mktree`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import itertools

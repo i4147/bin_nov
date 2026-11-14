@@ -2,7 +2,7 @@
 """Restore the real names of batch-renamed wheel files.
 Reads the ``METADATA`` and ``WHEEL`` files inside each ``.whl``, reconstructs the ``name-version-python-abi-platform`` name from the tags and renames the file accordingly; it is a dry run unless ``--apply`` is given, and the originals are backed up in ``whl_backup``.
 Usage: fixwhlnames [directory] [--apply] [--info-only] Positional arguments: directory Directory containing .whl files (default: current directory) Options: --apply, -a Actually rename files (dry run by default) --no-backup, -b Skip creating backups (backups are created by default) --info-only, -i Only show extracted info without renaming Examples: $ fixwhlnames ~/wheels --info-only Command-line script: run ``python fixwhlnames.py`` or the ``fixwhlnames`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from email.parser import HeaderParser

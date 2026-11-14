@@ -2,7 +2,7 @@
 """Detect and optionally fix the misspelled words of a text file with Hunspell.
 Checks each line against the Hunspell dictionary (``-d``/``--affix``, or the ones it discovers with ``--list-dicts``) in a process pool, prints the unknown words and with ``-a`` replaces them with the first suggestion.
 Usage: hunspeller FILE [-a] [-d DIC] [--affix AFF] [--list-dicts] Positional arguments: file Path to the text file to check Options: -a, --autofix Automatically correct misspelled words in the file -d, --dictionary Path to Hunspell dictionary file (.dic) --affix Path to Hunspell affix file (.aff) --list-dicts List available Hunspell dictionaries and exit Examples: $ hunspeller notes.txt -a Command-line script: run ``python hunspeller.py`` or the ``hunspeller`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from multiprocessing import Pool, cpu_count

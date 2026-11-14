@@ -6,7 +6,7 @@ Files or directories (default: .) Options: --out, -o Output JSON file.
 --max-line-length Max chars per line.
 --parallel-mode Parallelism mode: file (default) or line (inside each file).
 Examples: $ copilot_noneng docs/ -o noneng.json Command-line script: run ``python copilot_noneng.py`` or the ``copilot_noneng`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Iterable, Iterator

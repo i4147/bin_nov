@@ -2,7 +2,7 @@
 """Report the file extensions used below the current directory.
 Counts the files per extension with their sizes, prints a coloured table of the most common ones, and ``-s`` switches to the total size per extension while ``-p`` writes a Matplotlib pie chart (the top 30 are charted).
 Usage: extz [-s] [-p] [--no-color] Options: -s, --size Show total size per extension instead of example files -p, --pie-chart --no-color Disable color output Examples: $ extz -s -p Command-line script: run ``python extz.py`` or the ``extz`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict
@@ -12,7 +12,7 @@ import shutil
 import sys
 from typing import Any, Iterable
 
-from dh import SKIP_DIRS
+from dh import SKIP_DIRS, fsz
 
 TOP_N_PIE: int = 30
 
@@ -31,14 +31,6 @@ class Colors:
     EXT_FG = BOLD + MAGENTA
     COUNT_FG = BOLD + GREEN
     DATA_FG = YELLOW
-
-
-def format_size(bytes_val: float) -> str:
-    for unit in ("B", "KB", "MB", "GB", "TB"):
-        if bytes_val < 1024:
-            return f"{bytes_val:.1f} {unit}"
-        bytes_val /= 1024
-    return f"{bytes_val:.1f} PB"
 
 
 def should_skip(path: Path) -> bool:
@@ -74,7 +66,7 @@ def generate_report(
         paths, total_size = ext_map[ext]
         count = len(paths)
         if show_size:
-            info = format_size(total_size)
+            info = fsz(total_size)
         else:
             examples = ", ".join(str(p.relative_to(Path.cwd())) for p in paths[:max_examples])
             info = examples
@@ -160,7 +152,7 @@ def write_pie_chart(
         shown = total_exts
     values = [s for _, s in ordered]
     total_size = sum(values) or 1
-    legend_labels = [f"{ext}  ({size / total_size * 100:.1f}%, {format_size(size)})" for ext, size in ordered]
+    legend_labels = [f"{ext}  ({size / total_size * 100:.1f}%, {fsz(size)})" for ext, size in ordered]
     fig, ax = plt.subplots(figsize=(11, 8))
     wedges, _ = ax.pie(
         values,
@@ -178,9 +170,7 @@ def write_pie_chart(
         fontsize=9,
     )
     ax.set_title(
-        f"Disk usage by extension\n"
-        f"{total_files:,} files · {format_size(total_size)} total · "
-        f"{total_exts:,} distinct exts",
+        f"Disk usage by extension\n{total_files:,} files · {fsz(total_size)} total · {total_exts:,} distinct exts",
         fontsize=13,
     )
     fig.tight_layout()
@@ -225,7 +215,7 @@ def main() -> None:
             lines = [
                 f"✓ Total unique extensions: {total_exts}",
                 f"✓ Total files: {total_files}",
-                f"✓ Total size: {format_size(total_bytes)}",
+                f"✓ Total size: {fsz(total_bytes)}",
             ]
         else:
             lines = [

@@ -5,7 +5,7 @@ Usage: line_edit_tool {prefix,append,unescape-nl,escape-nl,wrap,get-range,join,m
 start end src dest Subcommands: prefix Prefix non-empty lines append Append text to files (default: *.py in .) unescape-nl Literal \n -> newlines (tree) escape-nl Newlines -> literal \n wrap Wrap text to a width get-range Extract lines START..END join Join non-empty lines into one line move-range Move lines START..END to another file sort-length Sort lines by length strip-ws Strip whitespace from each line tabs Tabs -> spaces (tree) space-out Blank lines between every line Options: -o, --output Write here instead of in place --stdout Print the result --no-space No space after the prefix --text Text to append --text-file Append this file's contents --glob Glob when paths are dirs (default: *.py) -w, --width Default: terminal width -i, --inplace --auto-name Write to START[_END].ext (original) --sep Separator (original default: none) ...
 plus 5 more; run ``line_edit_tool --help`` for the full list.
 Examples: $ line_edit_tool strip-ws -o clean.txt notes.txt $ line_edit_tool wrap -w 80 notes.txt Command-line script: run ``python line_edit_tool.py`` or the ``line_edit_tool`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

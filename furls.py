@@ -8,7 +8,7 @@ If empty, all files are scanned.
 Applies to archive members too.
 --max-recursion Max nested-archive recursion depth (default 999).
 Examples: $ furls -o urls.txt --max-mb 5 Command-line script: run ``python furls.py`` or the ``furls`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

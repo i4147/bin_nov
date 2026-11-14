@@ -5,7 +5,7 @@ Usage: imgco [paths ...] [--to jpg|png|webp] [-q QUALITY] [-r] Positional argume
 Files or directories (default: current dir) Options: -b, --backend -o, --to Output format/extension (default: jpg) -q, --quality Quality 1-100 where applicable (default 95) -r, --recursive Recurse into directories -k, --keep Keep original files -f, --force Overwrite existing targets / convert already-matching -e, --ext Extra source extension to include (can repeat) -v, --verbose Print per-file results --dry-run List files that would be processed and exit --list-targets Print available target extensions for selected/auto backend and exit ...
 plus 1 more; run ``imgco --help`` for the full list.
 Examples: $ imgco shots/ --to webp -q 80 -r Command-line script: run ``python imgco.py`` or the ``imgco`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import concurrent.futures

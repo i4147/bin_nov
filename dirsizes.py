@@ -9,7 +9,7 @@ Usage: dirsizes [--dir DIR] [--topk K] [--mode folder|file] [--exclude NAME] Opt
 --mode, -m Mode: 'folder' footprint (non-recursive sum) or individual 'file' size.
 --reverse Sort results from smallest to largest instead of largest to smallest.
 Examples: $ dirsizes -d ~ -k 20 Command-line script: run ``python dirsizes.py`` or the ``dirsizes`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import heapq

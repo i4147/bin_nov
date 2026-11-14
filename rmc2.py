@@ -13,7 +13,7 @@ import tokenize as _tokenize
 from typing import Any, Iterable, Iterator
 
 from atomicio import atomic_replace
-from dh import SKIP_DIRS
+from dh import SKIP_DIRS, fsz
 import libcst as cst
 
 POOL_PROCESSES: int = 8
@@ -40,17 +40,6 @@ BACKUP_SUFFIX: str = ".bak"
 
 def has_no_strippable_content(source: str) -> bool:
     return "#" not in source and '"""' not in source and "'''" not in source  # editor: """ '''
-
-
-def format_size(num_bytes: int) -> str:
-    if num_bytes < 1024:
-        return f"{num_bytes} B"
-    for suffix, threshold in (("M", 1024**3), ("k", 1024)):
-        if num_bytes >= threshold:
-            scaled = num_bytes / threshold
-            text = f"{scaled:.1f}".rstrip("0").rstrip(".")
-            return f"{text}{suffix}"
-    return f"{num_bytes} B"
 
 
 def is_docstring_literal(expr: cst.BaseExpression) -> bool:
@@ -649,13 +638,13 @@ def main(argv=None):
                 continue
             changed_count += 1
             bytes_reduced_total += bytes_reduced
-            print(f"{path.name}   {GREEN}{format_size(bytes_reduced)}{RESET}")
+            print(f"{path.name}   {GREEN}{fsz(bytes_reduced)}{RESET}")
     if total_count == 0:
         print("No Python files found.", file=sys.stderr)
         return 1
     summary = (
         f"\nProcessed {total_count} file(s): {changed_count} changed, "
-        f"{GREEN}{format_size(bytes_reduced_total)}{RESET} reduced, {error_count} error(s)."
+        f"{GREEN}{fsz(bytes_reduced_total)}{RESET} reduced, {error_count} error(s)."
     )
     print(summary, file=sys.stderr if error_count else sys.stdout)
     return 2 if error_count else 0

@@ -9,7 +9,7 @@ lookup Offline dictionary lookup (with optional fzf).
 Options: -v, --verbose Enable debug logging --mode Translate each line independently (default) or in chunks --chunk-size Max characters per chunk in --mode chunk (default: 4500) --backend Translation backend (default: deep-translator) --source Source language --target Target language --executor Pool kind (default: thread) --persian-only Only translate lines that contain Persian characters --in-place Rewrite the input file with translations --output JSON output path (default: <input>.json) ...
 plus 11 more; run ``fa_translator --help`` for the full list.
 Examples: $ fa_translator file notes.txt --target en $ fa_translator lookup Command-line script: run ``python fa_translator.py`` or the ``fa_translator`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed

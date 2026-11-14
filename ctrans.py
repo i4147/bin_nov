@@ -2,7 +2,7 @@
 """Translate a one-word-per-line file into a JSON map with many backends.
 Supports deep_translator, DeepL, LibreTranslate, translate, Bing, googletrans, boto3, Baidu, Alibaba, Watson and Azure, keeps the progress across the runs, retries with backoff, throttles the requests per worker and logs the failures to ``failed.txt`` and a rotating log.
 Usage: ctrans [-i words.txt] [-o words.json] [-b BACKEND] [-w N] Options: -i, --input Input file (default: words.txt) -o, --output Output JSON (default: words.json) --failed Failed words file (default: failed.txt) -s, --source Source language (default: fr) -t, --target Target language (default: en) -b, --backend -w, --workers Worker threads (default: 2) -d, --delay Seconds before each request, per worker (default: 0.5) --save-every Save every N words (default: 50) --no-continue Ignore existing output; start fresh Examples: $ ctrans -i words.txt -b deep_translator -w 4 Command-line script: run ``python ctrans.py`` or the ``ctrans`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import asyncio

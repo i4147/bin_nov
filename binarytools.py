@@ -5,7 +5,7 @@ Usage: binarytools {sort,sanity,verify-so,strip,size,ext,exclude,retry} [options
 Files or directories (default: cwd, *.so only) Subcommands: sort Move binary files into a subfolder sanity Test executables and move broken ones aside verify-so Verify .so files load via ctypes strip Batch-strip .so files size Strip by minimum size ext Strip by extension list exclude Strip, excluding patterns retry Strip with retry on failure Options: --strip-cmd Strip executable to invoke (default: strip) -v, --verbose Print per-file progress --no-verify Skip ctypes verification after stripping --dest Destination subfolder (default: binary) --recursive Descend into subdirectories --err-dir Folder for failed binaries (default: err) --report Report file path (default: ~/tmp/err) --timeout Per-probe timeout in seconds (default: 2.0) --log-file Log file path --symbols Also count symbols via nm ...
 plus 4 more; run ``binarytools --help`` for the full list.
 Examples: $ binarytools sanity ~/bin $ binarytools strip --recursive lib/ Command-line script: run ``python binarytools.py`` or the ``binarytools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import concurrent.futures as _futures

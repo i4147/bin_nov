@@ -3,7 +3,7 @@
 Parses and re-emits each ``.toml`` file with the configured indentation (``--indent``) and line width (``--column-width``), validates the result before writing and processes the files in parallel.
 Usage: fmt_toml [--indent N] [--column-width N] [paths ...] Positional arguments: paths ...
 Files or directories to format (default: current directory) Options: --indent Indentation size (default: 2) --column-width Column width for line wrapping (default: 80) Examples: $ fmt_toml pyproject.toml Command-line script: run ``python fmt_toml.py`` or the ``fmt_toml`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass

@@ -8,7 +8,7 @@ Options: --ignore Directories to skip (default: common VCS/build/cache dirs) -v,
 plus 14 more; run ``merge_reqs --help`` for the full list.
 Examples: $ merge_reqs scan -d .
 -o requirements.txt Command-line script: run ``python merge_reqs.py`` or the ``merge_reqs`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

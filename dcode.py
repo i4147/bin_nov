@@ -2,7 +2,7 @@
 """Peel encoded strings recursively and rank the plausible plain-text results.
 Applies base64, base32, base16, base58, hex, URL, ROT13/ROT47, Atbash, binary, HTML-entity, unicode-escape, gzip/zlib/bz2/lzma, and single-byte XOR decoders in a bounded search tree, scores each candidate by English letter frequency and prints the most readable chains (optionally as JSON).
 Usage: dcode STRING | --input FILE [--json] [--max-depth N] Positional arguments: string String to be decoded Options: -i, --input Read input from file -o, --output Write output to file --json Output results in JSON format -q, --quiet Quiet mode --no-color Disable color output --max-depth Maximum recursion depth -s, --sensitive For sensitive data Examples: $ dcode 'SGVsbG8gd29ybGQ=' $ dcode -i payload.txt --json Command-line script: run ``python dcode.py`` or the ``dcode`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import base64

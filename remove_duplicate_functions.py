@@ -3,7 +3,7 @@
 Hashes the normalized bodies of the reference functions, deletes the top-level definitions with the same hash from the target files (``-a`` applies, the default is a dry run) and processes the tree in a pool.
 Usage: remove_duplicate_functions REFERENCE.py [inputs ...] [-a] Positional arguments: reference Reference file (functions to keep) inputs ...
 Target files/directories (default: .) Options: -a, --apply Apply changes (default: dry-run) Examples: $ remove_duplicate_functions utils.py src/ -a Command-line script: run ``python remove_duplicate_functions.py`` or the ``remove_duplicate_functions`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

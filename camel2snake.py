@@ -3,7 +3,7 @@
 Collects the symbols with LibCST, rewrites the functions, classes, variables and parameters (``--targets``), can also rename the ``.py`` files, caches the work, snapshots an undo file and offers ``--undo``, ``--dry-run``, ``--diff`` and ``--exclude``.
 Usage: camel2snake [options] [paths ...] Positional arguments: paths ...
 Options: --targets --dry-run --diff --no-cache --no-undo --undo Restore from undo file and exit --rename-modules Rename camelCase .py filenames --cache-file --undo-file --exclude Regex to exclude paths Examples: $ camel2snake --diff pkg/ Command-line script: run ``python camel2snake.py`` or the ``camel2snake`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import base64

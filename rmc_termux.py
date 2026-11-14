@@ -6,7 +6,7 @@ Usage: rmc_termux [options] [paths ...] Positional arguments: inputs ...
 Options: -c Remove ordinary comments -d Remove function/class docstrings -a, --all Remove all comments/docstrings, including normally preserved ones --remove-blank-lines --dryrun, --dry-run --backup --diff -t, --time --color --exclude ...
 plus 12 more; run ``rmc_termux --help`` for the full list.
 Examples: $ rmc_termux -c -d src/ --backup $ rmc_termux --all --dry-run src/ Command-line script: run ``python rmc_termux.py`` or the ``rmc_termux`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

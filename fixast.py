@@ -4,7 +4,7 @@ Finds the deprecated node constructors and the ``visit_Str``/``visit_Num``-style
 Usage: fixast [root] [-a] [--diff] [--backup] [--json] Positional arguments: root File or directory to scan (default: current directory) Options: -a, --apply Write fixes in place (default: dry run) -i, --include File glob(s) to scan; repeating replaces the default *.py -e, --exclude Extra file or directory glob to skip --diff Print unified diffs of proposed/applied fixes --backup Write <file>.bak before modifying --stdin Transform stdin to stdout instead of scanning files --json Emit machine-readable summary on stdout -v, --verbose List every individual fix with line:col -q, --quiet Suppress per-file output (summary only) --follow-symlinks Follow symlinked directories and files ...
 plus 1 more; run ``fixast --help`` for the full list.
 Examples: $ fixast --diff src/ $ fixast -a src/ Command-line script: run ``python fixast.py`` or the ``fixast`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

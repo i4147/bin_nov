@@ -3,7 +3,7 @@
 Collects the imported names with ast, compares them with the names actually used, also reads the Python members of wheels and ``.tar.zst`` archives, and can rewrite the files in place with ``--autofix`` (``--dry-run`` previews, ``--exclude`` filters, ``--verbose`` adds the per-name detail).
 Usage: afkco [-a] [--dry-run] [paths ...] Positional arguments: paths ...
 File or directory paths to analyze (default: current directory) Options: -a, --autofix Remove unused imports in-place --dry-run Preview changes without writing (enables --autofix) -v, --verbose Detailed output with per-name breakdown --exclude Regex pattern to exclude files (repeatable) --no-color Disable ANSI color codes Examples: $ afkco -a src/ Command-line script: run ``python afkco.py`` or the ``afkco`` command.
-The module is importable as well."""
+"""
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import ast

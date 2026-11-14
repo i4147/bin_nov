@@ -8,7 +8,7 @@ otf2ttf-fontforge Convert OTF to TTF using FontForge Python bindings.
 tottf Convert SVG/WOFF/EOT/OTF/TTC to TTF using FontForge CLI.
 woff22ttf Decompress WOFF2 to TTF using fontTools.
 Options: --to Target format -r, --rm Delete source file after successful conversion -k, --keep-source Keep original OTF files (default: remove) -r, --remove-source Delete source file after successful conversion Examples: $ fontconverter otf2ttf fonts/ $ fontconverter convert --to woff2 fonts/ Command-line script: run ``python fontconverter.py`` or the ``fontconverter`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import multiprocessing

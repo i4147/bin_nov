@@ -4,7 +4,7 @@ Computes the ssdeep digests, keeps the pairs above the similarity threshold in `
 The internal helpers carry single-letter names from an earlier size-optimisation pass.
 Usage: ssdiper2 [-g] Options: -g, --group-similar Move similar files into group001, group002, ...
 subdirs based on simz.json Examples: $ ssdiper2 -g Command-line script: run ``python ssdiper2.py`` or the ``ssdiper2`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

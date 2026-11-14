@@ -2,7 +2,7 @@
 """Create tar and tar.gz archives, with optional cleanup of the source folder.
 The ``tar`` subcommand writes a plain tarball, ``tgz`` a gzip one (creating the members in parallel) and both can delete the archived folder with ``--cleanup`` or keep it with ``--no-cleanup``.
 Usage: archive_merger {tar,tgz} FOLDER [--output PATH] [--cleanup] Positional arguments: folder Folder to archive Subcommands: tar Create TAR archive and optionally remove folder tgz Create TAR.GZ archive and cleanup contents Options: --output Output archive path --cleanup Remove folder after compression --no-cleanup Keep original files Examples: $ archive_merger tgz project --cleanup Command-line script: run ``python archive_merger.py`` or the ``archive_merger`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import multiprocessing as mp

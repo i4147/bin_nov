@@ -5,7 +5,7 @@ Usage: archive_convert [paths ...] [-d] Positional arguments: paths ...
 Files or directories to process (default: current directory).
 Options: -d, --decompress Decompress the given .tar.br file(s) back to .tar.
 Examples: $ archive_convert dist/ $ archive_convert bundle.tar.br -d Command-line script: run ``python archive_convert.py`` or the ``archive_convert`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import bz2

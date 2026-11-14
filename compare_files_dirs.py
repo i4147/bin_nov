@@ -2,7 +2,7 @@
 """File and directory comparison utilities in one CLI.
 Subcommands: ``a-b`` prints the differing lines of two files, ``compare-dirs``/``compare-dirz`` report the hashes unique to each tree, ``fcmp``/``same-file`` compare two paths, ``pdif`` diffs the Python-aware content, ``pycommon`` finds the shared lines and ``compare-move`` moves or copies the common files.
 Usage: compare_files_dirs {a-b,compare-move,compare-dirs,...} [options] Positional arguments: first second source target dir1 dir2 directory file1 file2 Subcommands: a-b compare-move compare-dirs compare-dirz fcmp pdif pycommon same-file udiffer Options: --encoding --common-dir --yes --common-file --hash-chunk-size --dir1-output --common-output --only-in-dir1-output --base Examples: $ compare_files_dirs compare-dirs old/ new/ Command-line script: run ``python compare_files_dirs.py`` or the ``compare_files_dirs`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import difflib

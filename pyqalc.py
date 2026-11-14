@@ -3,7 +3,7 @@
 Evaluates the arithmetic, the scientific functions and the unit conversions with :class:`decimal.Decimal` at 28 digits, honours the ``-p`` precision and the ``-d`` degrees mode for the trigonometry and offers an interactive shell with ``-i``.
 Usage: pyqalc EXPRESSION [-p PRECISION] [-d] [-i] Positional arguments: expression ...
 Mathematical expression to evaluate Options: -f, --format Output format (default: auto) -p, --precision Decimal precision (default: 15) -d, --degrees Use degrees instead of radians for trig functions -i, --interactive Start interactive calculator mode Examples: $ pyqalc '3 km to m' $ pyqalc -i Command-line script: run ``python pyqalc.py`` or the ``pyqalc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from decimal import getcontext

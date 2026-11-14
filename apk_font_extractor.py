@@ -3,7 +3,7 @@
 Opens each APK with zipfile, pulls the ``.ttf``/``.woff``/``.woff2`` members (also the fonts embedded as base64 resources), names them from their internal font names and writes them to the output directory with eight fixed workers.
 Usage: apk_font_extractor [apks or directories] [-o OUTDIR] Positional arguments: inputs ...
 Input APK files or directories (default: current directory) Options: -o, --output Output directory for extracted fonts (default: fonts) -v, --verbose Enable verbose logging Examples: $ apk_font_extractor apps/ -o fonts Command-line script: run ``python apk_font_extractor.py`` or the ``apk_font_extractor`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

@@ -5,7 +5,7 @@ Archives (``.zip``, ``.tar``, ``.tar.gz``/``bz2``/``xz``, wheel and zstandard) a
 Usage: afk [options] [PATHS ...] Positional arguments: paths ...
 Python file, directory, or archive to scan (repeatable) Options: -x, --exclude Glob pattern matched against relative paths and each path component; repeatable (e.g.
 -x 'tests/*' -x migrations) --no-default-excludes Do not skip .git, venv, __pycache__, node_modules and similar --check Report only and exit with status 1 if unused imports are found --fix Write the cleaned source back to disk -n, --dry-run Show a unified diff of proposed removals and never write files --diff Show a unified diff preview of proposed removals --include-init Also analyze __init__.py files (skipped by default because imports there are usually re-exports) --color Colorize output (default: auto, only when writing to a terminal) -q, --quiet Print only errors and the summary Examples: $ afk src/ --check $ afk dist/pkg.whl --fix --diff Command-line script: run ``python afk.py`` or the ``afk`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

@@ -4,7 +4,7 @@
 folders.
 Usage: ssdiper [-a tlsh|ssdeep|sdhash|simhash|minhash] [-g] Options: -g, --group-similar Move similar files into group001, group002, ...
 subdirs based on simz.json -a, --alg Hashing algorithm to use (default: tlsh) Examples: $ ssdiper --alg ssdeep $ ssdiper -g Command-line script: run ``python ssdiper.py`` or the ``ssdiper`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

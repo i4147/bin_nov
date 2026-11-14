@@ -14,7 +14,7 @@ Files or directories (default: cwd) Options: -c, --comments Remove all comments 
 ...
 plus 2 more; run ``drmc --help`` for the full list.
 Examples: $ drmc -c -d --diff src/ Command-line script: run ``python drmc.py`` or the ``drmc`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

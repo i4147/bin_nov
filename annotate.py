@@ -15,7 +15,7 @@ Options: -r, --remove, --strip Remove all type annotations (and `# type:` commen
 --validate-compile Also run the built-in compile() on the modified output.
 --validate-mypy After writing, run mypy on the updated file (slow, annotate mode).
 Examples: $ annotate module.py --diff $ annotate --remove module.py Command-line script: run ``python annotate.py`` or the ``annotate`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

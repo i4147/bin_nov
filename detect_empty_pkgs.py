@@ -2,7 +2,7 @@
 """Find the empty or useless Python archives (tar.gz, wheel, zip).
 Opens each archive of the current directory and flags the ones without code (no files, only metadata, only ``setup.py``, only ``__pycache__``, only docs/tests, import-only modules or trivially small content), moving them into ``./empty`` with ``-a``.
 Usage: detect_empty_pkgs [-a] Options: -a, --apply Actually move the archives (default is dry-run) Examples: $ detect_empty_pkgs -a Command-line script: run ``python detect_empty_pkgs.py`` or the ``detect_empty_pkgs`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

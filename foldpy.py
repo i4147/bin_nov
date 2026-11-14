@@ -3,7 +3,7 @@
 Compiles each ``.py`` file in a process pool and sorts the results into ``ok``, ``warn`` (raised a ``SyntaxWarning``) and ``error`` (unreadable or invalid syntax).
 It only lists the groups unless ``--apply`` is given, in which case the files are moved into matching folders.
 Usage: foldpy [-a] Options: -a, --apply Examples: $ foldpy $ foldpy --apply Command-line script: run ``python foldpy.py`` or the ``foldpy`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

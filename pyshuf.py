@@ -3,7 +3,7 @@
 ``--methods`` selects the shuffles (regular, the three-pass fisher-yates style variant, and a weighted shuffle), ``--repeats`` runs several passes and ``--test`` measures how random the output is.
 Large files are handled through an mmap of the line offsets.
 Usage: pyshuf INPUT [-o OUTPUT] [--methods LIST] [--repeats N] [--test] Positional arguments: input_file Options: -o, --output -r, --repeats -t, --test -m, --methods Examples: $ pyshuf words.txt -o shuffled.txt Command-line script: run ``python pyshuf.py`` or the ``pyshuf`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import mmap

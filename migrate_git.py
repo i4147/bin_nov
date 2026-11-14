@@ -3,7 +3,7 @@
 Rewrites the git user name and e-mail (globally and in every local config), replaces the old identity in the text files of the home directory after backing them up, regenerates an SSH key and removes the old ones; it is a dry run unless ``--apply`` is passed.
 Usage: migrate_git --old-username U --new-username U [--apply] Options: --apply Actually apply changes (default is dry-run).
 --old-username Old GitHub username --old-email Old GitHub email --new-username New GitHub username --new-email New GitHub email --home-dir Home directory to scan --ssh-dir SSH directory --key-path Path for new SSH key Examples: $ migrate_git --old-email old@example.com --new-email new@example.com --apply Command-line script: run ``python migrate_git.py`` or the ``migrate_git`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from datetime import datetime

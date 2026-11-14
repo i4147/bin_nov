@@ -3,7 +3,7 @@
 Subcommands: ``diff`` writes a JSON report (files, stats, optional patch) between two refs, ``status`` summarises every repository below a root (``--dirty-only`` filters) and ``added-files`` lists the files added per commit.
 Usage: git_diff_tool {diff,status,added-files} [options] [repo] Positional arguments: repo older Older ref (default: HEAD~1) newer Newer ref (default: HEAD) root Subcommands: diff JSON report between two commits status Status of every repo under a root added-files Files added per commit (JSON) Options: -o, --output Default: <repo>/diff_report.json --patch Include full patch (default) --no-patch Skip the patch text --dirty-only Examples: $ git_diff_tool diff .
 HEAD~3 HEAD -o report.json Command-line script: run ``python git_diff_tool.py`` or the ``git_diff_tool`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

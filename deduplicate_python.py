@@ -2,7 +2,7 @@
 """Consolidate the duplicated Python objects of a tree into ``utils.py``.
 Hashes the top-level definitions (ast or tree-sitter, archives included), writes the repeated ones into ``utils.py`` and rewrites the sources with ``-m`` (import inserted, snippets removed) or only copies them with ``-c``.
 Usage: deduplicate_python [-m|-c] [paths ...] Options: -m, --move Move duplicate objects to utils.py and add imports -c, --copy Copy duplicate objects to utils.py without changing source files Examples: $ deduplicate_python -c src/ Command-line script: run ``python deduplicate_python.py`` or the ``deduplicate_python`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

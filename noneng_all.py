@@ -2,7 +2,7 @@
 """Detect the language of every file below a directory.
 Runs pycld2, gcld3, cld3, langdetect, py3langid, fast-langdetect or lingua (``-b``) on each file and prints the language and the confidence, with ``--only-non-english`` for the filtered list.
 Usage: noneng_all [ROOT] [-b BACKEND] [--only-non-english] Positional arguments: root Root directory to scan (default: .) Options: -b, --backend Language detection backend (default: pycld2) --only-non-english Only print files detected as non-English Examples: $ noneng_all ~/docs -b lingua --only-non-english Command-line script: run ``python noneng_all.py`` or the ``noneng_all`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import math

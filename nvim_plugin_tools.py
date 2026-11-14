@@ -19,7 +19,7 @@ Defaults: '.' for --engine strict, 'plugins' for --engine simple.
 ...
 plus 4 more; run ``nvim_plugin_toolbox --help`` for the full list.
 Examples: $ nvim_plugin_toolbox lock --output lazy-lock.json $ nvim_plugin_toolbox split plugins.lua --engine strict Command-line script: run ``python nvim_plugin_toolbox.py`` or the ``nvim_plugin_toolbox`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

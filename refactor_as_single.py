@@ -2,7 +2,7 @@
 """Consolidate a multi-file package into one module.
 Merges the modules of a package (or of a ``# File:``-sectioned dump), rewrites the relative imports, the ``six`` imports, the ``os.path`` calls and the logging setup to their current equivalents, strips the docstrings and injects the standard imports into the resulting single file.
 Usage: rassingle [package] [-o single.py] Positional arguments: input Package directory or .py file (default: current directory) Options: -f, --merged-file Read source from a single merged file containing '# File: <path>' section headers -o, --output Output file (default: <source_name>_single.py in cwd) Examples: $ rassingle src/mypkg -o mypkg_single.py Command-line script: run ``python rassingle.py`` or the ``rassingle`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

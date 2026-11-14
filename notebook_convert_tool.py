@@ -3,7 +3,7 @@
 Subcommands: ``to-py`` exports a notebook as a script (``--hoist-imports``, ``--wrap-main``, magic stripping), ``to-md`` exports it as Markdown, ``to-ipynb`` rebuilds a notebook from a script (split by defs/imports, blanks or one cell), ``strip`` clears the outputs and ``meta-to-ipynb`` turns a Markdown document into cells.
 Usage: notebook_convert_tool {to-py,to-md,to-ipynb,strip,meta-to-ipynb} [options] [paths ...] Positional arguments: paths ...
 input Subcommands: to-py .ipynb -> .py to-md .ipynb -> .md to-ipynb .py -> .ipynb strip Clear outputs/execution counts meta-to-ipynb Markdown doc -> notebook Options: --hoist-imports Move imports/env lines to top (nb2py) --wrap-main Indent body under __main__ (nb2py) --magics -o, --output Single-file output name --split Auto: def/import breaks; single: one cell; blank: blank-run breaks -n, --dry-run Examples: $ notebook_convert_tool to-py analysis.ipynb $ notebook_convert_tool strip notebooks/ Command-line script: run ``python notebook_convert_tool.py`` or the ``notebook_convert_tool`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

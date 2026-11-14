@@ -3,7 +3,7 @@
 Walks the history through subprocess, GitPython, pygit2 or Dulwich (``-b``), prints each commit with the added and removed paths, can skip the commits without changes and limit the walk with ``--max-commits``.
 Usage: gitreportx [repo] [-b BACKEND] [--only-with-changes] [--max-commits N] Positional arguments: repo Path to the Git repository (default: current directory) Options: -b, --backend --only-with-changes Skip commits that neither added nor removed any files --max-commits Stop after processing N commits Examples: $ gitreportx .
 --only-with-changes --max-commits 50 Command-line script: run ``python gitreportx.py`` or the ``gitreportx`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass

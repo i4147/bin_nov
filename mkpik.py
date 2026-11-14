@@ -3,7 +3,7 @@
 The ``compile`` subcommand byte-compiles the targets with ``-o``/``-l``/``--delete-source`` options and ``measure`` reports the size change of the current directory before and after, working through a process pool.
 Usage: mkpik {compile,measure} [targets ...] [-o 0|1|2] [-l] Positional arguments: targets ...
 Files or directories to compile Subcommands: compile Compile Python files with custom optimization and output options measure Compile Python files and report space change in current directory Options: -o, --optimize Optimization level (0, 1, or 2) -l, --legacy Create legacy .pyc file beside original file --delete-source Delete source .py files after compilation --pycache-prefix Directory prefix for pycache files --pool-size Number of worker processes Examples: $ mkpik measure src/ Command-line script: run ``python mkpik.py`` or the ``mkpik`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor

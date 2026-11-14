@@ -18,7 +18,7 @@ Default: flat.
 --prune-imports Remove top-level imports that become unused (fixdh behaviour).
 --dh-path --skip-file --bin-dir --report-path --dh-name Top-level package name to look for (default: dh).
 Examples: $ dhtools reverse ~/bin -a Command-line script: run ``python dhtools.py`` or the ``dhtools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

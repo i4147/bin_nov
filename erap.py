@@ -6,7 +6,7 @@ Python files or directories to process (default: .
 recursively) Subcommands: append Run checkers and append their output to Python files.
 report Run checkers on every .py in CWD and write JSON reports per file.
 Options: -a, --all Run all tools:ty,pyright,pylint,pyrefly,mypy -g, --pyright Run pyright -p, --pylint Run pylint -r, --pyrefly Run pyrefly -t, --ty Run ty -m, --mypy Run mypy -o, --output Examples: $ erap report -a src/ Command-line script: run ``python erap.py`` or the ``erap`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import json

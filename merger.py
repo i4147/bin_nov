@@ -2,7 +2,7 @@
 """Merge the text files of a directory into one document.
 Concatenates the files of the given extensions (``-e``) into ``merged.txt`` or copies the result to the clipboard, ``-c`` writes one merged file per extension into ``merged/`` and ``-u`` splits a merged file back into its parts.
 Usage: merger [-e py js] [-c] [-w] | merger -u MERGED.txt Positional arguments: file Path to the merged file to split (used with -u) Options: -e, --extensions File extensions to merge (e.g., py cpp js) -c, --group Group files by extension, output multiple files in "merged" directory -w, --write Write merged output to file(s) (default: only copy to clipboard) -u, --unmerge Split a previously merged file (path given as positional argument) Examples: $ merger -e py -w $ merger -u merged.txt Command-line script: run ``python merger.py`` or the ``merger`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

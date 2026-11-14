@@ -5,7 +5,7 @@ Usage: cleants [options] [{--inplace,--check,--diff}] [paths ...] Positional arg
 Options: --inplace --dryrun --check --diff --color --backup --backup-suffix --keep-doc --exclude --max-size ...
 plus 2 more; run ``cleants --help`` for the full list.
 Examples: $ cleants --check --diff src/ Command-line script: run ``python cleants.py`` or the ``cleants`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import Counter

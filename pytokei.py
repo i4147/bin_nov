@@ -8,7 +8,7 @@ Options: --no-report Suppress final statistics report (pytokei2.py behavior).
 Can be repeated.
 Default: .git Examples: $ pytokei .
 --exclude node_modules Command-line script: run ``python pytokei.py`` or the ``pytokei`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

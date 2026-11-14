@@ -3,7 +3,7 @@
 Uses LibCST to delete the comments and the class/function docstrings while preserving the shebangs, the ``# fmt``/``# type`` markers and the module docstrings (``-r`` removes those too), and processes the tree with eight workers.
 Usage: cleanpy [-r] [paths ...] Positional arguments: paths ...
 Files and/or directories to process (default: current directory) Options: -r, --remove-module-docstring Remove module-level docstrings too Examples: $ cleanpy src/ Command-line script: run ``python cleanpy.py`` or the ``cleanpy`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

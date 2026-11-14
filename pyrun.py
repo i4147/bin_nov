@@ -5,7 +5,7 @@ Usage: pyrun DIRECTORY [--timeout SECONDS] [--no-recursive] [-v] Positional argu
 Options: --no-recursive Do not descend into subdirectories.
 --timeout --verbose Enable verbose logging.
 Examples: $ pyrun examples/ --timeout 10 Command-line script: run ``python pyrun.py`` or the ``pyrun`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass, field

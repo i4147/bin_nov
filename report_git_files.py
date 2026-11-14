@@ -3,7 +3,7 @@
 Walks the history with ``git``, collects the added and removed files per commit (the modified ones are ignored) and prints the report or writes it as JSON with ``--json``.
 Usage: report_git_files [repo] [--json] Positional arguments: repo Repository directory (defaults to the current directory) Options: --json Write a JSON report, including commits with no added or removed paths Examples: $ report_git_files .
 --json Command-line script: run ``python report_git_files.py`` or the ``report_git_files`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import asdict, dataclass

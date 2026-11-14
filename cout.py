@@ -15,7 +15,7 @@ Options: -r, --remove Remove the comment prefix from target lines.
 --strict Fail on decode errors instead of using surrogateescape.
 --no-stats Suppress the summary line.
 Examples: $ cout script.py 10 25 $ cout script.py 10 25 -r Command-line script: run ``python cout.py`` or the ``cout`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Iterator, Sequence

@@ -8,7 +8,7 @@ Options: -o, --output-dir Directory to write outputs into (default: ./output).
 -t, --text Extract per-page text to .txt files instead of splitting PDF pages.
 --pool-method Multiprocessing pool method to use for processing.
 Examples: $ perpage book.pdf -o pages/ $ perpage book.pdf --text Command-line script: run ``python perpage.py`` or the ``perpage`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

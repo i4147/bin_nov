@@ -6,7 +6,7 @@ Usage: imgoptim [options] [paths ...] Options: -n, --dry-run -v, --verbose Forwa
 --root --no-recursive --only --timeout --jpg-quality --progressive --normal --jpegoptim ...
 plus 12 more; run ``imgoptim --help`` for the full list.
 Examples: $ imgoptim images/ --dry-run $ imgoptim images/ --only jpg --jpg-quality 82 Command-line script: run ``python imgoptim.py`` or the ``imgoptim`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import contextlib

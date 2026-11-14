@@ -3,7 +3,7 @@
 Searches ``~/dic.json`` for a word, lists the entries by ``--prefix``, does a typo-tolerant ``--fuzzy`` search and, unless ``--no-fzf`` is given, lets fzf pick among the candidates; the results are printed with the Persian shaping of ``faprint``.
 Usage: fztrans WORD [--prefix P] [--fuzzy] [--no-fzf] Positional arguments: word ...
 Word to translate Options: --prefix List words starting with prefix --fuzzy Fuzzy search (typo tolerant) --no-fzf Disable interactive fzf selector Examples: $ fztrans کتاب --fuzzy Command-line script: run ``python fztrans.py`` or the ``fztrans`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from difflib import get_close_matches

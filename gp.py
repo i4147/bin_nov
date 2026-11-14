@@ -2,7 +2,7 @@
 """Stage everything, commit with a timestamp message and push.
 Stages the changes (warning about the empty files), creates the ``YYYY-MM-DD HH:MM`` message or the ``-m`` one, commits and pushes to the remote/branch, with ``--force-with-lease``, ``--allow-empty``, ``--dry-run`` and ``-y`` for the confirmations.
 Usage: gp [repo] [-m MESSAGE] [-r REMOTE] [--branch BRANCH] [--dry-run] Positional arguments: repo Path to the Git repository (default: current directory) Options: -b, --backend -r, --remote Remote name to push to (default: origin) --branch Branch to push (default: current branch / HEAD) -m, --message Override the automatic datetime commit message --allow-empty Create a commit even when there are no changes --force-with-lease Use --force-with-lease when pushing (safer than --force) --yes, -y Assume 'yes' for all confirmation prompts --dry-run Show what would be done without actually committing or pushing --no-push Commit only; do not push to the remote --skip-empty-check Do not warn about empty (0-byte) files Examples: $ gp -m 'fix docs' Command-line script: run ``python gp.py`` or the ``gp`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from datetime import datetime

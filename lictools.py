@@ -2,7 +2,7 @@
 """License manager CLI.
 Subcommands: ``collect`` concatenates the discovered license files into one file, ``clear`` empties them and ``strip`` removes the license text patterns (read from ``-p``) from every non-binary file, with ``-g`` separating the patterns by blank lines.
 Usage: lictools {collect,clear,strip} [-d DIR] [options] Subcommands: collect Concatenate license files into one file clear Empty the contents of discovered license files strip Strip text patterns from non-binary files Options: -d, --dir Target directory (default: current) -o, --output Output file path -e, --exclude Directories to exclude --exts Extensions to target -p, --patterns File containing license patterns -g, --gap Number of newlines separating patterns Examples: $ lictools collect -o LICENSES.txt $ lictools strip -p patterns.txt Command-line script: run ``python lictools.py`` or the ``lictools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

@@ -4,7 +4,7 @@ Reads the installed distributions and their requirements, builds the graph (rest
 Usage: mk_deptree_svg [-o graph.svg] [--root PKG ...] Options: -o, --output Output SVG path.
 --root Only show dependencies reachable from these packages.
 Examples: $ mk_deptree_svg -o deps.svg --root mypkg Command-line script: run ``python mk_deptree_svg.py`` or the ``mk_deptree_svg`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict, deque

@@ -18,7 +18,7 @@ Options: --system-bin --work-dir --output-dir --chunk-size --report-style Simple
 --timeout --output --missing-txt --dest-root ...
 plus 16 more; run ``pkgtools2 --help`` for the full list.
 Examples: $ pkgtools2 list-installed-sizes --exclude-substrings llvm $ pkgtools2 missing-files Command-line script: run ``python pkgtools2.py`` or the ``pkgtools2`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed

@@ -8,7 +8,7 @@ A single file is formatted directly (no Pool); the file does not need a .sh exte
 If omitted, shell files under CWD are used.
 Options: --pool-method Multiprocessing pool method to use for formatting (default: starmap).
 -m, --move Examples: $ fmt_bash scripts/ $ fmt_bash setup.sh --move Command-line script: run ``python fmt_bash.py`` or the ``fmt_bash`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

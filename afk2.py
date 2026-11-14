@@ -11,7 +11,7 @@ Options: -a, --autofix Remove unused imports in-place.
 --ignore-init Treat all imports in __init__.py as used.
 --no-color Disable ANSI color codes in output.
 Examples: $ afk2 src/ --autofix $ afk2 pkg --dry-run -v Command-line script: run ``python afk2.py`` or the ``afk2`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

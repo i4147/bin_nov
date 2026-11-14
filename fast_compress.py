@@ -4,7 +4,7 @@ The ``zstd`` subcommand compresses with 4 threads at level 3 (``--level`` 1-22) 
 Usage: fast_compress {zstd,xz} [--dir DIR] [-d] [--level N] Positional arguments: directory Directory to process Subcommands: zstd Compress/decompress using zstandard xz Compress/decompress using lzma_mt Options: --dir Directory to process -c, --compress Compress files (default) -d, --decompress Decompress .zst files --level Compression level 1-22 (default: 3) --threads Threads per zstd call (default: 4) --pool-workers Multiprocessing pool size (default: 8) --sequential Disable multiprocessing and run in-process --keep, --keep-original Keep original files --chunk-size Streaming chunk size in bytes --scan-order File scan order ...
 plus 16 more; run ``fast_compress --help`` for the full list.
 Examples: $ fast_compress zstd --dir logs --level 19 Command-line script: run ``python fast_compress.py`` or the ``fast_compress`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

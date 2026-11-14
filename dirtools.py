@@ -4,7 +4,7 @@ Subcommands: ``info``/``subdirs`` print the size report and the charts, ``list``
 Usage: dirtools {info,subdirs,list,tree,split-range,split-count,split-greedy,split-even} [options] Subcommands: info Directory report + optional bar chart by extension subdirs Chart top-level directory size distribution list Du-style listing of current directory entries tree Tree view of a directory split-range Folderize by size ranges (foldesiz.py) split-count Folderize by fixed count or max-MB per folder (foldesize.py) split-greedy Greedy bin-pack into ~N folders (foldsize.py) split-even Even count split into N folders (foldsize2.py) Options: -d, --directory Directory to scan (default: .) --save-report Save the text report to PATH (skipped if it exists) --chart Save a bar chart of extension sizes to PATH --out Output image path (default: dirinfo.png) --top-n Show only top N entries; 0 = all (default: 25) --min-kb Ignore entries smaller than this many KB (default: 100) --dpi Image DPI (default: 300) --include-hidden Include dotfiles/dot-directories -s, --sizes Show sizes -H, --human-readable Human-readable sizes (used with --sizes) ...
 plus 4 more; run ``dirtools --help`` for the full list.
 Examples: $ dirtools split-count --max-mb 100 ~/photos Command-line script: run ``python dirtools.py`` or the ``dirtools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

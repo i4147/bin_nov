@@ -2,7 +2,7 @@
 """Detect the non-English content of text files recursively.
 Checks the lines with the ``langdetect`` backend (confidence 0.85 by default), filters by length and extension, writes the findings to ``noneng.txt`` or ``-o`` and processes the tree with a pool and a per-file progress report.
 Usage: noneng_langdet [directory] [-c CONFIDENCE] [-o noneng.txt] Positional arguments: directory Root directory to scan (default: current directory) Options: --confidence, -c --output, -o Output file path (default: noneng.txt) --min-length --extensions Additional file extensions to scan --verbose, -v Show detailed progress for each file Examples: $ noneng_langdet docs/ -c 0.9 -o report.txt Command-line script: run ``python noneng_langdet.py`` or the ``noneng_langdet`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

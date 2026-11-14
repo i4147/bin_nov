@@ -22,7 +22,7 @@ Options: -r, --remove Interactively remove duplicates (keep one per group).
 -a, --apply Apply changes (default: dry-run).
 Examples: $ dedup_func scan .
 --fuzzy $ dedup_func consolidate src/ --refactor Command-line script: run ``python dedup_func.py`` or the ``dedup_func`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

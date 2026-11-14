@@ -4,7 +4,7 @@ Infers the parameter and return types from the literal defaults and the returns,
 Usage: add_hints [options] FILE.py ...
 Positional arguments: files ...
 .py file(s) to annotate Options: --dry-run Don't write, just report --diff Print a unified diff --backup Write FILE.py.bak before overwriting --no-returns Only annotate parameters --name-heuristics Also guess types from parameter names (name→str, count→int, ...) Examples: $ add_hints --diff util.py Command-line script: run ``python add_hints.py`` or the ``add_hints`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

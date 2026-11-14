@@ -3,7 +3,7 @@
 Detects the source format from the suffix or the SQLite magic bytes, loads the tables (optionally through an mmap for the big files), and writes them out in any registered format, keeping the multi-table structure where the target supports it.
 Usage: dataconv INPUT -t TARGET_FORMAT [-o OUTPUT] Positional arguments: inputs ...
 Input file(s) Options: -o, --output-dir Directory for outputs (default: next to input) Examples: $ dataconv data.csv -t sqlite -o data.db Command-line script: run ``python dataconv.py`` or the ``dataconv`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import csv

@@ -2,7 +2,7 @@
 """Flatten the only-child subdirectory chains and remove the empty directories.
 Repeatedly moves the single subdirectory of a directory up to its parent, then deletes the empty directories bottom-up under the given root.
 Usage: flatten_only_children [ROOT] Positional arguments: root Root directory (default: .) Examples: $ flatten_only_children ~/downloads Command-line script: run ``python flatten_only_children.py`` or the ``flatten_only_children`` command.
-The module is importable as well."""
+"""
 
 from pathlib import Path
 

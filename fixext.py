@@ -2,7 +2,7 @@
 """Detect and fix the file extensions that do not match the MIME type.
 Uses libmagic for each file, maps the MIME type to the expected suffix (falling back to the shebang), renames the mismatches in parallel and can ask before each ``-i`` rename.
 Usage: fixext [directory] [-i] [--no-color] Positional arguments: directory Directory to scan (default: current directory) Options: -i, --interactive Interactive confirmation before renaming --no-color Disable colored output Examples: $ fixext ~/Downloads -i Command-line script: run ``python fixext.py`` or the ``fixext`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass

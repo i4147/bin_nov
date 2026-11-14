@@ -6,7 +6,7 @@ Paths to process (default: current directory) Subcommands: compress Compress fil
 files (lzer): compress files only.
 folders (lz5): compress each subfolder as .tar.lz4.
 Default: auto --level --min-size --chunk-size --chunk-threshold --recursive Walk directories recursively (mode=files) --keep Keep original files/folders after successful compression --skip-ext File extensions to skip (default: archive formats) --no-checksum Disable LZ4 content checksum Examples: $ lz4er compress dist/ --mode folders $ lz4er decompress dist.tar.lz4 Command-line script: run ``python lz4er.py`` or the ``lz4er`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor

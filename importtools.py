@@ -11,7 +11,7 @@ transform Rewrite 'import m; m.x' -> 'from m import x'.
 Options: -d, --directory --strategy Spec=find_spec (default), stdlib=fixed set, mapped=stdlib + from-import suggestions -a, --autofix -e, --exclude Extra directory name(s) to exclude --deep Use chk_imports.py semantics (nested imports counted, autofix possible).
 -o, --output --shebang Shebang to insert when the file has none.
 --threshold --no-color Examples: $ importtools check-missing -d src -a Command-line script: run ``python importtools.py`` or the ``importtools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

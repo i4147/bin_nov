@@ -2,7 +2,7 @@
 """Compress the files above 500 KB below the current directory.
 Streams each large file through xz (or the ``-b`` algorithm: gz, bz2, br, zst, lz4, 7z) in 1 MB chunks and replaces it with the archive; ``-d`` decompresses the recognised archives and ``--list``/``--show-reduction`` only the report the candidates.
 Usage: compress_files_500k [-b ALGO] [-d] [--list] [--show-reduction] Options: -b Compression algorithm (default: xz) -d Decompress supported archive files instead of compressing --list Print matching filenames without compressing or deleting files --show-reduction With --list, test-compress files and show their size reduction Examples: $ compress_files_500k -b zst --show-reduction Command-line script: run ``python compress_files_500k.py`` or the ``compress_files_500k`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import bz2

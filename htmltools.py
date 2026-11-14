@@ -7,7 +7,7 @@ input inputs ...
 One or more .mhtml files (default: *.mhtml in cwd) Subcommands: bundle Extract all assets and build single_page_local.html inline Inline local/remote assets into HTML/CSS files in place isolate Produce a <name>_standalone.html with local assets embedded standalone Multi-process standalone builder with remote cache mhtml Convert .mhtml to .html + <stem>_files/ directory css Inline @import and url() fonts in a CSS file Options: --output-dir --assets-dir --timeout --user-agent --no-remote-scripts Do NOT download remote <script src> -o, --output -v, --verbose --max-size --no-prompt Skip interactive prompt for large downloads --files-dir Output directory for extracted resources ...
 plus 1 more; run ``htmltools --help`` for the full list.
 Examples: $ htmltools bundle page.html --output-dir out/ $ htmltools inline index.html Command-line script: run ``python htmltools.py`` or the ``htmltools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import base64

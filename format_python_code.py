@@ -3,7 +3,7 @@
 Subcommands: ``fixcode``/``fixindent``/``tokenformat`` repair the indentation, ``reflow`` rewraps the comments and docstrings, ``astor`` round-trips through astor, ``ruff`` runs ``ruff format``, ``sort`` writes a ``*_sorted`` file with the top-level nodes ordered and ``format`` applies black, isort, autoflake, autopep8 or yapf.
 Usage: format_python_code {fixcode,fixindent,tokenformat,reflow,astor,ruff,sort,format} [options] Positional arguments: file files ...
 directory Subcommands: fixcode Regex-heuristic auto-indenter (writes in place) fixindent Simple colon-based re-indenter tokenformat Token-based reformatter reflow Reflow comments and docstrings to a width astor Rewrite via astor (or NFKC-normalize non-py) ruff Run ruff format on candidate files sort Sort top-level AST nodes; write *_sorted file format API-based formatter (black/isort/autoflake/autopep/yapf) Options: --output --indent --width --backup --style Examples: $ format_python_code reflow --width 88 notes.py $ format_python_code format --style black src/ Command-line script: run ``python format_python_code.py`` or the ``format_python_code`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

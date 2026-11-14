@@ -10,7 +10,7 @@ Options: --dry-run -f, --force Force overwrite existing module docstrings.
 --delay -j, --concurrency Number of concurrent workers.
 -v, --verbose Show prompts and raw felo output on stderr.
 --log-file Examples: $ feloer src/ --dry-run $ feloer notes/ --pattern '*.py' -j 2 Command-line script: run ``python feloer.py`` or the ``feloer`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

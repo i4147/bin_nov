@@ -5,7 +5,7 @@ Usage: compy2 [paths ...] Positional arguments: inputs ...
 Python files and/or directories.
 Defaults to the current directory.
 Examples: $ compy2 src/ Command-line script: run ``python compy2.py`` or the ``compy2`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

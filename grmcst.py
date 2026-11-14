@@ -5,7 +5,7 @@ Usage: grmcst [paths ...] Positional arguments: paths ...
 Target files or directories to process.
 Defaults to '.' if empty.
 Examples: $ grmcst src/ Command-line script: run ``python grmcst.py`` or the ``grmcst`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

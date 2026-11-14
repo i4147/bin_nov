@@ -5,7 +5,7 @@ Usage: imports5 {offline,online} -p PROJECT [--ast] [--print] Subcommands: offli
 plus 9 more; run ``imports5 --help`` for the full list.
 Examples: $ imports5 online -p .
 --ast --print Command-line script: run ``python imports5.py`` or the ``imports5`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

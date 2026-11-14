@@ -3,7 +3,7 @@
 Downloads the URLs (or the list of ``-f``) with the stdlib, requests or pycurl backend, picks the chunk size from the size, resumes from the ``.part`` files, derives the name from the URL or the ``Content-Disposition`` and shows the ``pip``-style progress display.
 Usage: pyget URL [...] [-f URLS.txt] [-b python|requests|pycurl] [-o NAME] Positional arguments: urls ...
 URL(s) to download Options: -f, --file Read URLs from FILE (one per line, '#' comments allowed); may be given multiple times -b, --backend HTTP backend to use (default: python) -o, --output Output filename (single URL only); relative paths use the CWD --no-resume Ignore partial files and restart from scratch --timeout Socket timeout in seconds (default: 30) -q, --quiet Suppress the progress display -V, --version Examples: $ pyget https://example.com/big.iso -b requests Command-line script: run ``python pyget.py`` or the ``pyget`` command.
-The module is importable as well."""
+"""
 
 from abc import ABC, abstractmethod
 import argparse

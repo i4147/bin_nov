@@ -26,7 +26,7 @@ Options: --method Detection strategy (default: dist-info).
 ...
 plus 5 more; run ``pkg_insoector --help`` for the full list.
 Examples: $ pkg_insoector multi-version --report dupes.txt Command-line script: run ``python pkg_insoector.py`` or the ``pkg_insoector`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import defaultdict

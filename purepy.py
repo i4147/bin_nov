@@ -4,7 +4,7 @@ Reads the package names from a file, queries the PyPI JSON API for the available
 Usage: purepy PACKAGES.txt [--pool-method map|starmap|imap_unordered|apply_async] Positional arguments: package_list Path to a file with one package per line.
 Options: --pool-method Multiprocessing pool method to use for PyPI queries.
 Examples: $ purepy packages.txt Command-line script: run ``python purepy.py`` or the ``purepy`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

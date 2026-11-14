@@ -8,7 +8,7 @@ Subcommands: names Search person names inside files (exnames.py) fast Fast recur
 archives (pfind.py) grep Ripgrep-like content search info Filename stats + similar groups (pyfinfo.py) regex Emit regex from filename list (pygrex.py) strings Extract strings from binaries (stringr.py) Options: --extensions File extensions to scan -c, --content Search file contents instead of names -d, --directory -o, --output (kept for compatibility; unused) --exclude Exclude a dir name or glob (repeatable) --no-pause Disable SPACE/p pause hotkey -e, --regexp Pattern (alternative to positional) -i, --ignore-case -F, --fixed-strings -n, --line-number ...
 plus 11 more; run ``pysearch --help`` for the full list.
 Examples: $ pysearch grep 'TODO' -d src/ $ pysearch find '*.whl' ~/wheels Command-line script: run ``python pysearch.py`` or the ``pysearch`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import Counter

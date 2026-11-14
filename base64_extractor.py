@@ -15,7 +15,7 @@ list-lines Report every line containing 'base64,'.
 Options: --out --extensions File extensions to scan (default: .css .js .html) --hash --hash-len --pattern --force Overwrite existing .txt files --output --dry-run --no-magic Disable magic-byte MIME sniffing --files Explicit file list (overrides root scan) ...
 plus 4 more; run ``base64_extractor --help`` for the full list.
 Examples: $ base64_extractor extract-assets --root dist/ Command-line script: run ``python base64_extractor.py`` or the ``base64_extractor`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import base64 as _b64

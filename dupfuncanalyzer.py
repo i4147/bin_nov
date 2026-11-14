@@ -3,7 +3,7 @@
 Normalizes the definitions with ast, groups the ones that appear more than once, writes them to ``repeated_functions.py`` (imported as ``dh``) and with ``-a`` removes the duplicates and adds the imports.
 Usage: dupfuncanalyzer [-a] [paths ...] Positional arguments: paths ...
 Directories or files to process (default: current directory) Options: -a, --apply Apply refactoring: remove duplicates and add imports Examples: $ dupfuncanalyzer -a src/ Command-line script: run ``python dupfuncanalyzer.py`` or the ``dupfuncanalyzer`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import ast

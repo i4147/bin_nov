@@ -10,7 +10,7 @@ Defaults to 'ttf'.
 --pool-method Method/Executor strategy to use with 4 workers.
 Defaults to 'imap_unordered'.
 Examples: $ gfco fonts/*.otf --to woff2 Command-line script: run ``python gfco.py`` or the ``gfco`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import concurrent.futures

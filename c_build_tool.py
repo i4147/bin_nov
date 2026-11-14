@@ -4,7 +4,7 @@ Compiles each ``.c``/``.cpp``/``.cc``/``.cxx`` file with clang/clang++ (``--cfla
 Usage: c_build_tool [build] [--strip] [--cflags FLAGS] [paths ...] | c_build_tool cythonize Positional arguments: paths ...
 Files or dirs (default: current dir) Options: --strip Strip each binary after compiling --cflags Extra compiler flags, e.g.
 --cflags="-O2 -Wall" Examples: $ c_build_tool --cflags '-O2 -Wall' src/ Command-line script: run ``python c_build_tool.py`` or the ``c_build_tool`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

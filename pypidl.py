@@ -3,7 +3,7 @@
 Subcommands: ``basic`` downloads the preferred ``py3-none-any`` wheel, ``download`` streams a specific version, ``wheels`` fetches the wheels in parallel scored by the Python version, ``mirror`` tries the PyPI, Tsinghua and Runflare mirrors with the hashes verified and ``scrape`` parses the ``/simple`` index.
 Usage: pypidl {basic,download,wheels,mirror,scrape} [options] PACKAGE Positional arguments: package Package name packages ...
 Package names Subcommands: basic Simple API download, prefers py3-none-any wheel (pd.py) download Version-aware streaming download (pdown.py) wheels Parallel wheel downloads scored by Python version (pdown2.py) mirror Multi-mirror + hash-verified downloads (pip_get.py) scrape HTML /simple index scraper (pipget.py) Options: -o, --output Output directory (default: current directory) -v, --version Specific version (default: latest) --python Target Python version (default: 3.12) --output Output directory (default: wheels) -f, --file Read package specifiers from a file (one per line) --backend Download backend (default: pycurl) -d, --dir Download directory (default: current directory) -p, --pypi Use official PyPI simple index -c, --china Use Tsinghua mirror -m, --mirror Choose a named mirror (default: runflare) Examples: $ pypidl wheels numpy --python 3.12 -o wheels/ Command-line script: run ``python pypidl.py`` or the ``pypidl`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed

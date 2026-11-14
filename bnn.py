@@ -3,7 +3,7 @@
 Streams each text file in chunks (1 MB by default, ``-c`` changes it), replaces the escapes with line breaks through joblib in parallel and writes the result back with a per-file byte count.
 Usage: bnn [paths ...] [-c CHUNK] [--include-binary] Positional arguments: inputs ...
 Files or directories to process (default: current directory) Options: -c, --chunk-size Chunk size for streaming (default: 1M, e.g., 512K, 2M) --include-binary Process binary files (not recommended) -v, --verbose Show detailed logging Examples: $ bnn dump.txt Command-line script: run ``python bnn.py`` or the ``bnn`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Generator

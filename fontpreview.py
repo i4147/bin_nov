@@ -3,7 +3,7 @@
 The ``simple`` subcommand writes one block per font at the given sizes, ``rich`` a page with editable sample areas and a dark mode; the sample text and the sizes come from the ``--preset`` (Persian by default) or from ``--text``/``--sizes``.
 Usage: fontpreview {simple,rich} [paths ...] [--text TEXT] [--sizes 14,22] Positional arguments: paths ...
 Files/directories to scan (default: cwd) Subcommands: simple Simple one-font-per-block preview (fafontpreview.py / fontpreview.py) rich Rich interactive preview with textareas + dark mode (fontpre.py) Options: --preset Preset text/sizes/output (default: fa) --text Override the sample text (defaults to preset's) --sizes Override font sizes in px (defaults to preset's) -o, --output Output HTML file (defaults to preset's) -v, --verbose --max-fonts Examples: $ fontpreview rich ~/fonts -o preview.html Command-line script: run ``python fontpreview.py`` or the ``fontpreview`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import namedtuple
@@ -12,7 +12,7 @@ from functools import lru_cache
 import html
 from pathlib import Path
 from typing import Any, Iterable, Optional, Sequence
-
+from dh import fsz
 from loguru import logger
 
 LOG = logger
@@ -88,14 +88,6 @@ def find_fonts(
     return sorted(found, key=lambda x: (x.parent, x.name))
 
 
-def format_size(n: float) -> str:
-    for unit in ("B", "KB", "MB", "GB"):
-        if n < 1024.0:
-            return f"{n:.1f} {unit}"
-        n /= 1024.0
-    return f"{n:.1f} TB"
-
-
 @lru_cache(maxsize=128)
 def font_format(ext: str) -> str:
     return _FONT_FORMATS.get(ext.lower(), ext.upper().lstrip("."))
@@ -157,7 +149,7 @@ def cmd_simple(args: argparse.Namespace) -> int:
     LOG.info("Found {} font(s)", len(fonts))
     doc = _generate_simple_html(fonts, text, sizes)
     output.write_text(doc, encoding="utf-8")
-    LOG.info("Wrote {} ({})", output, format_size(output.stat().st_size))
+    LOG.info("Wrote {} ({})", output, fsz(output.stat().st_size))
     return 0
 
 
@@ -209,7 +201,7 @@ def _rich_section(info: FontInfo, root: Path, text: str) -> str:
         rel = info.path
     rel_s = html.escape(str(rel))
     body = html.escape(text)
-    size_s = format_size(info.size)
+    size_s = fsz(info.size)
     return (
         "\n<section>\n"
         f"<h1 style=\"font-family:'{family}',serif;\">\n"
@@ -394,7 +386,7 @@ def cmd_rich(args: argparse.Namespace) -> int:
     LOG.info("Writing to {}...", output)
     if _atomic_write(doc, output):
         LOG.info("Successfully generated {}", output)
-        LOG.info("  File size: {}", format_size(output.stat().st_size))
+        LOG.info("  File size: {}", fsz(output.stat().st_size))
         return 0
     return 1
 

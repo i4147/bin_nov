@@ -17,7 +17,7 @@ Default: page_{page:0{w}d}.txt -e, --encoding Output file encoding (default: utf
 ...
 plus 9 more; run ``pdf2page --help`` for the full list.
 Examples: $ pdf2page book.pdf -b pymupdf Command-line script: run ``python pdf2page.py`` or the ``pdf2page`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed

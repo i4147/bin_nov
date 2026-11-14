@@ -2,7 +2,7 @@
 """Build a word-frequency JSON from the files below the current directory.
 Tokenizes the text files (regex by default, or nltk, blingfire, sacremoses, spacy, pyonmttok) in a pool, counts the words and writes them to ``word_freq.json`` for the ``~/.personal_dict`` used by the spelling tools.
 Usage: update_custom_dict [--tokenizer regex|nltk|blingfire|sacremoses|spacy|pyonmttok] Options: -t, --tokenizer Examples: $ update_custom_dict -t nltk Command-line script: run ``python update_custom_dict.py`` or the ``update_custom_dict`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections import Counter

@@ -21,7 +21,7 @@ Options: --target Target language (default: fa) --output-suffix Suffix appended 
 ...
 plus 2 more; run ``fatrans --help`` for the full list.
 Examples: $ fatrans to-fa README.md $ fatrans inplace-to-en notes/ Command-line script: run ``python fatrans.py`` or the ``fatrans`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed

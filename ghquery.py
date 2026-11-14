@@ -4,7 +4,7 @@ Subcommands: ``user-repos`` lists the repositories of a user (``--python-only``)
 Usage: github_query_tool {user-repos,search,trending,trending-users,repo-size} [options] Positional arguments: username repo User/repo or https://github.com/user/repo Subcommands: user-repos List a user's repos search Search repositories trending Github.com/trending scrape trending-users New users by followers + their Python repos repo-size Size of one repository Options: -o, --output Output file (default: print) --format --python-only -q, --query Raw GitHub search query --preset Active: latest updated Python (ghpy); new: created recently (ghpy10) --days Window for --preset new (default: 10) --sort --per-page --language --timeframe ...
 plus 1 more; run ``github_query_tool --help`` for the full list.
 Examples: $ github_query_tool trending --language python --days 7 Command-line script: run ``python github_query_tool.py`` or the ``github_query_tool`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from collections.abc import Sequence

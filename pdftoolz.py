@@ -14,7 +14,7 @@ Options: --html_path --pdf_path --summary_path --output_path --check-titles Base
 -o, --output --directory --output-subdir --dpi ...
 plus 4 more; run ``pdftoolz --help`` for the full list.
 Examples: $ pdftoolz outline --summary_path SUMMARY.md --html_path docs --pdf_path book.pdf Command-line script: run ``python pdftoolz.py`` or the ``pdftoolz`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor

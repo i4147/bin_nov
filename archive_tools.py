@@ -23,7 +23,7 @@ Options: -r, --recursive Recurse into directories.
 ...
 plus 3 more; run ``archive_tools --help`` for the full list.
 Examples: $ archive_tools extract -r downloads/ Command-line script: run ``python archive_tools.py`` or the ``archive_tools`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import bz2

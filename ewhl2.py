@@ -2,7 +2,7 @@
 """Move the empty wheels aside, flagging the ones already installed.
 Detects the ``.whl`` files without code members, extracts their name and version, checks whether the package is installed (``pip show`` and the import location), prompts before moving and offers ``--auto-move-all`` and ``--no-install-check``.
 Usage: ewhl2 [directory] [-d DEST] [--auto-move-all] Positional arguments: directory Directory containing .whl files (default: current directory) Options: -d, --dest Destination subdirectory name (default: 'empty_wheels') --no-install-check Skip checking installed packages --auto-move-all Automatically move all empty wheels without prompting Examples: $ ewhl2 ~/wheels --auto-move-all Command-line script: run ``python ewhl2.py`` or the ``ewhl2`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from pathlib import Path

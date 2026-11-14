@@ -6,7 +6,7 @@ Files to display (use '-' for stdin) Options: -l, --language Set the language fo
 '30:40', '30:', ':40' -H, --highlight-line Highlight a specific line (repeatable) --paging --color --tabs --list-languages ...
 plus 1 more; run ``pybat --help`` for the full list.
 Examples: $ pybat README.md -r 1:30 Command-line script: run ``python pybat.py`` or the ``pybat`` command.
-The module is importable as well."""
+"""
 
 import argparse
 from dataclasses import dataclass, field

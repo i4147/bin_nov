@@ -2,7 +2,7 @@
 """Recreate a directory tree from a ``tree`` listing or a screenshot of one.
 Parses the box-drawing markup of the text listing (or OCRs the screenshot with the available engine), infers the depth from the indentation, creates the directories and files under ``--base`` and offers ``--assume-dir``, ``--keep-suffix`` and ``--dry-run``.
 Usage: mk_tree INPUT [--base DIR] [-d] [-n] Positional arguments: input Text listing or screenshot image Options: --base Directory to build the tree in (default: current directory) -d, --assume-dir Entries without visible children are created as directories (default: files) -n, --dry-run Print the plan without creating anything --engine OCR engine (default: auto) --keep-suffix Keep tree -F suffixes (* @ = |) in names Examples: $ mk_tree listing.txt --base ./rebuilt --dry-run Command-line script: run ``python mk_tree.py`` or the ``mk_tree`` command.
-The module is importable as well."""
+"""
 
 import argparse
 import itertools
