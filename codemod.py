@@ -1,5 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Codemod: cprint('text', 'cyan') → cprint('text', color='cyan')."""
+
 from __future__ import annotations
 
 import argparse
@@ -8,11 +9,24 @@ from pathlib import Path
 import libcst as cst
 
 LEGACY_COLORS = frozenset({
-    "black", "red", "green", "yellow", "blue", "magenta", "cyan", "white",
-    "grey", "gray",
-    "light_red", "light_green", "light_yellow", "light_blue",
-    "light_magenta", "light_cyan",
-    "dark_grey", "light_grey",
+    "black",
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "white",
+    "grey",
+    "gray",
+    "light_red",
+    "light_green",
+    "light_yellow",
+    "light_blue",
+    "light_magenta",
+    "light_cyan",
+    "dark_grey",
+    "light_grey",
 })
 
 
@@ -22,9 +36,7 @@ class _Codemod(cst.CSTTransformer):
 
     def leave_Call(self, original: cst.Call, updated: cst.Call) -> cst.Call:
         f = updated.func
-        name = f.value if isinstance(f, cst.Name) else (
-            f.attr.value if isinstance(f, cst.Attribute) else None
-        )
+        name = f.value if isinstance(f, cst.Name) else (f.attr.value if isinstance(f, cst.Attribute) else None)
         if name != "cprint":
             return updated
 

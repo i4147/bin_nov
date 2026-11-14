@@ -19,7 +19,6 @@ def walk_files(directory: Path) -> Iterator[Path]:
             yield root / name
 
 
-
 def process_file(path: Path) -> None:
     """Run Ruff fixes and formatting on path, reporting command failures."""
     path = Path(path)

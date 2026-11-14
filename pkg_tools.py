@@ -46,7 +46,7 @@ import urllib.error
 import urllib.request
 import zipfile
 
-from dh import MAX_WORKERS
+from dh import MAX_WORKERS, cprint
 
 try:
     from rapidfuzz import fuzz as _rapidfuzz
@@ -62,23 +62,6 @@ try:
 except ImportError:
     parse_wheel_filename = None
     Version = None
-_ANSI: dict[str, str] = {
-    "red": "\033[31m",
-    "green": "\033[32m",
-    "yellow": "\033[33m",
-    "cyan": "\033[36m",
-    "white": "\033[37m",
-    "grey": "\033[90m",
-    "reset": "\033[0m",
-}
-_COLOR_ON = sys.stdout.isatty()
-
-
-def cprint(msg: str, color: str = "white", end: str = "\n") -> None:
-    if _COLOR_ON and color in _ANSI:
-        print(f"{_ANSI[color]}{msg}{_ANSI['reset']}", end=end)
-    else:
-        print(msg, end=end)
 
 
 def human_size(n: float) -> str:
@@ -254,9 +237,9 @@ def cmd_apt_install(args: argparse.Namespace) -> int:
         return 0
     rc, _, err = run_cmd(["pkg", "install", *matches], show_output=True)
     if rc == 0:
-        cprint("\n✓ Installation completed successfully!", "green")
+        cprint("\n✓ Installation completed successfully!", color="green")
         return 0
-    cprint(f"\n✗ Installation failed: {err}", "red")
+    cprint(f"\n✗ Installation failed: {err}", color="red")
     return 1
 
 
