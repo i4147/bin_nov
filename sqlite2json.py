@@ -17,6 +17,7 @@ from typing import Any, Callable
 
 from dh import MAX_WORKERS
 
+
 BLOB_BASE64: str = "__blob_base64"
 BLOB_HEX: str = "__blob_hex"
 BATCH_SIZE: int = 5000

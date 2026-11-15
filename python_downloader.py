@@ -21,6 +21,7 @@ import urllib.request
 
 from dh import MAX_WORKERS
 
+
 __version__: str = "2.0.0"
 CHUNK: int = 64 * 1024
 BIG_FILE: int = 50 * 1024 * 1024
@@ -164,7 +165,7 @@ class Progress:
             self._thread.start()
         return self
 
-    def __exit__(self, *exc: Any) -> bool:
+    def __exit__(self, *exc: object) -> bool:
         self.close()
         return False
 

@@ -8,7 +8,8 @@ from pathlib import Path
 import sys
 from typing import TYPE_CHECKING, Any
 
-from dh import MAX_WORKERS, runcmd, get_pyfiles
+from dh import MAX_WORKERS, get_pyfiles, runcmd
+
 
 print_lock = Lock()
 

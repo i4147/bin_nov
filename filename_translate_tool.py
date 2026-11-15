@@ -17,6 +17,7 @@ import unicodedata
 
 from dh import MAX_WORKERS
 
+
 NON_ASCII: re.Pattern[str] = re.compile(r"[^\x00-\x7F]")
 
 PERSIAN_MAP: dict[str, str] = {

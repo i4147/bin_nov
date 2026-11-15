@@ -10,6 +10,7 @@ from typing import Any, Iterable, Iterator
 
 from dh import fsz
 
+
 DARWIN_PATTERNS: set[str] = {
     ".DS_Store",
     ".AppleDouble",

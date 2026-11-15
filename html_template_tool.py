@@ -12,6 +12,7 @@ import html.parser
 from pathlib import Path
 import sys
 
+
 PAGE_CSS: str = (
     "body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; "
     "padding: 20px; background: #f4f4f4; }\n"

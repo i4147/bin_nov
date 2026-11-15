@@ -12,6 +12,7 @@ from pathlib import Path
 import sys
 from typing import Any
 
+
 DEFAULT_EXCLUDES: set[str] = {
     ".git",
     ".venv",

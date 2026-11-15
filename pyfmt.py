@@ -31,10 +31,11 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from typing import Any, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Optional
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 LOG = logger
 HTML_EXTS: set[str] = {".html", ".htm", ".xhtml"}

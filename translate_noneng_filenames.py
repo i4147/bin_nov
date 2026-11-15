@@ -10,6 +10,7 @@ import re
 
 from deep_translator import GoogleTranslator
 
+
 DIRECTORY = Path.cwd()
 non_english_pattern = re.compile(r"[^\x00-\x7F]")
 

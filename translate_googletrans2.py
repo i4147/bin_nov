@@ -4,6 +4,7 @@
 import argparse
 import ast
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import contextlib
 import io
 import json
 from pathlib import Path
@@ -21,6 +22,7 @@ from typing import Any, Callable, Sequence
 from dh import MAX_WORKERS
 from googletrans import Translator
 from loguru import logger
+
 
 RETRY_ATTEMPTS: int = 4
 RETRY_DELAY: float = 0.6
@@ -275,10 +277,8 @@ def _write_py_source(input_path: Path, new_source: str) -> None:
         tmp_path.write_text(new_source, encoding="utf-8")
         tmp_path.replace(input_path)
     except OSError:
-        try:
+        with contextlib.suppress(OSError):
             tmp_path.unlink()
-        except OSError:
-            pass
         raise
 
 

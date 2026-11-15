@@ -48,6 +48,7 @@ import zipfile
 
 from dh import MAX_WORKERS, cprint
 
+
 try:
     from rapidfuzz import fuzz as _rapidfuzz
 except ImportError:

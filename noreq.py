@@ -7,8 +7,8 @@ from pathlib import Path
 import shutil
 import tarfile
 import tempfile
-import zipfile
 from typing import Any
+import zipfile
 
 
 def is_wheel_ok(path: Path) -> bool:

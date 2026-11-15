@@ -12,6 +12,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 mpl.use("Agg")
 _FUNCTION_EXPR: str = ""
 

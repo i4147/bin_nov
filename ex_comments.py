@@ -10,6 +10,7 @@ from pathlib import Path
 from tree_sitter import Language, Parser, Tree
 import tree_sitter_python as tsp
 
+
 OUT_DIR: Path = Path("output")
 VALID: set[str] = {"comment", "expression_statements"}
 

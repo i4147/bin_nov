@@ -16,6 +16,7 @@ import sys
 from typing import Optional
 from urllib.parse import urlparse
 
+
 CURRENT_DIR = Path.cwd()
 HOME_ENV = Path.home() / ".env"
 DEFAULT_BACKEND: str = "subprocess"

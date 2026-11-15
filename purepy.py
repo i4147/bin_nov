@@ -16,6 +16,7 @@ from dh import MAX_WORKERS
 from loguru import logger
 import requests
 
+
 POOL_METHODS: Final[tuple[str, ...]] = (
     "map",
     "starmap",

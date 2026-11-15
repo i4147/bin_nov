@@ -6,6 +6,7 @@ Usage: bkk Examples: $ bkk Runs as a script (``python bkk.py``) in the directory
 
 from pathlib import Path
 
+
 if __name__ == "__main__":
     cwd = Path.cwd()
     for r, _d, files in cwd.walk():

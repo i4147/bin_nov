@@ -16,11 +16,12 @@ from pathlib import Path
 import sys
 import tarfile
 import tempfile
-import zipfile
 from typing import Any, Iterable
+import zipfile
 
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 try:
     from tree_sitter import Parser

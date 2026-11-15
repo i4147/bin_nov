@@ -17,6 +17,7 @@ import shutil
 import subprocess
 import sys
 
+
 ANSI_RE: re.Pattern[str] = re.compile(r"\x1b(?:\[[0-9;]*[A-Za-z]|\][^\x07]*\x07|[()][AB012])")
 CONTROL_RE: re.Pattern[str] = re.compile(r"[\x01-\x08\x0b\x0c\x0e-\x1f\x7f]")
 LITERAL_PATTERNS: tuple[str, ...] = (

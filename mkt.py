@@ -15,6 +15,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 import requests
 
+
 TEMPLATES_DIR: str = "templates"
 DEFAULT_MAX_DEPTH: int = 6
 

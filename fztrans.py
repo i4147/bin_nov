@@ -18,6 +18,7 @@ from typing import Final, Iterable
 from faprint import faprint
 from loguru import logger
 
+
 DICT_FILE: Final[str] = Path("~/dic.json").expanduser()
 
 

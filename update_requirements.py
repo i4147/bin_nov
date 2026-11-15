@@ -12,6 +12,7 @@ from dh import MAX_WORKERS
 from packaging.version import InvalidVersion, Version
 import requests
 
+
 _TIMEOUT: Final[float] = 10.0
 _DEFAULT_INPUT: Final[str] = "requirements.txt"
 _DEFAULT_OUTPUT: Final[str] = "upgradable.txt"

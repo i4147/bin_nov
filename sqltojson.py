@@ -23,6 +23,7 @@ import fire
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 
+
 __version__: str = "0.0.0"
 DATE_FIELDS: list[str] = [
     "CURRENT_DATE",

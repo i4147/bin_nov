@@ -22,15 +22,17 @@ human could infer from context simply disappear.
 import argparse
 import ast
 import copy
+from pathlib import Path
 import random
 import shutil
 import sys
 import tempfile
-from pathlib import Path
+
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import infer_annotations as ia  # noqa: E402
+
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 

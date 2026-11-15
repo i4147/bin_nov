@@ -11,6 +11,7 @@ import sqlite3
 import sys
 from typing import Any
 
+
 DB_PATH: Path = Path("/sdcard/data/pip.db")
 DEFAULT_LIMIT: int = 20
 TRIGRAM_MIN: int = 3

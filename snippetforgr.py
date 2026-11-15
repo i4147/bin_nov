@@ -13,6 +13,7 @@ from typing import Any, Iterable, Iterator, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 SOURCE_CODE_EXTS: frozenset[str] = frozenset({
     ".py",
     ".h",

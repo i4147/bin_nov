@@ -15,6 +15,7 @@ from typing import Any, Iterable
 
 from tree_sitter import Language, Node, Parser
 
+
 PathLike = str | Path
 
 

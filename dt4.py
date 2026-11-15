@@ -20,6 +20,7 @@ from deep_translator.exceptions import NotValidPayload, TranslationNotFound
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 DEFAULT_INPUT: str = "input.txt"
 DEFAULT_OUTPUT: str = "chunks.json"
 DEFAULT_FAILED: str = "failed.txt"

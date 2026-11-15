@@ -12,6 +12,7 @@ import re
 import shutil
 from typing import Any, Iterable
 
+
 HOME = Path.home()
 ZSHRC = HOME / ".zshrc"
 CUSTOM_DIR = HOME / ".config" / "zsh.d"

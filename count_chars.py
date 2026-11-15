@@ -7,6 +7,7 @@ Usage: count_chars FILE Examples: $ count_chars article.txt Runs as a script (``
 from pathlib import Path
 import sys
 
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python count_chars_of_input_file.py <input_file>")

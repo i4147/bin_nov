@@ -17,6 +17,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFont, ImageOps
 
+
 RESAMPLING: dict[str, Any] = {
     "nearest": Image.Resampling.NEAREST,
     "box": Image.Resampling.BOX,

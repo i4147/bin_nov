@@ -4,6 +4,7 @@
 from pathlib import Path
 import re
 
+
 # Text-based file extensions to scan
 TEXT_EXT: set[str] = {".txt", ".md", ".csv", ".json", ".xml", ".html", ".htm", ".log", ".py", ".yaml", ".yml"}
 
@@ -14,7 +15,7 @@ QUESTION_PATTERN = re.compile(r"[^؟?]*[؟?]")
 def main() -> None:
     questions = []
 
-    for path in Path(".").rglob("*"):
+    for path in Path().rglob("*"):
         if not path.is_file():
             continue
 

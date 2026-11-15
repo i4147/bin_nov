@@ -10,6 +10,7 @@ import sys
 
 from dh import get_nobinary
 
+
 IF_BLOCK_REGEX = re.compile(
     r"^if\s+\[\s*\$\((\S+)\)\s*\{\-ne\s+0\s*\}\]\s*;\s*then\s*\n((?:.|\n)*?)^\s*exit\s+1\s*$(.*?)^\s*fi",
     re.MULTILINE | re.IGNORECASE,

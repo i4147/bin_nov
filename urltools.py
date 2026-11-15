@@ -10,11 +10,12 @@ from pathlib import Path
 import re
 import sys
 import tarfile
-from typing import Any, Iterable, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Iterable, Optional
 from urllib.parse import unquote, urlparse
 import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS
+
 
 try:
     from loguru import logger as _loguru_logger

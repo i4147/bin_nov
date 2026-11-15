@@ -21,6 +21,7 @@ import unicodedata
 
 from dh import cprint, format_time, fsz, get_files, get_pyfiles, is_binary, mpf
 
+
 _DOC_TOKENS: tuple[str, str] = ('"""', "'''")
 _FORMAT_STYLES: tuple[str, ...] = ("black", "isort", "autoflake", "autopep", "yapf")
 _FIXCODE_HEAD = re.compile(r"^\s*(def|class)\s+")

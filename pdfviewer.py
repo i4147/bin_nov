@@ -17,6 +17,7 @@ from typing import Any
 
 import pymupdf
 
+
 RESET: str = "\x1b[0m"
 HOME: str = "\x1b[H"
 CLEAR: str = "\x1b[2J"

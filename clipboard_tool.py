@@ -17,6 +17,7 @@ import shutil
 import subprocess
 import sys
 
+
 DEFAULT_GET_CMD: str = "termux-clipboard-get"
 DEFAULT_SET_CMD: str = "termux-clipboard-set"
 SHEBANG_PREFIX: str = "#!/data/data/com.termux/files/usr/bin"

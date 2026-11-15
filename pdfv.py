@@ -14,6 +14,7 @@ import termios
 import tty
 from typing import Any, Iterable
 
+
 try:
     import pymupdf
 except ImportError:

@@ -33,6 +33,7 @@ from typing import Iterable
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 log = logger
 DEFAULT_DH_PATH: Path = Path.home() / "projects" / "py" / "dh" / "src" / "dh"
 DEFAULT_BIN_DIR: Path = Path.home() / "bin"

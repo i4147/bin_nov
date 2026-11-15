@@ -18,6 +18,7 @@ from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
+
 try:
     from tenacity import before_sleep_log, retry, retry_if_exception_type, stop_after_attempt, wait_exponential_jitter
 

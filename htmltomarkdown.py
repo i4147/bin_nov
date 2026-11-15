@@ -10,7 +10,8 @@ from html import unescape
 from html.parser import HTMLParser
 import re
 import sys
-from typing import Final, Optional, Union, cast
+from typing import Final, Optional, cast
+
 
 SELF_CLOSING_TAGS: Final[list[str]] = [
     "area",
@@ -250,7 +251,7 @@ class Tag(metaclass=ABCMeta):
         return self.inner()
 
 
-Element = Union[Content, Tag]
+Element = Content | Tag
 
 
 class HTML(Tag):

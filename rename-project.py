@@ -12,6 +12,7 @@ from typing import Any
 
 from dh import SKIP_DIRS, TEXT_EXT
 
+
 TEXT_PREFIXES: tuple[str, ...] = (
     "readme",
     "license",

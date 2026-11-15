@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/env python
+from pathlib import Path
 import random
 import sys
-from pathlib import Path
 
 
 def show_random_cheat():

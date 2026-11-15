@@ -18,6 +18,7 @@ from pathlib import Path
 import pydoc
 import sys
 
+
 RESET: str = "\x1b[0m"
 NUM_COLOR: str = "\x1b[38;5;244m"
 HEADER_COLOR: str = "\x1b[38;5;81m"

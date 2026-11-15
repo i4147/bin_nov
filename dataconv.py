@@ -21,6 +21,7 @@ from typing import Any, Callable, Iterable, Iterator, Optional
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 Tables = dict[str, list[dict[str, Any]]]
 MMAP_THRESHOLD: int = 5 * 1024 * 1024
 

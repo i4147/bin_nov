@@ -12,10 +12,11 @@ import site
 import sys
 import tarfile
 import tempfile
-import zipfile
 from typing import Any, Sequence
+import zipfile
 
 from loguru import logger
+
 
 try:
     STDLIB = set(sys.stdlib_module_names)

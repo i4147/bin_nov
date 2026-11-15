@@ -21,6 +21,7 @@ from urllib.parse import quote
 from atomicio import atomic_write
 from dh import MAX_WORKERS
 
+
 PATTERN: Final[re.Pattern[str]] = re.compile(
     r"(?<![A-Za-z0-9_+/-])"
     r"data:"

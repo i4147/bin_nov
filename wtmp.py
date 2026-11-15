@@ -15,6 +15,7 @@ from typing import Any
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
+
 DEST_DIR = pathlib.Path("~/tmp/tgz").expanduser()
 ALLOWED_EXT: tuple[str, ...] = (
     ".tar.gz",

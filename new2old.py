@@ -9,6 +9,7 @@ from pathlib import Path
 import sys
 from typing import Any, Callable, Iterable
 
+
 if sys.version_info < (3, 11):
     import tomli as tomllib
 else:

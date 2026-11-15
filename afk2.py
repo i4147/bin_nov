@@ -24,10 +24,11 @@ from pathlib import Path
 import re
 import sys
 import tarfile
-import zipfile
 from typing import Any, Iterable
+import zipfile
 
 from dh import MAX_WORKERS
+
 
 try:
     import zstandard as zstd

@@ -17,6 +17,7 @@ from loguru import logger
 from tree_sitter import Language, Parser
 import tree_sitter_python as tspython
 
+
 logger.remove()
 logger.add(
     sys.stderr,

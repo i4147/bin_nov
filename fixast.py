@@ -22,6 +22,7 @@ import sys
 import tokenize
 from typing import Any, Final, Iterable
 
+
 __version__: str = "1.1.0"
 DEPRECATED_FAMILY: Final[dict[str, str]] = {
     "Str": "str",

@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 from typing import Any, Sequence
 
+
 try:
     from faprint import format_persian
 except ImportError:

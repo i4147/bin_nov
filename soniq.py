@@ -13,6 +13,7 @@ from typing import Any, Iterable
 
 from dh import is_binary
 
+
 THRESHOLD: int = 1024 * 1024
 
 

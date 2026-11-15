@@ -18,6 +18,7 @@ from typing import Callable
 import zipfile
 import zlib
 
+
 try:
     import brotli as _brotli_mod
 except ImportError:

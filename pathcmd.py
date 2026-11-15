@@ -6,6 +6,7 @@ Usage: pathcmd Examples: $ pathcmd Runs as a script (``python pathcmd.py``) in t
 
 import os
 
+
 if __name__ == "__main__":
     p_env = os.environ.get("PATH")
     pdirs = p_env.split(":")

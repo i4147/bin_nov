@@ -14,6 +14,7 @@ from pathlib import Path
 import shutil
 import sys
 
+
 IMAGE_SUFFIXES: frozenset[str] = frozenset({".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"})
 CASCADE_NAMES: tuple[str, ...] = (
     "haarcascade_frontalface_default.xml",

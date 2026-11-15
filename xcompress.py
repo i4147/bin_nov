@@ -24,6 +24,7 @@ import zlib
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 try:
     import zstandard as zstd
 except ImportError:

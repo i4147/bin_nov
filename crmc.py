@@ -34,6 +34,7 @@ from dh import MAX_WORKERS
 import libcst as cst
 from loguru import logger
 
+
 if TYPE_CHECKING:
     from multiprocessing.pool import AsyncResult
 """Exact number of worker processes in the pool (a hard requirement)."""

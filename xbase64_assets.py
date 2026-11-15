@@ -21,6 +21,7 @@ from typing import Any
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 SUPPORTED_EXT: set[str] = {".html", ".css", ".js", ".jsx", ".tsx", ".ts"}
 ASSETS_DIR: Path = Path("assets")
 CHUNK_SIZE: int = 8192

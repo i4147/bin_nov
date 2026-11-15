@@ -13,6 +13,7 @@ from typing import Any, Iterable, Iterator
 from dh import SKIP_DIRS
 from spellchecker import SpellChecker
 
+
 WORD_RE = re.compile(r"[^\W\d_]+(?:['\u2019][^\W\d_]+)*", re.UNICODE)
 _TEXT_CHARS = bytes({7, 8, 9, 10, 12, 13, 27} | (set(range(0x20, 0x100)) - {0x7F}))
 _OUTPUT_PATH = Path.home() / ".personal_dict"

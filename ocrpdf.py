@@ -10,6 +10,7 @@ from typing import Optional
 
 import pymupdf
 
+
 _DOC: Optional[pymupdf.Document] = None
 
 

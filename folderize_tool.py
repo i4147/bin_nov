@@ -20,6 +20,7 @@ import re
 import shutil
 import sys
 
+
 IMAGE_EXT: frozenset[str] = frozenset({
     ".jpg",
     ".jpeg",

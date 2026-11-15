@@ -2,14 +2,15 @@
 import argparse
 import difflib
 import os
+from pathlib import Path
 import re
 import runpy
 import subprocess
 import sys
 import tempfile
-from pathlib import Path
 
 import libcst as cst
+
 
 # ---------------------------------------------------------------------------
 # Heuristic inference (default engine)

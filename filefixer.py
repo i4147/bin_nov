@@ -38,11 +38,12 @@ import subprocess
 import sys
 import tarfile
 import tokenize
-from typing import Any, Callable, Iterable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Iterable
 import zipfile
 
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 try:
     import puremagic

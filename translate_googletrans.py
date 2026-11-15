@@ -18,6 +18,7 @@ from dh import MAX_WORKERS
 from googletrans import Translator
 from loguru import logger
 
+
 RETRY_ATTEMPTS: int = 4
 RETRY_DELAY: float = 0.6
 MAX_CHUNK_SIZE: int = 2000

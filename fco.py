@@ -14,10 +14,11 @@ from multiprocessing import Pool
 from pathlib import Path
 import sys
 import time
-from typing import Any, Optional, Sequence, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Optional, Sequence
 
 from dh import MAX_WORKERS, fsz
 from loguru import logger
+
 
 if TYPE_CHECKING:
     from fontTools.misc.psCharStrings import T2CharString

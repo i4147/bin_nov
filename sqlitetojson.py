@@ -39,17 +39,17 @@ Notes
 """
 
 from __future__ import annotations
-
 import argparse
 import base64
 import contextlib
 import json
 import math
 import os
+from pathlib import Path
 import sqlite3
 import sys
-from pathlib import Path
 from typing import Any, Iterable, Iterator, TextIO
+
 
 __version__ = "1.0.0"
 PROG = "sqlite2json"
@@ -72,7 +72,8 @@ class ExportError(Exception):
 def quote_ident(name: str) -> str:
     """Quote an SQL identifier, doubling embedded double quotes."""
     if not isinstance(name, str) or not name:
-        raise ExportError("encountered an empty identifier")
+        msg = "encountered an empty identifier"
+        raise ExportError(msg)
     return '"' + name.replace('"', '""') + '"'
 
 
@@ -92,7 +93,8 @@ def convert_value(
             return raw.hex()
         if blobs == "null":
             return None
-        raise ExportError(f"{context or 'value'}: binary (BLOB) data found; use --blobs base64|hex|null")
+        msg = f"{context or 'value'}: binary (BLOB) data found; use --blobs base64|hex|null"
+        raise ExportError(msg)
     if isinstance(value, float) and not math.isfinite(value):
         if nan == "null":
             return None
@@ -100,7 +102,8 @@ def convert_value(
             if math.isnan(value):
                 return "NaN"
             return "Infinity" if value > 0 else "-Infinity"
-        raise ExportError(f"{context or 'value'}: non-finite float {value!r}; use --nan null|string")
+        msg = f"{context or 'value'}: non-finite float {value!r}; use --nan null|string"
+        raise ExportError(msg)
     return value
 
 
@@ -111,9 +114,11 @@ def open_database(path: str | Path) -> sqlite3.Connection:
     """Open *path* read-only and validate that it really is a SQLite DB."""
     p = Path(path)
     if not p.exists():
-        raise ExportError(f"database not found: {p}")
+        msg = f"database not found: {p}"
+        raise ExportError(msg)
     if not p.is_file():
-        raise ExportError(f"not a regular file: {p}")
+        msg = f"not a regular file: {p}"
+        raise ExportError(msg)
 
     resolved = p.resolve()
     attempts = (
@@ -132,7 +137,8 @@ def open_database(path: str | Path) -> sqlite3.Connection:
             if conn is not None:
                 conn.close()
 
-    raise ExportError(f"cannot open {p}: {last_error}") from last_error
+    msg = f"cannot open {p}: {last_error}"
+    raise ExportError(msg) from last_error
 
 
 def list_tables(
@@ -420,9 +426,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _run(args: argparse.Namespace) -> int:
     if args.indent < 0:
-        raise ExportError("--indent must be >= 0")
+        msg = "--indent must be >= 0"
+        raise ExportError(msg)
     if args.batch_size < 1:
-        raise ExportError("--batch-size must be >= 1")
+        msg = "--batch-size must be >= 1"
+        raise ExportError(msg)
 
     conn = open_database(args.database)
     try:

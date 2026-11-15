@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 
+
 static_dir: str = "/sdcard/_static"
 
 

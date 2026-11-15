@@ -11,6 +11,7 @@ from pathlib import Path
 import sys
 from typing import Any
 
+
 VOID_ELEMENTS = frozenset({
     "area",
     "base",

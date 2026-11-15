@@ -16,8 +16,9 @@ import tempfile
 import time
 from typing import Any
 
-from dh import SKIP_DIRS, MAX_WORKERS
+from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
+
 
 try:
     import tomllib

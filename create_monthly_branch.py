@@ -9,6 +9,7 @@ from pathlib import Path
 import subprocess
 import sys
 
+
 REPO_PATH = Path.home() / "bin"
 MAIN_BRANCH: str = "main"
 

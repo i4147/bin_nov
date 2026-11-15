@@ -12,6 +12,7 @@ from typing import Any, Iterable
 
 import sh
 
+
 COMPILERS: dict[str, tuple[Any, ...]] = {
     ".c": ("clang", ("clang", "gcc")),
     ".cpp": ("clang++", ("clang++", "g++")),

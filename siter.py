@@ -10,8 +10,8 @@ from pathlib import Path
 import shutil
 import sys
 import tempfile
-import zipfile
 from typing import Any, Iterable, Sequence
+import zipfile
 
 from dh import MAX_WORKERS
 

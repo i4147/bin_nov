@@ -14,11 +14,14 @@ import subprocess
 import sys
 from typing import Any
 
+
 try:
     import tomllib
 except ModuleNotFoundError:
     import tomli as tomllib
+
 from setuptools import find_packages, setup
+
 
 ROOT = Path.cwd()
 

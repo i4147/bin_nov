@@ -11,6 +11,7 @@ from typing import Any, Optional, Sequence
 from dh import _SNAPR_WORKERS
 from loguru import logger
 
+
 try:
     import cramjam
     from loguru import logger
@@ -19,6 +20,7 @@ try:
 except ImportError:
     _HAS_CRAMJAM = False
 from dh import cprint, fsz, get_files, gsz
+
 
 _BLOCK_SIZE: int = 16384
 _MAX_OFFSET_1B: int = 2047

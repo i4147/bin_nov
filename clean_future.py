@@ -31,8 +31,8 @@ The module can also be imported.  Requires Python 3.10+.
 """
 
 import ast
-import sys
 from pathlib import Path
+import sys
 from typing import Iterator, Sequence
 
 from atomicio import atomic_write

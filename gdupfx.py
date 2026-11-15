@@ -22,6 +22,7 @@ from typing import Optional
 
 from dh import MAX_WORKERS, SKIP_DIRS, fsz
 
+
 try:
     import xxhash
 except ImportError:

@@ -12,6 +12,7 @@ from typing import Any, Iterator
 from dh import SKIP_DIRS
 import py3langid as langid
 
+
 ROOT = Path.cwd()
 SKIP_EXTS: set[str] = {
     ".pyc",

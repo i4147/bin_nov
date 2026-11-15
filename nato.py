@@ -9,6 +9,7 @@ import argparse
 from pathlib import Path
 import sys
 
+
 NATO: dict[str, str] = {
     "A": "Alpha",
     "B": "Bravo",

@@ -29,6 +29,7 @@ import libcst as cst
 from loguru import logger
 from tree_sitter import Node, Parser
 
+
 try:
     from rich.console import Console
     from rich.text import Text

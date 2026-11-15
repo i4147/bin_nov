@@ -17,6 +17,7 @@ from typing import Callable
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 try:
     from loguru import logger
 except ImportError as exc:

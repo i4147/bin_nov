@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import subprocess
 
+
 NEW_USER: str = "i4147"
 IGNORE: set[str] = {"cpython", "neovim-source", ".git"}
 

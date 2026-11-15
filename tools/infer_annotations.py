@@ -45,13 +45,14 @@ Notes
 
 import argparse
 import ast
+from dataclasses import dataclass, field
 import io
 import json
+from pathlib import Path
 import re
 import sys
 import tokenize
-from dataclasses import dataclass, field
-from pathlib import Path
+
 
 # --------------------------------------------------------------------------- #
 # constants
@@ -1162,9 +1163,8 @@ def infer_expr(ctx: FileCtx, node: ast.AST | None, depth: int = 0) -> str:
     if isinstance(node, ast.BinOp):
         left = infer_expr(ctx, node.left, depth + 1)
         right = infer_expr(ctx, node.right, depth + 1)
-        if left == "str" or right == "str":
-            if isinstance(node.op, (ast.Add, ast.Mod)):
-                return "str"
+        if (left == "str" or right == "str") and isinstance(node.op, (ast.Add, ast.Mod)):
+            return "str"
         if not left and isinstance(node.left, ast.Subscript) and right in NUMERIC:
             return right
         if left in NUMERIC and right in NUMERIC:
@@ -1278,19 +1278,18 @@ def infer_call(ctx: FileCtx, node: ast.Call, depth: int) -> str:
             return "tuple[int, int]"
         if attr in ("start", "end"):
             return "int"
-    if recv.startswith("dict"):
-        if attr == "get":
-            # `mapping.get(key, default)` is as typed as its default
-            for kw in node.keywords:
-                if kw.arg == "default" and kw.value is not None:
-                    default_t = infer_expr(ctx, kw.value)
-                    if default_t and "|" not in default_t:
-                        return default_t
-            if len(node.args) >= 2:
-                default_t = infer_expr(ctx, node.args[1])
+    if recv.startswith("dict") and attr == "get":
+        # `mapping.get(key, default)` is as typed as its default
+        for kw in node.keywords:
+            if kw.arg == "default" and kw.value is not None:
+                default_t = infer_expr(ctx, kw.value)
                 if default_t and "|" not in default_t:
                     return default_t
-            return "Any"
+        if len(node.args) >= 2:
+            default_t = infer_expr(ctx, node.args[1])
+            if default_t and "|" not in default_t:
+                return default_t
+        return "Any"
     if dotted in MODULE_ATTR_RETURNS:
         return MODULE_ATTR_RETURNS[dotted]
     if "." in dotted:
@@ -1562,10 +1561,7 @@ def evidence_to_type(ev: Evidence, ctx: FileCtx) -> str:
     pool = hard or counts
     if not pool:
         return ""
-    best = sorted(
-        pool.items(),
-        key=lambda kv: (-kv[1], PRIORITIES.index(kv[0]) if kv[0] in PRIORITIES else 99),
-    )[0][0]
+    best = min(pool.items(), key=lambda kv: (-kv[1], PRIORITIES.index(kv[0]) if kv[0] in PRIORITIES else 99))[0]
     mapping = {
         "Path": "Path",
         "Command": "str",
@@ -1598,7 +1594,7 @@ def name_based_type(ctx: FileCtx, name: str) -> str:
         return EXPR_NAME_HINTS[lname]
     if lname in ("node", "original_node", "updated_node") and ctx.has_name("cst"):
         return "cst.CSTNode"
-    if lname in ("tree",) and ctx.has_name("cst"):
+    if lname == "tree" and ctx.has_name("cst"):
         return "cst.Module"
     if lname in (
         "event",

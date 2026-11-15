@@ -10,6 +10,7 @@ import sys
 
 from dh import cprint
 
+
 major, minor, _, _, _ = sys.version_info
 py_version: str = f"{major}.{minor}"
 ALLOWED: list[str] = ["METADATA", "RECORD", "WHEEL", "top_level.txt"]

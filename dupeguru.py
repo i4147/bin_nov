@@ -16,6 +16,7 @@ from typing import Any, Iterable, Iterator, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS, fsz
 
+
 CHUNK_SIZE: int = 1 << 20
 PARTIAL_SIZE: int = 1 << 16
 DIGEST_BYTES: int = 16

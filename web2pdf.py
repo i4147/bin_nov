@@ -4,12 +4,13 @@
 import argparse
 from pathlib import Path
 import sys
+from typing import Any
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
-from typing import Any
 
 from rich.console import Console
 from weasyprint import CSS, HTML
+
 
 console = Console(stderr=True)
 PAPER: dict[str, tuple[float, float]] = {

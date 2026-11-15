@@ -32,6 +32,7 @@ import shutil
 import sys
 from typing import Iterable, Iterator, Mapping, Sequence
 
+
 try:
     import ssdeep
 except ImportError as exc:

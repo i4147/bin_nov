@@ -15,13 +15,15 @@ The tool is idempotent: running it twice changes nothing the second time.
 import argparse
 import fnmatch
 import json
+from pathlib import Path
 import sys
 import time
-from pathlib import Path
+
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import infer_annotations as ia  # noqa: E402
+
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 

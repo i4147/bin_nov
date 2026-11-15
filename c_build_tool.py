@@ -17,6 +17,7 @@ import sys
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
+
 TIMEOUT_SECONDS: int = 60
 COMPILERS: dict[str, str] = {".c": "clang", ".cpp": "clang++", ".cc": "clang++", ".cxx": "clang++"}
 

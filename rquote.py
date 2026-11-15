@@ -9,6 +9,7 @@ from pathlib import Path
 import random
 from shutil import get_terminal_size
 
+
 FILE_NAME: str = "/sdcard/data/quotes/quotes.json"
 
 

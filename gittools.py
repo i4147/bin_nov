@@ -2,27 +2,28 @@
 
 import concurrent.futures
 import csv
-import fnmatch
-import json
-import os
-import shutil
-import subprocess
-import sys
-import urllib.error
-import urllib.request
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta, timezone
 from enum import StrEnum
+import fnmatch
+import json
+import os
 from pathlib import Path
+import shutil
+import subprocess
+import sys
 from typing import Annotated, Any, Iterator, TextIO
+import urllib.error
+import urllib.request
 
-import typer
 from loguru import logger
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.prompt import Confirm
 from rich.table import Table
+import typer
+
 
 console = Console()
 err_console = Console(stderr=True)
@@ -219,9 +220,7 @@ def _pending_historical_deletions(repo: Path) -> list[str]:
 def _path_ok(path: str, glob: str | None, exclude: str | None) -> bool:
     if glob and not fnmatch.fnmatch(path, glob):
         return False
-    if exclude and fnmatch.fnmatch(path, exclude):
-        return False
-    return True
+    return not (exclude and fnmatch.fnmatch(path, exclude))
 
 
 def _apply_mode(rec: CommitRecord, mode: ChangeMode) -> CommitRecord:
@@ -507,7 +506,8 @@ def _github_api_request(token: str, method: str, url: str, data: dict[str, Any] 
             msg = json.loads(body).get("message", body)
         except Exception:
             msg = body
-        raise RuntimeError(f"GitHub API error {exc.code}: {msg}") from exc
+        msg_0 = f"GitHub API error {exc.code}: {msg}"
+        raise RuntimeError(msg_0) from exc
 
 
 def _api_repo_create(token: str, name: str, private: bool, description: str | None) -> dict[str, Any]:
@@ -529,7 +529,7 @@ def _api_repo_create(token: str, name: str, private: bool, description: str | No
 
 @repo_app.command("scan")
 def repo_scan(
-    path: Annotated[Path, typer.Argument(help="Root directory to scan")] = Path("."),
+    path: Annotated[Path, typer.Argument(help="Root directory to scan")] = Path(),
     json_out: Annotated[bool, typer.Option("--json", help="Emit JSON")] = False,
     check: Annotated[bool, typer.Option("--check", help="Exit 1 if any repo is dirty")] = False,
 ) -> None:
@@ -574,7 +574,7 @@ def repo_scan(
         )
     else:
         for p, d, detail in results:
-            rel = p.relative_to(root) if p != root else Path(".")
+            rel = p.relative_to(root) if p != root else Path()
             if d:
                 console.print(f"[red]✗[/red] [bold]{rel}[/bold]")
                 console.print(f"  └─ {detail}")
@@ -591,7 +591,7 @@ def repo_scan(
 
 @repo_app.command("pull")
 def repo_pull(
-    path: Annotated[Path, typer.Argument(help="Root directory")] = Path("."),
+    path: Annotated[Path, typer.Argument(help="Root directory")] = Path(),
     timeout: Annotated[int, typer.Option("--timeout", help="Per-repo timeout (s)")] = 120,
 ) -> None:
     root = path.resolve()
@@ -626,7 +626,7 @@ def repo_pull(
 
     ok = sum(1 for _, s, _ in results if s)
     for repo, success, msg in results:
-        rel = repo.relative_to(root) if repo != root else Path(".")
+        rel = repo.relative_to(root) if repo != root else Path()
         if success:
             console.print(f"[green]✓[/green] {rel}")
         else:
@@ -700,7 +700,7 @@ def repo_ignore(
     if not needle:
         logger.error("line cannot be empty")
         raise typer.Exit(1)
-    targets = [p.resolve() for p in (paths or [Path(".")])]
+    targets = [p.resolve() for p in (paths or [Path()])]
     gi_files: list[Path] = []
     for t in targets:
         if t.is_file() and t.name == ".gitignore":
@@ -727,7 +727,7 @@ def repo_ignore(
 
 @history_app.command("checkout-previous")
 def history_checkout_previous(
-    root: Annotated[Path, typer.Argument(help="Directory containing repositories")] = Path("."),
+    root: Annotated[Path, typer.Argument(help="Directory containing repositories")] = Path(),
     prefix: Annotated[str, typer.Option("--prefix", "-p", help="Latest commit subject prefix")] = "2026-08-29",
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip confirmation")] = False,
 ) -> None:
@@ -773,7 +773,7 @@ def history_checkout_previous(
 
 @history_app.command("prune")
 def history_prune(
-    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path("."),
+    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
     days: Annotated[int, typer.Option("--days", help="Drop commits older than N days")] = 30,
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip confirmation")] = False,
     dry_run: Annotated[bool, typer.Option("--dry-run", help="Preview only")] = False,
@@ -828,7 +828,7 @@ def history_prune(
 
 @history_app.command("cut")
 def history_cut(
-    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path("."),
+    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
     days: Annotated[int, typer.Option("--days", help="Drop commits older than N days")] = 30,
     method: Annotated[CutMethod, typer.Option("--method")] = CutMethod.squash,
     backup: Annotated[bool, typer.Option("--backup", help="Create backup branch")] = False,
@@ -901,7 +901,7 @@ def history_cut(
 
 @history_app.command("remote-prune")
 def history_remote_prune(
-    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path("."),
+    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
     branch: Annotated[str, typer.Option("--branch", help="Branch to clean")] = "master",
     days: Annotated[int, typer.Option("--days", help="Keep commits within N days")] = 7,
     no_push: Annotated[bool, typer.Option("--no-push", help="Only reset locally")] = False,
@@ -950,7 +950,7 @@ def history_remote_prune(
 
 @history_app.command("restore")
 def history_restore(
-    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path("."),
+    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
     message: Annotated[str, typer.Option("-m", "--message")] = "removed files",
     dry_run: Annotated[bool, typer.Option("--dry-run")] = False,
     yes: Annotated[bool, typer.Option("--yes", "-y")] = False,
@@ -1002,7 +1002,7 @@ def history_restore(
 
 @stage_app.command("deleted")
 def stage_deleted(
-    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path("."),
+    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
     message: Annotated[str, typer.Option("-m", "--message")] = "removed files",
     dry_run: Annotated[bool, typer.Option("--dry-run")] = False,
 ) -> None:
@@ -1024,7 +1024,7 @@ def stage_deleted(
 
 @stage_app.command("squash")
 def stage_squash(
-    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path("."),
+    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
     dry_run: Annotated[bool, typer.Option("--dry-run")] = False,
 ) -> None:
     repo = _require_repo(repo)
@@ -1045,7 +1045,7 @@ def stage_squash(
 
 @log_app.command("added")
 def log_added(
-    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path("."),
+    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
     n: Annotated[int, typer.Option("-n", help="Commits to look back")] = 10,
 ) -> None:
     repo = _require_repo(repo)
@@ -1079,7 +1079,7 @@ def log_added(
 
 @log_app.command("export")
 def log_export(
-    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path("."),
+    repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
     output: Annotated[Path | None, typer.Option("-o", "--output", help="Output file (- for stdout)")] = None,
     fmt: Annotated[OutputFormat, typer.Option("--format", "-f")] = OutputFormat.json,
     ref: Annotated[str, typer.Option("--ref", help="Ref to walk")] = "HEAD",

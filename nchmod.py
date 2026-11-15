@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env python
-import sys
 from pathlib import Path
+import sys
 
 
 def normalize_chmod(target_dir: str):

@@ -14,6 +14,7 @@ from typing import Any, Iterable
 from dh import get_random_filename
 from loguru import logger
 
+
 ENGLISH_RE = re.compile(r"^[A-Za-z][A-Za-z\s\-'.]*$")
 
 

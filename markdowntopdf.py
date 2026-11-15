@@ -19,6 +19,7 @@ from loguru import logger
 from markdown import markdown
 from weasyprint import CSS, HTML
 
+
 MARKDOWN_BASE_EXT: list[str] = [
     "markdown.extensions.tables",
     "pymdownx.magiclink",

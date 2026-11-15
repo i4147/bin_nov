@@ -36,6 +36,7 @@ from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 LOGGER = logger
 DEFAULT_EXCLUDED_DIRS = frozenset({
     "lazy",

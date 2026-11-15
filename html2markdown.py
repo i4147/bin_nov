@@ -17,6 +17,7 @@ import urllib.request
 
 from dh import MAX_WORKERS
 
+
 HTML_SUFFIXES: frozenset[str] = frozenset({".html", ".htm", ".xhtml", ".xhtm"})
 SKIP_TAGS: frozenset[str] = frozenset({"script", "style", "noscript", "template", "head"})
 BLOCK_TAGS: frozenset[str] = frozenset({

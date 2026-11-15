@@ -14,6 +14,7 @@ from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 if TYPE_CHECKING:
     from multiprocessing.pool import AsyncResult
 CHUNK_SIZE: Final[int] = 4500

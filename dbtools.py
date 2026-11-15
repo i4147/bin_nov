@@ -47,10 +47,11 @@ import sqlite3
 import sys
 import tempfile
 import traceback
-from typing import Any, Iterable, Sequence, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Iterable, Sequence
 
 from dh import MAX_WORKERS, SQL_MAX_WORKERS
 from loguru import logger
+
 
 try:
     import py7zr

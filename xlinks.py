@@ -6,11 +6,11 @@ Usage:
     python script.py https://example.com/page
 """
 
-import sys
 import re
+import sys
+import urllib.error
 from urllib.parse import urljoin, urlparse
 import urllib.request
-import urllib.error
 
 
 def fetch_html(url, timeout=15):
@@ -65,8 +65,7 @@ def extract_urls(html, base_url):
 def save_urls(urls, filename="urls.txt"):
     """Save a sorted list of URLs to a file."""
     with open(filename, "w", encoding="utf-8") as f:
-        for url in sorted(urls):
-            f.write(url + "\n")
+        f.writelines(url + "\n" for url in sorted(urls))
 
 
 def main():

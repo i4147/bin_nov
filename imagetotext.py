@@ -13,6 +13,7 @@ from typing import Any
 from PIL import Image
 import pytesseract
 
+
 TESSDATA = str(Path.home() / ".local" / "share" / "tessdata")
 LANGS: str = "eng+fas+rus"
 OVERWRITE: bool = False

@@ -9,6 +9,7 @@ from multiprocessing import Pool
 from pathlib import Path
 import re
 
+
 _BASE: str = (
     "\U0001f300-\U0001f5ff"
     "\U0001f600-\U0001f64f"

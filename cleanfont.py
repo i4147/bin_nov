@@ -15,6 +15,7 @@ from typing import Any
 
 from fontTools import subset
 
+
 # Unicode blocks that carry Chinese (and CJK-shared) glyphs.
 CJK_BLOCKS: list[tuple[Any, ...]] = [
     (0x2E80, 0x2EFF),  # CJK Radicals Supplement

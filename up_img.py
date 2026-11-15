@@ -11,12 +11,13 @@ import platform
 import subprocess
 import sys
 from traceback import print_exc
-from urllib.parse import urljoin
 from typing import Any, Iterator
+from urllib.parse import urljoin
 
 from PIL import Image, ImageGrab
 from pyperclip import copy as copy2clipboard
 import upyun
+
 
 SYSTEM = platform.system()
 CONFIG_PATH = Path(Path("~").expanduser()).joinpath(".upimg_config.pkl")

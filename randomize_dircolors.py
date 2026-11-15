@@ -8,6 +8,7 @@ from pathlib import Path
 from random import choice as random_choice
 from typing import Any
 
+
 extensions: list[str] = [
     ".Z",
     ".a",

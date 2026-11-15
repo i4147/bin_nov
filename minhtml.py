@@ -21,11 +21,12 @@ import subprocess
 import sys
 import tempfile
 import time
-import unicodedata
 from typing import TypeAlias
+import unicodedata
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
+
 
 try:
     from concurrent.futures import InterpreterPoolExecutor as _IPE

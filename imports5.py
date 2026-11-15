@@ -19,6 +19,7 @@ from typing import Iterable, Iterator, Optional
 import urllib.error
 import urllib.request
 
+
 try:
     STDLIB: set[str] = set(sys.stdlib_module_names)
 except AttributeError:

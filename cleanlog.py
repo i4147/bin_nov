@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import sys
 
+
 ANSI_ESCAPE_RE = re.compile(
     r"""
     \x1B

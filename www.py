@@ -6,6 +6,7 @@ Usage: www Examples: $ www Runs as a script (``python www.py``) in the directory
 
 from pathlib import Path
 
+
 if __name__ == "__main__":
     cwd = Path.cwd()
     for path in cwd.rglob("*.whl"):

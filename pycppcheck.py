@@ -11,6 +11,7 @@ import sys
 
 from dh import cprint, get_files
 
+
 c_files: set[str] = {".c", ".h", ".inc"}
 cpp_files: set[str] = {".cpp", ".cc", ".cxx", ".hpp", ".hpp11", ".hh", ".hxx"}
 

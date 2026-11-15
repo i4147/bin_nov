@@ -9,6 +9,7 @@ import sys
 
 from dh import get_nobinary
 
+
 INVISIBLE_CHARS: set[str] = {
     "\u200b",
     "\u200c",

@@ -11,6 +11,7 @@ import sys
 
 from dh import get_nobinary
 
+
 HTML_ENTITIES: dict[str, str] = {
     "&lt;": "<",
     "&gt;": ">",

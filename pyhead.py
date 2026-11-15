@@ -7,6 +7,7 @@ Usage: pyhead FILE Examples: $ pyhead data.bin Runs as a script (``python pyhead
 from pathlib import Path
 import sys
 
+
 if __name__ == "__main__":
     fn = Path(sys.argv[1])
     try:

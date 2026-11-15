@@ -20,6 +20,7 @@ import sys
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
+
 STDLIB: frozenset[str] = frozenset(sys.stdlib_module_names)
 PACKAGE_MAPPING: dict[str, str] = {
     "cv2": "opencv-python",

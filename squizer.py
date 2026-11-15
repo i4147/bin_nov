@@ -16,6 +16,7 @@ import zlib
 
 from dh import cprint
 
+
 PROTECTED_NAMES: frozenset[str] = frozenset(dir(builtins)) | {
     "__file__",
     "__name__",

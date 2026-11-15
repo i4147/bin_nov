@@ -9,6 +9,7 @@ import sys
 
 from blingfire_compat import text_to_sentences, text_to_words
 
+
 if __name__ == "__main__":
     fn = Path(sys.argv[1])
     text = fn.read_text()

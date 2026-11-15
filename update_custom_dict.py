@@ -15,7 +15,8 @@ import re
 from typing import Any, Callable, Iterable, Iterator
 
 from atomicio import atomic_write
-from dh import SKIP_DIRS, BINARY_EXT
+from dh import BINARY_EXT, SKIP_DIRS
+
 
 CWD = Path.cwd()
 DICT_PATH = Path.home() / ".personal_dict"

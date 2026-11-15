@@ -12,6 +12,7 @@ import sys
 import time
 from typing import Any
 
+
 LOG_DIR = Path.home() / "tmp" / "log" / "apps"
 REAL_GH: str = "/data/data/com.termux/files/usr/bin/gh"
 

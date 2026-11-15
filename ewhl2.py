@@ -9,8 +9,8 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-import zipfile
 from typing import Any
+import zipfile
 
 
 def is_empty_wheel(wheel_path: Path) -> bool:

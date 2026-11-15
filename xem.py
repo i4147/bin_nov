@@ -13,6 +13,7 @@ from typing import Any, Iterator
 
 from dh import MIME2EXT, get_nobinary
 
+
 OUTPUT_DIR: Path = Path("extracted_base64")
 DATA_URL_RE = re.compile(r"data:(?P<mime>[-\w.+/]+);base64,(?P<data>[A-Za-z0-9+/=\s]+)", re.IGNORECASE)
 

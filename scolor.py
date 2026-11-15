@@ -6,6 +6,7 @@ Usage: python scolor.py Examples: $ python scolor.py Runs its loop at import tim
 
 from secrets import randbelow
 
+
 RESET: str = "\033[0m;"
 
 

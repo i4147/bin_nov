@@ -18,11 +18,12 @@ import re
 import sys
 import tarfile
 import tempfile
-import zipfile
 from typing import Any, Iterable
+import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
+
 
 try:
     from tree_sitter import Language, Parser

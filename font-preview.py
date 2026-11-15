@@ -6,6 +6,7 @@ from html import escape
 from pathlib import Path
 from typing import Any
 
+
 OUTPUT: Path = Path("font_preview.html")
 FONT_FORMATS: dict[str, tuple[Any, ...]] = {
     ".ttf": ("font/ttf", "truetype"),

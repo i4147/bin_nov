@@ -1,12 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/env python
-from pathlib import Path
 import mmap
 import os
+from pathlib import Path
 import re
 import tokenize
 from typing import Iterator
 
 from dh import SKIP_DIRS
+
 
 SIZE_THRESHOLD: int = 1 << 20
 _SKIP_IN_LOOKAHEAD: frozenset[int] = frozenset({
@@ -84,9 +85,8 @@ def _read_text(path: Path) -> str | None:
 def _iter_tokens(path: Path) -> list[tokenize.TokenInfo] | None:
     try:
         if path.stat().st_size > SIZE_THRESHOLD:
-            with path.open("rb") as f:
-                with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as mm:
-                    return list(tokenize.tokenize(mm.readline))
+            with path.open("rb") as f, mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as mm:
+                return list(tokenize.tokenize(mm.readline))
         with path.open("rb") as f:
             return list(tokenize.tokenize(f.readline))
     except (OSError, tokenize.TokenError, SyntaxError):

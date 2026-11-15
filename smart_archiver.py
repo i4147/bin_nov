@@ -22,6 +22,7 @@ from loguru import logger
 import lz4.frame
 import zstandard as zstd
 
+
 EXTENSION_MAP: dict[str, dict[str, str | int]] = {
     ".txt": {"algo": "brotli", "level": 11},
     ".log": {"algo": "brotli", "level": 11},

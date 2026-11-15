@@ -11,6 +11,7 @@ import re
 
 from dh import MAX_WORKERS
 
+
 SUFFIXES: set[str] = {".py", ".sh", ".bash", ".pl", ".rb", ".pyw", ".txt"}
 BIN_DIRS: set[str] = {"sbin", "bin", ".bin"}
 SO_RE = re.compile(r".*\.so(?:\.\d+)*$")

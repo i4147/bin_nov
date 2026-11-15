@@ -14,6 +14,7 @@ from typing import Any, Iterable
 
 import ssdeep
 
+
 try:
     from tabulate import tabulate
 

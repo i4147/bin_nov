@@ -13,6 +13,7 @@ from typing import Final, NamedTuple
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 SRC: Final[Path] = Path("/data/data/com.termux/files/usr/lib/python3.14/site-packages")
 DEST: Final[Path] = Path.home() / "tmp" / "tests_dirs"
 EXCLUDED: Final[tuple[str, ...]] = ("numpy", "pandas", "scipy", "numba")

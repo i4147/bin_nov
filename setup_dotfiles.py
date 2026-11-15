@@ -11,6 +11,7 @@ import subprocess
 import sys
 import textwrap
 
+
 HOME = Path("~").expanduser()
 AGE_DIR = Path(HOME).joinpath(".config", "age")
 AGE_KEY = Path(AGE_DIR).joinpath("keys.txt")

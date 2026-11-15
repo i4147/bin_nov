@@ -19,6 +19,7 @@ from dh import SKIP_DIRS
 from rich.console import Console
 from rich.text import Text
 
+
 OUT_DIR: Path = Path("output")
 OUT_DIR.mkdir(exist_ok=True)
 

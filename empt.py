@@ -7,5 +7,6 @@ Usage: empt FILE Examples: $ empt notes.log Runs as a script (``python empt.py``
 from pathlib import Path
 import sys
 
+
 if __name__ == "__main__":
     Path(sys.argv[1].strip()).write_text("")

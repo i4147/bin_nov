@@ -18,6 +18,7 @@ from typing import Any, Iterable, Iterator
 
 from dh import MAX_WORKERS
 
+
 APPEND_TOOLS: dict[str, list[str]] = {
     "ty": ["ty", "check"],
     "pyright": ["pyright"],

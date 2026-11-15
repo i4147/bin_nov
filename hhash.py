@@ -15,6 +15,7 @@ import sys
 from typing import Any, Optional, Sequence
 import uuid as uuidlib
 
+
 DEFAULT_WORDLIST: tuple[str, ...] = (
     "ack",
     "alabama",

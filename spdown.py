@@ -6,8 +6,8 @@ from dataclasses import dataclass
 import hashlib
 from pathlib import Path
 import sys
-from urllib.parse import unquote, urljoin, urlparse
 from typing import Any, Iterable
+from urllib.parse import unquote, urljoin, urlparse
 
 import httpx
 from loguru import logger
@@ -23,6 +23,7 @@ from packaging.utils import (
 )
 from packaging.version import InvalidVersion, Version
 from rich.progress import BarColumn, DownloadColumn, Progress, TextColumn, TimeRemainingColumn, TransferSpeedColumn
+
 
 PYPI: str = "https://pypi.org/simple/"
 ACCEPT: str = "application/vnd.pypi.simple.v1+json"

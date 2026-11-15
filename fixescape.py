@@ -13,8 +13,9 @@ import pathlib
 import re
 import sys
 import tokenize
-import warnings
 from typing import Any
+import warnings
+
 
 RED: str = "\033[91m"
 CYAN: str = "\033[96m"

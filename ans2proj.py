@@ -11,6 +11,7 @@ import sys
 
 from loguru import logger
 
+
 HEADER_RE: re.Pattern[str] = re.compile(r"^##\s+`([^`]+)`\s*$", re.MULTILINE)
 OPEN_FENCE_RE: re.Pattern[str] = re.compile(r"```[^\n]*\n")
 CLOSE_FENCE_RE: re.Pattern[str] = re.compile(r"(?m)^```[ \t]*\r?$")

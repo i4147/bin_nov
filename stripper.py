@@ -6,24 +6,30 @@ strip comments from files that use # as comment char
 
 import argparse
 import codecs
+from collections import deque
+from collections.abc import (
+    Iterable,
+    Iterator,
+    Sequence,
+    Set as AbstractSet,
+)
+import contextlib
+from dataclasses import dataclass
 import io
 import multiprocessing as mp
 import os
+from pathlib import Path
 import stat
 import sys
 import tempfile
-from collections import deque
-from collections.abc import Iterable, Iterator, Sequence, Set
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Final, IO
+from typing import IO, Final
 
+from dh import SKIP_DIRS
 from rich import filesize
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from dh import SKIP_DIRS
 
 PROBE_BYTES: Final[int] = 8192
 COPY_CHUNK_BYTES: Final[int] = 65536
@@ -37,7 +43,7 @@ class CliConfig:
 
 def walk_files(
     roots: Iterable[Path],
-    skip_dirs: Set[str] = SKIP_DIRS,
+    skip_dirs: AbstractSet[str] = SKIP_DIRS,
 ) -> Iterator[Path]:
     stack: deque[Path] = deque()
     for root in roots:
@@ -74,7 +80,7 @@ def walk_files(
 def split_line_ending(line: str) -> tuple[str, str]:
     if line.endswith("\r\n"):
         return line[:-2], "\r\n"
-    if line.endswith("\n") or line.endswith("\r"):
+    if line.endswith(("\n", "\r")):
         return line[:-1], line[-1]
     return line, ""
 
@@ -246,10 +252,8 @@ def process_file(path: Path) -> tuple[Path, int]:
         return path, 0
     finally:
         if tmp_file is not None and not tmp_file.closed:
-            try:
+            with contextlib.suppress(OSError):
                 tmp_file.close()
-            except OSError:
-                pass
         if tmp_path is not None and not replaced:
             tmp_path.unlink(missing_ok=True)
 
@@ -300,7 +304,7 @@ def parse_args(argv: Sequence[str] | None = None) -> CliConfig:
         "files",
         nargs="*",
         type=Path,
-        default=[Path(".")],
+        default=[Path()],
     )
     parser.add_argument(
         "-j",

@@ -6,6 +6,7 @@ Usage: python srpr.py Examples: $ python srpr.py Wrapper around the external ``s
 
 from dh import runcmd
 
+
 if __name__ == "__main__":
     from string import ascii_lowercase, ascii_uppercase
 

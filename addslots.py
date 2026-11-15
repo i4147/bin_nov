@@ -1,9 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/env python
-import sys
 from pathlib import Path
+import sys
+
+from dh import cprint, get_pyfiles, mpf
 import libcst as cst
 from libcst import matchers as m
-from dh import get_pyfiles, mpf, cprint
 
 
 class DataclassSlotsTransformer(cst.CSTTransformer):

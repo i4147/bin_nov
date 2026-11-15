@@ -15,6 +15,7 @@ from typing import Iterable, Optional, Sequence
 
 from loguru import logger
 
+
 try:
     from bs4 import BeautifulSoup
 

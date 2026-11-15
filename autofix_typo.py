@@ -16,6 +16,7 @@ from typing import Any, Iterable, Sequence
 
 from dh import PY_KEYWORDS
 
+
 COMMON_SUBSTITUTIONS: dict[str, str] = {
     "0": "p",
     "1": "q",

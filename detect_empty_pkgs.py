@@ -10,10 +10,11 @@ import multiprocessing as mp
 from pathlib import Path
 import shutil
 import tarfile
-import zipfile
 from typing import Any, Iterator
+import zipfile
 
 from dh import MAX_WORKERS
+
 
 MIN_ARCHIVE_BYTES: int = 300
 TARGET_GLOBS: tuple[str, str, str] = ("*.tar.gz", "*.whl", "*.zip")
@@ -94,7 +95,7 @@ class Archive:
             self._fh = zipfile.ZipFile(self.path, "r")
         return self
 
-    def __exit__(self, *exc: Any) -> None:
+    def __exit__(self, *exc: object) -> None:
         if self._fh is not None:
             self._fh.close()
             self._fh = None

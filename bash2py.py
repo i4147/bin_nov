@@ -11,6 +11,7 @@ import re
 import sys
 import tokenize
 
+
 HEREDOC_START_RE = re.compile(
     r"^(?P<indent>[ \t]*)(?P<cmd>(?:python3?|py)\b[^;\n]*?)"
     r"<<(?P<dash>-)?[ \t]*"

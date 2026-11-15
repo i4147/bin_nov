@@ -17,6 +17,7 @@ from pathlib import Path
 import subprocess
 import sys
 
+
 BINARY_EXT: frozenset[str] = frozenset({
     ".png",
     ".jpg",

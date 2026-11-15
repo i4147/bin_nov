@@ -18,6 +18,7 @@ import subprocess
 import sys
 import urllib.request
 
+
 GITHUB_API: str = "https://api.github.com"
 
 

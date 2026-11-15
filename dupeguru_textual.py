@@ -11,6 +11,7 @@ import hashlib
 from pathlib import Path
 import sys
 from typing import Any, Callable, ClassVar, Iterable, Sequence
+
 from dh import fsz
 from textual import on
 from textual.app import App, ComposeResult

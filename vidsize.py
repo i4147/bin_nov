@@ -12,11 +12,12 @@ from pathlib import Path
 import re
 import sys
 import threading
-from urllib.parse import urljoin, urlparse
 from typing import Any, Iterable, TextIO
+from urllib.parse import urljoin, urlparse
 
 from dh import MAX_WORKERS
 import requests
+
 
 UA: str = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"

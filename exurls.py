@@ -7,7 +7,7 @@ Usage: exurls URL Positional arguments: url Target URL Examples: $ exurls https:
 import argparse
 from pathlib import Path
 import sys
-from typing import Any, Iterable, Sequence, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Iterable, Sequence
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup

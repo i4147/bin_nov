@@ -10,6 +10,7 @@ from pathlib import Path
 import subprocess
 import sys
 
+
 LOG_DIR = Path.home() / "tmp" / "apps"
 FSA: str = "/data/data/com.termux/files/home/bashbin/felo-sa.mjs"
 

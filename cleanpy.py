@@ -20,6 +20,7 @@ from libcst import RemovalSentinel
 from libcst.metadata import MetadataWrapper, PositionProvider
 from loguru import logger
 
+
 PRESERVED_COMMENT_MARKERS: tuple[str, ...] = ("# fmt", "# type")
 DEFAULT_POOL_SIZE: int = 8
 

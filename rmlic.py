@@ -10,6 +10,7 @@ from typing import Any, Iterable
 
 from dh import cprint, fsz, get_nobinary, gsz, mpf
 
+
 LIC_FILE: Path = Path("/sdcard/lic")
 MIN_BLANK_LINES: int = 3
 

@@ -25,6 +25,7 @@ from typing import Any, Iterable, Optional, Self, Sequence
 from dh import MAX_WORKERS, workers
 from loguru import logger
 
+
 DEFAULT_CHUNK_SIZE: int = 524_288
 DEFAULT_GZIPER_CHUNK: int = 262_144
 DEFAULT_MEM_THRESHOLD: int = 32_768
@@ -131,7 +132,7 @@ class Tool:
     def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *exc_info: Any) -> None:
+    def __exit__(self, *exc_info: object) -> None:
         self.close()
 
     def _compress_small(self, src: Path, dst: Path) -> bool:

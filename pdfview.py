@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING, Iterable, Iterator, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 if TYPE_CHECKING:
     import os
 PDF_SUFFIXES: frozenset[str] = frozenset({".pdf"})

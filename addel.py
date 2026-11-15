@@ -16,14 +16,15 @@ from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
 from typing import Any, Callable, Iterable, Optional, Sequence
-import re
 
 from dh import SKIP_DIRS
+
 
 UNIT_SEP: str = "\x1f"
 DIFF_FILTER: str = "AD"

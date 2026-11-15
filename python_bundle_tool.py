@@ -18,6 +18,7 @@ from pathlib import Path
 import re
 import sys
 
+
 FILE_HEADER: re.Pattern[str] = re.compile(r"^# File: (.+?)$", re.MULTILINE)
 DEFAULT_MAX_FILES: int = 10
 

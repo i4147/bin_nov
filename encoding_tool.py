@@ -32,7 +32,9 @@ from pathlib import Path
 import re
 import sys
 from typing import Any, Iterable, Sequence
+
 from dh import MAX_WORKERS, is_binary
+
 
 SAMPLE_SIZE: int = 100_000
 COMMON_ENCODINGS: tuple[str, ...] = (

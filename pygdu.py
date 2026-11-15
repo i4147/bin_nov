@@ -15,6 +15,7 @@ from typing import Final
 from dh import fsz
 from loguru import logger
 
+
 POOL_SIZE: Final[int] = 8
 BAR_WIDTH: Final[int] = 10
 RESET: Final[str] = "\x1b[0m"

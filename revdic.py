@@ -9,6 +9,7 @@ import sys
 
 from dh import reverse_dict
 
+
 if __name__ == "__main__":
     fn = sys.argv[1]
     with open(fn, encoding="utf-8") as f:

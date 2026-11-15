@@ -28,6 +28,7 @@ import brotli
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
+
 ARCHIVE_SUFFIXES: tuple[str, ...] = (
     ".tar.gz",
     ".tar.xz",

@@ -27,9 +27,10 @@ from pathlib import Path
 import shutil
 import sys
 from tempfile import NamedTemporaryFile
-from typing import Any, Iterable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Iterable
 
 from loguru import logger
+
 
 POOL_SIZE: int = 8
 CHUNK_SIZE: int = 10_000

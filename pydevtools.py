@@ -1,25 +1,26 @@
 #!/data/data/com.termux/files/usr/bin/env python
 
 import configparser
+from dataclasses import dataclass, field
+from email.parser import Parser
+from enum import StrEnum
 import json
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
 import textwrap
-import zipfile
-from dataclasses import dataclass, field
-from email.parser import Parser
-from enum import StrEnum
-from pathlib import Path
 from typing import Annotated, Any, Iterable, NoReturn
+import zipfile
 
-import typer
 from loguru import logger
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+import typer
+
 
 try:
     import tomllib
@@ -1308,7 +1309,7 @@ def init_cmd(
 
 @app.command("dev")
 def dev_cmd(
-    path: Annotated[Path, typer.Argument()] = Path("."),
+    path: Annotated[Path, typer.Argument()] = Path(),
     install_hooks: Annotated[bool, typer.Option("--install-hooks", help="Install pre-commit hooks")] = False,
 ) -> None:
     project = path.expanduser().resolve()
@@ -1379,7 +1380,7 @@ def new_script_cmd(
 
 @setup_app.command("pyproject")
 def setup_pyproject(
-    path: Annotated[Path, typer.Argument(help="Path to pyproject.toml or its directory")] = Path("."),
+    path: Annotated[Path, typer.Argument(help="Path to pyproject.toml or its directory")] = Path(),
     style: Annotated[SetupStyle, typer.Option("--style")] = SetupStyle.detailed,
     with_cfg: Annotated[bool, typer.Option("--with-cfg", help="Read setup.cfg (detailed only)")] = False,
     force: Annotated[bool, typer.Option("--force", "-f")] = False,
@@ -1414,7 +1415,7 @@ def setup_pyproject(
 
 @setup_app.command("directory")
 def setup_directory(
-    path: Annotated[Path, typer.Argument(help="Project directory")] = Path("."),
+    path: Annotated[Path, typer.Argument(help="Project directory")] = Path(),
     package: Annotated[str | None, typer.Option("--package", help="Package name")] = None,
     force: Annotated[bool, typer.Option("--force", "-f")] = False,
     preview: Annotated[bool, typer.Option("--preview")] = False,

@@ -29,6 +29,7 @@ from typing import Any, Optional, Sequence, TextIO
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
+
 DEFAULT_EXT: frozenset[str] = frozenset({
     ".txt",
     ".csv",

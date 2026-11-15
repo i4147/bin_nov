@@ -15,6 +15,7 @@ import ast
 import json
 from pathlib import Path
 
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SELF_NAMES = {"self", "cls", "mcs"}
 

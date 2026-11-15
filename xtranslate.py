@@ -13,9 +13,10 @@ import sys
 import time
 from typing import Any, Iterable, Iterator, Sequence
 
-from dh import MAX_WORKERS
 from atomicio import atomic_write
+from dh import MAX_WORKERS
 from loguru import logger
+
 
 try:
     from deep_translator import GoogleTranslator

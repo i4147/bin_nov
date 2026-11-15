@@ -1,20 +1,21 @@
 #!/data/data/com.termux/files/usr/bin/env python
+from datetime import datetime
 import json
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
+from typing import Annotated, Any, Literal, NoReturn, Optional
 import urllib.error
 import urllib.request
-from datetime import datetime
-from pathlib import Path
-from typing import Annotated, Any, Literal, NoReturn, Optional
 
-import typer
 from loguru import logger
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+import typer
+
 
 __version__ = "1.0.0"
 
@@ -172,7 +173,8 @@ class GitHubClient:
                 logger.warning(f"gh create failed, falling back to REST: {exc}")
         if self.token:
             return self._create_rest(name, description, private, auto_init)
-        raise RuntimeError("No GitHub auth available: run `gh auth login` or provide GITHUB_TOKEN")
+        msg = "No GitHub auth available: run `gh auth login` or provide GITHUB_TOKEN"
+        raise RuntimeError(msg)
 
     def _create_gh(self, name: str, description: str, private: bool, auto_init: bool) -> dict[str, Any]:
         cmd = [
@@ -202,7 +204,8 @@ class GitHubClient:
             return data
         if status == 422:
             return self._default_payload(name)
-        raise RuntimeError(f"GitHub API {status}: {data.get('message', 'unknown')}")
+        msg = f"GitHub API {status}: {data.get('message', 'unknown')}"
+        raise RuntimeError(msg)
 
     def _default_payload(self, name: str) -> dict[str, Any]:
         base = f"https://github.com/{self.username}/{name}"
@@ -247,7 +250,7 @@ def _fail(msg: str, exc: Optional[Exception] = None) -> NoReturn:
 def _version_cb(value: bool) -> None:
     if value:
         console.print(f"ghrepo [bold cyan]{__version__}[/bold cyan]")
-        raise typer.Exit()
+        raise typer.Exit
 
 
 @app.callback()

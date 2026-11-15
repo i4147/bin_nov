@@ -22,9 +22,9 @@ import sys
 from typing import Any
 
 from atomicio import atomic_write_file
+from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
-from dh import MAX_WORKERS, SKIP_DIRS
 
 try:
     import libcst as cst

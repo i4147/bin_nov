@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import sys
 
+
 DEFAULT_VERSION: str = "1.4.7"
 
 

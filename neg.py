@@ -13,6 +13,7 @@ from typing import Any
 from atomicio import atomic_write
 from PIL import Image, ImageOps, UnidentifiedImageError
 
+
 DIRECT_MODES: set[str] = {"L", "RGB", "CMYK"}
 
 META_KEYS: tuple[str, str, str] = ("exif", "icc_profile", "dpi")

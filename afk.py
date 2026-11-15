@@ -31,6 +31,7 @@ import zipfile
 from atomicio import atomic_write
 from dh import MAX_WORKERS, SKIP_DIRS
 
+
 MAX_FILE_BYTES: int = 8 * 1024 * 1024
 LINE_LIMIT: int = 88
 ZSTD_HINT: str = "zstandard support is unavailable (pip install zstandard)"

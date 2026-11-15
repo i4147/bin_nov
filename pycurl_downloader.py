@@ -12,6 +12,7 @@ from urllib.parse import unquote, urlparse
 from dh import MAX_WORKERS
 import pycurl
 
+
 OUTPUT_DIR: Path = Path("downloads")
 TIMEOUT: int = 30
 CONNECT_TIMEOUT: int = 5

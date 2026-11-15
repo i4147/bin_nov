@@ -5,10 +5,11 @@ import argparse
 from pathlib import Path
 import re
 import sys
-import unicodedata
 from typing import Any
+import unicodedata
 
 from dh import SKIP_DIRS
+
 
 try:
     from pypinyin import lazy_pinyin

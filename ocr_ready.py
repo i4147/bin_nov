@@ -15,6 +15,7 @@ import numpy as np
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 import pytesseract
 
+
 try:
     import cv2
 

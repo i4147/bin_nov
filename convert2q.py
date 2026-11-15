@@ -4,6 +4,7 @@
 from pathlib import Path
 import re
 
+
 EXTENSIONS: set[str] = {".txt", ".md", ".csv", ".json", ".xml", ".html", ".htm", ".log"}
 
 AUXILIARIES: tuple[str, ...] = (
@@ -88,10 +89,10 @@ def to_question(sentence: str) -> str | None:
 def main() -> None:
     results = []
 
-    for path in Path(".").rglob("*"):
+    for path in Path().rglob("*"):
         if not path.is_file():
             continue
-        if path.name in {"qmade.txt"}:
+        if path.name == "qmade.txt":
             continue
 
         if path.suffix.lower() not in EXTENSIONS:

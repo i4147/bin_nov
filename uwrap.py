@@ -12,6 +12,7 @@ import sys
 import time
 from typing import Any
 
+
 LOG_DIR = Path.home() / "tmp" / "log" / "apps"
 CLIPBOARD_MAX_BYTES: int = 1 * 1024 * 1024
 COLORS: dict[str, str] = {
@@ -207,7 +208,7 @@ class nullcontext:
     def __enter__(self) -> None:
         return None
 
-    def __exit__(self, *args: Any) -> bool:
+    def __exit__(self, *args: object) -> bool:
         return False
 
 

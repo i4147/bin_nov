@@ -7,6 +7,7 @@ Usage: del10 FILE [MIN_LENGTH] Examples: $ del10 links.txt 20 Runs as a script (
 from pathlib import Path
 import sys
 
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python script.py <filename>")

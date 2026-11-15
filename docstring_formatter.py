@@ -12,6 +12,7 @@ from typing import Any
 
 from dh import SKIP_DIRS
 
+
 _BEFORE_MARKER = re.compile(r"[ \t\r\n]+(?=(?:\d+[.)]|\(\d+\)|[-*\u2022]|\*\*[^*\n]+\*\*)\s)")
 _COMMA_SPLIT = re.compile(r",[ \t]+")
 _SEMICOLON_SPLIT = re.compile(r";[ \t]+")

@@ -17,6 +17,7 @@ from typing import Any
 from dotenv import load_dotenv
 import requests
 
+
 env_path = Path.home() / ".env"
 if env_path.exists():
     load_dotenv(env_path)

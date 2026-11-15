@@ -11,6 +11,7 @@ import sys
 
 from rignore import walk as _walk
 
+
 JUNK_FILE: Path = Path("/sdcard/data/junk")
 
 JUNK_SUFFIXES: tuple[str, ...] = (

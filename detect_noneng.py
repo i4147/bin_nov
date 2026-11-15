@@ -22,6 +22,7 @@ from rich.progress import (
     TimeRemainingColumn,
 )
 
+
 try:
     from concurrent.futures import InterpreterPoolExecutor
 except ImportError:

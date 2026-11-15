@@ -23,6 +23,7 @@ import lz4.frame
 import py7zr
 import zstandard
 
+
 try:
     import brotli
 except ImportError:

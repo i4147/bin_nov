@@ -13,6 +13,7 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 import sys
 
+
 DEFAULT_WORKERS: int = 8
 SNIFF_BYTES: int = 8192
 SKIP_DIRS: frozenset[str] = frozenset({

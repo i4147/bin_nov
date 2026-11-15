@@ -20,13 +20,14 @@ import sys
 import tarfile
 from tarfile import TarFile
 import tempfile
+from typing import Any, Iterable
 from urllib.parse import urlparse
 import zipfile
 from zipfile import ZipFile
-from typing import Any, Iterable
 
 from dh import append_text, is_valid_url
 import zstd
+
 
 DEFAULT_MAX_MB: int = 15
 EXCLUDE_DIRS: set[str] = {".git", "__pycache__"}

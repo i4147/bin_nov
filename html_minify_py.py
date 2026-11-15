@@ -8,7 +8,7 @@ Usage: html_minify_py [paths ...] Examples: $ html_minify_py site/ Runs as a scr
 from pathlib import Path
 import re
 import sys
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from dh import get_files, mpf
 from lxml import html as lxml_html

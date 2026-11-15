@@ -23,6 +23,7 @@ import sys
 import tokenize
 from typing import Any, Sequence
 
+
 _CLOSING: set[str] = {"return", "raise", "break", "continue", "pass"}
 _DEDENT_KW: set[str] = {"else", "elif", "except", "finally", "case"}
 _BLOCK_KW: set[str] = {

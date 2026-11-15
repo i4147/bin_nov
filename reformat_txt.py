@@ -2,6 +2,7 @@
 
 import argparse
 import codecs
+from collections.abc import Iterator, Sequence
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 import difflib
@@ -16,9 +17,6 @@ from typing import TYPE_CHECKING, Final, Literal, NamedTuple
 from atomicio import atomic_write
 from dh import MAX_WORKERS, SKIP_DIRS
 import rignore
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
 
 
 DEFAULT_WIDTH: Final[int] = 100
@@ -329,9 +327,8 @@ def weak_heading(line: str) -> Heading | None:
     if letters >= 3 and stripped.isupper() and len(words) <= 10 and not stripped.endswith((".", ",", ";")):
         return Heading(2, stripped.rstrip(":").rstrip(), line)
 
-    if stripped.endswith(":") and 1 <= len(words) <= 6:
-        if is_title_case([word.rstrip(":") for word in words]):
-            return Heading(3, stripped.rstrip(":"), line)
+    if stripped.endswith(":") and 1 <= len(words) <= 6 and is_title_case([word.rstrip(":") for word in words]):
+        return Heading(3, stripped.rstrip(":"), line)
 
     return None
 

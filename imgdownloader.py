@@ -13,8 +13,9 @@ import os
 from pathlib import Path
 import re
 import sys
-import urllib.parse
 from typing import Any, Iterable, Sequence
+import urllib.parse
+
 
 try:
     import requests

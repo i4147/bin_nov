@@ -16,6 +16,7 @@ from pathlib import Path
 import re
 import sys
 
+
 ENV_ASSIGN: re.Pattern[str] = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*)=")
 ENV_CODE: re.Pattern[str] = re.compile(
     r"""os\.(?:environ(?:\.get)?\[?\(?|getenv\()\s*["']([A-Z_][A-Z0-9_]*)""" r"""|\$\{?([A-Z_][A-Z0-9_]*)\}?"""

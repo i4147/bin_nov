@@ -11,6 +11,7 @@ import termios
 import tty
 from typing import Any, Sequence
 
+
 RESET: str = "\033[0m"
 SEQ_MAP: dict[bytes, str] = {
     b"\x1b[5~": "pgup",

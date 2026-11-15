@@ -27,6 +27,7 @@ from urllib import request as urlrequest
 
 from dh import MAX_WORKERS
 
+
 try:
     from colorama import (
         Fore,

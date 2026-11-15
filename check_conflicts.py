@@ -15,6 +15,7 @@ from typing import Iterator
 
 from dh import STDLIB
 
+
 PIP_JSON: Path = Path("/sdcard/data/pip.json")
 DEFAULT_REPORT: Path = Path("conflict_report.json")
 

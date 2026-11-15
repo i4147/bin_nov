@@ -15,6 +15,7 @@ from pathlib import Path
 import re
 import sys
 
+
 LICENSE_EXTS: frozenset[str] = frozenset({".md", ".txt", ".rst", ""})
 MIN_BLANK_LINES: int = 3
 BINARY_SUFFIXES: frozenset[str] = frozenset({

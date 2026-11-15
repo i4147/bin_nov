@@ -93,15 +93,15 @@ def main() -> None:
     output_lines = []
 
     output_lines.append("# editable")
-    output_lines.extend(segments["editable"] if segments["editable"] else ["# No packages found"])
+    output_lines.extend(segments["editable"] or ["# No packages found"])
     output_lines.append("")  # Blank spacer newline
 
     output_lines.append("# pure")
-    output_lines.extend(segments["pure"] if segments["pure"] else ["# No packages found"])
+    output_lines.extend(segments["pure"] or ["# No packages found"])
     output_lines.append("")
 
     output_lines.append("# not pure")
-    output_lines.extend(segments["not_pure"] if segments["not_pure"] else ["# No packages found"])
+    output_lines.extend(segments["not_pure"] or ["# No packages found"])
 
     # Write out block to file
     output_file = Path("requirements.txt")

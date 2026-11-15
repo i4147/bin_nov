@@ -12,8 +12,10 @@ from functools import lru_cache
 import html
 from pathlib import Path
 from typing import Any, Iterable, Optional, Sequence
+
 from dh import fsz
 from loguru import logger
+
 
 LOG = logger
 FONT_EXTS: frozenset[str] = frozenset({

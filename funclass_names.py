@@ -19,6 +19,7 @@ from dh import WorkerResult
 from rich.console import Console
 from rich.progress import BarColumn, MofNCompleteColumn, Progress, TextColumn, TimeElapsedColumn, TimeRemainingColumn
 
+
 SKIP_NAMES: set[str] = {
     "main",
     "app",

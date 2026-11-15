@@ -25,6 +25,7 @@ from atomicio import atomic_write
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 
+
 PYTHON_SUFFIXES: frozenset[str] = frozenset({".py", ".pyw", ".pyi"})
 ALL_FIXES: frozenset[str] = frozenset({"regex", "escape", "bytes", "is"})
 RE_FUNCS: frozenset[str] = frozenset({

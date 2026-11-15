@@ -16,8 +16,8 @@ from pathlib import Path
 import sys
 import tarfile
 import tempfile
-import zipfile
 from typing import Any, Iterable
+import zipfile
 
 import brotli
 from dh import MAX_WORKERS
@@ -25,6 +25,7 @@ from loguru import logger
 from tree_sitter import Language, Parser
 import tree_sitter_python
 import zstandard as zstd
+
 
 TREE_SITTER_AVAILABLE: bool = True
 SUPPORTED_ARCHIVES: tuple[str, ...] = (

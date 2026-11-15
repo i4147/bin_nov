@@ -12,6 +12,7 @@ import sys
 from tempfile import NamedTemporaryFile
 from typing import Any
 
+
 SKIP_CONTENT_TAGS: set[str] = {"script", "style", "noscript", "template", "head"}
 BLOCK_TAGS: set[str] = {
     "address",

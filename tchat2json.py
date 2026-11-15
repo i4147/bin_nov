@@ -13,6 +13,7 @@ import re
 import sqlite3
 import sys
 
+
 LINE_RE = re.compile(r"^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\]\s+(.*?):\s?(.*)$")
 
 

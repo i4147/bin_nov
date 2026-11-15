@@ -21,6 +21,7 @@ from typing import Any, Iterator, Optional, Sequence
 
 from dh import MAX_WORKERS
 
+
 _CUSTOM_RULE_RE = re.compile(r"^(?:(\d+?)>)?(\d+)=")
 
 

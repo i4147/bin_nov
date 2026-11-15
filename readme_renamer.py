@@ -1,9 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/env python
-import re
 from concurrent.futures import InterpreterPoolExecutor
 from pathlib import Path
+import re
 
 from loguru import logger
+
 
 VERSION_SUFFIX: re.Pattern[str] = re.compile(r"[-_]v?\d+(?:\.\d+)+(?:[-+][0-9A-Za-z.-]+)?$")
 
@@ -30,7 +31,7 @@ def rename_readme(source: Path) -> tuple[Path, Path, str]:
 
 def main() -> None:
     files: list[Path] = [
-        path for path in Path(".").rglob("*") if path.is_file() and path.name in {"README.md", "README.rst"}
+        path for path in Path().rglob("*") if path.is_file() and path.name in {"README.md", "README.rst"}
     ]
     files.sort(key=lambda path: path.as_posix())
 

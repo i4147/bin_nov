@@ -7,6 +7,7 @@ Usage: raster FILE.so NEW_STEM Examples: $ raster _speedups.so _speedups Runs as
 from pathlib import Path
 import sys
 
+
 if __name__ == "__main__":
     fn = Path(sys.argv[1])
     new_stem = sys.argv[2]

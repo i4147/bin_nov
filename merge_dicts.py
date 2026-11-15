@@ -36,12 +36,13 @@ Usage:
 """
 
 import argparse
+import contextlib
 import json
 import os
+from pathlib import Path
 import re
 import sys
 import tempfile
-from pathlib import Path
 
 
 # --- normalization -------------------------------------------------------
@@ -84,7 +85,8 @@ def load_translations(path: Path) -> dict[str, list[str]]:
         raw = json.load(f)
 
     if not isinstance(raw, dict):
-        raise ValueError(f"{path}: top-level JSON value must be an object")
+        msg = f"{path}: top-level JSON value must be an object"
+        raise ValueError(msg)
 
     out: dict[str, list[str]] = {}
     for key, value in raw.items():
@@ -93,7 +95,8 @@ def load_translations(path: Path) -> dict[str, list[str]]:
         elif isinstance(value, list):
             out[key] = [v for v in value if isinstance(v, str)]
         else:
-            raise ValueError(f"{path}: value for key {key!r} must be a string or list of strings")
+            msg = f"{path}: value for key {key!r} must be a string or list of strings"
+            raise ValueError(msg)
     return out
 
 
@@ -133,10 +136,11 @@ def merge(*dicts: dict[str, list[str]]) -> dict[str, list[str]]:
 def check_target_available(target: Path) -> None:
     """Refuse to proceed if `target` already exists on disk."""
     if target.exists():
-        raise SystemExit(
+        msg = (
             f"error: refusing to overwrite existing file: {target}\n"
             f"       remove it first, or pick a different name with -o"
         )
+        raise SystemExit(msg)
 
 
 # --- writing -------------------------------------------------------------
@@ -155,10 +159,8 @@ def write_json_atomic(path: Path, data: dict, *, indent: int = 2, ensure_ascii: 
             f.write("\n")
         os.replace(tmp_name, path)
     except BaseException:
-        try:
+        with contextlib.suppress(FileNotFoundError):
             os.unlink(tmp_name)
-        except FileNotFoundError:
-            pass
         raise
 
 
@@ -217,7 +219,8 @@ def main(argv: list[str] | None = None) -> int:
     output_resolved = output.resolve()
     for p in args.files:
         if p.is_file() and p.resolve() == output_resolved:
-            raise SystemExit(f"error: output file {output} is also an input file")
+            msg = f"error: output file {output} is also an input file"
+            raise SystemExit(msg)
 
     loaded = [load_translations(p) for p in args.files]
     result = merge(*loaded)

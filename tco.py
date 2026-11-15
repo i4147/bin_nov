@@ -10,6 +10,7 @@ from typing import Any
 
 from translate import Translator
 
+
 SAVE_EVERY: int = 50
 SLEEP_BETWEEN: float = 0.5
 MAX_RETRIES: int = 5

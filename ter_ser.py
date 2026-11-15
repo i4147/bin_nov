@@ -9,6 +9,7 @@ import sys
 
 from dh import get_files, gsz, mpf, rrs, runcmd
 
+
 EXT: list[str] = [".js", ".jsx", ".jsm", ".jsc"]
 
 

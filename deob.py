@@ -10,6 +10,7 @@ from pathlib import Path
 import re
 import sys
 
+
 _ASSIGN_RE = re.compile(
     r"""
     (?P<name>[A-Za-z_][A-Za-z0-9_]*)=

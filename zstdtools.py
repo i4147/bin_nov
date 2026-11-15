@@ -19,6 +19,7 @@ from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
 import zstandard as zstd
 
+
 with contextlib.suppress(ImportError):
     from loguru import logger
 DEFAULT_LEVEL: int = 19

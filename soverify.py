@@ -12,6 +12,7 @@ import sys
 from dh import cprint, get_files
 from loguru import logger
 
+
 logger.remove()
 logger.add("/data/data/com.termux/files/home/tmp/apps/soverify.log")
 

@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from pathlib import Path
 import sys
 
+
 Categories = dict[str, list[str]]  # {"functions": [...], "classes": [...], "constants": [...]}
 MissingMap = dict[str, Categories]  # filename -> categories
 

@@ -14,6 +14,7 @@ from typing import Any
 from dh import SKIP_DIRS
 from loguru import logger
 
+
 ICONS: dict[str, str] = {"functions": "🔧", "classes": "🏛️ ", "constants": "📌"}
 
 

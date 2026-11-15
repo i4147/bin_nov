@@ -18,6 +18,7 @@ import unicodedata
 from dh import WORKERS
 from loguru import logger
 
+
 try:
     TREE_SITTER_AVAILABLE = True
 except ImportError:

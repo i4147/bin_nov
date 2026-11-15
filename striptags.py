@@ -10,6 +10,7 @@ from typing import Any, Iterable, Optional, TextIO
 from bs4 import BeautifulSoup, Comment, NavigableString
 import click
 
+
 NEWLINE_ELEMENTS: tuple[str, ...] = (
     "address",
     "article",

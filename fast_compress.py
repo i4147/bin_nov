@@ -16,11 +16,12 @@ from multiprocessing import Pool
 import os
 from pathlib import Path
 import sys
-from typing import Any, Iterable, Sequence, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Iterable, Sequence
 
 from dh import DEFAULT_XZ_MAX_WORKERS, DEFAULT_ZSTD_MAX_WORKERS
 from loguru import logger
 import zstandard as zstd
+
 
 try:
     import lzma_mt

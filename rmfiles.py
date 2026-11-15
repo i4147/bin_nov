@@ -7,6 +7,7 @@ Usage: rmfiles [LIST.txt] Examples: $ rmfiles list.txt Runs as a script (``pytho
 from pathlib import Path
 import sys
 
+
 DEFAULT_LIST: str = "list.txt"
 
 

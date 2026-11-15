@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 from typing import Any, Iterable
 
+
 WHL_DIRECTORY: Path = Path()
 WHL_PATTERN = re.compile(
     r"(?P<name>[\w\-]+)"

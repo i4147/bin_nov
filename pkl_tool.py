@@ -15,6 +15,7 @@ from pathlib import Path
 import pickle
 import sys
 
+
 JSON_NATIVE: tuple[type, ...] = (str, int, float, bool, type(None))
 
 

@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 
+
 DEFAULT_JSON: Path = Path("installed.json")
 
 

@@ -2,11 +2,11 @@
 """Codemod: cprint('text', 'cyan') → cprint('text', color='cyan')."""
 
 from __future__ import annotations
-
 import argparse
 from pathlib import Path
 
 import libcst as cst
+
 
 LEGACY_COLORS = frozenset({
     "black",

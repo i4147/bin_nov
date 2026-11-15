@@ -12,6 +12,7 @@ from pathlib import Path
 import shutil
 import sys
 
+
 IMAGE_SUFFIXES: frozenset[str] = frozenset({
     ".png",
     ".jpg",

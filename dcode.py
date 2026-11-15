@@ -19,6 +19,7 @@ import urllib.parse
 import urllib.request
 import zlib
 
+
 ENGLISH_FREQS: dict[str, float] = {
     "E": 12.02,
     "T": 9.10,

@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/env python
 
-import sys
 from pathlib import Path
+import sys
 
 from dh import cprint, get_files
 

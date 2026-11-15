@@ -11,6 +11,7 @@ import sys
 from dh import cprint, get_files, mpf, unique_path
 from fontTools.ttLib import TTFont
 
+
 cwd = Path.cwd()
 
 

@@ -9,6 +9,7 @@ import subprocess
 import sys
 from typing import Any
 
+
 TEMPLATE: str = """\
 #include <bits/stdc++.h>
 using namespace std;

@@ -7,6 +7,7 @@ Usage: check_fname_conflict Examples: $ check_fname_conflict Runs as a script (`
 from pathlib import Path
 import sys
 
+
 PIP_LIST: Path = Path("/sdcard/data/pip.txt")
 TARGET_DIR = Path.cwd()
 

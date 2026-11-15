@@ -38,6 +38,7 @@ from typing import Any, Callable, Iterable, Sequence
 
 from dh import MAX_WORKERS
 
+
 try:
     from tqdm import tqdm
 except ImportError:

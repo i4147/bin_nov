@@ -18,8 +18,8 @@ value has had its leading whitespace stripped (as in your example).
 """
 
 import json
-import sys
 from pathlib import Path
+import sys
 
 
 def split_into_lines(text: str):
@@ -50,7 +50,8 @@ def apply_translations(py_path: Path, json_path: Path) -> None:
 
     translations = data.get("translations")
     if not isinstance(translations, dict):
-        raise ValueError(f"'translations' must be an object in {json_path}")
+        msg = f"'translations' must be an object in {json_path}"
+        raise ValueError(msg)
 
     with py_path.open("r", encoding="utf-8", newline="") as f:
         original_text = f.read()

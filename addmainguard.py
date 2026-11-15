@@ -16,6 +16,7 @@ from typing import Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 DEFAULT_EXCLUDES: tuple[str, ...] = (
     ".git",
     "__pycache__",

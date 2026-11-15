@@ -27,6 +27,7 @@ from typing import BinaryIO, Callable, Final, Literal, TypeVar, cast
 
 from dh import MAX_WORKERS, fsz
 
+
 Compressor = Literal["xz", "gz", "bz2", "zstd", "lz4", "snappy"]
 Method = Literal["mp-map", "mp-imap", "process-pool", "thread-pool"]
 Status = Literal["ok", "skipped", "error"]

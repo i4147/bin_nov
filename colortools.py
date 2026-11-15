@@ -24,6 +24,7 @@ import re
 import sys
 from typing import Any, Iterable, Iterator, Optional, Sequence
 
+
 try:
     from dh import cprint, is_binary, should_skip
 except ImportError:

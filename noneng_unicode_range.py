@@ -12,6 +12,7 @@ from typing import Iterator
 
 from binaryornot.check import is_binary
 
+
 ARABIC_PERSIAN_RANGES: list[tuple[int, int]] = [
     (0x0600, 0x06FF),
     (0x0750, 0x077F),

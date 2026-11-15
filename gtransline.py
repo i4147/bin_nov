@@ -15,6 +15,7 @@ from typing import Any, Final
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 try:
     from googletrans import Translator
 

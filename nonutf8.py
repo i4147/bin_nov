@@ -9,6 +9,7 @@ import codecs
 from pathlib import Path
 from typing import Iterator, Optional
 
+
 BOMS: tuple[tuple[bytes, str], ...] = (
     (codecs.BOM_UTF8, "utf-8"),
     (codecs.BOM_UTF32_LE, "utf-32"),

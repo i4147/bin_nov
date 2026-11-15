@@ -12,6 +12,7 @@ import sys
 
 from dh import SKIP_DIRS
 
+
 SKIP_EXTS: frozenset[str] = frozenset({
     ".yaml",
     ".yml",

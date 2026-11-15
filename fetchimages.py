@@ -13,10 +13,11 @@ import io
 from pathlib import Path
 import re
 import sys
-from urllib.parse import unquote, urljoin, urlparse
 from typing import Any
+from urllib.parse import unquote, urljoin, urlparse
 
 import pycurl
+
 
 IMAGE_EXTS: set[str] = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".svg", ".tif", ".tiff", ".ico", ".avif"}
 USER_AGENT: str = "Mozilla/5.0 (compatible; ImageCrawler/1.0)"

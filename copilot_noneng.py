@@ -15,12 +15,13 @@ import multiprocessing as mp
 from pathlib import Path
 import sys
 import threading
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from dh import MAX_WORKERS, is_binary
 import gcld3
 from langdetect import DetectorFactory, detect_langs
 import pycld2 as cld2
+
 
 DetectorFactory.seed = 0
 _print_lock = threading.Lock()

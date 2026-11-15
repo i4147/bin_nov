@@ -19,6 +19,7 @@ import sys
 import urllib.request
 import xml.etree.ElementTree as ET
 
+
 FEEDS: dict[str, str] = {
     "updates": "https://pypi.org/rss/updates.xml",
     "packages": "https://pypi.org/rss/packages.xml",

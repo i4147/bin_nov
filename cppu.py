@@ -9,6 +9,7 @@ import sys
 
 from dh import cprint, fsz, get_files, gsz, mpf, rrs, runcmd
 
+
 EXT: list[str] = [
     ".java",
     ".c",

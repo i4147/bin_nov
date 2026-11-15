@@ -31,6 +31,7 @@ from typing import Any, Iterable, Iterator, Optional
 
 from dh import MAX_WORKERS, SKIP_DIRS
 
+
 MIME2EXT: dict[str, str] = {
     "image/png": ".png",
     "image/jpeg": ".jpg",

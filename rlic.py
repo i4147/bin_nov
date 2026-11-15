@@ -12,6 +12,7 @@ from typing import Optional, Sequence
 
 from dh import MAX_WORKERS
 
+
 DEFAULT_TEXT_EXTS: set[str] = {
     ".txt",
     ".md",

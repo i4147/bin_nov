@@ -16,6 +16,7 @@ from typing import Any, Iterable, Sequence
 from dh import MAX_WORKERS
 from loguru import logger
 
+
 READ_CHUNK_BYTES: int = 1024 * 1024
 DEFAULT_ENCODING: str = "utf-8"
 INSERT_START_RE = re.compile(

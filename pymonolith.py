@@ -16,6 +16,7 @@ from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
 import requests
 
+
 DEFAULT_MIME_TYPES: dict[str, str] = {
     ".css": "text/css",
     ".js": "application/javascript",

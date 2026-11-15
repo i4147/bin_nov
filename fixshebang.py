@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 from typing import Any, Final
 
+
 SHEBANG_PATTERN: Final[re.Pattern[str]] = re.compile(r"^#!.*python[23]?(?:\.\d+)?(?:[ \t]+.*)?$", re.MULTILINE)
 PY_SHEBANG: Final[str] = "#!/data/data/com.termux/files/usr/bin/env python"
 

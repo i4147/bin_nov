@@ -7,6 +7,7 @@ Usage: csym Examples: $ csym Runs as a script (``python csym.py``) in the direct
 
 from pathlib import Path
 
+
 BASHBIN: Path = Path.home() / "bashbin"
 BIN: Path = Path.home() / "bin"
 LOBIN: Path = Path.home() / ".local" / "bin"

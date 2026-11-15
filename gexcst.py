@@ -14,9 +14,10 @@ import tarfile
 from typing import Any
 import zipfile
 
+from dh import unique_path
 import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
-from dh import unique_path
+
 
 OUTPUT_DIR: Path = Path("output")
 ARCHIVE_EXT: tuple[str, ...] = (

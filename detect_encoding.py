@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 import tokenize
 
+
 try:
     import chardet
 except ImportError:

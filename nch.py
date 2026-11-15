@@ -7,7 +7,9 @@ import stat as st
 import sys
 import time
 from typing import Iterator, Optional, Sequence
+
 from dh import SKIP_DIRS
+
 
 DIR_MODE: int = 0o775
 FILE_MODE: int = 0o644
@@ -198,9 +200,8 @@ def walk_items(cfg: Config, include_dirs: bool = True, include_files: bool = Tru
                         if include_dirs:
                             yield ("dir", p)
                         stack.append(p)
-                    elif entry.is_file(follow_symlinks=False):
-                        if include_files:
-                            yield ("file", p)
+                    elif entry.is_file(follow_symlinks=False) and include_files:
+                        yield ("file", p)
         except (OSError, PermissionError):
             continue
 
@@ -254,10 +255,9 @@ def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -
             return s, None
 
         target = cur & ~EXEC_BITS
-        if not dry_run:
-            if not chmod_safe(path, target):
-                s.errors = 1
-                return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
+        if not dry_run and not chmod_safe(path, target):
+            s.errors = 1
+            return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
         s.files_deexeced = 1
         return s, f"{YELLOW}[DEEXEC]{RESET} {rp} {oct(cur)}->{oct(target)}"
 
@@ -265,10 +265,9 @@ def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -
         target = cfg.dir_mode
         if cur == target:
             return s, None
-        if not dry_run:
-            if not chmod_safe(path, target):
-                s.errors = 1
-                return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
+        if not dry_run and not chmod_safe(path, target):
+            s.errors = 1
+            return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
         s.dirs_changed = 1
         return s, f"{BLUE}[DIR]{RESET} {rp} {oct(cur)}->{oct(target)}"
 
@@ -277,19 +276,17 @@ def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -
             s.skipped = 1
             return s, None
         target = cfg.exec_mode
-        if not dry_run:
-            if not chmod_safe(path, target):
-                s.errors = 1
-                return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
+        if not dry_run and not chmod_safe(path, target):
+            s.errors = 1
+            return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
         s.files_made_exec = 1
         return s, f"{GREEN}[EXEC+]{RESET} {rp} {oct(cur)}->{oct(target)}"
 
     if kind == "file" and is_executable(path) and not cfg.looks_executable(path) and not cfg.keeps_exec_by_parent(path):
         target = cur & ~EXEC_BITS
-        if not dry_run:
-            if not chmod_safe(path, target):
-                s.errors = 1
-                return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
+        if not dry_run and not chmod_safe(path, target):
+            s.errors = 1
+            return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
         s.files_deexeced = 1
         return s, f"{YELLOW}[DEEXEC-NONEXEC]{RESET} {rp} {oct(cur)}->{oct(target)}"
 
@@ -301,10 +298,9 @@ def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -
     if cur == target:
         return s, None
 
-    if not dry_run:
-        if not chmod_safe(path, target):
-            s.errors = 1
-            return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
+    if not dry_run and not chmod_safe(path, target):
+        s.errors = 1
+        return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
 
     if target == cfg.exec_mode:
         s.files_made_exec = 1
@@ -354,7 +350,8 @@ def parse_mode(s: str) -> int:
     try:
         return int(s, 8)
     except ValueError:
-        raise argparse.ArgumentTypeError(f"invalid octal mode: {s!r}")
+        msg = f"invalid octal mode: {s!r}"
+        raise argparse.ArgumentTypeError(msg)
 
 
 def build_parser() -> argparse.ArgumentParser:

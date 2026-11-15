@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import sys
 
+
 STRING_RE = re.compile(r'"(?:[^"\\]|\\.)*"')
 
 
