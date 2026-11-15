@@ -349,7 +349,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     try:
-        main()
+        raise SystemExit(main())
     except KeyboardInterrupt:
         console.print("\n[bold red]Operation cancelled by user.[/bold red]")
         sys.exit(1)

@@ -746,6 +746,6 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     try:
-        sys.exit(main())
+        raise SystemExit(main())
     except KeyboardInterrupt:
         sys.exit(130)

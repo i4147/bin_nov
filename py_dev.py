@@ -164,7 +164,7 @@ logs/
 def main() -> None:
     print("Hello, Python!")
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
 '''
 
     def _get_test_template(self) -> str:
@@ -172,7 +172,7 @@ if __name__ == "__main__":
 import pytest
 from src.main import main
 def test_main(capsys: pytest.CaptureFixture[str]) -> None:
-    main()
+    raise SystemExit(main())
     captured = capsys.readouterr()
     assert captured.out.strip() == "Hello, Python!"
 '''
@@ -451,4 +451,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

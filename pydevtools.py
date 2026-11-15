@@ -1251,7 +1251,7 @@ def _scaffold_setuptools_cfg(cfg: InitConfig, target: Path) -> None:
         "def main() -> None:\n"
         f'    print("Hello from {name}!")\n\n\n'
         'if __name__ == "__main__":\n'
-        "    main()\n",
+        "    raise SystemExit(main())\n",
         encoding="utf-8",
     )
 

@@ -117,7 +117,7 @@ def main() -> None:
     t = timeit.timeit(lambda: sum_as_string(1, 2), number=n)
     print(f"sum_as_string x{{n}}: {{t:.4f}}s")
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
 """,
     )
     print("\nInitializing git repository...")
@@ -140,4 +140,4 @@ if __name__ == "__main__":
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

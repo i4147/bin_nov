@@ -303,7 +303,7 @@ def main(argv: Optional[list[str]] = None) -> int:
 
 if __name__ == "__main__":
     mp.set_start_method("spawn", force=False)
-    sys.exit(main())
+    raise SystemExit(main())
 """
 ### Key design notes
 1. **Comment stripping**: Handled via `EmptyLine` (standalone comment lines) and `TrailingWhitespace` (inline comments) leave-visitors — the two places LibCST attaches comments. Shebang and pragma (`# type:`, `# fmt:`, `# noqa`) comments are detected by prefix and preserved.
