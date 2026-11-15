@@ -12,7 +12,7 @@ import argparse
 from pathlib import Path
 import shutil
 import subprocess
-from typing import TYPE_CHECKING, Final, Optional, Protocol
+from typing import Final, Optional, Protocol
 
 from github import Github
 from github.GithubException import GithubException, UnknownObjectException

@@ -1,124 +1,33 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Remove every ``from __future__ import ...`` statement from Python files.
 
-The statement is deleted in all of its syntactic forms::
+Performance model
+-----------------
+* ``from __future__ import ...`` always contains the bytes ``__future__``,
+  so a byte-substring test skips untouched files *before* decoding or
+  parsing.  On a clean tree this is the only per-file cost.
+* Files that pass the byte test are parsed with :mod:`ast` (not a regex),
+  so every syntactic form is handled: single name, comma list,
+  parenthesised / multi-line list, trailing comments, aliases.
+* Work is farmed out to a :class:`concurrent.futures.ProcessPoolExecutor`;
+  each worker handles a batch of paths end-to-end.
 
-    from __future__ import annotations
-    from __future__ import annotations, division
-    from __future__ import annotations
-    from __future__ import (
-        annotations,
-        division,
-    )
-    from __future__ import annotations  # noqa: F401
-    from __future__ import annotations as ann
-
-The now-redundant blank line that a removal can leave at the top of a
-file is dropped as well.
-
-Directories are walked via ``rignore``, so ``.gitignore`` rules are
-honoured; ``SKIP_DIRS`` (from :mod:`dh`) is applied as a second filter.
-Files are read and written as UTF-8; a leading BOM, if present, is
-stripped on the first rewrite.
-
-Usage::
-
-    clean_future                 # clean the current directory
-    clean_future src/ tests/     # clean multiple paths
-    clean_future src/main.py     # clean a single file
-
-The module can also be imported.  Requires Python 3.10+.
+Requires Python 3.10+.
 """
 
 import ast
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 import sys
 from typing import Iterator, Sequence
 
 from atomicio import atomic_write
-from dh import SKIP_DIRS, gsz
-import rignore
+from dh import get_pyfiles
 
 
 # ---------------------------------------------------------------------------
-# file discovery
+# core transformer (pure, testable)
 # ---------------------------------------------------------------------------
-
-
-def _has_python_shebang(path: Path) -> bool:
-    try:
-        with path.open("rb") as f:
-            first = f.readline(256)
-    except OSError:
-        return False
-    if not first.startswith(b"#!"):
-        return False
-    low = first.lower()
-    return b"python" in low or b"pypy" in low
-
-
-def is_python_file(path: str | Path) -> bool:
-    """Return True if *path* looks like a Python source file."""
-    p = Path(path)
-    if p.suffix in {".py", ".pyw", ".pyi"}:
-        return True
-    if p.suffix == "":
-        return _has_python_shebang(p)
-    return False
-
-
-def walk_python_files(root_dir: str | Path) -> Iterator[Path]:
-    """Yield Python files under *root_dir* (or *root_dir* itself if it is a file)."""
-    root = Path(root_dir)
-
-    # Explicit file argument: process it even if it is a symlink, because
-    # the user asked for it by name.
-    if root.is_file():
-        if is_python_file(root):
-            yield root
-        return
-
-    root = root.resolve()
-    for entry in rignore.walk(root):
-        path = Path(entry)
-        if path.is_symlink():
-            continue
-        try:
-            rel = path.relative_to(root)
-        except ValueError:
-            rel = path
-        if any(part in SKIP_DIRS for part in rel.parts[:-1]):
-            continue
-        if not path.is_file():
-            continue
-        if is_python_file(path):
-            yield path
-
-
-# ---------------------------------------------------------------------------
-# core logic
-# ---------------------------------------------------------------------------
-
-
-def _parse(text: str) -> ast.Module:
-    """Parse *text*, tolerating a UTF-8 BOM (for direct library use)."""
-    try:
-        return ast.parse(text)
-    except SyntaxError:
-        if text.startswith("\ufeff"):
-            return ast.parse(text[1:])
-        raise
-
-
-def _future_import_line_ranges(tree: ast.AST) -> list[tuple[int, int]]:
-    """Return 1-based inclusive ``(start, end)`` line ranges of __future__ imports."""
-    ranges: list[tuple[int, int]] = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.ImportFrom) and node.module == "__future__":
-            end = getattr(node, "end_lineno", None) or node.lineno
-            ranges.append((node.lineno, end))
-    ranges.sort()
-    return ranges
 
 
 def strip_future_imports(text: str) -> str:
@@ -126,25 +35,26 @@ def strip_future_imports(text: str) -> str:
 
     Raises :class:`SyntaxError` if *text* is not valid Python.
     """
-    tree = _parse(text)
-    ranges = _future_import_line_ranges(tree)
+    tree = ast.parse(text)
+
+    ranges: list[tuple[int, int]] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom) and node.module == "__future__":
+            end = getattr(node, "end_lineno", None) or node.lineno
+            ranges.append((node.lineno, end))
+
     if not ranges:
         return text
 
-    # Split on "\n" only (not str.splitlines) so that our line numbering
-    # matches the AST's, which counts only "\n" / "\r\n" as line breaks and
-    # treats e.g. "\x0c" as plain whitespace.
-    lines = text.split("\n")
-
+    ranges.sort()
+    lines = text.split("\n")  # \n only: matches AST line numbering
     remove: set[int] = set()
     for start, end in ranges:
-        remove.update(range(start - 1, end))  # 1-based -> 0-based
-
+        remove.update(range(start - 1, end))
     new_lines = [ln for i, ln in enumerate(lines) if i not in remove]
 
-    # If the file used to start with non-blank content and now starts with
-    # blank lines, those blanks are the residue of the removed import
-    # (and the blank line that followed it).  Drop them.
+    # Drop leading blank residue left by the removed import (and the blank
+    # line after it), but only if the file originally started non-blank.
     if lines and lines[0].strip() and new_lines and not new_lines[0].strip():
         while new_lines and not new_lines[0].strip():
             new_lines.pop(0)
@@ -152,47 +62,108 @@ def strip_future_imports(text: str) -> str:
     return "\n".join(new_lines)
 
 
-def process_file(path: Path) -> bool:
-    """Strip future imports from *path*.  Return True if the file changed."""
+# ---------------------------------------------------------------------------
+# per-file work (runs inside worker processes)
+# ---------------------------------------------------------------------------
+
+_FAST_MARKER = b"__future__"
+
+
+def _process_one(path_str: str) -> tuple[str, int, int, str | None]:
+    """Return ``(path, before_bytes, after_bytes, error_or_None)``.
+
+    ``before == after`` iff the file was not modified.  ``error`` non-None
+    means the file was skipped (never a partial write).
+    """
+    path = Path(path_str)
     try:
-        original = path.read_text(encoding="utf-8-sig")
-    except (OSError, UnicodeDecodeError) as exc:
-        print(f"skip   {path}: {exc}", file=sys.stderr)
-        return False
+        raw = path.read_bytes()
+    except OSError as exc:
+        return path_str, 0, 0, f"read: {exc}"
+
+    # ── fast path ──────────────────────────────────────────────────────
+    # Bytes, not regex: `in` is a plain Boyer-Moore-ish scan in CPython and
+    # beats `re.search` for a fixed literal.  Either would work; this is
+    # the cheapest possible "should I bother?" test.
+    if _FAST_MARKER not in raw:
+        return path_str, len(raw), len(raw), None
 
     try:
-        updated = strip_future_imports(original)
+        text = raw.decode("utf-8-sig")  # strips BOM if present
+    except UnicodeDecodeError as exc:
+        return path_str, len(raw), len(raw), f"decode: {exc}"
+
+    try:
+        updated = strip_future_imports(text)
     except SyntaxError as exc:
-        print(f"skip   {path}: syntax error: {exc}", file=sys.stderr)
-        return False
+        return path_str, len(raw), len(raw), f"parse: {exc}"
 
-    if updated == original:
-        return False
+    if updated == text:
+        return path_str, len(raw), len(raw), None
 
     try:
         atomic_write(path, updated)
-    except Exception as exc:  # noqa: BLE001 - report anything that goes wrong
-        print(f"error  {path}: {exc}", file=sys.stderr)
-        return False
-    return True
+    except Exception as exc:  # noqa: BLE001
+        return path_str, len(raw), len(raw), f"write: {exc}"
+
+    return path_str, len(raw), len(updated.encode("utf-8")), None
+
+
+def _process_batch(paths: list[str]) -> list[tuple[str, int, int, str | None]]:
+    return [_process_one(p) for p in paths]
 
 
 # ---------------------------------------------------------------------------
-# entry point
+# driver
 # ---------------------------------------------------------------------------
+
+# Below this many files the ProcessPoolExecutor startup (~150 ms on Linux,
+# more on Windows) costs more than sequential processing.  Tune to taste.
+_PARALLEL_THRESHOLD = 100
+
+
+def _iter_results(
+    paths: list[str],
+    workers: int,
+) -> Iterator[tuple[str, int, int, str | None]]:
+    """Yield per-file results, in walk order, sequential or parallel."""
+    if len(paths) < _PARALLEL_THRESHOLD or workers <= 1:
+        for p in paths:
+            yield _process_one(p)
+        return
+
+    # Aim for ~4 batches per worker so we get load-balancing without
+    # drowning in IPC.  Floor of 8 amortises pickling on tiny runs.
+    target_batches = workers * 4
+    batch_size = max(8, (len(paths) + target_batches - 1) // target_batches)
+    batches = [paths[i : i + batch_size] for i in range(0, len(paths), batch_size)]
+
+    workers = min(workers, len(batches))
+    with ProcessPoolExecutor(max_workers=workers) as ex:
+        # ex.map preserves input order, so per-file output stays in walk
+        # order and remains comparable across runs.
+        for batch_result in ex.map(_process_batch, batches):
+            yield from batch_result
 
 
 def main(argv: Sequence[str]) -> int:
-    roots: list[str] = list(argv[1:]) or ["."]
+    roots = list(argv[1:]) or Path.cwd()
+    paths = [str(p) for p in get_pyfiles(roots)]
+
+    if not paths:
+        print("scanned 0 python files, modified 0")
+        return 0
+
     scanned = changed = 0
-    for root in roots:
-        for path in walk_python_files(root):
-            scanned += 1
-            before = gsz(path)
-            if process_file(path):
-                changed += 1
-                after = gsz(path)
-                print(f"{path}    \x1b[38;5;10m{before - after}\x1b[0m")
+    for path_str, before, after, err in _iter_results(paths, 8):
+        scanned += 1
+        if err is not None:
+            print(f"skip   {path_str}: {err}", file=sys.stderr)
+            continue
+        if after != before:
+            changed += 1
+            print(f"{path_str}    \x1b[38;5;10m{before - after}\x1b[0m")
+
     print(f"scanned {scanned} python files, modified {changed}")
     return 0
 

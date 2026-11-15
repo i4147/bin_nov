@@ -16,7 +16,6 @@ import sys
 import tempfile
 import termios
 import tty
-from typing import Any, Sequence
 
 
 RESET: str = "\x1b[0m"

@@ -15,7 +15,6 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-from typing import Any
 
 from dh import MAX_WORKERS
 from loguru import logger

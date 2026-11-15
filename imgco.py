@@ -15,7 +15,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from typing import Any, Callable, Optional, Sequence
+from typing import Callable, Optional, Sequence
 
 from dh import MAX_WORKERS
 

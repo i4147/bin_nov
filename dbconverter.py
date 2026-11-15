@@ -11,7 +11,7 @@ from pathlib import Path
 import pickle
 import sqlite3
 import sys
-from typing import Any, Iterable
+from typing import Any
 
 import pandas as pd
 

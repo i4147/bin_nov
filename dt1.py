@@ -23,7 +23,7 @@ from pathlib import Path
 import sys
 import threading
 import time
-from typing import Any, Callable
+from typing import Callable
 
 from atomicio import atomic_save
 from dh import MAX_WORKERS

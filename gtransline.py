@@ -10,7 +10,7 @@ import multiprocessing as mp
 from pathlib import Path
 import re
 import sys
-from typing import Any, Final
+from typing import Final
 
 from dh import MAX_WORKERS
 from loguru import logger

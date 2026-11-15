@@ -6,7 +6,6 @@ from dataclasses import dataclass
 import hashlib
 from pathlib import Path
 import sys
-from typing import Any, Iterable
 from urllib.parse import unquote, urljoin, urlparse
 
 import httpx

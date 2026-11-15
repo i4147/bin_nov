@@ -9,7 +9,6 @@ import mmap
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
 import sys
-from typing import Any, Iterable
 
 from dh import is_binary
 

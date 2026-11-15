@@ -23,7 +23,7 @@ from pathlib import Path
 import re
 import sys
 import time
-from typing import TYPE_CHECKING, Any, Iterable, Sequence, TextIO
+from typing import Any, TextIO
 from zlib import crc32
 
 from dh import MAX_WORKERS, SKIP_DIRS, is_binary

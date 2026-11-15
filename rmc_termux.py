@@ -26,7 +26,7 @@ import tempfile
 from time import perf_counter
 import tokenize
 import traceback
-from typing import Any, Iterable, Iterator, Sequence
+from typing import Iterator
 
 from atomicio import atomic_write
 from codeutils import ASTStripper, CSTStripper, TSStripper

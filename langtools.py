@@ -28,7 +28,7 @@ from pathlib import Path
 import re
 import shutil
 import sys
-from typing import Any, Iterator, Optional, Sequence
+from typing import Iterator, Optional
 
 
 try:

@@ -29,7 +29,7 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import Any, Iterable, Optional, Sequence
+from typing import Optional, Sequence
 
 
 PLUGIN_PATTERNS: dict[str, list[str]] = {

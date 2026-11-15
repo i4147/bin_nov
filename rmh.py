@@ -6,7 +6,6 @@ from multiprocessing import Pool, cpu_count
 from pathlib import Path
 import re
 import sys
-from typing import Any
 
 from dh import MAX_WORKERS
 from loguru import logger

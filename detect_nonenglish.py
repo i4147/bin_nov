@@ -25,7 +25,7 @@ from datetime import datetime
 import json
 from pathlib import Path
 import sys
-from typing import Any, Optional, Sequence, TextIO
+from typing import Optional, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 

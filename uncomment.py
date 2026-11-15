@@ -20,7 +20,7 @@ import re
 import shutil
 import sys
 import tempfile
-from typing import TYPE_CHECKING, Final, Literal, NamedTuple
+from typing import Final, Literal, NamedTuple
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger

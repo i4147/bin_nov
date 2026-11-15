@@ -20,7 +20,7 @@ from pathlib import Path
 import shutil
 import tarfile
 import time
-from typing import Any, Iterable, Optional, Self, Sequence
+from typing import Optional, Self, Sequence
 
 from dh import MAX_WORKERS, workers
 from loguru import logger

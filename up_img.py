@@ -11,7 +11,7 @@ import platform
 import subprocess
 import sys
 from traceback import print_exc
-from typing import Any, Iterator
+from typing import Any
 from urllib.parse import urljoin
 
 from PIL import Image, ImageGrab

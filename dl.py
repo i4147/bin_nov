@@ -53,7 +53,7 @@ import re
 import signal
 import sys
 import time
-from typing import Any, Optional, Sequence
+from typing import Any, Optional
 import urllib.error
 import urllib.parse
 import urllib.request

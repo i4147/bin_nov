@@ -8,7 +8,6 @@ Usage: neg IMAGE [IMAGE ...] Examples: $ neg photo.jpg scan.png Runs as a script
 import io
 from pathlib import Path
 import sys
-from typing import Any
 
 from atomicio import atomic_write
 from PIL import Image, ImageOps, UnidentifiedImageError

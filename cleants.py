@@ -20,7 +20,7 @@ import re
 import shlex
 import shutil
 import sys
-from typing import Any, Iterable, Iterator
+from typing import Iterator
 
 from atomicio import atomic_write
 from dh import MAX_WORKERS

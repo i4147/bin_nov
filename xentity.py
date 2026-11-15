@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 import textwrap
 import time
-from typing import Any, Iterable, Iterator, Sequence
+from typing import Any, Iterable, Iterator
 
 from dh import SKIP_DIRS
 from rich.console import Console

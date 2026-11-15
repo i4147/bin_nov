@@ -11,7 +11,7 @@ import operator
 from pathlib import Path
 import string
 import sys
-from typing import Any, Callable, Iterable, Iterator, Sequence
+from typing import Callable, Iterator, Sequence
 import zlib
 
 from dh import cprint

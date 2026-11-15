@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 import sys
 import tokenize
-from typing import TYPE_CHECKING, Any, Iterable
+from typing import Iterable
 
 from dh import MAX_WORKERS, SKIP_DIR
 import libcst as cst

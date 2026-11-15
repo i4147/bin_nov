@@ -7,7 +7,6 @@ from functools import lru_cache
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterable
 
 
 try:

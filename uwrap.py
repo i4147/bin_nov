@@ -10,7 +10,6 @@ import shlex
 import subprocess
 import sys
 import time
-from typing import Any
 
 
 LOG_DIR = Path.home() / "tmp" / "log" / "apps"

@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 import re
 import tempfile
-from typing import Any, Iterable, Sequence
+from typing import Any, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger

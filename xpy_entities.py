@@ -20,7 +20,7 @@ import sqlite3
 import sys
 import tarfile
 import textwrap
-from typing import Any, Iterable, Iterator, Sequence
+from typing import Any, Iterable, Iterator
 import zipfile
 
 from dh import SKIP_DIRS

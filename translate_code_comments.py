@@ -30,7 +30,7 @@ from pathlib import Path
 import re
 import shutil
 import tokenize
-from typing import Any, Callable, Iterable, Iterator, Sequence
+from typing import Any, Callable, Iterator, Sequence
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS

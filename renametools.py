@@ -32,7 +32,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterable, Iterator, Optional, Sequence
+from typing import Iterator, Optional, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger

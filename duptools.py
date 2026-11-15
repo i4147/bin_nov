@@ -19,7 +19,7 @@ import shutil
 import subprocess
 import sys
 import time
-from typing import Any, Iterable, Optional, Sequence
+from typing import Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS
 

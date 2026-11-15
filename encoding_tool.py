@@ -31,7 +31,7 @@ import html
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterable, Sequence
+from typing import Any, Sequence
 
 from dh import MAX_WORKERS, is_binary
 

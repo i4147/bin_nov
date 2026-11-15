@@ -22,7 +22,7 @@ import subprocess
 import sys
 import tarfile
 import threading
-from typing import Any, Iterable, Iterator, Optional, Sequence
+from typing import Any, Iterator, Optional, Sequence
 import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS

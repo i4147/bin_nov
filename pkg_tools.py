@@ -41,7 +41,7 @@ import shutil
 import subprocess
 import sys
 import time
-from typing import Any, Callable, Iterable, Optional, Sequence
+from typing import Any, Callable, Optional, Sequence
 import urllib.error
 import urllib.request
 import zipfile

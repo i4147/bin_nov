@@ -9,7 +9,6 @@ import concurrent.futures
 import pathlib
 import site
 import sys
-from typing import Any, Iterable
 
 
 def get_site_directories() -> tuple[list[pathlib.Path], list[pathlib.Path]]:

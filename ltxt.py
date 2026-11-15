@@ -11,7 +11,7 @@ from collections import Counter
 from collections.abc import Sequence
 from multiprocessing.pool import AsyncResult, Pool
 from pathlib import Path
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TypeAlias
 
 from dh import BINARY_EXT, MAX_WORKERS
 from loguru import logger

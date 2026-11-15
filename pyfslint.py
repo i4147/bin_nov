@@ -20,7 +20,6 @@ import re
 import stat
 import subprocess
 import sys
-from typing import TYPE_CHECKING, Any, Iterable, Sequence
 
 
 RESET: str = "\x1b[0m"

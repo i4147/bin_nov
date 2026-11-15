@@ -14,7 +14,6 @@ import re
 import subprocess
 import sys
 import time
-from typing import Any, Iterable
 
 
 REQ: Path = Path("requirements.txt")

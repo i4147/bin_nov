@@ -18,7 +18,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Any, Final
+from typing import Final
 import xml.etree.ElementTree as ET
 
 from dh import MAX_WORKERS, walker

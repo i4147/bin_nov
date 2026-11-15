@@ -13,7 +13,7 @@ from multiprocessing.pool import AsyncResult, Pool
 import os
 from pathlib import Path
 import re
-from typing import TYPE_CHECKING, Final, TypeAlias
+from typing import Final, TypeAlias
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS, unique_path

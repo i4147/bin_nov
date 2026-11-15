@@ -9,7 +9,7 @@ import itertools
 from pathlib import Path
 import re
 import sys
-from typing import Any, Callable, Iterable
+from typing import Any, Iterable
 
 
 NODE_MARKERS: tuple[str, str, str, str] = ("\u251c\u2500\u2500", "\u2514\u2500\u2500", "|--", "`--")

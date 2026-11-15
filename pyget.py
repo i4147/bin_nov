@@ -19,7 +19,7 @@ import shutil
 import sys
 import threading
 import time
-from typing import Any, Iterable, Iterator, Self
+from typing import Any, Iterator, Self
 import urllib.error
 import urllib.parse
 import urllib.request

@@ -20,7 +20,6 @@ import multiprocessing as mp
 import os
 from pathlib import Path
 import stat
-import sys
 import tempfile
 from typing import IO, Final
 

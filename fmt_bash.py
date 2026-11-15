@@ -16,7 +16,7 @@ import contextlib
 from multiprocessing.pool import AsyncResult, Pool
 from pathlib import Path
 import shutil
-from typing import TYPE_CHECKING, Final, TypeAlias
+from typing import Final, TypeAlias
 
 from dh import MAX_WORKERS, get_files, is_binary, runcmd
 from loguru import logger

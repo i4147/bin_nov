@@ -12,7 +12,6 @@ import shutil
 import sys
 import termios
 import tty
-from typing import Any, Iterable
 
 
 try:

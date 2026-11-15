@@ -5,7 +5,6 @@ import importlib.metadata
 import json
 from pathlib import Path
 import sysconfig
-from typing import Any, Iterable
 
 
 def get_site_packages_dirs() -> set[Path]:

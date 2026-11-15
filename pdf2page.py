@@ -23,7 +23,7 @@ import argparse
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from pathlib import Path
 import sys
-from typing import Any, Iterable, Sequence
+from typing import Any, Sequence
 
 from dh import MAX_WORKERS
 

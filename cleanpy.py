@@ -12,7 +12,6 @@ from dataclasses import dataclass
 from multiprocessing import Pool
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING
 
 from dh import SKIP_DIRS
 import libcst as cst

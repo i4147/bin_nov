@@ -25,7 +25,7 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import Any, Iterable, Optional, Sequence
+from typing import Any, Iterable, Optional
 import urllib.parse
 
 from dh import MAX_WORKERS

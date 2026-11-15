@@ -11,7 +11,6 @@ import os
 from pathlib import Path
 import sys
 import time
-from typing import Any, Iterable
 
 from tree_sitter import Language, Node, Parser
 

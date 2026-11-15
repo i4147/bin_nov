@@ -12,7 +12,7 @@ import multiprocessing as mp
 import os
 from pathlib import Path
 import sys
-from typing import Any, Iterable, Iterator, Sequence
+from typing import Any, Iterable, Iterator
 
 from dh import MAX_WORKERS, SKIP_DIRS, fsz
 

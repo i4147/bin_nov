@@ -10,7 +10,6 @@ import contextlib
 from pathlib import Path
 import shutil
 import sys
-from typing import Any, Iterable
 
 from dh import SKIP_DIRS, fsz
 

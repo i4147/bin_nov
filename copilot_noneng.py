@@ -15,7 +15,7 @@ import multiprocessing as mp
 from pathlib import Path
 import sys
 import threading
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from dh import MAX_WORKERS, is_binary
 import gcld3

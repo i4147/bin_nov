@@ -9,7 +9,7 @@ import math
 import os
 from pathlib import Path
 import sys
-from typing import Any, Callable
+from typing import Callable
 
 
 DetectionResult = tuple[str, float]

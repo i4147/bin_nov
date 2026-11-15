@@ -12,7 +12,7 @@ import re
 import stat
 import sys
 import textwrap
-from typing import Any, ClassVar, Iterable, Iterator, Literal, Sequence
+from typing import ClassVar, Iterable, Iterator, Literal, Sequence
 
 from dh import MAX_WORKERS, atomic_write
 import libcst as cst

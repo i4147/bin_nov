@@ -8,7 +8,7 @@ import shutil
 import subprocess
 import sys
 import sysconfig
-from typing import Any, Optional
+from typing import Optional
 import zipfile
 
 

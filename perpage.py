@@ -14,7 +14,7 @@ import argparse
 from collections.abc import Sequence
 from multiprocessing.pool import AsyncResult, Pool
 from pathlib import Path
-from typing import TYPE_CHECKING, Final, TypeAlias
+from typing import Final, TypeAlias
 
 from dh import MAX_WORKERS
 from loguru import logger

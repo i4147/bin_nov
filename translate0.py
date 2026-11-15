@@ -9,7 +9,7 @@ import re
 import sqlite3
 import threading
 import time
-from typing import Any, Callable, Final, Sequence
+from typing import Any, Callable, Final
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS

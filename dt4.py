@@ -13,7 +13,7 @@ import signal
 import sys
 from threading import Lock
 import time
-from typing import Any, Callable, Iterable, Optional, TextIO
+from typing import Any, Callable, Optional
 
 from deep_translator import GoogleTranslator
 from deep_translator.exceptions import NotValidPayload, TranslationNotFound

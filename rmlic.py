@@ -6,7 +6,6 @@ Usage: rmlic [paths ...] Examples: $ rmlic src/ Runs as a script (``python rmlic
 
 from pathlib import Path
 import re
-from typing import Any, Iterable
 
 from dh import cprint, fsz, get_nobinary, gsz, mpf
 

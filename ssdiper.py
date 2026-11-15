@@ -11,7 +11,7 @@ from collections import defaultdict
 import json
 import operator
 from pathlib import Path
-from typing import Any, Callable, Optional, Sequence, TextIO
+from typing import Callable, Optional
 
 from dh import get_files
 

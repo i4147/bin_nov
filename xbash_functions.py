@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import TYPE_CHECKING, Final, Protocol
+from typing import Final, Protocol
 
 from dh import MAX_WORKERS
 from loguru import logger

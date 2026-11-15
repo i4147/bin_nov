@@ -36,7 +36,7 @@ from pathlib import Path
 import sys
 import tarfile
 import tempfile
-from typing import TYPE_CHECKING, Any, BinaryIO, Callable, Optional
+from typing import Any, BinaryIO, Callable, Optional
 import zipfile
 
 import brotli

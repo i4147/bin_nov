@@ -11,7 +11,7 @@ from dataclasses import dataclass
 import multiprocessing as mp
 from pathlib import Path
 import re
-from typing import Any, Iterable, Optional
+from typing import Any, Optional
 
 from dh import MAX_WORKERS
 

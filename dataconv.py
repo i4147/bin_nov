@@ -16,7 +16,7 @@ from pathlib import Path
 import re
 import sqlite3
 import sys
-from typing import Any, Callable, Iterable, Iterator, Optional
+from typing import Any, Callable, Iterator, Optional
 
 from dh import MAX_WORKERS
 from loguru import logger

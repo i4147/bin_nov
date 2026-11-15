@@ -8,7 +8,7 @@ import multiprocessing as mp
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterable, Iterator
+from typing import Iterable, Iterator
 
 from dh import SKIP_DIRS
 from spellchecker import SpellChecker

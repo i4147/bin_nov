@@ -11,7 +11,6 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 import re
 import sys
-from typing import TYPE_CHECKING
 
 from dh import MAX_WORKERS
 import pymupdf

@@ -42,7 +42,7 @@ import re
 import site
 import subprocess
 import sys
-from typing import Any, Iterable, Iterator, Sequence
+from typing import Iterable, Iterator, Sequence
 
 
 BINARY_EXTS: tuple[str, ...] = (".so", ".pyd", ".dll", ".dylib")

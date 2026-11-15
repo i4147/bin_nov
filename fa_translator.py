@@ -21,7 +21,7 @@ import shutil
 import subprocess
 import sys
 import time
-from typing import Any, Iterable, Optional, Self, Sequence, TextIO
+from typing import Any, Iterable, Optional, Self, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger

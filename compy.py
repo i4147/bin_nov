@@ -19,7 +19,7 @@ import sys
 import sysconfig
 import token
 import tokenize
-from typing import Any, Iterable
+from typing import Any
 
 from dh import MAX_WORKERS, runcmd
 

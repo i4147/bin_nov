@@ -27,7 +27,7 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterable, Iterator, Optional
+from typing import Iterable, Iterator, Optional
 
 from dh import MAX_WORKERS, SKIP_DIRS
 

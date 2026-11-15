@@ -6,7 +6,7 @@ from functools import partial
 import multiprocessing as mp
 from pathlib import Path
 import re
-from typing import TYPE_CHECKING, Optional, Sequence
+from typing import Optional, Sequence
 
 import cv2
 from dh import MAX_WORKERS

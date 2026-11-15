@@ -9,7 +9,6 @@ import heapq
 from pathlib import Path
 import sqlite3
 import sys
-from typing import Any
 
 
 DB_PATH: Path = Path("/sdcard/data/pip.db")

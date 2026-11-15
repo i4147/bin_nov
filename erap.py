@@ -14,7 +14,7 @@ import multiprocessing
 from pathlib import Path
 import shutil
 import subprocess
-from typing import Any, Iterable, Iterator
+from typing import Iterable, Iterator
 
 from dh import MAX_WORKERS
 

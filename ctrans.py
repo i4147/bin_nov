@@ -19,7 +19,7 @@ import signal
 import sys
 import tempfile
 import threading
-from typing import Any, Callable, Iterator, Optional, TextIO
+from typing import Any, Callable, Iterator, Optional
 
 
 try:

@@ -9,7 +9,7 @@ from enum import Enum, auto
 from io import StringIO
 from pathlib import Path
 import re
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from loguru import logger
 

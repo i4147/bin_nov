@@ -17,7 +17,7 @@ import shutil
 import stat
 import sys
 import time
-from typing import Any, Iterator, Sequence
+from typing import Any, Iterator
 
 from dh import MAX_WORKERS
 from loguru import logger

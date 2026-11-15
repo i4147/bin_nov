@@ -15,7 +15,7 @@ import multiprocessing
 import os
 from pathlib import Path
 import sys
-from typing import Any, TextIO
+from typing import Any
 
 
 try:

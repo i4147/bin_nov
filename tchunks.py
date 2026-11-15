@@ -12,7 +12,6 @@ import sys
 import threading
 import time
 from types import FrameType
-from typing import TYPE_CHECKING
 
 from dh import MAX_WORKERS
 from loguru import logger

@@ -18,7 +18,7 @@ from pathlib import Path
 import re
 import sys
 import tokenize
-from typing import Any, Iterator, NamedTuple
+from typing import Iterator, NamedTuple
 
 from atomicio import atomic_write
 from dh import MAX_WORKERS, SKIP_DIRS

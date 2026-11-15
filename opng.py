@@ -23,7 +23,7 @@ import stat
 import subprocess
 import sys
 import tempfile
-from typing import TYPE_CHECKING, Final, NamedTuple
+from typing import Final, NamedTuple
 
 from dh import MAX_WORKERS, SKIP_DIRS
 

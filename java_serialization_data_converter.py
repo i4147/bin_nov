@@ -7,7 +7,7 @@ Usage: java_serialization_data_converter INPUT.bin OUTPUT.json Examples: $ java_
 import json
 from pathlib import Path
 import sys
-from typing import Any, Iterable
+from typing import Any
 
 import javaobj
 

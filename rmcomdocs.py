@@ -8,7 +8,7 @@ import multiprocessing as mp
 from pathlib import Path
 import sys
 import time
-from typing import Any, Iterable, Sequence
+from typing import Iterable, Sequence
 
 from dh import MAX_WORKERS
 

@@ -14,7 +14,7 @@ from pathlib import Path
 import select
 import shutil
 import sys
-from typing import Any, Iterable, Iterator, Optional, Sequence
+from typing import Iterator, Optional, Sequence
 
 
 _WIN_EXTS: set[str] = {".exe", ".dll", ".bat", ".com", ".msi", ".vbs", ".ps1"}

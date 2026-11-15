@@ -10,7 +10,7 @@ import select
 import sys
 import termios
 import tty
-from typing import Any, Iterable, Sequence
+from typing import Any, Iterable
 
 
 def fuzzy_score(query: str, text: str):

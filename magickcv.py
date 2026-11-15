@@ -11,7 +11,7 @@ Examples: $ magickcv in.jpg out.jpg -resize 800x600 -grayscale -strip Command-li
 import argparse
 from pathlib import Path
 import re
-from typing import Any, Iterable, Sequence
+from typing import Any
 
 import cv2
 import numpy as np

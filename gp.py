@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 import subprocess
 import sys
-from typing import Any, Literal, Protocol, Sequence
+from typing import Literal, Protocol, Sequence
 
 
 try:

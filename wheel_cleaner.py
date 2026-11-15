@@ -9,7 +9,7 @@ import subprocess
 import sys
 import sysconfig
 import textwrap
-from typing import Any, Callable, Iterable, Optional, Sequence
+from typing import Callable, Iterable, Optional, Sequence
 import zipfile
 
 

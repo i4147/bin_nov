@@ -17,7 +17,7 @@ import sys
 import tarfile
 import tempfile
 import time
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 import zipfile
 import zlib
 

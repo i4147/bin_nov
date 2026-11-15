@@ -15,7 +15,7 @@ import multiprocessing
 from pathlib import Path
 import subprocess
 import sys
-from typing import Any, Callable, Iterable, Sequence
+from typing import Any, Callable, Sequence
 
 from dh import MAX_WORKERS
 

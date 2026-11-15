@@ -14,7 +14,7 @@ from datetime import datetime
 import importlib
 from pathlib import Path
 import sys
-from typing import Any, Iterable, Sequence
+from typing import Any, Sequence
 
 
 DEFAULT_PACKAGE: str = "dh"

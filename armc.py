@@ -11,7 +11,7 @@ import ast
 import multiprocessing as mp
 from pathlib import Path
 import sys
-from typing import Any, Iterable, NamedTuple
+from typing import Any, NamedTuple
 
 from loguru import logger
 from tree_sitter import Language, Parser

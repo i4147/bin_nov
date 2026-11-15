@@ -24,7 +24,6 @@ from pathlib import Path
 import re
 import sys
 import tarfile
-from typing import Any, Iterable
 import zipfile
 
 from dh import MAX_WORKERS

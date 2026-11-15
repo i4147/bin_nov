@@ -16,7 +16,7 @@ import sys
 from textwrap import fill as _fill
 import time
 import tokenize
-from typing import Any, Optional
+from typing import Optional
 import unicodedata
 
 from dh import cprint, format_time, fsz, get_files, get_pyfiles, is_binary, mpf

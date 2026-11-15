@@ -7,7 +7,6 @@ Usage: version_filter Examples: $ cd ~/wheels && version_filter Runs as a script
 import os
 from pathlib import Path
 import re
-from typing import Any, Iterable
 
 
 WHL_DIRECTORY: Path = Path()

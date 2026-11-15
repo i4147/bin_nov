@@ -15,7 +15,7 @@ import os
 from pathlib import Path
 import sys
 import tokenize
-from typing import Any, Callable, Iterable, TypeAlias
+from typing import Callable, TypeAlias
 
 from dh import MAX_WORKERS, cprint, get_pyfiles
 from xxhash import xxh64_hexdigest

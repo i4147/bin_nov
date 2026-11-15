@@ -14,7 +14,7 @@ import shutil
 import sys
 import textwrap
 
-from dh import MAX_WORKERS, SKIP_DIRS
+from dh import SKIP_DIRS
 
 
 DEFAULT_APPEND_TEXT: str = "\n#migrate from logging with print and standard logging module to loguru\n"

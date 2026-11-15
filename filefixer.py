@@ -38,7 +38,7 @@ import subprocess
 import sys
 import tarfile
 import tokenize
-from typing import TYPE_CHECKING, Any, Callable, Iterable
+from typing import Any, Callable
 import zipfile
 
 from dh import MAX_WORKERS

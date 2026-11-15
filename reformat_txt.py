@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import TYPE_CHECKING, Final, Literal, NamedTuple
+from typing import Final, Literal, NamedTuple
 
 from atomicio import atomic_write
 from dh import MAX_WORKERS, SKIP_DIRS

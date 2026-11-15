@@ -31,7 +31,7 @@ import sys
 import tempfile
 import time
 import tokenize
-from typing import Any, Callable, Iterable, Iterator, Sequence
+from typing import Callable, Iterable, Iterator
 import zipfile
 
 from atomicio import atomic_write

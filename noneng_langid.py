@@ -7,7 +7,7 @@ Usage: noneng_langid Examples: $ noneng_langid Runs as a script (``python noneng
 import math
 from pathlib import Path
 import sys
-from typing import Any, Iterator
+from typing import Iterator
 
 from dh import SKIP_DIRS
 import py3langid as langid

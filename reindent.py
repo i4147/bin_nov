@@ -21,7 +21,6 @@ from pathlib import Path
 import re
 import sys
 import tokenize
-from typing import Any, Sequence
 
 
 _CLOSING: set[str] = {"return", "raise", "break", "continue", "pass"}

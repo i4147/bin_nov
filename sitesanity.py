@@ -5,7 +5,7 @@ import argparse
 from fnmatch import fnmatch
 import importlib.metadata
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from loguru import logger
 

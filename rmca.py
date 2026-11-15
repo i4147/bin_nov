@@ -6,7 +6,7 @@ import ast as ast_module
 import multiprocessing as mp
 from pathlib import Path
 import sys
-from typing import Any, Sequence
+from typing import Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger

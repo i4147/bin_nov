@@ -22,7 +22,7 @@ from pathlib import Path
 import random
 import re
 import sys
-from typing import Any, Iterable, Iterator, Optional, Sequence
+from typing import Any, Iterator, Optional, Sequence
 
 
 try:

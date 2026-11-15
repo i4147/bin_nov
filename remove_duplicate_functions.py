@@ -11,7 +11,7 @@ from collections.abc import Sequence
 import hashlib
 from multiprocessing import Pool
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from loguru import logger
 

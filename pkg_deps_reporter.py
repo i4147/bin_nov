@@ -13,7 +13,6 @@ import argparse
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterable
 
 
 def parse_metadata_dependencies(metadata_path: Path) -> dict:

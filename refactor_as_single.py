@@ -9,7 +9,7 @@ import ast
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterable, Optional, Sequence
+from typing import Any, Optional
 
 from dh import MAX_WORKERS
 

@@ -14,7 +14,7 @@ import codecs
 from dataclasses import dataclass
 import multiprocessing
 from pathlib import Path
-from typing import Any, Iterable, Iterator, Sequence
+from typing import Any, Iterable, Iterator
 
 from dh import SKIP_DIRS, WORKERS
 from loguru import logger

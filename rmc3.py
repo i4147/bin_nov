@@ -19,7 +19,7 @@ import sys
 import tempfile
 import textwrap
 import tokenize
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TypeAlias
 import warnings
 import zipfile
 

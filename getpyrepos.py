@@ -8,7 +8,6 @@ Usage: getpyrepos [USERNAME] Examples: $ getpyrepos psf Runs as a script (``pyth
 from datetime import datetime, timedelta
 import json
 import sys
-from typing import TextIO
 
 import requests
 

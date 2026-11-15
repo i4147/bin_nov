@@ -16,9 +16,9 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from typing import Any, Iterable
+from typing import Any
 
-from dh import MAX_WORKERS, SKIP_DIRS
+from dh import SKIP_DIRS
 
 
 def unique_destination(dest: Path) -> Path:

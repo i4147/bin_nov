@@ -25,7 +25,6 @@ import re
 import shutil
 import sys
 import time
-from typing import TYPE_CHECKING
 import warnings
 
 from dh import SKIP_DIRS

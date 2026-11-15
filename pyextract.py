@@ -35,7 +35,7 @@ import re
 import shutil
 import sqlite3
 import tarfile
-from typing import Any, Iterable, Iterator, Optional, Sequence
+from typing import Any, Iterable, Iterator, Optional
 import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS

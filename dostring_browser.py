@@ -9,7 +9,6 @@ import ast
 from dataclasses import dataclass
 from pathlib import Path
 import sys
-from typing import Any
 
 from rich.console import Console
 from rich.markdown import Markdown

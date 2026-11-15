@@ -21,7 +21,6 @@ import subprocess
 import sys
 import tarfile
 import tempfile
-from typing import TYPE_CHECKING
 import zipfile
 
 import brotli

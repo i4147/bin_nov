@@ -27,7 +27,7 @@ from pathlib import Path
 import shutil
 import sys
 from tempfile import NamedTemporaryFile
-from typing import TYPE_CHECKING, Any, Iterable
+from typing import Any, Iterable
 
 from loguru import logger
 

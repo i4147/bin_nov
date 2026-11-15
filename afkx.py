@@ -16,7 +16,7 @@ import shutil
 import subprocess
 import sys
 import tarfile
-from typing import Any, Callable, Iterable, Optional
+from typing import Any, Callable, Optional
 import zipfile
 
 from dh import MAX_WORKERS

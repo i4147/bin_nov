@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 import re
 import textwrap
-from typing import Any, Iterable, NamedTuple
+from typing import NamedTuple
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from rich.console import Console

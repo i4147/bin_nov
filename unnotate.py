@@ -8,7 +8,6 @@ import multiprocessing as mp
 import os
 from pathlib import Path
 import re
-from typing import TYPE_CHECKING
 
 from atomicio import atomic_write
 from dh import MAX_WORKERS, SKIP_DIRS

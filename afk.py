@@ -24,7 +24,7 @@ import re
 import sys
 import tarfile
 import tokenize
-from typing import IO, Any, Callable, Iterator, Sequence, Union
+from typing import IO, Any, Callable, Iterator, Sequence
 import warnings
 import zipfile
 

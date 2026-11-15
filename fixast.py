@@ -20,7 +20,7 @@ from pathlib import Path
 import re
 import sys
 import tokenize
-from typing import Any, Final, Iterable
+from typing import Final
 
 
 __version__: str = "1.1.0"

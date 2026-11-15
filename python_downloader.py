@@ -15,7 +15,7 @@ import shutil
 import sys
 import threading
 import time
-from typing import Any, Iterable, Iterator, Optional, Self, Sequence
+from typing import Any, Iterator, Optional, Self
 import urllib.parse
 import urllib.request
 

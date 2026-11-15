@@ -6,7 +6,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 import sys
 import tarfile
-from typing import Any, Optional, Sequence
+from typing import Optional, Sequence
 
 from dh import _SNAPR_WORKERS
 from loguru import logger

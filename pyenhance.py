@@ -18,7 +18,7 @@ from pathlib import Path
 import re
 import sys
 import tokenize
-from typing import TYPE_CHECKING, NamedTuple
+from typing import NamedTuple
 import warnings
 
 from atomicio import atomic_write

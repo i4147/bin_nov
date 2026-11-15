@@ -8,7 +8,6 @@ Usage: docstring_formatter [paths ...] Examples: $ docstring_formatter pkg/ Runs
 import ast
 from pathlib import Path
 import re
-from typing import Any
 
 from dh import SKIP_DIRS
 

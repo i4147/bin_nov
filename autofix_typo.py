@@ -12,7 +12,6 @@ from pathlib import Path
 import re
 import shutil
 import sys
-from typing import Any, Iterable, Sequence
 
 from dh import PY_KEYWORDS
 

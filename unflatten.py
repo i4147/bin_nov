@@ -11,7 +11,6 @@ import keyword
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterable, Sequence
 
 
 _S: str = r'(?:"""(?:\\.|[^\\])*?"""' r"|'''(?:\\.|[^\\])*?'''" r'|"(?:\\.|[^"\\\n])*"' r"|'(?:\\.|[^'\\\n])*')"

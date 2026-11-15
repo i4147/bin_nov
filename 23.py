@@ -6,9 +6,9 @@ from collections.abc import Iterator
 from multiprocessing import Lock, Pool
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from dh import MAX_WORKERS, get_pyfiles, runcmd
+from dh import MAX_WORKERS, runcmd
 
 
 print_lock = Lock()

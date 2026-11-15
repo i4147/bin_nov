@@ -13,7 +13,6 @@ import shutil
 import sys
 import termios
 import tty
-from typing import Any
 
 import pymupdf
 

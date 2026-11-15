@@ -47,7 +47,7 @@ import sqlite3
 import sys
 import tempfile
 import traceback
-from typing import TYPE_CHECKING, Any, Iterable, Sequence
+from typing import Any, Sequence
 
 from dh import MAX_WORKERS, SQL_MAX_WORKERS
 from loguru import logger

@@ -6,7 +6,6 @@ Usage: restore_all_historical_deletions Examples: $ restore_all_historical_delet
 
 from pathlib import Path
 import subprocess
-from typing import Any
 
 
 def run_git_command(args: list[str]) -> str:

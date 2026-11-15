@@ -12,7 +12,7 @@ import argparse
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterator
+from typing import Iterator
 
 
 if sys.version_info >= (3, 10):

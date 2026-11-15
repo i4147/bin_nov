@@ -10,7 +10,6 @@ from dataclasses import dataclass
 import multiprocessing as mp
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING
 
 from dh import MAX_WORKERS
 from loguru import logger

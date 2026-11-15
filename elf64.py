@@ -8,7 +8,7 @@ import argparse
 import multiprocessing as mp
 from pathlib import Path
 import sys
-from typing import Any, Iterator
+from typing import Iterator
 
 from dh import MAX_WORKERS, is_binary
 from elftools.common.exceptions import ELFError

@@ -8,7 +8,6 @@ import argparse
 from pathlib import Path
 import subprocess
 import sys
-from typing import Any, Iterable, Sequence
 
 from dh import get_nobinary, get_random_filename, should_skip
 

@@ -6,7 +6,7 @@ Usage: cwin [paths ...] Examples: $ cwin ~/downloads --dry-run Runs as a script 
 
 from pathlib import Path
 import sys
-from typing import Any, Iterable, Iterator
+from typing import Iterator
 
 from dh import fsz
 

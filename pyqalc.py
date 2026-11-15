@@ -9,7 +9,6 @@ import argparse
 from decimal import getcontext
 import math
 import re
-from typing import Any
 
 
 getcontext().prec = 28

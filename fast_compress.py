@@ -16,7 +16,7 @@ from multiprocessing import Pool
 import os
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING, Any, Iterable, Sequence
+from typing import Sequence
 
 from dh import DEFAULT_XZ_MAX_WORKERS, DEFAULT_ZSTD_MAX_WORKERS
 from loguru import logger

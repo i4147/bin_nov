@@ -9,7 +9,7 @@ from collections import deque
 from collections.abc import Callable
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from PIL import Image
 from pytesseract import image_to_string

@@ -10,7 +10,7 @@ import base64
 from pathlib import Path
 import re
 import sys
-from typing import Any, Optional
+from typing import Optional
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup

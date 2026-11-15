@@ -7,7 +7,7 @@ Usage: new2old Examples: $ new2old Runs as a script (``python new2old.py``) in t
 from dataclasses import dataclass
 from pathlib import Path
 import sys
-from typing import Any, Callable, Iterable
+from typing import Any, Callable
 
 
 if sys.version_info < (3, 11):

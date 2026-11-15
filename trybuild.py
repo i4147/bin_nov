@@ -14,7 +14,6 @@ import subprocess
 import sys
 import tempfile
 import time
-from typing import Any
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger

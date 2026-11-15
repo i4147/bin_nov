@@ -14,7 +14,7 @@ import lzma
 from pathlib import Path
 import re
 import sys
-from typing import Any, Callable, Iterable
+from typing import Any, Callable
 import urllib.parse
 import urllib.request
 import zlib

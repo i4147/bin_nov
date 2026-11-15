@@ -10,7 +10,7 @@ from pathlib import Path
 import re
 import sys
 import tarfile
-from typing import TYPE_CHECKING, Any, Iterable, Optional
+from typing import Any, Iterable, Optional
 from urllib.parse import unquote, urlparse
 import zipfile
 
