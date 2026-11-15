@@ -346,14 +346,14 @@ def _print_failures(failures: list[ProcessingFailure]) -> None:
 
 def _report_duplicates(groups: list[DuplicateGroup], remove: bool) -> None:
     if not groups:
-        cprint("No duplicate files found.", "green")
+        cprint("No duplicate files found.", color="green")
         return
     for index, group in enumerate(groups, start=1):
-        cprint(f"Duplicate group {index}")
+        cprint(f"Duplicate group {index}", color="cyan")
         for path in group.paths:
-            cprint(f"  - {path.name}", "yellow")
+            cprint(f"  - {path.name}", color="yellow")
     if not remove:
-        cprint("Re-run with -r to remove duplicates.", "cyan")
+        cprint("Re-run with -r to remove duplicates.", color="cyan")
         return
     deleted = 0
     for group in groups:
@@ -366,9 +366,9 @@ def _report_duplicates(groups: list[DuplicateGroup], remove: bool) -> None:
             except OSError as error:
                 print(f"Failed to remove {duplicate}: {error}", file=sys.stderr)
     if deleted:
-        cprint(f"{deleted} duplicate files removed.", "cyan")
+        cprint(f"{deleted} duplicate files removed.", color="cyan")
     else:
-        cprint("No duplicate files were removed.", "green")
+        cprint("No duplicate files were removed.", color="green")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -385,13 +385,13 @@ def main(argv: list[str] | None = None) -> int:
             if verified:
                 _report_duplicates(verified, True)
             else:
-                cprint("No duplicate files found.", "green")
+                cprint("No duplicate files found.", color="green")
             clear_duplicates_cache(root)
             return 0
 
     files = sorted({Path(path) for path in get_pyfiles(root)}, key=str)
     if not files:
-        cprint("No Python files found.", "green")
+        cprint("No Python files found.", color="green")
         return 0
 
     results = process_files(files, MAX_WORKERS, args.rich)

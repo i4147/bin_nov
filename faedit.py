@@ -41,7 +41,7 @@ def run_urwid(text: str):
     pv = urwid.Text(around(text, 0))
 
     class Ed(urwid.Edit):
-        def keypress(self, size: int, key: str):
+        def keypress(self, size: int, key: str) -> str:
             if key == "ctrl q":
                 raise urwid.ExitMainLoop
             key = super().keypress(size, key)
@@ -174,7 +174,7 @@ def run_prompt_toolkit(text: str):
     return buf.text
 
 
-def run_textual(text: str):
+def run_textual(text: str) -> str:
     from rich.text import Text
     from textual.app import App
     from textual.binding import Binding

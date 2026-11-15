@@ -8,6 +8,7 @@ import runpy
 import subprocess
 import sys
 import tempfile
+from typing import Any, Callable
 
 import libcst as cst
 
@@ -17,7 +18,7 @@ import libcst as cst
 # ---------------------------------------------------------------------------
 
 
-def infer_from_expr(expr):
+def infer_from_expr(expr: Any):
     """Infer a simple builtin type name from a literal-ish expression."""
     if isinstance(expr, cst.Integer):
         return "int"
@@ -57,23 +58,23 @@ class _ReturnCollector(cst.CSTVisitor):
         self.returns = []
         self.has_yield = False
 
-    def visit_FunctionDef(self, node) -> bool:
+    def visit_FunctionDef(self, node: cst.FunctionDef) -> bool:
         return False
 
-    def visit_ClassDef(self, node) -> bool:
+    def visit_ClassDef(self, node: cst.ClassDef) -> bool:
         return False
 
-    def visit_Lambda(self, node) -> bool:
+    def visit_Lambda(self, node: cst.Lambda) -> bool:
         return False
 
-    def visit_Yield(self, node) -> None:
+    def visit_Yield(self, node: cst.Yield) -> None:
         self.has_yield = True
 
-    def visit_Return(self, node) -> None:
+    def visit_Return(self, node: cst.Return) -> None:
         self.returns.append(node.value)
 
 
-def _last_is_exit(body) -> bool:
+def _last_is_exit(body: str) -> bool:
     """True if the block's last statement is a return or raise."""
     if isinstance(body, cst.SimpleStatementSuite):
         last = body.body[-1] if body.body else None
@@ -84,7 +85,7 @@ def _last_is_exit(body) -> bool:
     )
 
 
-def infer_return(func) -> str | None:
+def infer_return(func: Callable[..., Any]) -> str | None:
     """Return an annotation string for the function, or None if unsure."""
     if func.returns is not None:
         return None
@@ -129,7 +130,7 @@ class AnnotateTransformer(cst.CSTTransformer):
         super().__init__()
         self.changes = 0
 
-    def _annotate_params(self, params):
+    def _annotate_params(self, params: dict[str, Any]):
         out = []
         for p in params:
             if p.annotation is None and p.default is not None:
@@ -146,7 +147,7 @@ class AnnotateTransformer(cst.CSTTransformer):
             out.append(p)
         return out
 
-    def leave_FunctionDef(self, original_node, updated_node):
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.CSTNode:
         params = updated_node.params
         new_node = updated_node.with_changes(
             params=params.with_changes(
@@ -174,7 +175,7 @@ def annotate_heuristic(source: str):
 # ---------------------------------------------------------------------------
 
 
-def annotate_with_pyannotate(path: Path, original: str):
+def annotate_with_pyannotate(path: Path, original: str) -> str:
     """Run the file, record observed types, and let pyannotate insert them.
 
     pyannotate writes into the file, so the original text is restored in a
@@ -222,14 +223,14 @@ def annotate_with_pyannotate(path: Path, original: str):
 # Colored diff output
 # ---------------------------------------------------------------------------
 
-BOLD = "\033[1m"
-RED = "\033[31m"
-GREEN = "\033[32m"
-CYAN = "\033[36m"
-RESET = "\033[0m"
+BOLD: str = "\033[1m"
+RED: str = "\033[31m"
+GREEN: str = "\033[32m"
+CYAN: str = "\033[36m"
+RESET: str = "\033[0m"
 
 
-def print_colored_diff(old: str, new, filename: str) -> None:
+def print_colored_diff(old: str, new: str, filename: str) -> None:
     use_color = sys.stdout.isatty() and "NO_COLOR" not in os.environ
     diff = difflib.unified_diff(
         old.splitlines(keepends=True),

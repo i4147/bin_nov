@@ -248,7 +248,7 @@ def _apt_reinstall_one(pkg: str) -> bool:
     print(f"Reinstalling: {pkg}")
     rc, _, err = run_cmd(["apt", "install", "--reinstall", "-y", pkg], show_output=True)
     if rc == 0:
-        cprint(f"✓ Successfully reinstalled: {pkg}", "green")
+        cprint(f"✓ Successfully reinstalled: {pkg}", color="green")
         return True
     cprint(f"✗ Failed to reinstall {pkg}", "red")
     if err:
@@ -367,7 +367,7 @@ def cmd_wheel_install(args: argparse.Namespace) -> int:
     print("INSTALLATION SUMMARY")
     print("-" * 40)
     print(f"Total wheels: {len(wheels)}")
-    cprint(f"✓ Successfully installed: {len(successes)}", "green")
+    cprint(f"✓ Successfully installed: {len(successes)}", color="green")
     if failures:
         cprint(f"✗ Failed: {len(failures)}", "red")
         for m in failures:
@@ -565,7 +565,7 @@ def cmd_pip_uninstall_flake8(args: argparse.Namespace) -> int:
         print(f"\nUninstalling {p}...")
         rc, _, err = pip_run_subprocess(["uninstall", "-y", p])
         if rc == 0:
-            cprint(f"✓ Successfully uninstalled {p}", "green")
+            cprint(f"✓ Successfully uninstalled {p}", color="green")
         else:
             cprint(f"✗ Failed to uninstall {p}: {err}", "red")
             fail += 1
@@ -820,7 +820,7 @@ def cmd_pip_reinstall_entry_points(args: argparse.Namespace) -> int:
     print("\n" + "=" * 40)
     print("REINSTALLATION SUMMARY")
     print("=" * 40)
-    cprint(f"✓ Successfully reinstalled: {len(successes)}", "green")
+    cprint(f"✓ Successfully reinstalled: {len(successes)}", color="green")
     if failures:
         cprint(f"✗ Failed to reinstall: {len(failures)}", "red")
         for name, msg in failures:

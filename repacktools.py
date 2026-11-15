@@ -46,7 +46,7 @@ try:
 except ImportError:
     _HAS_TQDM = False
 
-    def _tqdm(it: Iterable[Any], **_kw: Any):
+    def _tqdm(it: Iterable[Any], **_kw: Any) -> Iterable[Any]:
         return it
 
 

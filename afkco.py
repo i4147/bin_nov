@@ -5,6 +5,8 @@ Usage: afkco [-a] [--dry-run] [paths ...] Positional arguments: paths ...
 File or directory paths to analyze (default: current directory) Options: -a, --autofix Remove unused imports in-place --dry-run Preview changes without writing (enables --autofix) -v, --verbose Detailed output with per-name breakdown --exclude Regex pattern to exclude files (repeatable) --no-color Disable ANSI color codes Examples: $ afkco -a src/ Command-line script: run ``python afkco.py`` or the ``afkco`` command.
 """
 
+from __future__ import annotations
+
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import ast
 from dataclasses import dataclass, field
@@ -371,7 +373,7 @@ def remove_unused_imports(source: str, unused: Iterable[Any]):
     return (result, True)
 
 
-def _reconstruct_import_line(node: ast.AST, unused_names: Any, original_line: Any):
+def _reconstruct_import_line(node: ast.AST, unused_names: Any, original_line: Any) -> str | None:
     if isinstance(node, ast.Import):
         names_to_keep = []
         for alias in node.names:

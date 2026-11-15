@@ -11,7 +11,7 @@ import sys
 from typing import Any
 
 
-def decode_value(value: str, params: dict[str, Any]):
+def decode_value(value: str, params: dict[str, Any]) -> str:
     encoding = None
     charset = "utf-8"
     for p in params:

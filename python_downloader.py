@@ -15,7 +15,7 @@ import shutil
 import sys
 import threading
 import time
-from typing import Any, Iterator, Optional, Self
+from typing import Any, Iterable, Iterator, Optional, Self, Sequence
 import urllib.parse
 import urllib.request
 
@@ -245,7 +245,7 @@ class _UrllibStream(StreamResponse):
         self.status = getattr(resp, "status", 200) or 200
         self.headers = {k.lower(): v for k, v in resp.headers.items()}
 
-    def chunks(self):
+    def chunks(self) -> Iterator[str]:
         while True:
             data = self._resp.read(CHUNK)
             if not data:

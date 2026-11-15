@@ -66,7 +66,7 @@ def strip_future_imports(text: str) -> str:
 # per-file work (runs inside worker processes)
 # ---------------------------------------------------------------------------
 
-_FAST_MARKER = b"__future__"
+_FAST_MARKER: bytes = b"__future__"
 
 
 def _process_one(path_str: str) -> tuple[str, int, int, str | None]:
@@ -119,7 +119,7 @@ def _process_batch(paths: list[str]) -> list[tuple[str, int, int, str | None]]:
 
 # Below this many files the ProcessPoolExecutor startup (~150 ms on Linux,
 # more on Windows) costs more than sequential processing.  Tune to taste.
-_PARALLEL_THRESHOLD = 100
+_PARALLEL_THRESHOLD: int = 100
 
 
 def _iter_results(

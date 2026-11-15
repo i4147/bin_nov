@@ -14,7 +14,7 @@ def process_line(line: str, autofix: bool = False) -> tuple:
     misspelled_count = 0
     fixed_count = 0
 
-    def check_and_replace(match: re.Match[str]):
+    def check_and_replace(match: re.Match[str]) -> str:
         nonlocal misspelled_count, fixed_count
         word = match.group(0)
         clean_word = word.strip("'")

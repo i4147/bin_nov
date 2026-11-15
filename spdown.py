@@ -7,6 +7,7 @@ import hashlib
 from pathlib import Path
 import sys
 from urllib.parse import unquote, urljoin, urlparse
+from typing import Any, Iterable
 
 import httpx
 from loguru import logger

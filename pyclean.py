@@ -311,7 +311,7 @@ class _LibCSTStripper(cst.CSTTransformer):
         return updated
 
     @staticmethod
-    def _fix_empty(body: ast.Module):
+    def _fix_empty(body: ast.Module) -> ast.Module:
         if not body:
             return (cst.SimpleStatementLine(body=[cst.Pass()]),)
         return body

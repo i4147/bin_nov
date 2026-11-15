@@ -17,15 +17,15 @@ from rich.table import Table
 import typer
 
 
-__version__ = "1.0.0"
+__version__: str = "1.0.0"
 
 DEFAULT_ENV_FILE = Path.home() / ".env"
 DEFAULT_GLOBAL_GITIGNORE = Path.home() / ".gitignore"
-DEFAULT_USERNAME = "i4147"
-DEFAULT_GIT_USER = "i4147"
-DEFAULT_GIT_EMAIL = "yesnacoc@gmail.com"
-DEFAULT_BRANCH = "main"
-DEFAULT_DESCRIPTION = "created with python"
+DEFAULT_USERNAME: str = "i4147"
+DEFAULT_GIT_USER: str = "i4147"
+DEFAULT_GIT_EMAIL: str = "yesnacoc@gmail.com"
+DEFAULT_BRANCH: str = "main"
+DEFAULT_DESCRIPTION: str = "created with python"
 
 LOG_DIR = Path.home() / "tmp" / "apps" / "ghrepo"
 LOG_DIR.mkdir(parents=True, exist_ok=True)

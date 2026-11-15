@@ -197,7 +197,7 @@ class Printer:
             return TerminalTrueColorFormatter(style=style)
         return Terminal256Formatter(style=style)
 
-    def _highlight_lines(self, lines: list[Any], lexer: Any, formatter: Any):
+    def _highlight_lines(self, lines: list[Any], lexer: Any, formatter: Any) -> list[str]:
         if self.config.plain or formatter is None:
             return lines
         code = "\n".join(lines) + "\n"

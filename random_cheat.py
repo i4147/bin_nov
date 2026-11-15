@@ -4,7 +4,7 @@ import random
 import sys
 
 
-def show_random_cheat():
+def show_random_cheat() -> None:
     cheat_dir = Path.expanduser(Path("~/.cheats"))
 
     if not cheat_dir.exists() or not cheat_dir.is_dir():

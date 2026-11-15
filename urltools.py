@@ -25,7 +25,7 @@ try:
     from tqdm import tqdm as _tqdm
 except ImportError:
 
-    def _tqdm(it: Iterable[Any], **_kw: Any):
+    def _tqdm(it: Iterable[Any], **_kw: Any) -> Iterable[Any]:
         return it
 
 

@@ -11,7 +11,7 @@ from dataclasses import dataclass
 import multiprocessing as mp
 from pathlib import Path
 import re
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 from dh import MAX_WORKERS
 
@@ -151,7 +151,7 @@ def clean_file_remote(path: Path) -> FileStats:
         removed = 0
         if path.suffix.lower() in {".html", ".htm"}:
 
-            def repl(m: re.Match[str]):
+            def repl(m: re.Match[str]) -> str:
                 nonlocal removed
                 src = m.group(1)
                 if src.startswith(REMOTE_PREFIXES):
@@ -162,7 +162,7 @@ def clean_file_remote(path: Path) -> FileStats:
             modified = IMG_TAG_RE.sub(repl, modified)
         elif path.suffix.lower() == ".md":
 
-            def inline_repl(m: re.Match[str]):
+            def inline_repl(m: re.Match[str]) -> str:
                 nonlocal removed
                 url = m.group(1)
                 if url.startswith(REMOTE_PREFIXES):

@@ -12,7 +12,7 @@ from pathlib import Path
 import re
 import sys
 import threading
-from typing import Any
+from typing import Any, Iterable, TextIO
 from urllib.parse import urljoin, urlparse
 
 from dh import MAX_WORKERS

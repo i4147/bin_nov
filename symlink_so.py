@@ -19,7 +19,7 @@ def should_skip(so_path: Path) -> bool:
     return bool(re.search(r"\.so\.\d+(\.\d+)+$", name))
 
 
-def get_base_name(so_path: Path):
+def get_base_name(so_path: Path) -> str:
     name = so_path.name
     match = re.match(r"(.+\.so)(?:\.\d+)*$", name)
     if match:

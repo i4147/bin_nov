@@ -11,9 +11,10 @@ import sys
 import urllib.error
 from urllib.parse import urljoin, urlparse
 import urllib.request
+from typing import Any, Iterable
 
 
-def fetch_html(url, timeout=15):
+def fetch_html(url: str, timeout=15) -> str:
     """Fetch HTML content from a URL."""
     headers = {
         "User-Agent": (
@@ -28,7 +29,7 @@ def fetch_html(url, timeout=15):
         return response.read().decode(charset, errors="replace")
 
 
-def extract_urls(html, base_url):
+def extract_urls(html: str, base_url: str):
     """
     Extract URLs from HTML content.
     - Absolute URLs (http://, https://) are kept as-is.
@@ -62,13 +63,13 @@ def extract_urls(html, base_url):
     return urls
 
 
-def save_urls(urls, filename="urls.txt"):
+def save_urls(urls: Iterable[Any], filename="urls.txt") -> None:
     """Save a sorted list of URLs to a file."""
     with open(filename, "w", encoding="utf-8") as f:
         f.writelines(url + "\n" for url in sorted(urls))
 
 
-def main():
+def main() -> None:
     if len(sys.argv) != 2:
         print("Usage: python script.py <URL>")
         sys.exit(1)

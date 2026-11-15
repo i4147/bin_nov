@@ -70,7 +70,7 @@ class C:
     BOLD = "\033[1m"
 
 
-def color(text: str, c: str):
+def color(text: str, c: str) -> str:
     if not sys.stdout.isatty():
         return text
     return f"{c}{text}{C.RESET}"

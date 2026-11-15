@@ -76,7 +76,7 @@ def ah(s: TextIO, J="simz.json") -> None:
         print(f"Error saving data to JSON file '{J}': {c}")
 
 
-def U(name: str):
+def U(name: str) -> str:
     C = Path(name)
     if C.stem.endswith("_1"):
         return C.stem[:-2] + C.suffix
@@ -104,7 +104,7 @@ def group_similar(ae="simz.json"):
         m.add(q["file2"])
     o = {d: d for d in m}
 
-    def B(r: int):
+    def B(r: int) -> int:
         n = r
         while o[n] != n:
             n = o[n]

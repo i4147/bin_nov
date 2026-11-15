@@ -12,6 +12,7 @@ from pathlib import Path
 import re
 import shutil
 import sys
+from typing import Any, Iterable, Sequence
 
 from dh import PY_KEYWORDS
 
@@ -270,7 +271,7 @@ class TypoFixerWithLearning:
         for line_num, line in enumerate(lines, 1):
             fixed_line = line
 
-            def replace_word(match: re.Match[str]):
+            def replace_word(match: re.Match[str]) -> str:
                 nonlocal changes
                 word = match.group(1)
                 if len(word) <= 2 or word.isupper():

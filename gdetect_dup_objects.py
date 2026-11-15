@@ -37,7 +37,7 @@ class TypeAnnotationChecker(ast.NodeVisitor):
 
 
 class AnnotationStripper(ast.NodeTransformer):
-    def visit_FunctionDef(self, node: ast.AST):
+    def visit_FunctionDef(self, node: ast.AST) -> ast.AST:
         node.returns = None
         for arg in node.args.args + node.args.kwonlyargs:
             arg.annotation = None
@@ -48,7 +48,7 @@ class AnnotationStripper(ast.NodeTransformer):
         self.generic_visit(node)
         return node
 
-    def visit_AsyncFunctionDef(self, node: ast.AST):
+    def visit_AsyncFunctionDef(self, node: ast.AST) -> ast.AST:
         return self.visit_FunctionDef(node)
 
     def visit_AnnAssign(self, node: ast.AST):

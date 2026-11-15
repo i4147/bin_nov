@@ -80,7 +80,7 @@ def build_transformations(info: dict) -> dict:
         (re.compile(r'(?m)^([ \t]*maintainer_email[ \t]*=[ \t]*)(?![ "\']).*$'), _cfg(email)),
     ]
 
-    def _poetry_author(m: re.Match[str]):
+    def _poetry_author(m: re.Match[str]) -> str:
         inner = m.group(2)
         if not inner.strip():
             return m.group(0)

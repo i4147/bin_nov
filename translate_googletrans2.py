@@ -180,7 +180,7 @@ def translate_text(text: str, source_lang: str, target_lang: str):
 
 
 def translate_chunk_factory(source_lang: str, target_lang: str) -> Callable[..., Any]:
-    def translate_chunk(chunk: Any):
+    def translate_chunk(chunk: Any) -> tuple[Any,]:
         return chunk, translate_text("\n".join(chunk), source_lang, target_lang)
 
     return translate_chunk

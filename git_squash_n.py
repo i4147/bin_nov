@@ -118,7 +118,7 @@ class SubprocessBackend(Backend):
             raise RuntimeError(msg)
         return shas
 
-    def write_combined_diff(self, base_rev: str, head_rev: str, out_patch_path: Path):
+    def write_combined_diff(self, base_rev: str, head_rev: str, out_patch_path: Path) -> Path:
         with open(out_patch_path, "wb") as f:
             p = subprocess.Popen(
                 ["git", "diff", "--binary", f"{base_rev}..{head_rev}"],
@@ -133,7 +133,7 @@ class SubprocessBackend(Backend):
             f.write(out)
         return out_patch_path
 
-    def write_commits_metadata(self, base_rev: str, head_rev: str, out_meta_path: Path):
+    def write_commits_metadata(self, base_rev: str, head_rev: str, out_meta_path: Path) -> Path:
         git_log_fmt = "---%n%H|%an|%ae|%ad|%s"
         res = run(
             [

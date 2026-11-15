@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 
 
-def normalize_chmod(target_dir: str):
+def normalize_chmod(target_dir: str) -> None:
     root = Path(target_dir)
     if not root.exists():
         print(f"Error: Path '{target_dir}' does not exist.")

@@ -23,7 +23,7 @@ from pathlib import Path
 import re
 import sys
 import time
-from typing import Any, TextIO
+from typing import Any, Iterable, Sequence, TextIO
 from zlib import crc32
 
 from dh import MAX_WORKERS, SKIP_DIRS, is_binary
@@ -76,7 +76,7 @@ _PATH_PALETTE: tuple[str, ...] = (
 )
 
 
-def _stable_hash(s) -> int:
+def _stable_hash(s: str) -> int:
     return crc32(str(s).encode("utf-8"))
 
 

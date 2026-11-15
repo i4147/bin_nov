@@ -10,7 +10,7 @@ import multiprocessing as mp
 from pathlib import Path
 import sys
 import tokenize as _tokenize
-from typing import Any, Iterator
+from typing import Any, Iterable, Iterator
 
 from atomicio import atomic_replace
 from dh import SKIP_DIRS, fsz
@@ -438,7 +438,7 @@ def process_file(
     return path, bytes_reduced, True, None
 
 
-def iter_python_files(paths: list[Path]):
+def iter_python_files(paths: list[Path]) -> Iterator[Path]:
     seen = set()
 
     def on_walk_error(exc: str) -> None:

@@ -20,7 +20,7 @@ import sqlite3
 import sys
 import tarfile
 import textwrap
-from typing import Any, Iterable, Iterator
+from typing import Any, Iterable, Iterator, Sequence
 import zipfile
 
 from dh import SKIP_DIRS
@@ -871,7 +871,7 @@ def cmd_sexpr(args: argparse.Namespace) -> int:
     data = args.file.read_bytes()
     tree = parser.parse(data)
 
-    def render(n) -> str:
+    def render(n: int) -> str:
         if n.child_count == 0:
             return f'({n.type} "{data[n.start_byte : n.end_byte].decode("utf-8", errors="replace")}")'
         children = " ".join(render(c) for c in n.children)

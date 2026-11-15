@@ -51,12 +51,12 @@ import sys
 from typing import Any, Iterable, Iterator, TextIO
 
 
-__version__ = "1.0.0"
-PROG = "sqlite2json"
+__version__: str = "1.0.0"
+PROG: str = "sqlite2json"
 
-BLOB_MODES = ("base64", "hex", "null", "error")
-NAN_MODES = ("null", "string", "error")
-INTERNAL_PREFIX = "sqlite_"
+BLOB_MODES: tuple[str, str, str, str] = ("base64", "hex", "null", "error")
+NAN_MODES: tuple[str, str, str] = ("null", "string", "error")
+INTERNAL_PREFIX: str = "sqlite_"
 
 Row = dict[str, Any]
 TableStream = tuple[str, Iterator[Row]]

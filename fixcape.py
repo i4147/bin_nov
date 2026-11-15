@@ -52,7 +52,7 @@ def fix_source_code(source_bytes: bytes) -> tuple[bytes, bool]:
                         new_string = new_prefix + quote + content + end_quote
                     else:
 
-                        def replacer(match: re.Match[str]):
+                        def replacer(match: re.Match[str]) -> str:
                             char = match.group(1)
                             if char in valid_escape_chars:
                                 return match.group(0)

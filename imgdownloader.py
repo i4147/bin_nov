@@ -34,7 +34,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
 
-def validDir(userDir: Path):
+def validDir(userDir: Path) -> Path:
     if userDir and Path(userDir).exists():
         return userDir
     elif not userDir:

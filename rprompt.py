@@ -39,7 +39,7 @@ def remove_comments_and_docstrings(source_code: str) -> str:
     return out
 
 
-def shorten_variable_name(name: str):
+def shorten_variable_name(name: str) -> str:
     if not name or name.startswith("_"):
         return name
     vowels = "aeiouAEIOU"

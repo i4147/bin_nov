@@ -21,7 +21,7 @@ import re
 import subprocess
 import sys
 import tarfile
-from typing import Any, Iterable, Iterator, Optional, Sequence
+from typing import Any, Iterable, Iterator, Optional, Sequence, TextIO
 import zipfile
 
 from dh import MAX_WORKERS

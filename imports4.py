@@ -214,7 +214,7 @@ def is_local_module(name: str, source_file: Path) -> bool:
     return False
 
 
-def apply_pin(name: str, version: str, style: str):
+def apply_pin(name: str, version: str, style: str) -> str:
     if style == "none" or not version:
         return name
     if style == "exact":
