@@ -1,9 +1,4 @@
 #!/data/data/com.termux/files/usr/bin/env python
-"""Copy the new archives dropped into a directory to ``~/tmp/tgz``.
-Scans the watched directory (``$PREFIX/tmp`` by default) once, then uses watchdog to copy every newly created or modified ``.tar.gz``/``.tar.xz``/``.tar.bz2``/``.zip``/``.whl`` file into ``~/tmp/tgz``.
-Usage: wtmp [DIRECTORY] Examples: $ wtmp ~/tmp Runs as a script (``python wtmp.py``) in the directory it should act on; the module can also be imported.
-"""
-
 import os
 import pathlib
 from pathlib import Path
@@ -12,8 +7,21 @@ import sys
 import time
 from typing import Any
 
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
+# Prefer watchfiles; fall back to watchdog if unavailable.
+try:
+    from watchfiles import watch as wf_watch, Change
+
+    _BACKEND = "watchfiles"
+except ImportError:
+    try:
+        from watchdog.events import FileSystemEventHandler
+        from watchdog.observers import Observer
+
+        _BACKEND = "watchdog"
+    except ImportError:
+        raise ImportError(
+            "Neither 'watchfiles' nor 'watchdog' is installed. Install one of them, e.g. `pip install watchfiles`."
+        )
 
 
 DEST_DIR = pathlib.Path("~/tmp/tgz").expanduser()
@@ -26,8 +34,8 @@ ALLOWED_EXT: tuple[str, ...] = (
 )
 
 
-def copy_if_match(src_path: Path) -> None:
-    if src_path.endswith(ALLOWED_EXT):
+def copy_if_match(src_path: Path | str) -> None:
+    if str(src_path).endswith(ALLOWED_EXT):
         try:
             pathlib.Path(DEST_DIR).mkdir(exist_ok=True, parents=True)
             dest = Path(DEST_DIR).joinpath(pathlib.Path(src_path).name)
@@ -44,26 +52,46 @@ def startup_scan(fpath: str) -> None:
             copy_if_match(full_path)
 
 
-class CopyEventHandler(FileSystemEventHandler):
-    def on_created(self, event: Any) -> None:
-        if not event.is_directory:
-            copy_if_match(event.src_path)
+def run_watchfiles(path: str) -> None:
+    """Watch using watchfiles (default backend)."""
+    try:
+        for changes in wf_watch(path, recursive=True):
+            for change, changed_path in changes:
+                if change in (Change.added, Change.modified):
+                    copy_if_match(changed_path)
+    except KeyboardInterrupt:
+        pass
 
-    def on_modified(self, event: Any) -> None:
-        if not event.is_directory:
-            copy_if_match(event.src_path)
+
+if _BACKEND == "watchdog":
+
+    class CopyEventHandler(FileSystemEventHandler):
+        def on_created(self, event: Any) -> None:
+            if not event.is_directory:
+                copy_if_match(event.src_path)
+
+        def on_modified(self, event: Any) -> None:
+            if not event.is_directory:
+                copy_if_match(event.src_path)
+
+    def run_watchdog(path: str) -> None:
+        """Watch using watchdog (fallback backend)."""
+        event_handler = CopyEventHandler()
+        observer = Observer()
+        observer.schedule(event_handler, path, recursive=True)
+        observer.start()
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            observer.stop()
+        observer.join()
 
 
 if __name__ == "__main__":
     path = sys.argv[1] if len(sys.argv) > 1 else "/data/data/com.termux/files/usr/tmp"
     startup_scan(path)
-    event_handler = CopyEventHandler()
-    observer = Observer()
-    observer.schedule(event_handler, path, recursive=True)
-    observer.start()
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
+    if _BACKEND == "watchfiles":
+        run_watchfiles(path)
+    else:
+        run_watchdog(path)

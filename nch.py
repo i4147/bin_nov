@@ -8,14 +8,13 @@ import sys
 import time
 from typing import Iterator, Optional, Sequence
 
-from dh import SKIP_DIRS
 
+from dh import SKIP_DIRS, is_binary
 
 DIR_MODE: int = 0o775
 FILE_MODE: int = 0o644
 EXEC_MODE: int = 0o755
 EXEC_BITS: int = st.S_IXUSR | st.S_IXGRP | st.S_IXOTH
-
 RESET: str = "\033[0m"
 GREEN: str = "\033[32m"
 BLUE: str = "\033[34m"
@@ -49,6 +48,13 @@ def is_symlink(p: Path) -> bool:
         return p.is_symlink()
     except OSError:
         return False
+
+
+def is_binary_file(p: Path) -> bool:
+    try:
+        return is_binary(str(p))
+    except Exception:
+        return True
 
 
 def has_shebang(p: Path) -> bool:
@@ -86,10 +92,8 @@ def convert_file_content(p: Path, dry_run: bool) -> tuple[bool, bool, bool, Opti
         raw = p.read_bytes()
     except (OSError, PermissionError):
         return False, False, False, "read failed"
-
     content: str = ""
     encoding_fixed: bool = False
-
     try:
         content = raw.decode("utf-8")
     except UnicodeDecodeError:
@@ -102,11 +106,9 @@ def convert_file_content(p: Path, dry_run: bool) -> tuple[bool, bool, bool, Opti
                 continue
         else:
             return False, False, False, "undecodable encoding"
-
     has_crlf = b"\r\n" in raw
     content_lf = content.replace("\r\n", "\n").replace("\r", "\n")
     crlf_fixed = has_crlf or (content_lf != content)
-
     tabs_fixed: bool = False
     new_lines = []
     for line in content_lf.splitlines(keepends=True):
@@ -118,20 +120,16 @@ def convert_file_content(p: Path, dry_run: bool) -> tuple[bool, bool, bool, Opti
             new_lines.append(spaces + stripped)
         else:
             new_lines.append(line)
-
     new_content = "".join(new_lines)
     if new_content != content_lf:
         tabs_fixed = True
-
     if not encoding_fixed and not crlf_fixed and not tabs_fixed:
         return False, False, False, None
-
     if not dry_run:
         try:
             p.write_text(new_content, encoding="utf-8")
         except (OSError, PermissionError):
             return False, False, False, "write_failed"
-
     return encoding_fixed, crlf_fixed, tabs_fixed, None
 
 
@@ -160,11 +158,17 @@ class Config:
         self.deexec_patterns: tuple[str, ...] = deexec_patterns
         self.keep_exec_parents: frozenset[str] = keep_exec_parents
 
+    def _rel_parts(self, p: Path) -> tuple[str, ...]:
+        try:
+            return p.relative_to(self.root).parts
+        except ValueError:
+            return p.parts
+
     def is_skipped(self, p: Path) -> bool:
-        return any(part in self.skip_dirs for part in p.parts)
+        return any(part in self.skip_dirs for part in self._rel_parts(p))
 
     def in_exec_dir(self, p: Path) -> bool:
-        return any(part in self.exec_dirs for part in p.parts)
+        return any(part in self.exec_dirs for part in self._rel_parts(p))
 
     def looks_executable(self, p: Path) -> bool:
         if p.suffix.lower() in self.suffix_exec:
@@ -193,15 +197,18 @@ def walk_items(cfg: Config, include_dirs: bool = True, include_files: bool = Tru
                 for entry in entries:
                     if entry.name in cfg.skip_dirs:
                         continue
-                    p = Path(entry.path)
                     if entry.is_symlink():
                         continue
+                    p = Path(entry.path)
                     if entry.is_dir(follow_symlinks=False):
                         if include_dirs:
                             yield ("dir", p)
                         stack.append(p)
                     elif entry.is_file(follow_symlinks=False) and include_files:
-                        yield ("file", p)
+                        if is_binary_file(p):
+                            yield ("binary", p)
+                        else:
+                            yield ("file", p)
         except (OSError, PermissionError):
             continue
 
@@ -217,6 +224,7 @@ class Stats:
         self.encoding_fixed: int = 0
         self.tabs_fixed: int = 0
         self.skipped: int = 0
+        self.binary_skipped: int = 0
         self.errors: int = 0
 
 
@@ -224,11 +232,9 @@ def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -
     s = Stats()
     s.total = 1
     rp = rel_str(path, cfg.root)
-
     if cfg.is_skipped(path):
         s.skipped = 1
         return s, None
-
     if kind == "file":
         enc_fix, crlf_fix, tabs_fix, err = convert_file_content(path, dry_run)
         if err:
@@ -243,24 +249,20 @@ def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -
         if tabs_fix:
             s.tabs_fixed += 1
             print(f"{CYAN}[TABS->SPACES]{RESET} {rp}")
-
     cur = mode_of(path)
     if cur is None:
         s.errors = 1
         return s, f"{RED}[ERR]{RESET} {rp}: stat failed"
-
     if mode == "deexec":
         if not cfg.matches_deexec(path) or cfg.keeps_exec_by_parent(path) or not (cur & EXEC_BITS):
             s.skipped = 1
             return s, None
-
         target = cur & ~EXEC_BITS
         if not dry_run and not chmod_safe(path, target):
             s.errors = 1
             return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
         s.files_deexeced = 1
         return s, f"{YELLOW}[DEEXEC]{RESET} {rp} {oct(cur)}->{oct(target)}"
-
     if kind == "dir":
         target = cfg.dir_mode
         if cur == target:
@@ -270,7 +272,6 @@ def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -
             return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
         s.dirs_changed = 1
         return s, f"{BLUE}[DIR]{RESET} {rp} {oct(cur)}->{oct(target)}"
-
     if mode == "addx":
         if is_executable(path) or not cfg.looks_executable(path):
             s.skipped = 1
@@ -281,7 +282,6 @@ def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -
             return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
         s.files_made_exec = 1
         return s, f"{GREEN}[EXEC+]{RESET} {rp} {oct(cur)}->{oct(target)}"
-
     if kind == "file" and is_executable(path) and not cfg.looks_executable(path) and not cfg.keeps_exec_by_parent(path):
         target = cur & ~EXEC_BITS
         if not dry_run and not chmod_safe(path, target):
@@ -289,19 +289,15 @@ def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -
             return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
         s.files_deexeced = 1
         return s, f"{YELLOW}[DEEXEC-NONEXEC]{RESET} {rp} {oct(cur)}->{oct(target)}"
-
     if is_executable(path) and cfg.preserve_existing_exec:
         s.skipped = 1
         return s, None
-
     target = cfg.exec_mode if cfg.looks_executable(path) else cfg.file_mode
     if cur == target:
         return s, None
-
     if not dry_run and not chmod_safe(path, target):
         s.errors = 1
         return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
-
     if target == cfg.exec_mode:
         s.files_made_exec = 1
         return s, f"{GREEN}[EXEC]{RESET} {rp} {oct(cur)}->{oct(target)}"
@@ -314,6 +310,10 @@ def run_serial(cfg: Config, mode: str, dry_run: bool, include_dirs: bool, includ
     total = Stats()
     gen = walk_items(cfg, include_dirs=include_dirs, include_files=include_files)
     for kind, path in gen:
+        if kind == "binary":
+            total.total += 1
+            total.binary_skipped += 1
+            continue
         st_res, msg = process_item(cfg, kind, path, mode, dry_run)
         total.total += st_res.total
         total.dirs_changed += st_res.dirs_changed
@@ -335,6 +335,7 @@ def report(s: Stats, elapsed: float) -> None:
     print(f"Time elapsed: {elapsed:.2f}s")
     print(f"Total items: {s.total}")
     print(f"Skipped: {s.skipped}")
+    print(f"Binary files skipped: {s.binary_skipped}")
     print(f"Dirs changed: {s.dirs_changed}")
     print(f"Files changed: {s.files_changed}")
     print(f"Files made exec: {s.files_made_exec}")
@@ -375,12 +376,10 @@ def build_parser() -> argparse.ArgumentParser:
 def build_config(args: argparse.Namespace) -> Config:
     skip = frozenset(args.skip_dir) if args.skip_dir else SKIP_DIRS
     execd = frozenset(args.exec_dir) if args.exec_dir else DEFAULT_EXEC_DIRS
-
     if args.suffix_exec:
         suffix = tuple(s.lower() for s in args.suffix_exec)
     else:
         suffix = DEFAULT_SUFFIX_EXEC
-
     patterns = tuple(args.patterns) if args.patterns else DEFAULT_DEEXEC_PATTERNS
     keep = frozenset(args.keep_exec_parent) if args.keep_exec_parent else DEFAULT_KEEP_EXEC_PARENTS
     return Config(
@@ -401,14 +400,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     cfg = build_config(args)
-
     if not cfg.root.exists():
         print(f"Error: path does not exist: {cfg.root}", file=sys.stderr)
         return 1
-
     include_dirs = args.mode in ("all", "dirs", "addx")
     include_files = args.mode in ("all", "files", "addx", "deexec")
-
     t0 = time.time()
     s = run_serial(cfg, args.mode, args.dry_run, include_dirs, include_files)
     report(s, time.time() - t0)
