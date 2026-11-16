@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/data/data/com.termux/files/usr/bin/env python
 """Accuracy harness: does the inferencer recover the annotations already in a file?
 
 Note that the annotations in this repository were themselves produced by this

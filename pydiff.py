@@ -1,14 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/env python
-"""Diff two files line by line.
-Reads both files in parallel, compares the hashes first, prints the differing lines with their line numbers and, with ``-s -m``, moves the files that match after the whitespace strip into a numbered ``group_N`` folder.
-Usage: pydiff FILE1 FILE2 [-s] [-m] Positional arguments: file1 file2 Options: -s, --strip Strip leading and trailing whitespace from lines before comparing -m, --move With -s, if files match, move both into a group_N subdir in the current folder Examples: $ pydiff a.txt b.txt -s Command-line script: run ``python pydiff.py`` or the ``pydiff`` command.
-"""
-
 import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import hashlib
 from pathlib import Path
 import shutil
+
+import libcst as cst
 
 from dh import MAX_WORKERS, cprint, read_lines
 
@@ -25,11 +22,65 @@ def file_hash(path: Path) -> str:
     return h.hexdigest()
 
 
+class StripPythonTransformer(cst.CSTTransformer):
+    def leave_Comment(self, original_node: cst.Comment, updated_node: cst.Comment) -> cst.RemovalSentinel:
+        return cst.RemoveFromParent()
+
+    def leave_EmptyLine(self, original_node: cst.EmptyLine, updated_node: cst.EmptyLine) -> cst.RemovalSentinel:
+        return cst.RemoveFromParent()
+
+    def _is_docstring(self, stmt: cst.BaseStatement) -> bool:
+        if not isinstance(stmt, cst.SimpleStatementLine):
+            return False
+        if len(stmt.body) != 1:
+            return False
+        expr = stmt.body[0]
+        if not isinstance(expr, cst.Expr):
+            return False
+        return isinstance(expr.value, (cst.SimpleString, cst.ConcatenatedString))
+
+    def _strip_docstring(self, node: cst.FunctionDef | cst.ClassDef) -> cst.FunctionDef | cst.ClassDef:
+        body = node.body
+        if not isinstance(body, cst.IndentedBlock):
+            return node
+        stmts = body.body
+        if not stmts or not self._is_docstring(stmts[0]):
+            return node
+        new_stmts = stmts[1:]
+        if not new_stmts:
+            new_stmts = (cst.SimpleStatementLine(body=[cst.Pass()]),)
+        return node.with_changes(body=body.with_changes(body=new_stmts))
+
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
+        body = updated_node.body
+        if body and self._is_docstring(body[0]):
+            return updated_node.with_changes(body=body[1:])
+        return updated_node
+
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
+        return self._strip_docstring(updated_node)
+
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
+        return self._strip_docstring(updated_node)
+
+
+def strip_python_source(source: str) -> str:
+    module = cst.parse_module(source)
+    return module.visit(StripPythonTransformer()).code
+
+
 def read_file_task(path: Path, use_mmap: bool, strip: bool) -> tuple[Path, list[str]]:
-    lines = read_lines(path, ke=False)
+    if strip and path.suffix == ".py":
+        try:
+            source = path.read_text(encoding="utf-8")
+            raw_lines = strip_python_source(source).splitlines()
+        except (cst.ParserSyntaxError, UnicodeDecodeError, ValueError):
+            raw_lines = read_lines(path, ke=False)
+    else:
+        raw_lines = read_lines(path, ke=False)
     if strip:
-        lines = [line.strip() for line in lines]
-    return path, lines
+        raw_lines = [line.strip() for line in raw_lines]
+    return path, [line for line in raw_lines if line]
 
 
 def filter_diff_chunk(chunk: list[str], exclude_set: frozenset[str], mode: str) -> list[str]:
@@ -52,7 +103,7 @@ def move_files_to_group(path1: Path, path2: Path) -> None:
     target.mkdir()
     shutil.move(str(path1.resolve()), str(target / path1.name))
     shutil.move(str(path2.resolve()), str(target / path2.name))
-    cprint(f"moved to {target.name}/", "magenta")
+    cprint(f"moved to {target.name}/", color="magenta")
 
 
 def report_diff_lines(
@@ -63,7 +114,7 @@ def report_diff_lines(
     num_workers: int = 2,
 ) -> None:
     if file_hash(path1) == file_hash(path2) and not strip:
-        cprint(f"{path1.name} and {path2.name} are identical", "blue")
+        cprint(f"{path1.name} and {path2.name} are identical", color="blue")
         if move:
             move_files_to_group(path1, path2)
         return
@@ -83,7 +134,7 @@ def report_diff_lines(
         chunks = [lines1[i : i + chunk_size] for i in range(0, len(lines1), chunk_size)]
         with ProcessPoolExecutor(max_workers=num_workers) as executor:
             futures = [executor.submit(filter_diff_chunk, chunk, frozenset(set2), "only_in_first") for chunk in chunks]
-            only_in_first = []
+            only_in_first: list[str] = []
             for future in as_completed(futures):
                 only_in_first.extend(future.result())
     else:
@@ -93,22 +144,22 @@ def report_diff_lines(
     if move and strip and not only_in_first and not only_in_second:
         move_files_to_group(path1, path2)
     if only_in_first:
-        cprint(f"only in {path1.name}:", "cyan")
+        cprint(f"only in {path1.name}:", color="cyan")
         for line in only_in_first[:150]:
-            cprint(f"  - {line}", "green")
+            cprint(f"  - {line}", color="green")
         if len(only_in_first) > 150:
-            cprint(f"  ... and {len(only_in_first) - 5} lines more", "green")
+            cprint(f"  ... and {len(only_in_first) - 5} lines more", color="green")
     if only_in_second:
-        cprint(f"only in {path2.name}:", "cyan")
+        cprint(f"only in {path2.name}:", color="cyan")
         for line in only_in_second[:150]:
-            cprint(f"  - {line}", "yellow")
+            cprint(f"  - {line}", color="yellow")
         if len(only_in_second) > 150:
-            cprint(f"  ... and {len(only_in_second) - 5} lines more", "yellow")
+            cprint(f"  ... and {len(only_in_second) - 5} lines more", color="yellow")
     cprint(
         f"common lines: {common_count}\n"
         f"only in {path1.name}: {len(only_in_first)}\n"
         f"only in {path2.name}: {len(only_in_second)}",
-        "blue",
+        color="blue",
     )
 
 
@@ -120,7 +171,7 @@ def main() -> None:
         "-s",
         "--strip",
         action="store_true",
-        help="strip leading and trailing whitespace from lines before comparing",
+        help="strip leading/trailing whitespace; for .py files also remove comments and docstrings",
     )
     parser.add_argument(
         "-m",

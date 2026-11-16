@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/data/data/com.termux/files/usr/bin/env python
 """Batched driver that was used to annotate the whole repo.
 
 Runs :mod:`infer_annotations` over the root-level ``*.py`` files in chunks

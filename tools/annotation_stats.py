@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/data/data/com.termux/files/usr/bin/env python
 """Annotation coverage report for the root scripts.
 
     python arena/annotation_stats.py                 # summary table

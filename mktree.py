@@ -443,14 +443,14 @@ def detect_mode(path: Path) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        prog="tree2fs",
+        prog="mktree",
         description="Recreate a directory tree from a `tree` listing (text) or a screenshot of one (OCR).",
         epilog=(
             "examples:\n"
-            "  tree2fs tree.txt                     # build from a text listing\n"
-            "  tree2fs screenshot.png               # build from a screenshot (OCR)\n"
-            "  tree2fs tree.txt --base /tmp/out     # build elsewhere\n"
-            "  tree2fs tree.txt -d -n               # ambiguous entries as dirs, dry run"
+            "  mktree tree.txt                     # build from a text listing\n"
+            "  mktree screenshot.png               # build from a screenshot (OCR)\n"
+            "  mktree tree.txt --base /tmp/out     # build elsewhere\n"
+            "  mktree tree.txt -d -n               # ambiguous entries as dirs, dry run"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

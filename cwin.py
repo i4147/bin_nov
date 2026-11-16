@@ -4,12 +4,13 @@ Matches the usual artefacts (``.DS_Store``, ``._*``, ``.Trashes``, ``Thumbs.db``
 Usage: cwin [paths ...] Examples: $ cwin ~/downloads --dry-run Runs as a script (``python cwin.py``) in the directory it should act on; the module can also be imported.
 """
 
+import shutil
 from pathlib import Path
 import sys
 from typing import Iterator
 
-from dh import fsz
-
+from dh import fsz, gsz
+from fastwalk import walk_files
 
 DARWIN_PATTERNS: set[str] = {
     ".DS_Store",
@@ -57,46 +58,19 @@ def matches_pattern(path: Path, patterns: set) -> bool:
     return False
 
 
-def walk_directory(root_dir: Path) -> Iterator[Path]:
-    try:
-        for entry in root_dir.iterdir():
-            yield entry
-            if entry.is_dir():
-                yield from walk_directory(entry)
-    except (OSError, PermissionError) as e:
-        print(f"Error accessing {root_dir}: {e}", file=sys.stderr)
-
-
 def process_path(path: Path) -> tuple[str, int]:
     try:
-        if path.is_file():
-            size = path.stat().st_size
-            path.unlink()
-            return (str(path), size)
-        elif path.is_dir():
-            total_size = 0
-            for path in walk_directory(path):
-                if path.is_file():
-                    total_size += path.stat().st_size
-            import shutil
-
-            shutil.rmtree(path)
-            return (str(path), total_size)
+        size = path.stat().st_size
+        path.unlink()
+        return (str(path), size)
     except (OSError, PermissionError) as e:
         print(f"Error deleting {path}: {e}", file=sys.stderr)
     return (str(path), 0)
 
 
-def find_and_remove_files(root_dir: Path | None = None) -> dict:
-    if root_dir is None:
-        root_dir = Path.cwd()
-    else:
-        root_dir = Path(root_dir)
-    if not root_dir.exists():
-        print(f"Error: {root_dir} does not exist", file=sys.stderr)
-        return {}
+def find_and_remove_files(root_dir: Path = Path.cwd()) -> dict:
     matching_paths = []
-    for path in walk_directory(root_dir):
+    for path in walk_files(root_dir):
         if matches_pattern(path, ALL_PATTERNS):
             matching_paths.append(path)
     if not matching_paths:
@@ -119,6 +93,7 @@ def find_and_remove_files(root_dir: Path | None = None) -> dict:
 
 def main() -> None:
     stats = find_and_remove_files(Path.cwd())
+    print(stats)
 
 
 if __name__ == "__main__":

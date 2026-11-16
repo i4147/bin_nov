@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/data/data/com.termux/files/usr/bin/env python
 """Heuristic in-place type-annotation adder for the bin_nov scripts.
 
 This is the tool that produced the annotations in PR #1 (409 files, ~3000 new

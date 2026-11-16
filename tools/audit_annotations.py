@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/data/data/com.termux/files/usr/bin/env python
 """Safety net for an annotation run.
 
 Three checks, each of which must come back clean before the changes are kept:
