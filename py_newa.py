@@ -55,9 +55,7 @@ if __name__ == "__main__":
 '''
 
 
-def create_script(
-    filepath: Path, description: str, force: bool = False
-) -> None:
+def create_script(filepath: Path, description: str, force: bool = False) -> None:
     """Write the template content to the target file."""
     if not filepath.suffix:
         filepath = filepath.with_suffix(".py")
@@ -79,17 +77,13 @@ def create_script(
 
     # Make the file executable on Unix-like systems (macOS/Linux)
     current_permissions = filepath.stat().st_mode
-    filepath.chmod(
-        current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
-    )
+    filepath.chmod(current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
     print(f"Created template script: {filepath}")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Generate a new Python script from a template."
-    )
+    parser = argparse.ArgumentParser(description="Generate a new Python script from a template.")
     parser.add_argument("filename", type=Path, help="Name or path of the new script")
     parser.add_argument(
         "-d",

@@ -1,7 +1,6 @@
-i updated my cprint module (from dh)
+i updated my cprint module (from dh) -> i have a repo named dh, check it, its all there
 the new module has this signature:
 cprint('text',color='cyan')
-
 from dh import Ansi, Cube, cprint, cstr, cube, gray
 
 # 1) Basic named colors
@@ -32,3 +31,6 @@ print(repr(line))
 please inspect the .py files in root of repo, and fix any cprint usage to new style
 update files inplace
 report stats when done
+
+in short:
+you should find : "green"   "blue"   and other colors and add `color=` before them
