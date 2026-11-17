@@ -1,5 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/env python
-"""Unified tool for cleaning and repairing installed-package metadata (RECORD, dist-info, urecord)."""
+"""
+
+Unified tool for cleaning and
+repairing installed-package metadata
+
+"""
 
 import argparse
 import base64
@@ -16,50 +21,8 @@ import sys
 import tarfile
 from typing import Any, Iterable, Iterator
 
-from dh import MAX_WORKERS
+from dh import MAX_WORKERS, fsz, gsz, get_files, unique_path, cprint
 from loguru import logger
-
-
-def cprint(text: str, color: str = "reset") -> None:
-    colors = {"cyan": "\033[96m", "green": "\033[92m", "yellow": "\033[93m", "red": "\033[91m", "reset": "\033[0m"}
-    print(f"{colors.get(color, '')}{text}{colors['reset']}")
-
-
-def fsz(size: int) -> str:
-    for unit in ["B", "KB", "MB", "GB"]:
-        if size < 1024.0:
-            return f"{size:.2f} {unit}"
-        size /= 1024.0
-    return f"{size:.2f} TB"
-
-
-def gsz(path: Path) -> int:
-    if path.is_file():
-        return path.stat().st_size
-    return sum(f.stat().st_size for f in path.rglob("*") if f.is_file())
-
-
-def unique_path(path: Path) -> Path:
-    if not path.exists():
-        return path
-    stem = path.stem
-    suffix = path.suffix
-    parent = path.parent
-    counter = 1
-    while True:
-        new_path = parent / f"{stem}_{counter}{suffix}"
-        if not new_path.exists():
-            return new_path
-        counter += 1
-
-
-def get_files(path: Path, ext=None) -> Iterator[Path]:
-    if path.is_file():
-        yield path
-        return
-    for p in path.rglob("*"):
-        if p.is_file() and (ext is None or p.suffix in ext):
-            yield p
 
 
 def cmd_clean_meta(args: list[Any]) -> None:
@@ -118,7 +81,7 @@ def cmd_clean_meta(args: list[Any]) -> None:
         c = "".join(v)
         s.write_text(c, encoding="utf-8")
         print(f"✅ {s.name}", end="")
-        cprint(f" {a}", "cyan")
+        cprint(f" {a}", color="cyan")
     final_sz = gsz(target_dir)
     print(f"space saved : {fsz(initial_sz - final_sz)}")
 
@@ -156,7 +119,7 @@ def cmd_clean_distinfo(args: list[Any]) -> None:
         if h.is_dir() and len(list(h.iterdir())) == 1 and "dist-info" in h.name:
             for k in h.iterdir():
                 if k.name in {"top_level.txt", "entry_points.txt"}:
-                    cprint(f"{h} removed", "cyan")
+                    cprint(f"{h} removed", color="cyan")
                     shutil.rmtree(h)
 
 
@@ -268,16 +231,16 @@ def _process_meta_file(o: Path, c: Any) -> None:
         if g_path.exists():
             g_path = unique_path(g_path)
         g_path.write_text(f_text, encoding="utf-8")
-        cprint(f"{l_name} created.", "green")
+        cprint(f"{l_name} created.", color="green")
     elif h_val and not b_val:
         l_name = Path(f"{h_val}.metadata")
         g_path = c / l_name
         if g_path.exists():
             g_path = unique_path(g_path)
         g_path.write_text(f_text, encoding="utf-8")
-        cprint(f"{l_name} created.", "yellow")
+        cprint(f"{l_name} created.", color="yellow")
     elif not h_val and not b_val:
-        cprint(f"no data{o}", "cyan")
+        cprint(f"no data{o}", color="cyan")
         with contextlib.suppress(EOFError):
             input("what u wanna do?")
 

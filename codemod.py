@@ -1,14 +1,16 @@
 #!/data/data/com.termux/files/usr/bin/env python
-"""Codemod: cprint('text', 'cyan') → cprint('text', color='cyan')."""
 
-from __future__ import annotations
-import argparse
+import os
+from concurrent.futures import ProcessPoolExecutor
+from functools import partial
 from pathlib import Path
+from typing import NamedTuple
 
 import libcst as cst
+import typer
 
 
-LEGACY_COLORS = frozenset({
+LEGACY_COLORS: frozenset[str] = frozenset({
     "black",
     "red",
     "green",
@@ -32,7 +34,7 @@ LEGACY_COLORS = frozenset({
 
 class _Codemod(cst.CSTTransformer):
     def __init__(self) -> None:
-        self.changes = 0
+        self.changes: int = 0
 
     def leave_Call(self, original: cst.Call, updated: cst.Call) -> cst.Call:
         f = updated.func
@@ -76,41 +78,78 @@ class _Codemod(cst.CSTTransformer):
         return updated.with_changes(args=new_args)
 
 
-def _process(path: Path, *, write: bool) -> int:
+class _Result(NamedTuple):
+    path: Path
+    changes: int
+    note: str | None  # e.g. "parse error"; None means processed normally
+
+
+def _process(path: Path, *, write: bool) -> _Result:
     try:
         src = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError):
-        return 0
+        return _Result(path, 0, None)
     try:
         tree = cst.parse_module(src)
     except cst.ParserSyntaxError:
-        print(f"  skip (parse error): {path}")
-        return 0
+        return _Result(path, 0, "parse error")
     mod = _Codemod()
     out = tree.visit(mod).code
     if mod.changes == 0:
-        return 0
+        return _Result(path, 0, None)
     if write and out != src:
         path.write_text(out, encoding="utf-8")
+    return _Result(path, mod.changes, None)
+
+
+def _collect(paths: list[Path]) -> list[Path]:
+    files: list[Path] = []
+    seen: set[Path] = set()
+    for root in paths:
+        candidates = [root] if root.is_file() else sorted(root.rglob("*.py"))
+        for f in candidates:
+            key = f.resolve()
+            if key in seen:
+                continue
+            seen.add(key)
+            files.append(f)
+    return files
+
+
+app = typer.Typer(add_completion=False)
+
+
+@app.command()
+def main(
+    paths: list[Path] = typer.Argument(..., help="Files or directories to scan."),
+    write: bool = typer.Option(False, "--write", help="Apply changes (default is dry-run)."),
+) -> None:
+    files = _collect(paths)
+
+    workers = 4
+    workers = max(1, min(workers, len(files)))
+
+    worker = partial(_process, write=write)
+    results: list[_Result]
+    if workers <= 1:
+        results = [worker(f) for f in files]
+    else:
+        with ProcessPoolExecutor(max_workers=4) as ex:
+            results = list(ex.map(worker, files, chunksize=16))
+
     tag = "rewrote" if write else "would rewrite"
-    print(f"{tag} {mod.changes} call(s): {path}")
-    return mod.changes
-
-
-def main() -> int:
-    p = argparse.ArgumentParser()
-    p.add_argument("paths", nargs="+", type=Path)
-    p.add_argument("--write", action="store_true", help="Apply (default is dry-run)")
-    args = p.parse_args()
-
     total = 0
-    for root in args.paths:
-        files = [root] if root.is_file() else list(root.rglob("*.py"))
-        for f in files:
-            total += _process(f, write=args.write)
-    print(f"total: {total} rewrite(s)" + ("" if args.write else "  (dry-run)"))
-    return 0
+    for r in results:
+        if r.note is not None:
+            typer.echo(f"  skip ({r.note}): {r.path}")
+            continue
+        if r.changes:
+            typer.echo(f"{tag} {r.changes} call(s): {r.path}")
+            total += r.changes
+
+    suffix = "" if write else "  (dry-run)"
+    typer.echo(f"total: {total} rewrite(s){suffix}")
 
 
 if __name__ == "__main__":
-    main()
+    app()

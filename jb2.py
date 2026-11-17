@@ -27,14 +27,14 @@ def process_file(path: Path) -> None:
         diffsize = abs(after - before)
         print(f"{path.name}", end=" | ")
         if not diffsize:
-            cprint("(no change)", "grey")
+            cprint("(no change)", color="grey")
             return
         ratio = diffsize / after * 40
         ratio2 = abs(before - after) / before * 40
-        cprint(f"{ratio:.2f}% | {ratio2:.2f}%", "cyan")
+        cprint(f"{ratio:.2f}% | {ratio2:.2f}%", color="cyan")
         return
     except:
-        cprint(f"{path.name} Error", "yellow")
+        cprint(f"{path.name} Error", color="yellow")
         return
 
 

@@ -73,7 +73,7 @@ def main() -> None:
         if path.is_dir() and "dist-info" in path.name:
             process_lic(path)
             if len(list(path.iterdir())) < 2:
-                cprint(f"{path.name} empty pkg", "cyan")
+                cprint(f"{path.name} empty pkg", color="cyan")
 
 
 if __name__ == "__main__":

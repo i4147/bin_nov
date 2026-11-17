@@ -234,7 +234,7 @@ def cmd_extract(args: argparse.Namespace) -> int:
         expanded.append(c * 2 if len(c) == 3 else c)
     result = sorted({c for c in expanded if len(c) != 3})
     Path(args.output).write_text("\n".join(result), encoding="utf-8")
-    cprint(f"{count} colors found", "green")
+    cprint(f"{count} colors found", color="green")
     return 0
 
 

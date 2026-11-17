@@ -76,7 +76,7 @@ def decode_base64_lines(path: Path) -> None:
                 failed.append(i)
                 remained.append(line)
     print(failed)
-    cprint(f"✓ {success_count}\n✘ {error_count}", "cyan")
+    cprint(f"✓ {success_count}\n✘ {error_count}", color="cyan")
     if cleanup:
         new_content = "\n".join(remained)
         path.write_text(new_content)

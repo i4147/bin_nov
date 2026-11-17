@@ -250,7 +250,7 @@ def _apt_reinstall_one(pkg: str) -> bool:
     if rc == 0:
         cprint(f"✓ Successfully reinstalled: {pkg}", color="green")
         return True
-    cprint(f"✗ Failed to reinstall {pkg}", "red")
+    cprint(f"✗ Failed to reinstall {pkg}", color="red")
     if err:
         print(f"  Error: {err.strip()}")
     return False
@@ -369,7 +369,7 @@ def cmd_wheel_install(args: argparse.Namespace) -> int:
     print(f"Total wheels: {len(wheels)}")
     cprint(f"✓ Successfully installed: {len(successes)}", color="green")
     if failures:
-        cprint(f"✗ Failed: {len(failures)}", "red")
+        cprint(f"✗ Failed: {len(failures)}", color="red")
         for m in failures:
             print(f"  {m}")
     print("Done!")
@@ -387,7 +387,7 @@ def cmd_wheel_install_local(args: argparse.Namespace) -> int:
     pip_args.extend(str(Path(p)) for p in args.wheels)
     rc, _, err = run_cmd([sys.executable, "-m", "pip", *pip_args], show_output=True)
     if rc != 0:
-        cprint(f"✗ pip install failed: {err.strip()}", "red")
+        cprint(f"✗ pip install failed: {err.strip()}", color="red")
         return 1
     if not args.keep_file:
         for p in args.wheels:
@@ -457,7 +457,7 @@ def cmd_wheel_move_installed(args: argparse.Namespace) -> int:
         if key in installed:
             current = installed[key]
             if current == Version(str(ver)):
-                cprint(f"[MATCH] {dist}=={ver} → removing", "cyan")
+                cprint(f"[MATCH] {dist}=={ver} → removing", color="cyan")
                 whl.unlink()
                 removed += 1
             else:
@@ -567,7 +567,7 @@ def cmd_pip_uninstall_flake8(args: argparse.Namespace) -> int:
         if rc == 0:
             cprint(f"✓ Successfully uninstalled {p}", color="green")
         else:
-            cprint(f"✗ Failed to uninstall {p}: {err}", "red")
+            cprint(f"✗ Failed to uninstall {p}: {err}", color="red")
             fail += 1
     return 0 if fail == 0 else 1
 
@@ -822,7 +822,7 @@ def cmd_pip_reinstall_entry_points(args: argparse.Namespace) -> int:
     print("=" * 40)
     cprint(f"✓ Successfully reinstalled: {len(successes)}", color="green")
     if failures:
-        cprint(f"✗ Failed to reinstall: {len(failures)}", "red")
+        cprint(f"✗ Failed to reinstall: {len(failures)}", color="red")
         for name, msg in failures:
             print(f"  ✗ {name}: {msg[:100]}")
     return 0 if not failures else 1

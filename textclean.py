@@ -141,16 +141,16 @@ def cmd_empty_lines(args: argparse.Namespace) -> int:
         if removed == 0:
             if args.verbose:
                 cprint(f"{f.name} | ", end="")
-                cprint("NO CHANGE", "grey")
+                cprint("NO CHANGE", color="grey")
             continue
         total_removed += removed
         if args.dry_run:
             cprint(f"{f.name} | would remove ", end="")
-            cprint(str(removed), "blue")
+            cprint(str(removed), color="blue")
         else:
             write_text(f, "\n".join(kept))
             cprint(f"{f.name} | ", end="")
-            cprint(str(removed), "blue")
+            cprint(str(removed), color="blue")
     if args.dry_run:
         print(f"\nTotal lines that would be removed: {total_removed}")
     return 0
@@ -330,13 +330,13 @@ def cmd_lines(args: argparse.Namespace) -> int:
         if removed == 0:
             if args.verbose:
                 cprint(f"{f.name} | ", end="")
-                cprint("NO CHANGE", "grey")
+                cprint("NO CHANGE", color="grey")
             continue
         total_removed += removed
         modified_files += 1
         if args.dry_run:
             cprint(f"{f.name} | would remove ", end="")
-            cprint(str(removed), "blue")
+            cprint(str(removed), color="blue")
             print("    sample lines that would be removed:")
             for ln in lines:
                 if should_drop(ln):
@@ -344,7 +344,7 @@ def cmd_lines(args: argparse.Namespace) -> int:
         else:
             write_text(f, "".join(kept))
             cprint(f"{f.name} | ", end="")
-            cprint(str(removed), "blue")
+            cprint(str(removed), color="blue")
     print(f"\n{'Would remove' if args.dry_run else 'Removed'} {total_removed} line(s) from {modified_files} file(s).")
     return 0
 

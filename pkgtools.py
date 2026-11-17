@@ -1,28 +1,46 @@
 #!/data/data/com.termux/files/usr/bin/env python
-"""Copy, move and repack the installed Python packages.
-Subcommands: ``record`` copies or moves the files listed in a ``RECORD`` from the current dist-info, ``site-copy`` copies the installed package directories out of ``site-packages``, ``repack`` rebuilds them into a wheel-like directory layout and ``entry-points`` lists the packages declaring console scripts.
-Usage: pkgtools {record,site-copy,repack,entry-points} [options] [packages ...] Positional arguments: packages ...
-Package names to process.
-patterns ...
-Package names or wildcard patterns.
-Subcommands: record Copy/move files listed in RECORD from cwd dist-info.
-site-copy Copy installed package directories from site-packages.
-repack Repack installed packages into wheel-like directory structure.
-entry-points Extract packages that declare entry points.
-Options: -v, --verbose Enable debug logging (for subcommands that use it).
---all Process all dist-info directories in the current directory.
---move Move files instead of copying them.
---dest Destination root (default: ~/tmp/1 with --move, else ~/tmp/packages).
---per-package-subdir Place files under <dest>/<pkg>/...
-(default: follows --move).
---clean-record Remove .pyc lines from RECORD files before processing.
---skip-pyc Skip .pyc files (default: True).
---no-skip-pyc Do not skip .pyc files.
---warn-missing Warn about missing files (default: True).
---no-warn-missing Do not warn about missing files.
-...
-plus 8 more; run ``pkgtools --help`` for the full list.
-Examples: $ pkgtools site-copy requests --dest ~/tmp/packages Command-line script: run ``python pkgtools.py`` or the ``pkgtools`` command.
+"""
+Copy, move and repack the installed Python packages.
+
+Subcommands:
+
+record: copies or moves the files listed in a RECORD from the current dist-info
+site-copy: copies the installed package directories out of site-packages
+repack: rebuilds them into a wheel-like directory layout
+entry-points: lists the packages declaring console scripts.
+
+
+Usage:
+pkgtools {record,site-copy,repack,entry-points} [options] [packages ...]
+
+Positional arguments: packages ... Package names to process.
+patterns ... Package names or wildcard patterns.
+
+Subcommands:
+
+record: Copy/move files listed in RECORD from cwd dist-info.
+site-copy: Copy installed package directories from site-packages.
+repack: Repack installed packages into wheel-like directory structure.
+entry-points: Extract packages that declare entry points
+
+Options:
+
+-v, --verbose: Enable debug logging
+--all: Process all dist-info directories in the current directory.
+--move: Move files instead of copying them.
+--dest: Destination root (default: ~/tmp/1 with --move, else ~/tmp/packages).
+--per-package-subdir: Place files under <dest>/<pkg>/... (default: follows --move).
+--clean-record: Remove .pyc lines from RECORD files before processing.
+--skip-pyc: Skip .pyc files (default: True).
+--no-skip-pyc: Do not skip .pyc files
+--warn-missing: Warn about missing files (default: True).
+--no-warn-missing: Do not warn about missing files.
+
+run pkgtools --help for the full list
+
+Examples:
+pkgtools site-copy requests --dest ~/tmp/packages
+
 """
 
 import argparse

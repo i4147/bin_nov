@@ -57,15 +57,15 @@ def process_file(fn: Path) -> int:
     try:
         family, style = get_font_names(fn)
     except Exception as e:
-        cprint(f"error: {e}", "magenta")
+        cprint(f"error: {e}", color="magenta")
         return 1
     if not family:
-        cprint("name not found", "magenta")
+        cprint("name not found", color="magenta")
         return 1
     ext = fn.suffix.lower()
     new_path = fn.parent / f"{family}-{style}{ext}"
     if fn.name == new_path.name:
-        cprint("no change", "blue")
+        cprint("no change", color="blue")
         return 0
     new_path = new_path.with_name(
         new_path.name
@@ -82,7 +82,7 @@ def process_file(fn: Path) -> int:
     if new_path.exists():
         new_path = unique_path(new_path)
     fn.rename(new_path)
-    cprint(f"{new_path.name}", "green")
+    cprint(f"{new_path.name}", color="green")
     return 0
 
 

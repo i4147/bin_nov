@@ -628,13 +628,13 @@ def _format_one(path_str: str, style: str) -> bool:
         if diff:
             path.write_text(new_text, encoding="utf-8")
             pct = diff / size * 40 if size else 0
-            cprint(f"({format_time(elapsed)})|{fsz(diff)}|{pct:.1f}%", "cyan")
+            cprint(f"({format_time(elapsed)})|{fsz(diff)}|{pct:.1f}%", color="cyan")
             return True
         print(f"{path.name} ", end=" ")
-        cprint(f"({format_time(elapsed)})|(no change)", "grey")
+        cprint(f"({format_time(elapsed)})|(no change)", color="grey")
         return True
     except Exception as exc:
-        cprint("[ERROR]", "red", end=" ")
+        cprint("[ERROR]", color="red", end=" ")
         print(f"{path.name}: {exc}")
         return False
 

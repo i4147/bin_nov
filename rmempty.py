@@ -38,19 +38,19 @@ def main() -> int:
         small_files = [p for p in files if p.name != "__init__.py" and 0 < _size(p) < 100]
 
     if not empty_files and not small_files:
-        cprint("no empty or small files found", "cyan")
+        cprint("no empty or small files found", color="cyan")
         return 0
 
     if empty_files:
-        cprint(f"{len(empty_files)} empty files found.", "cyan")
+        cprint(f"{len(empty_files)} empty files found.", color="cyan")
         for f in empty_files:
-            cprint(f"    - {f.relative_to(cwd)}", "yellow")
+            cprint(f"    - {f.relative_to(cwd)}", color="yellow")
             f.unlink()
 
     if small_files:
-        cprint(f"{len(small_files)} small files (<100 bytes) found.", "cyan")
+        cprint(f"{len(small_files)} small files (<100 bytes) found.", color="cyan")
         for f in small_files:
-            cprint(f"    - {f.relative_to(cwd)}", "blue")
+            cprint(f"    - {f.relative_to(cwd)}", color="blue")
             f.unlink()
 
     return 0

@@ -31,12 +31,12 @@ def process_file(path: Path) -> bool:
         after = gsz(path)
         diffsize = before - after
         if not diffsize:
-            cprint("[NO CHANGE]", "white")
+            cprint("[NO CHANGE]", color="white")
         if diffsize:
             ratio = after / before * 40
-            cprint(f"[OK] - {fsz(diffsize)} {abs(ratio):.1f}%", "cyan")
+            cprint(f"[OK] - {fsz(diffsize)} {abs(ratio):.1f}%", color="cyan")
         return True
-    cprint("[ERROR]", "red")
+    cprint("[ERROR]", color="red")
     return False
 
 
@@ -47,7 +47,7 @@ def main() -> None:
     files = [Path(p) for p in args] if args else get_files(cwd, ext=[".css", ".min.css"])
     _ = mpf(process_file, files)
     diff_size = before - gsz(cwd)
-    cprint(f"space freed : {fsz(diff_size)}", "green")
+    cprint(f"space freed : {fsz(diff_size)}", color="green")
 
 
 if __name__ == "__main__":

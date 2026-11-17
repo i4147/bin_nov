@@ -45,7 +45,7 @@ def main() -> None:
     args = sys.argv[1:]
     files = [Path(arg) for arg in args] if args else get_files(cwd, ext=EXT)
     all_count = len(files)
-    cprint(f"{all_count} files found", "cyan")
+    cprint(f"{all_count} files found", color="cyan")
     if all_count == 1:
         process_file(files[0])
         sys.exit(1)

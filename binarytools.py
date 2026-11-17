@@ -175,7 +175,7 @@ def cmd_sort(args: argparse.Namespace) -> int:
                 if args.verbose:
                     print(f"  → {f.name}")
             except OSError as e:
-                cprint(f"  ! failed to move {f}: {e}", "red")
+                cprint(f"  ! failed to move {f}: {e}", color="red")
     print(f"Scanned {scanned} file(s); moved {moved} binary file(s) to {dst}")
     return 0
 
@@ -271,7 +271,7 @@ def cmd_sanity(args: argparse.Namespace) -> int:
             try:
                 path.rename(target)
             except OSError as e:
-                cprint(f"  ! could not move {path}: {e}", "red")
+                cprint(f"  ! could not move {path}: {e}", color="red")
     lines = [
         "Binary Analysis Results",
         f"Directory: {root}",
@@ -310,7 +310,7 @@ def _collect_so_files(inputs: Sequence[str]) -> list[Path]:
         elif p.is_dir():
             out.extend(iter_files(p, ext=[".so"], recursive=True))
         else:
-            cprint(f"Warning: {p} does not exist", "yellow")
+            cprint(f"Warning: {p} does not exist", color="yellow")
     return out
 
 
@@ -319,7 +319,7 @@ def cmd_verify_so(args: argparse.Namespace) -> int:
     logger = setup_logger(log_path, verbose=args.verbose)
     files = _collect_so_files(args.paths)
     if not files:
-        cprint("No .so files found to verify", "yellow")
+        cprint("No .so files found to verify", color="yellow")
         return 0
     print(f"\nVerifying {len(files)} shared object file(s)...\n")
     valid = 0
@@ -543,7 +543,7 @@ def cmd_strip(args: argparse.Namespace) -> int:
     elif args.strip_mode == "retry":
         stripper.strip_with_retry(root, args.max_retries)
     else:
-        cprint("Unknown strip mode", "red")
+        cprint("Unknown strip mode", color="red")
         return 2
     return 1 if stripper.stats["failed"] else 0
 
@@ -633,7 +633,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     try:
         return args.func(args)
     except KeyboardInterrupt:
-        cprint("\nInterrupted by user", "yellow")
+        cprint("\nInterrupted by user", color="yellow")
         return 130
 
 

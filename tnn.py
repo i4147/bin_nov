@@ -17,10 +17,10 @@ def process_file(path: str | Path) -> None:
         return
     new_content = content.replace("\t", "    ")
     if new_content == content:
-        cprint(f"{path.name} (no change)", "grey")
+        cprint(f"{path.name} (no change)", color="grey")
         return
     path.write_text(new_content, encoding="utf-8")
-    cprint(f"{path.name} (updated)", "cyan")
+    cprint(f"{path.name} (updated)", color="cyan")
 
 
 def main() -> None:

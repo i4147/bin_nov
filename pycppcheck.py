@@ -59,6 +59,6 @@ if __name__ == "__main__":
             results.append(pending.popleft().get())
     for result in results:
         if int(result[1]) == 2:
-            cprint(f"[✖] : {result[0].name} has error", "white")
+            cprint(f"[✖] : {result[0].name} has error", color="white")
         else:
-            cprint(f"[✅] : {result[0].name} is ok", "cyan")
+            cprint(f"[✅] : {result[0].name} is ok", color="cyan")

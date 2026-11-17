@@ -49,7 +49,7 @@ def process_file(path: Path, patterns: list[str]) -> tuple:
     cleaned_content = remove_patterns_from_content(original_content, patterns)
     if len(cleaned_content) != len(original_content):
         path.write_text(cleaned_content, encoding="utf-8")
-        cprint(f"{path.name} updated", "green", end=" | ")
+        cprint(f"{path.name} updated", color="green", end=" | ")
         ds = before - gsz(path)
         cprint(f"{fsz(ds)}")
         del before, ds, cleaned_content, original_content, path
@@ -69,7 +69,8 @@ def main() -> None:
     if not files:
         print("No files to process.")
         return
-    mpf(process_file, files)
+    for f in files:
+        process_file(f, patterns)
 
 
 if __name__ == "__main__":

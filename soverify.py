@@ -84,11 +84,11 @@ def verify_single_file(path: Path) -> bool | None:
             return True
         else:
             logger.error(f"✗ {path.name}: {message}")
-            cprint(f"  ✗ {path}: {message}", "red")
+            cprint(f"  ✗ {path}: {message}", color="red")
             return False
     except Exception as e:
         logger.error(f"✗ {path.name}: Unexpected error - {e}")
-        cprint(f"  ✗ {path}: Unexpected error - {e}", "red")
+        cprint(f"  ✗ {path}: Unexpected error - {e}", color="red")
         return False
 
 
@@ -103,14 +103,14 @@ def collect_files(args: list[str]) -> list[Path]:
         elif path.is_dir():
             files.extend(get_files(path, ext=[".so"]))
         else:
-            cprint(f"Warning: {path} does not exist", "yellow")
+            cprint(f"Warning: {path} does not exist", color="yellow")
     return files
 
 
 def main() -> None:
     files = list(collect_files(sys.argv[1:]))
     if not files:
-        cprint("No .so files found to verify", "yellow")
+        cprint("No .so files found to verify", color="yellow")
         return
     print(f"\nVerifying {len(files)} shared object file(s)...\n")
     valid_count = 0
@@ -145,11 +145,11 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except KeyboardInterrupt:
-        cprint("\nVerification interrupted by user", "yellow")
+        cprint("\nVerification interrupted by user", color="yellow")
         sys.exit(130)
     except Exception as e:
         logger.error(f"Fatal error: {e}")
-        cprint(f"Fatal error: {e}", "red")
+        cprint(f"Fatal error: {e}", color="red")
         sys.exit(1)
     finally:
         ctypes.pythonapi.PyGILState_Release(gil_state)

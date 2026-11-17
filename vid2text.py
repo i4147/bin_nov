@@ -47,11 +47,11 @@ def emit(
     min_chars: int,
 ) -> None:
     if text and len(text.strip()) > min_chars:
-        cprint(f"frame {frame_num}-->{text}", "cyan")
+        cprint(f"frame {frame_num}-->{text}", color="cyan")
         with out_path.open("a", encoding="utf-8") as fh:
             fh.write(text + "\n")
     else:
-        cprint(f"frame {frame_num}-->no text", "blue")
+        cprint(f"frame {frame_num}-->no text", color="blue")
 
 
 def worker(

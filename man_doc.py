@@ -89,9 +89,9 @@ def process_file(path: Path) -> bool:
     print(f"{path.name}", end=" ")
     res = safe_run(path)
     if res:
-        cprint("[✓] ", "cyan")
+        cprint("[✓] ", color="cyan")
         return True
-    cprint("[ERROR]", "red")
+    cprint("[ERROR]", color="red")
     return False
 
 
