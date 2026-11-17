@@ -29,4 +29,3 @@ If you find behavior that is unclear, leave it undocumented and flag it for me r
 After all batches are complete, run the relevant formatting, lint, and test checks if available.
 Provide a final summary of files changed, checks run, skipped files,
 and anything that needs my input.
-Do not commit or push changes.
