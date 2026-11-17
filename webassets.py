@@ -16,7 +16,7 @@ import sys
 import tempfile
 from typing import Any, Callable, Optional, Sequence
 
-from dh import MAX_WORKERS
+from dh import MAX_WORKERS, cprint
 
 
 try:
@@ -28,19 +28,6 @@ try:
 except ImportError:
     _rjsmin = None
 _NONE_TYPE = type(None)
-_ANSI: dict[str, str] = {
-    "red": "\033[31m",
-    "green": "\033[32m",
-    "yellow": "\033[33m",
-    "cyan": "\033[36m",
-    "white": "\033[37m",
-    "grey": "\033[90m",
-    "reset": "\033[0m",
-}
-
-
-def cprint(msg: str, color: str = "white") -> None:
-    print(f"{_ANSI.get(color, '')}{msg}{_ANSI['reset']}")
 
 
 def file_size(p: Path | str) -> int:
@@ -147,17 +134,17 @@ def _relative(path: Path) -> Path | str:
 def print_file_result(r: Result) -> None:
     rel = _relative(r.path)
     if not r.success:
-        cprint(f"✗ {rel}: {r.error}", "red")
+        cprint(f"✗ {rel}: {r.error}", color="red")
     elif r.no_change:
-        cprint(f"= {rel}: (no change)", "yellow")
+        cprint(f"= {rel}: (no change)", color="yellow")
     elif r.dry_run:
-        cprint(f"~ {rel}: would save {human_size(r.saved)} ({r.ratio:.1f}%)", "cyan")
+        cprint(f"~ {rel}: would save {human_size(r.saved)} ({r.ratio:.1f}%)", color="cyan")
     else:
         cprint(
             f"✓ {rel}: {human_size(r.original_size)} → "
             f"{human_size(r.minified_size)} "
             f"(-{human_size(r.saved)}, {r.ratio:.1f}%)",
-            "green",
+            color="green",
         )
 
 
@@ -173,15 +160,15 @@ def print_summary(results: Sequence[Result], title: str = "Summary") -> None:
     print("=" * 40)
     print(title)
     print("=" * 40)
-    cprint(f"Files processed: {total}", "white")
-    cprint(f"✓ Successful:    {ok}", "green")
+    cprint(f"Files processed: {total}", color="white")
+    cprint(f"✓ Successful:    {ok}", color="green")
     if nc:
-        cprint(f"= Unchanged:     {nc}", "yellow")
+        cprint(f"= Unchanged:     {nc}", color="yellow")
     if fail:
-        cprint(f"✗ Failed:        {fail}", "red")
-    cprint(f"Original size:   {human_size(orig)}", "white")
-    cprint(f"Minified size:   {human_size(new)}", "white")
-    cprint(f"Total saved:     {human_size(saved)} ({ratio:.1f}%)", "green")
+        cprint(f"✗ Failed:        {fail}", color="red")
+    cprint(f"Original size:   {human_size(orig)}", color="white")
+    cprint(f"Minified size:   {human_size(new)}", color="white")
+    cprint(f"Total saved:     {human_size(saved)} ({ratio:.1f}%)", color="green")
     print("=" * 40)
 
 

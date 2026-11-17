@@ -110,3 +110,7 @@ def main() -> int:
             total += _process(f, write=args.write)
     print(f"total: {total} rewrite(s)" + ("" if args.write else "  (dry-run)"))
     return 0
+
+
+if __name__ == "__main__":
+    main()
