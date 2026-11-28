@@ -22,25 +22,29 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import concurrent.futures
+from dataclasses import dataclass
+from io import StringIO
 import mimetypes
 import os
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
 import tarfile
 import tokenize
+from typing import TYPE_CHECKING, Any, Callable
 import zipfile
-from collections.abc import Iterator, Sequence
-from dataclasses import dataclass
-from io import StringIO
-from pathlib import Path
-from typing import Any, Callable
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 try:
     import puremagic
@@ -57,20 +61,10 @@ except Exception:
 try:
     from dh import (
         BINARY_EXT as DH_BINARY_EXT,
-    )
-    from dh import (
         MIME2EXT as DH_MIME2EXT,
-    )
-    from dh import (
         SHEBANG_MAP as DH_SHEBANG_MAP,
-    )
-    from dh import (
         TEXT_EXT as DH_TEXT_EXT,
-    )
-    from dh import (
         get_files as dh_get_files,
-    )
-    from dh import (
         is_binary as dh_is_binary,
     )
 except Exception:

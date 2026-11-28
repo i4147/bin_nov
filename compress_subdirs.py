@@ -16,13 +16,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import bz2
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+from decimal import Decimal
 import fnmatch
 import gzip
 import lzma
 import multiprocessing as mp
 import os
+from pathlib import Path
 import re
 import shutil
 import stat
@@ -30,12 +34,10 @@ import struct
 import sys
 import tarfile
 import tempfile
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
-from decimal import Decimal
-from pathlib import Path
 from typing import BinaryIO, Callable, Final, Literal, TypeVar, cast
 
 from dh import MAX_WORKERS, fsz
+
 
 Compressor = Literal["xz", "gz", "bz2", "zstd", "lz4", "snappy"]
 Method = Literal["mp-map", "mp-imap", "process-pool", "thread-pool"]
@@ -291,11 +293,13 @@ def _compress_one(task: CompressTask) -> Result:
                     with output.open("wb") as destination:
                         _write_snappy(raw, destination)
             else:
-                with _open_writer(output, compressor, level, extreme) as writer:
-                    with tarfile.open(
+                with (
+                    _open_writer(output, compressor, level, extreme) as writer,
+                    tarfile.open(
                         fileobj=writer, mode="w|", format=tarfile.PAX_FORMAT
-                    ) as tar:
-                        tar.add(directory, arcname=directory.name)
+                    ) as tar,
+                ):
+                    tar.add(directory, arcname=directory.name)
 
             if force:
                 os.replace(output, archive)

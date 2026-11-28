@@ -19,19 +19,24 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
 import contextlib
 import grp
 import hashlib
 import os
+from pathlib import Path
 import pwd
 import re
 import stat
 import subprocess
 import sys
-from collections import defaultdict
-from collections.abc import Generator
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 RESET: str = "\x1b[0m"
 BOLD: str = "\x1b[1m"

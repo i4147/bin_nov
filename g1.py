@@ -19,16 +19,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shutil
 import subprocess
-from pathlib import Path
-from typing import Final, Optional, Protocol
+from typing import TYPE_CHECKING, Final, Optional, Protocol
 
 from github import Github
 from github.GithubException import GithubException, UnknownObjectException
-from github.Repository import Repository
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 LARGE_REPO_THRESHOLD_MB: Final[float] = 5.0
 DEFAULT_BRANCH_FALLBACK: Final[str] = "master"

@@ -19,14 +19,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
+from pathlib import Path
 import select
 import shutil
 import sys
 import termios
 import tty
-from pathlib import Path
+
 
 try:
     import pymupdf

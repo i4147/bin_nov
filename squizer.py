@@ -10,17 +10,19 @@ Examples:
 
 """
 
+from __future__ import annotations
 import ast
 import base64
 import builtins
 import operator
+from pathlib import Path
 import string
 import sys
-import zlib
-from pathlib import Path
 from typing import Callable, Iterator, Sequence
+import zlib
 
 from dh import atomic_write, cprint
+
 
 PROTECTED_NAMES: frozenset[str] = frozenset(dir(builtins)) | {
     "__file__",

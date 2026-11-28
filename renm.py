@@ -16,18 +16,22 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import os
-import re
-from collections.abc import Iterator, Sequence
 from multiprocessing.pool import AsyncResult, Pool
+import os
 from pathlib import Path
-from typing import Final, TypeAlias
+import re
+from typing import TYPE_CHECKING, Final, TypeAlias
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS, unique_path
 from loguru import logger
 from tqdm import tqdm
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 DIRECTORY: Final[str] = "."
 POOL_METHODS: Final[tuple[str, ...]] = (

@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 from collections import defaultdict
 from pathlib import Path
 
-import tree_sitter_python as tsp
 from dh import atomic_write
 from tree_sitter import Language, Parser, Tree
+import tree_sitter_python as tsp
+
 
 OUT_DIR: Path = Path("output")
 VALID: set[str] = {"comment", "expression_statements"}

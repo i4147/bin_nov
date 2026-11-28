@@ -42,29 +42,32 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
 import hashlib
 import json
 import multiprocessing as mp
+from pathlib import Path
 import re
 import signal
 import sys
 import time
+from typing import Any, Optional
 import urllib.error
 import urllib.parse
 import urllib.request
-from pathlib import Path
-from typing import Any, Optional
 
-import pycurl
-import requests
 from dh import MAX_WORKERS, atomic_write, fsz
 from loguru import logger
+import pycurl
+import requests
 from tqdm import tqdm
+
 
 _HAS_PYCURL: bool = True
 from loguru import logger
+
 
 _DEFAULT_UA: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 

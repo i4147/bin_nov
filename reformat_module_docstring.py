@@ -5,17 +5,16 @@ libcst-based codemod that reflows each module docstring to the target width (tex
 """
 
 from __future__ import annotations
-
 import difflib
+from functools import partial
 import os
 import re
 import sys
 import textwrap
-from functools import partial
 from typing import TYPE_CHECKING
 
-import libcst as cst
 from dh import SKIP_DIRS, atomic_write
+import libcst as cst
 from parallel_runner import (
     FileFilter,
     RunnerConfig,
@@ -24,6 +23,7 @@ from parallel_runner import (
     normalize_extensions,
     run_two_pass,
 )
+
 
 if TYPE_CHECKING:
     import argparse

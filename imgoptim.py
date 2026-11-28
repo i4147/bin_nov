@@ -16,20 +16,22 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
+from dataclasses import dataclass
 import multiprocessing as mp
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
 import tempfile
-import xml.etree.ElementTree as ET
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Final
+import xml.etree.ElementTree as ET
 
 from dh import MAX_WORKERS, walker
+
 
 GREEN: str = "\033[32m"
 DIM: str = "\033[2m"

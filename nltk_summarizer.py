@@ -4,16 +4,18 @@
 Scores sentences by stemmed word frequency minus stopwords and writes <stem>_summary<suffix> with the top-N sentences; downloads the required NLTK data on first run.
 """
 
-import heapq
+from __future__ import annotations
 from collections import defaultdict
+import heapq
 from pathlib import Path
 
-import nltk
 from loguru import logger
+import nltk
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 from nltk.stem import PorterStemmer
 from nltk.tokenize import sent_tokenize, word_tokenize
+
 
 nltk.download("punkt_tab", quiet=True)
 nltk.download("stopwords", quiet=True)
@@ -52,7 +54,8 @@ def _score_sentences(text: str, top_n: int = 5) -> list[str]:
 def summarize_file(input_path: str | Path, top_n: int = 5) -> Path:
     src = Path(input_path)
     if not src.is_file():
-        raise FileNotFoundError(f"Input file not found: {src}")
+        msg = f"Input file not found: {src}"
+        raise FileNotFoundError(msg)
 
     text = src.read_text(encoding="utf-8", errors="replace")
     if not text.strip():

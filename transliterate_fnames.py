@@ -4,14 +4,16 @@ Transliterate non-ASCII file/dir names in place.
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import re
 import sys
-import unicodedata
-from pathlib import Path
 from typing import Any
+import unicodedata
 
 from dh import SKIP_DIRS
+
 
 try:
     from pypinyin import lazy_pinyin

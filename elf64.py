@@ -19,15 +19,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import multiprocessing as mp
-import sys
 from pathlib import Path
+import sys
 from typing import Iterator
 
 from dh import MAX_WORKERS, is_binary
 from elftools.common.exceptions import ELFError
 from elftools.elf.elffile import ELFFile
+
 
 ELF_TYPES: dict[str, str] = {
     "ET_NONE": "no file type",

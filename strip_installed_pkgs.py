@@ -10,8 +10,9 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import STDLIB, atomic_write, get_installed_pkgs
 

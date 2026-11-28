@@ -4,23 +4,25 @@
 Typer CLI with create/push/status/config commands. Uses the gh CLI when available and falls back to the REST API with a token from --token or an env file.
 """
 
+from __future__ import annotations
+from datetime import datetime
 import json
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
+from typing import Annotated, Any, Literal, NoReturn, Optional
 import urllib.error
 import urllib.request
-from datetime import datetime
-from pathlib import Path
-from typing import Annotated, Any, Literal, NoReturn, Optional
 
-import typer
 from dh import atomic_write
 from loguru import logger
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+import typer
+
 
 __version__: str = "1.0.0"
 

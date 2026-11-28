@@ -19,6 +19,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import bz2
 import contextlib
@@ -26,17 +27,21 @@ import gzip
 import lzma
 import multiprocessing as mp
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import tarfile
 import tempfile
+from typing import TYPE_CHECKING
 import zipfile
-from collections.abc import Iterator
-from pathlib import Path
 
 import brotli
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 ARCHIVE_SUFFIXES: tuple[str, ...] = (
     ".tar.gz",

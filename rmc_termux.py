@@ -19,29 +19,31 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from dataclasses import asdict, dataclass
 import difflib
 import fnmatch
 import io
 import json
 import os
+from pathlib import Path
 import re
 import shlex
 import shutil
 import stat
 import sys
 import tempfile
+from time import perf_counter
 import tokenize
 import traceback
-from dataclasses import asdict, dataclass
-from pathlib import Path
-from time import perf_counter
 from typing import Iterator
 
 from codeutils import ASTStripper, CSTStripper, TSStripper
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 LOGGER = logger
 _COOKIE_RE = re.compile(rb"coding[:=]\s*[-\w.]+")
@@ -637,8 +639,8 @@ def main() -> int:
                 report.add(result)
 
         if args.mp:
-            import multiprocessing as mp
             from functools import partial
+            import multiprocessing as mp
 
             worker = partial(
                 process_file_with_config,

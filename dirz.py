@@ -16,6 +16,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import os
 from pathlib import Path

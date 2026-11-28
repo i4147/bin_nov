@@ -4,16 +4,18 @@ Extract URLs/links from a Telegram channel using Telethon.
 
 """
 
+from __future__ import annotations
 import argparse
 import asyncio
 import os
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 from typing import Iterator
 
 from dotenv import load_dotenv
 from telethon import TelegramClient
+
 
 PATTERN_PRESETS: dict[str, str] = {
     "coc": r"https://link\.clashofclans\.com/[a-zA-Z0-9\?\=\&_]+",

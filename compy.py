@@ -16,21 +16,23 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import builtins
+from io import StringIO
 import keyword
 import multiprocessing as mp
+from pathlib import Path
 import re
 import sys
 import sysconfig
 import token
 import tokenize
-from io import StringIO
-from pathlib import Path
 from typing import Any
 
 from dh import MAX_WORKERS, atomic_write, get_random_filename, runcmd
+
 
 OUTPUT_FILE: Path = Path(get_random_filename(10, ext=".txt"))
 COMPRESSION_NOTE: str = (

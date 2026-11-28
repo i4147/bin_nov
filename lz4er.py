@@ -23,19 +23,19 @@ Command-line script:
 """
 
 from __future__ import annotations
-
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import contextlib
 import io
+from pathlib import Path
 import shutil
 import sys
 import tarfile
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
 from typing import Any
 
-import lz4.frame
 from dh import MAX_WORKERS, atomic_write, fsz
+import lz4.frame
+
 
 DEFAULT_SKIP_EXT: set[str] = {
     ".gz",

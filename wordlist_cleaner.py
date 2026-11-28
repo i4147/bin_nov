@@ -4,15 +4,16 @@ Clean and filter wordlist files.
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
 import contextlib
 import mmap
 import os
+from pathlib import Path
 import re
 import sys
 import tempfile
-from collections import defaultdict
-from pathlib import Path
 
 
 def read_lines_dynamically(file_path: Path, mmap_threshold_mb: float) -> list[str]:

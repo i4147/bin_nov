@@ -10,10 +10,11 @@ Examples:
 
 """
 
+from __future__ import annotations
 import csv
 import json
-import sys
 from pathlib import Path
+import sys
 
 
 def convert_csv_to_json(input_path: Path) -> None:

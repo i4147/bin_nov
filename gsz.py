@@ -4,17 +4,19 @@
 Resolves the size via the GitHub API (git trees or the zipball Content-Length) and can stream the body when headers are missing; --json emits machine-readable output.
 """
 
+from __future__ import annotations
 import json
 import os
-import re
 from pathlib import Path
+import re
 from typing import Any, Optional
 from urllib.parse import urlparse
 
-import requests
-import typer
 from dh import gsz
 from dotenv import load_dotenv
+import requests
+import typer
+
 
 load_dotenv()
 

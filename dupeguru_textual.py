@@ -16,12 +16,13 @@ Command-line script:
 
 """
 
-import hashlib
-import sys
+from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
+import hashlib
 from pathlib import Path
+import sys
 from typing import Any, ClassVar, Iterable, Sequence
 
 from dh import fsz

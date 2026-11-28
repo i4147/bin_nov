@@ -19,10 +19,11 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import sys
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from pathlib import Path
+import sys
 from typing import Any, Sequence
 
 from dh import MAX_WORKERS, atomic_write

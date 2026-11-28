@@ -16,14 +16,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shutil
 import tempfile
 import time
-from pathlib import Path
+
+from dh import MAX_WORKERS
 
 import rmc3 as sc
-from dh import MAX_WORKERS
 
 
 def main() -> int:

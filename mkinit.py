@@ -19,15 +19,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import fnmatch
-import sys
-from collections.abc import Sequence
 from dataclasses import dataclass
+import fnmatch
 from pathlib import Path
+import sys
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 LINE_LIMIT: int = 88
 

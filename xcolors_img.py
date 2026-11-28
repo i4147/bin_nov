@@ -4,9 +4,10 @@
 Converts the image to RGB, tallies pixel frequencies with a Counter and prints the most common colors; --brief (default) and the mutually exclusive options control the output.
 """
 
+from __future__ import annotations
 import argparse
-import os
 from collections import Counter
+import os
 from typing import Any, Sequence
 
 from PIL import Image
@@ -72,7 +73,7 @@ def main() -> None:
         for rgb, count in color_counts:
             percentage = (count / total_pixels) * 100
             print(
-                f"RGB: {str(rgb):<16} | Hex: {rgb_to_hex(rgb)} | Count: {count:<8} ({percentage:.2f}%)"
+                f"RGB: {rgb!s:<16} | Hex: {rgb_to_hex(rgb)} | Count: {count:<8} ({percentage:.2f}%)"
             )
     else:
         # Runs by default when no flag is provided or when -b/--brief is passed
@@ -80,7 +81,7 @@ def main() -> None:
         print("-" * 45)
         for rgb, count in color_counts[:5]:
             percentage = (count / total_pixels) * 100
-            print(f"RGB: {str(rgb):<16} | Hex: {rgb_to_hex(rgb)} | ({percentage:.2f}%)")
+            print(f"RGB: {rgb!s:<16} | Hex: {rgb_to_hex(rgb)} | ({percentage:.2f}%)")
 
     if args.save:
         with open(args.save, "w") as file:

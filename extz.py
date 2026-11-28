@@ -16,14 +16,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
 import contextlib
+from pathlib import Path
 import shutil
 import sys
-from collections import defaultdict
-from pathlib import Path
 
 from dh import SKIP_DIRS, fsz
+
 
 TOP_N_PIE: int = 30
 

@@ -10,10 +10,12 @@ Examples:
 
 """
 
+from __future__ import annotations
 import json
 import sys
 
 from dh import reverse_dict
+
 
 if __name__ == "__main__":
     fn = sys.argv[1]

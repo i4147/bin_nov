@@ -1,14 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/env python
 from __future__ import annotations
-
 import argparse
 import os
+from secrets import randbelow
 import shutil
 import subprocess
 import sys
-from secrets import randbelow
 
 import readchar
+
 
 RESET: str = "\033[0m"
 CLEAR_SCREEN: str = "\033[2J\033[H"
@@ -177,17 +177,13 @@ def load_swatches_from_file(filepath: str) -> list[str]:
     with open(filepath, "r", encoding="utf-8") as file:
         for line_num, line in enumerate(file, start=1):
             stripped_line: str = line.strip()
-            if (
-                not stripped_line
-                or stripped_line.startswith("//")
-                or stripped_line.startswith(";")
-            ):
+            if not stripped_line or stripped_line.startswith(("//", ";")):
                 continue
             # Allow full-line comments starting with '#' followed by space or non-hex words,
             # while still accepting '#1e1f20' or '#abc'.
             candidate: str = stripped_line
             if stripped_line.startswith("#"):
-                token_part: str = stripped_line.split()[0]
+                token_part: str = stripped_line.split(maxsplit=1)[0]
                 hex_body: str = token_part.lstrip("#")
                 if len(hex_body) not in (3, 6) or any(
                     c not in "0123456789abcdefABCDEF" for c in hex_body

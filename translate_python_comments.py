@@ -4,16 +4,17 @@ Translate detectable non-English Python comments and strings.
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from dataclasses import dataclass
 import json
 import multiprocessing
+from multiprocessing import Lock, Pool, Value
+from pathlib import Path
 import re
 import time
 import tokenize
-from dataclasses import dataclass
-from multiprocessing import Lock, Pool, Value
-from pathlib import Path
 from typing import Final
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -21,6 +22,7 @@ from urllib.request import Request, urlopen
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 DEFAULT_CHUNK_SIZE: Final[int] = 2500
 DEFAULT_DELAY: Final[float] = 1.5

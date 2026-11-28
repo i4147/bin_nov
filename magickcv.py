@@ -19,14 +19,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from pathlib import Path
+import re
 from typing import Any
 
 import cv2
 import numpy as np
 from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFont, ImageOps
+
 
 RESAMPLING: dict[str, Any] = {
     "nearest": Image.Resampling.NEAREST,

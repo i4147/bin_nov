@@ -38,19 +38,24 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import csv
-import json
-import os
-import sys
-import urllib.parse
-import urllib.request
-from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
+import json
+import os
 from pathlib import Path
+import sys
+from typing import TYPE_CHECKING
+import urllib.parse
+import urllib.request
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 API: str = "https://api.github.com"
 

@@ -4,14 +4,16 @@ Translate non-English string literals in Python scripts in place.
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import re
-import sys
 from functools import lru_cache
 from pathlib import Path
+import re
+import sys
 
 from dh import atomic_write
+
 
 try:
     from translate import Translator
@@ -112,14 +114,17 @@ def process_python_file(file_path: Path) -> bool:
     targets: list[tuple[int, int, str, str]] = []
     for node in ast.walk(tree):
         if (
-            isinstance(node, ast.Constant)
-            and isinstance(node.value, str)
-            and contains_non_english(node.value)
+            (
+                isinstance(node, ast.Constant)
+                and isinstance(node.value, str)
+                and contains_non_english(node.value)
+            )
+            and hasattr(node, "lineno")
+            and hasattr(node, "end_lineno")
         ):
-            if hasattr(node, "lineno") and hasattr(node, "end_lineno"):
-                start_idx, end_idx = get_node_char_offsets(source_code, node)
-                orig_slice = source_code[start_idx:end_idx]
-                targets.append((start_idx, end_idx, node.value, orig_slice))
+            start_idx, end_idx = get_node_char_offsets(source_code, node)
+            orig_slice = source_code[start_idx:end_idx]
+            targets.append((start_idx, end_idx, node.value, orig_slice))
     if not targets:
         print(f"No non-English string literals found in: {file_path}")
         return False

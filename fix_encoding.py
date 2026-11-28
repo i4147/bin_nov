@@ -19,20 +19,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import codecs
-import fnmatch
-import math
-import os
-import sys
-import time
 from collections import Counter
-from collections.abc import Iterator, Sequence
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from enum import Enum
+import fnmatch
 from functools import partial
+import math
+import os
 from pathlib import Path
+import sys
+import time
+from typing import TYPE_CHECKING
 
 from binaryornot.check import is_binary
 from charset_normalizer import from_bytes
@@ -41,6 +42,10 @@ from loguru import logger
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 UTF8_NAMES: frozenset[str] = frozenset({"utf-8", "utf-8-sig"})
 

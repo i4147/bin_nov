@@ -17,24 +17,24 @@ Command-line script:
 """
 
 from __future__ import annotations
-
 import argparse
 import contextlib
 import io
 import os
+from pathlib import Path
 import re
 import sys
 import tarfile
-import tempfile
-import zipfile
-from pathlib import Path
 from tarfile import TarFile
+import tempfile
 from typing import Any, Iterable
 from urllib.parse import urlparse
+import zipfile
 from zipfile import ZipFile
 
-import zstandard as zstd
 from dh import append_text, is_valid_url
+import zstandard as zstd
+
 
 DEFAULT_MAX_MB: int = 15
 EXCLUDE_DIRS: set[str] = {".git", "__pycache__"}

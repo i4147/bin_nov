@@ -5,14 +5,13 @@ Detects each input's encoding with chardet, parses rows with the csv module and 
 """
 
 from __future__ import annotations
-
 import argparse
 import asyncio
 import csv
-import json
-import sys
 from dataclasses import dataclass, field
+import json
 from pathlib import Path
+import sys
 from typing import Protocol
 
 import chardet
@@ -25,7 +24,7 @@ class EncodingDetector(Protocol):
 
 @dataclass(slots=True)
 class ConversionConfig:
-    output_dir: Path = Path(".")
+    output_dir: Path = Path()
     verbose: bool = False
     recursive: bool = False
     no_overwrite: bool = False
@@ -272,7 +271,7 @@ def parse_args() -> ConversionConfig:
         "-o",
         "--output",
         type=Path,
-        default=Path("."),
+        default=Path(),
         help="Output directory for JSON files",
     )
     parser.add_argument(
@@ -465,7 +464,7 @@ async def run() -> int:
     parser = argparse.ArgumentParser(description="Convert CSV files to JSON")
     parser.add_argument("path", type=Path, help="File or directory path")
     parser.add_argument(
-        "-o", "--output", type=Path, default=Path("."), help="Output directory"
+        "-o", "--output", type=Path, default=Path(), help="Output directory"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     parser.add_argument(

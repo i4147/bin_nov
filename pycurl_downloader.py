@@ -10,13 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
 import multiprocessing as mp
-import sys
 from pathlib import Path
+import sys
 from urllib.parse import unquote, urlparse
 
-import pycurl
 from dh import MAX_WORKERS, atomic_write
+import pycurl
+
 
 OUTPUT_DIR: Path = Path("downloads")
 TIMEOUT: int = 30

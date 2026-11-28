@@ -7,23 +7,23 @@ Install the CLI dependency with pip install typer. The find-py2 command also req
 """
 
 from __future__ import annotations
-
 import ast
 import builtins
+from concurrent.futures import ProcessPoolExecutor
 import importlib.metadata
 import importlib.util
 import os
+from pathlib import Path
 import re
 import shlex
 import sys
 import tokenize
 import traceback
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
 from typing import Annotated, Any
 
-import typer
 from dh import atomic_write
+import typer
+
 
 app = typer.Typer(no_args_is_help=True, help="Inspect and manage Python imports.")
 MAX_WORKERS: int = os.cpu_count() or 1
@@ -497,9 +497,9 @@ def find_py2(
     This is a broad heuristic, not a reliable Python 2 detector.
     """
     try:
-        import tree_sitter_python as tsp
         from rapidfuzz import fuzz
         from tree_sitter import Language, Parser
+        import tree_sitter_python as tsp
     except ImportError as exc:
         typer.echo(
             f"Install rapidfuzz, tree-sitter and tree-sitter-python: {exc}", err=True

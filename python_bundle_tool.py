@@ -4,16 +4,21 @@ Merge a small Python package into one file (and split it back). Analysis / dedup
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import re
-import sys
 from collections import deque
-from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
+import re
+import sys
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 FILE_HEADER: re.Pattern[str] = re.compile(r"^# File: (.+?)$", re.MULTILINE)
 DEFAULT_MAX_FILES: int = 10
@@ -112,9 +117,8 @@ def analyze(
                 candidate == dep
                 or candidate.startswith(dep + ".")
                 or dep.startswith(candidate + ".")
-            ):
-                if candidate in known or "." not in candidate:
-                    normalized.add(candidate if candidate in known else dep)
+            ) and (candidate in known or "." not in candidate):
+                normalized.add(candidate if candidate in known else dep)
     info.deps = {d for d in normalized if d in known} or (info.deps & known)
     return info
 

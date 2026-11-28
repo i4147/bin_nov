@@ -4,16 +4,18 @@
 Sets directory modes to 775 and file modes to 644, flipping files with any executable bit to 755; honors an exclusion list and skip patterns.
 """
 
+from __future__ import annotations
 import argparse
 import fnmatch
 import os
+from pathlib import Path
 import stat as st
 import sys
 import time
-from pathlib import Path
 from typing import Iterator, Optional, Sequence
 
 from dh import SKIP_DIRS, atomic_write, is_binary
+
 
 DIR_MODE: int = 0o775
 FILE_MODE: int = 0o644

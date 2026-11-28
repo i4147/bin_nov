@@ -5,11 +5,10 @@ Loads a {pairs: [...]} document (algorithm, file1, file2, similarity_score), sor
 """
 
 from __future__ import annotations
-
-import json
-import sys
 from dataclasses import dataclass
+import json
 from pathlib import Path
+import sys
 
 import loguru
 

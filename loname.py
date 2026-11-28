@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import re
 import string
 import sys
-from pathlib import Path
 
 from dh import unique_path
+
 
 recursive: bool = "-r" in sys.argv
 

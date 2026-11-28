@@ -17,7 +17,6 @@ Command-line script:
 """
 
 from __future__ import annotations
-
 import ast
 import contextlib
 import difflib

@@ -10,8 +10,9 @@ Examples:
 
 """
 
-import shutil
+from __future__ import annotations
 from pathlib import Path
+import shutil
 
 
 def is_git_repo_simple(folder_path: str | Path) -> bool:

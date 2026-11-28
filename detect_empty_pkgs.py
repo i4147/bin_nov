@@ -16,16 +16,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import multiprocessing as mp
+from pathlib import Path
 import shutil
 import tarfile
-import zipfile
-from pathlib import Path
 from typing import Any, Iterator
+import zipfile
 
 from dh import MAX_WORKERS
+
 
 MIN_ARCHIVE_BYTES: int = 300
 TARGET_GLOBS: tuple[str, str, str] = ("*.tar.gz", "*.whl", "*.zip")

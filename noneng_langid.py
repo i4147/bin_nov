@@ -10,13 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
 import math
-import sys
 from pathlib import Path
+import sys
 from typing import Iterator
 
-import py3langid as langid
 from dh import SKIP_DIRS
+import py3langid as langid
+
 
 ROOT = Path.cwd()
 SKIP_EXTS: set[str] = {

@@ -10,11 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
 import re
 from typing import Any, Iterable, Optional, TextIO
 
-import click
 from bs4 import BeautifulSoup, Comment, NavigableString
+import click
+
 
 NEWLINE_ELEMENTS: tuple[str, ...] = (
     "address",

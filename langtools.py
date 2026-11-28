@@ -36,17 +36,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import Counter, defaultdict
 import csv
 import os
+from pathlib import Path
 import re
 import shutil
 import sys
-from collections import Counter, defaultdict
-from pathlib import Path
 from typing import Iterator, Optional
 
 from dh import atomic_write
+
 
 try:
     import pycld2

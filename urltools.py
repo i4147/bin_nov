@@ -4,20 +4,22 @@ Unified URL extraction and cleaning toolkit.
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
+from collections.abc import Iterable
 import hashlib
+from multiprocessing import Pool
+from pathlib import Path
 import re
 import sys
 import tarfile
-import zipfile
-from collections import defaultdict
-from collections.abc import Iterable
-from multiprocessing import Pool
-from pathlib import Path
 from typing import Any, Iterable, Optional
 from urllib.parse import unquote, urlparse
+import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+
 
 try:
     from loguru import logger as _loguru_logger

@@ -10,8 +10,10 @@ Examples:
 
 """
 
+from __future__ import annotations
 import os
 from pathlib import Path
+
 
 if __name__ == "__main__":
     p_env = os.environ.get("PATH")

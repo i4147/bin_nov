@@ -4,20 +4,20 @@
 Performs an initial filesystem walk, then watches with watchfiles (falling back to watchdog) copying every archive that appears; errors are logged per file.
 """
 
+from __future__ import annotations
 import os
 import pathlib
+from pathlib import Path
 import shutil
 import sys
 import time
-from pathlib import Path
 from typing import Any
+
 
 # Prefer watchfiles; fall back to watchdog if unavailable.
 try:
     from watchfiles import (
         Change,
-    )
-    from watchfiles import (
         watch as wf_watch,
     )
 

@@ -24,14 +24,16 @@ Excluded: no recursion needed (repo root is flat; only root *.py files).
 No vendored/build/cache dirs exist at root. .git excluded by construction.
 """
 
+from __future__ import annotations
 import collections
 import hashlib
 import io
 import json
+from pathlib import Path
 import re
 import sys
 import tokenize
-from pathlib import Path
+
 
 ROOT = Path.cwd().resolve()
 SHINGLE = 6

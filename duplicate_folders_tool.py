@@ -4,16 +4,21 @@ Find duplicate folders by content hash or by tree structure. Analysis / deduplic
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
 import hashlib
 import json
-import sys
-from collections import defaultdict
-from collections.abc import Sequence
-from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+import sys
+from typing import TYPE_CHECKING
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 CHUNK_SIZE: int = 1 << 20
 

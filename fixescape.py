@@ -19,6 +19,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import contextlib
@@ -28,8 +29,9 @@ import pathlib
 import re
 import sys
 import tokenize
-import warnings
 from typing import Any
+import warnings
+
 
 RED: str = "\033[91m"
 CYAN: str = "\033[96m"

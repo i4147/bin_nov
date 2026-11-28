@@ -45,22 +45,24 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import io
 import os
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
 import time
+from typing import Any, Callable, Optional, Sequence
 import urllib.error
 import urllib.request
 import zipfile
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
-from typing import Any, Callable, Optional, Sequence
 
 from dh import MAX_WORKERS, atomic_write, cprint
+
 
 try:
     from rapidfuzz import fuzz as _rapidfuzz

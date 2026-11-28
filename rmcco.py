@@ -4,19 +4,21 @@ Strip comments and docstrings from Python source files and wheel archives.
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import re
-import shutil
-import tempfile
-import zipfile
 from dataclasses import dataclass, field
 from multiprocessing import Pool
 from pathlib import Path
+import re
+import shutil
+import tempfile
 from typing import Final
+import zipfile
 
 from dh import SKIP_DIRS
 from loguru import logger
+
 
 POOL_SIZE: Final[int] = 8
 

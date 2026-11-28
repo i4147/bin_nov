@@ -10,11 +10,12 @@ Examples:
 
 """
 
-import subprocess
-import sys
+from __future__ import annotations
 from functools import partial
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
+import subprocess
+import sys
 from typing import Any
 
 

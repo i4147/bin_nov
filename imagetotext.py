@@ -14,19 +14,22 @@ Examples:
     $ imagetotext Runs as a script (python imagetotext.py) in the directory it should act on; the module can also be imported.
 """
 
-import os
-import re
+from __future__ import annotations
 from multiprocessing import Pool
+import os
 from pathlib import Path
+import re
 from typing import Any
+
 
 # Keep each Tesseract subprocess single-threaded: we already parallelise
 # across images, so this avoids CPU thrashing and extra heat on phones.
 os.environ.setdefault("OMP_THREAD_LIMIT", "1")
 
-import pytesseract
 from dh import IMAGE_EXT, atomic_write
 from PIL import Image
+import pytesseract
+
 
 TESSDATA = str(Path.home() / ".local" / "share" / "tessdata")
 LANGS: str = "eng+fas"

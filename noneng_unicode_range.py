@@ -10,13 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
 import json
 import os
-import sys
 from pathlib import Path
+import sys
 from typing import Iterator
 
 from binaryornot.check import is_binary
+
 
 ARABIC_PERSIAN_RANGES: list[tuple[int, int]] = [
     (0x0600, 0x06FF),

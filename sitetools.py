@@ -6,6 +6,7 @@ repairing installed-package metadata
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
 import contextlib
@@ -14,11 +15,11 @@ import hashlib
 import json
 import multiprocessing
 import os
+from pathlib import Path
 import re
 import shutil
 import sys
 import tarfile
-from pathlib import Path
 from typing import Any, Iterable
 
 from dh import MAX_WORKERS, atomic_write, cprint, fsz, get_files, gsz, unique_path

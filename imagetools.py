@@ -46,6 +46,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
@@ -53,6 +54,7 @@ from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
+
 
 try:
     from PIL import Image, UnidentifiedImageError

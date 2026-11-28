@@ -10,10 +10,12 @@ Examples:
 
 """
 
+from __future__ import annotations
 import os
 from pathlib import Path
 
 from fontTools.ttLib import TTFont
+
 
 DRY_RUN: bool = False
 FONT_EXT: tuple[str, str, str] = (".ttf", ".woff2", ".woff")

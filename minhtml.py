@@ -5,13 +5,17 @@ Walks the given roots (default: cwd), runs min-html on each HTML file with optio
 """
 
 from __future__ import annotations
-
 import argparse
+from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
 import contextlib
+from dataclasses import dataclass
+from datetime import timedelta
 import fnmatch
 import glob as _glob
 import json
 import os
+from pathlib import Path
 import re
 import shutil
 import signal
@@ -20,16 +24,12 @@ import subprocess
 import sys
 import tempfile
 import time
-import unicodedata
-from collections import defaultdict
-from concurrent.futures import ProcessPoolExecutor
-from dataclasses import dataclass
-from datetime import timedelta
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeAlias
+import unicodedata
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 if TYPE_CHECKING:
     from collections.abc import Sequence

@@ -16,15 +16,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import json
-import sys
 from concurrent.futures import InterpreterPoolExecutor
+import json
 from pathlib import Path
+import sys
 from typing import Any
 
 from dh import SKIP_DIRS, atomic_write
+
 
 MIN_AST_NODES: int = 5
 

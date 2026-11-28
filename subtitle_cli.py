@@ -4,6 +4,7 @@ Download English subtitles for movies or videos.
 
 """
 
+from __future__ import annotations
 import argparse
 import sys
 

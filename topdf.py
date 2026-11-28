@@ -4,12 +4,13 @@ Unified document-to-PDF converter (HTML, Markdown, CHM, SVG, dictionaries).
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
-import re
-import sys
 from html.parser import HTMLParser
 from pathlib import Path
+import re
+import sys
 from typing import Any, Iterable, Optional, Sequence
 
 from dh import atomic_write

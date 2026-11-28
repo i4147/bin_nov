@@ -4,21 +4,23 @@ Convert a SQLite database to JSON.
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from contextlib import closing
 import json
 import math
 import os
+from pathlib import Path
 import shutil
 import sqlite3
 import sys
 import tempfile
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from contextlib import closing
-from pathlib import Path
 from typing import Any, Callable
 
 from dh import MAX_WORKERS
+
 
 BLOB_BASE64: str = "__blob_base64"
 BLOB_HEX: str = "__blob_hex"

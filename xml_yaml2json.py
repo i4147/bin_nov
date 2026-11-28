@@ -4,14 +4,16 @@ Convert XML, YAML and TOML configuration files to JSON.
 
 """
 
+from __future__ import annotations
 import argparse
 import concurrent.futures
 import json
-import sys
 from pathlib import Path
+import sys
 from typing import Any, Optional
 
 from dh import MAX_WORKERS
+
 
 try:
     import toml

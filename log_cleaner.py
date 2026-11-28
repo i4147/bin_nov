@@ -4,16 +4,21 @@ Clean terminal transcripts/logs and shell histories; trim audio tails. Analysis 
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
-from collections.abc import Sequence
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 ANSI_RE: re.Pattern[str] = re.compile(
     r"\x1b(?:\[[0-9;]*[A-Za-z]|\][^\x07]*\x07|[()][AB012])"

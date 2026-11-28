@@ -51,17 +51,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import hashlib
-import re
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
+import hashlib
 from pathlib import Path
+import re
 from typing import Iterable
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 log = logger
 DEFAULT_DH_PATH: Path = Path.home() / "projects" / "py" / "dh" / "src" / "dh"

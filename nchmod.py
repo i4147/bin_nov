@@ -4,8 +4,9 @@
 Walks the target recursively; directories become 755, files become 644, or 755 when any executable bit is already set. The target directory itself is included.
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 
 def normalize_chmod(target_dir: str) -> None:

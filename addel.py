@@ -19,22 +19,24 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import Counter
 import contextlib
 import csv
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
 import json
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
 import tempfile
-from collections import Counter
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from pathlib import Path
 from typing import Callable, Iterable, Optional, Sequence
 
 from dh import SKIP_DIRS, atomic_write
+
 
 UNIT_SEP: str = "\x1f"
 DIFF_FILTER: str = "AD"

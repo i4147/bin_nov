@@ -10,14 +10,16 @@ Examples:
 
 """
 
-import shutil
-import sys
+from __future__ import annotations
 from multiprocessing.pool import Pool
 from pathlib import Path
+import shutil
+import sys
 from typing import Final, NamedTuple
 
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 SRC: Final[Path] = Path("/data/data/com.termux/files/usr/lib/python3.14/site-packages")
 DEST: Final[Path] = Path.home() / "tmp" / "tests_dirs"

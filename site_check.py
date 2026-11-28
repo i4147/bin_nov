@@ -10,13 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import importlib
 import json
 import os
+from pathlib import Path
 import pkgutil
 import py_compile
 import site
-from pathlib import Path
 from typing import Any
 
 

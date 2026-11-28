@@ -16,13 +16,14 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import os
-import re
-import shutil
 from collections import defaultdict
 from hashlib import sha256
+import os
 from pathlib import Path
+import re
+import shutil
 
 from dh import atomic_write
 

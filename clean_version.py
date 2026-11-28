@@ -16,11 +16,13 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from pathlib import Path
+import re
 
 from dh import atomic_write
+
 
 PKG_NAME_RE = re.compile(
     r"""

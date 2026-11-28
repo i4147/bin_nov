@@ -4,24 +4,28 @@ Recursively extract embedded base64 data-URIs from files.
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
 import binascii
+from collections import deque
 import concurrent.futures
+from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 import mimetypes
 import os
+from pathlib import Path
 import re
 import sys
-from collections import deque
-from collections.abc import Iterator, Sequence
-from dataclasses import asdict, dataclass, field
-from pathlib import Path
-from typing import Final
+from typing import TYPE_CHECKING, Final
 from urllib.parse import quote
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 PATTERN: Final[re.Pattern[str]] = re.compile(
     r"(?<![A-Za-z0-9_+/-])"

@@ -4,18 +4,20 @@ Format TOML files in place (taplo-style).
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import Counter
+from dataclasses import dataclass
 import functools
 import multiprocessing as mp
 import os
+from pathlib import Path
 import re
 import sys
-from collections import Counter
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Iterator, Sequence
 
 from dh import SKIP_DIRS, WORKERS, atomic_write
+
 
 try:
     import tomllib

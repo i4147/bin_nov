@@ -16,6 +16,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 from html import escape
 from html.parser import HTMLParser
@@ -24,6 +25,7 @@ from typing import Any, Callable, Iterable
 
 from dh import atomic_write
 from loguru import logger
+
 
 VOID_ELEMENTS: set[str] = {
     "area",
@@ -173,8 +175,6 @@ def backend_html_parser(raw: str) -> tuple[str,]:
 def backend_lxml(raw: str):
     from lxml import (
         etree,
-    )
-    from lxml import (
         html as lxml_html,
     )
 

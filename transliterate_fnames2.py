@@ -4,10 +4,12 @@ Recursively transliterate Persian filenames/directories.
 
 """
 
+from __future__ import annotations
 import argparse
 import pathlib
 import re
 import unicodedata
+
 
 PERSIAN_MAP: dict[str, str] = {
     "ا": "a",

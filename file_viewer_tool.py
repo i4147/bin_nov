@@ -4,12 +4,17 @@ Terminal file viewer: cat files with optional syntax highlighting. Analysis / de
 
 """
 
+from __future__ import annotations
 import argparse
 import os
+from pathlib import Path
 import pydoc
 import sys
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 RESET: str = "\x1b[0m"
 NUM_COLOR: str = "\x1b[38;5;244m"

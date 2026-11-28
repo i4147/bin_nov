@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
-import sys
+from __future__ import annotations
 from functools import partial
 from pathlib import Path
+import sys
 
 from dh import cprint, fsz, get_files, gsz, mpf, runcmd
 
@@ -32,7 +33,8 @@ def process_file(path: Path, *, mode: str) -> bool | None:
         error_color = "yellow"
         success_return = None
     else:
-        raise ValueError(f"Unsupported mode: {mode!r}")
+        msg = f"Unsupported mode: {mode!r}"
+        raise ValueError(msg)
 
     print(f"{path.name}", end=" ")
     res, _, _err = runcmd(cmd, show_output=True)
@@ -68,7 +70,7 @@ def main() -> None:
 
     cwd = Path.cwd()
     before = gsz(cwd)
-    files = paths if paths else get_files(cwd, ext=[".css", ".min.css"])
+    files = paths or get_files(cwd, ext=[".css", ".min.css"])
     _ = mpf(partial(process_file, mode=mode), files)
     diff_size = before - gsz(cwd)
     cprint(f"space freed : {fsz(diff_size)}", color="green")

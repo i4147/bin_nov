@@ -10,13 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
 import os
+from pathlib import Path
 import stat
 import sys
-from pathlib import Path
 from typing import Any, Iterable
 
 import sh
+
 
 COMPILERS: dict[str, tuple[Any, ...]] = {
     ".c": ("clang", ("clang", "gcc")),

@@ -10,9 +10,10 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from multiprocessing import Pool
 from pathlib import Path
+import sys
 from typing import Any, Iterable
 
 from dh import atomic_write, fsz, get_nobinary, gsz

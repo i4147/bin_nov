@@ -22,16 +22,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import re
-import sys
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+import re
+import sys
 from typing import Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 DEFAULT_INDENT: int = 4
 MAIN_GUARD_RE: re.Pattern[str] = re.compile(

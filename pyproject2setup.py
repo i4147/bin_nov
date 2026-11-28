@@ -1,16 +1,16 @@
 #!/data/data/com.termux/files/usr/bin/env python
 from __future__ import annotations
-
 import multiprocessing as mp
+from pathlib import Path
 import pprint
 import re
 import sys
 import tomllib
-from pathlib import Path
 from typing import Any, Callable
 
 import libcst as cst
 from loguru import logger
+
 
 NATIVE_BACKENDS = ("maturin", "mesonpy", "scikit_build_core", "meson_python")
 DEFAULT_BACKEND = "setuptools"  # PEP 517 fallback when build-backend is absent
@@ -102,7 +102,8 @@ def _poetry_clause(part: str) -> str:
 
 def _poetry_specifier(spec: str) -> str:
     if "||" in spec:
-        raise ValueError(f"OR constraint {spec!r} cannot be expressed in PEP 508")
+        msg = f"OR constraint {spec!r} cannot be expressed in PEP 508"
+        raise ValueError(msg)
     clauses = [
         _poetry_clause(part.strip())
         for part in spec.split(",")
@@ -114,9 +115,8 @@ def _poetry_specifier(spec: str) -> str:
 def _poetry_requirement(name: str, spec: str | dict[str, Any]) -> str:
     if isinstance(spec, dict):
         if any(key in spec for key in ("git", "path", "url")):
-            raise ValueError(
-                f"dependency {name!r} uses a non-index source; convert manually"
-            )
+            msg = f"dependency {name!r} uses a non-index source; convert manually"
+            raise ValueError(msg)
         extras = spec.get("extras")
         if extras:
             name = f"{name}[{','.join(extras)}]"
@@ -131,7 +131,8 @@ def _poetry_project(data: dict[str, Any]) -> dict[str, Any]:
 
     poetry = data.get("tool", {}).get("poetry")
     if not isinstance(poetry, dict):
-        raise ValueError("missing [tool.poetry] table")
+        msg = "missing [tool.poetry] table"
+        raise ValueError(msg)
 
     project: dict[str, Any] = {
         key: poetry[key]
@@ -252,7 +253,8 @@ def readme_metadata(
             path = root / readme["file"]
             return path.read_text(encoding="utf-8"), content_type
 
-    raise ValueError("Unsupported [project].readme format")
+    msg = "Unsupported [project].readme format"
+    raise ValueError(msg)
 
 
 def make_setup_kwargs(

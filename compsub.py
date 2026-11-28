@@ -19,21 +19,25 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
 import lzma
+from multiprocessing import Pool
+from pathlib import Path
 import shutil
 import sys
 import tarfile
-from collections.abc import Sequence
-from multiprocessing import Pool
-from pathlib import Path
-from typing import Any, Self
+from typing import TYPE_CHECKING, Any, Self
 
 import brotli
-import zstandard as zstd
 from dh import MAX_WORKERS, SKIP_DIRS, fsz
 from loguru import logger
+import zstandard as zstd
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 ZSTD_LEVEL: int = 19
 BROTLI_QUALITY: int = 11

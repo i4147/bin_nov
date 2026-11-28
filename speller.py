@@ -4,9 +4,10 @@ Detect and optionally autofix misspelled words in a file using parallel processi
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from multiprocessing import Pool, cpu_count
+import re
 
 from dh import MAX_WORKERS
 from spellchecker import SpellChecker

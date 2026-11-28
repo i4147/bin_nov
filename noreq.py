@@ -10,12 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import shutil
 import tarfile
 import tempfile
-import zipfile
-from pathlib import Path
 from typing import Any
+import zipfile
 
 from dh import atomic_write
 

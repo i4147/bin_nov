@@ -19,14 +19,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
 import os
-import sys
 from pathlib import Path
+import sys
 from typing import Any
 
 from dh import atomic_write
+
 
 try:
     import cramjam as cj

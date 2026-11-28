@@ -10,8 +10,10 @@ Examples:
 
 """
 
-import shutil
+from __future__ import annotations
 from pathlib import Path
+import shutil
+
 
 L1: str = "[egg_info]"
 L2: str = "tag_build = "

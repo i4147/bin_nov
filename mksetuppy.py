@@ -10,15 +10,16 @@ Examples:
 
 """
 
+from __future__ import annotations
+from collections import defaultdict
 import email.utils
 import importlib
+from pathlib import Path
 import re
 import subprocess
 import sys
-from collections import defaultdict
-from collections.abc import Callable
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
 
 try:
     import tomllib
@@ -26,6 +27,10 @@ except ModuleNotFoundError:
     import tomli as tomllib
 
 from setuptools import find_packages, setup
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 ROOT = Path.cwd()
 

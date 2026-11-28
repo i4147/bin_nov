@@ -4,17 +4,17 @@ Split a text file into chunks, translate each chunk, and save results to JSON.
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import Future, ThreadPoolExecutor
 import json
 import os
+from pathlib import Path
 import signal
 import sys
 import threading
 import time
-from collections.abc import Callable
-from concurrent.futures import Future, ThreadPoolExecutor
-from pathlib import Path
-from types import FrameType
+from typing import TYPE_CHECKING
 
 from dh import MAX_WORKERS
 from loguru import logger
@@ -24,6 +24,11 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
 )
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from types import FrameType
 
 
 class TranslationFailedError(Exception):

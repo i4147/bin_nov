@@ -10,13 +10,15 @@ Examples:
 
 """
 
-import os
+from __future__ import annotations
 from dataclasses import dataclass
+import os
 from pathlib import Path
 from typing import Optional
 
 import gcld3
 import py3langid as langid
+
 
 MIN_PROBABILITY: float = 0.5
 _detector: gcld3.NNetLanguageIdentifier = gcld3.NNetLanguageIdentifier(

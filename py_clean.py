@@ -19,26 +19,28 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import deque
+from dataclasses import dataclass, field
 import difflib
 import fnmatch
 import io
 import multiprocessing
 import os
+from pathlib import Path
 import re
 import shutil
 import signal
 import sys
 import tokenize
-from collections import deque
-from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Callable, Iterable, Optional, Sequence
 
-import libcst as cst
 from dh import atomic_write
+import libcst as cst
 from libcst.helpers import get_full_name_for_node
 from loguru import logger
+
 
 SUPPORTED_EXT = frozenset({".py", ".pyw"})
 IGNORE_FILENAME: str = ".ignore"

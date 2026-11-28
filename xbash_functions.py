@@ -4,18 +4,22 @@ Extract shell function definitions from scripts into individual files.
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
+from multiprocessing import Pool
 import os
+from pathlib import Path
 import re
 import sys
-from collections.abc import Iterable, Iterator
-from multiprocessing import Pool
-from pathlib import Path
-from typing import Final, Protocol
+from typing import TYPE_CHECKING, Final, Protocol
 
 from dh import MAX_WORKERS
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
 
 EXCLUDED_SUFFIXES: Final[frozenset[str]] = frozenset(
     {

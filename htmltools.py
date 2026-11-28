@@ -22,25 +22,27 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
 import contextlib
 import hashlib
+from io import BytesIO
 import mimetypes
+from multiprocessing import Pool
 import os
+from pathlib import Path
 import re
 import sys
 import time
-from io import BytesIO
-from multiprocessing import Pool
-from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import unquote, urldefrag, urljoin, urlparse
 
-import requests
 from bs4 import BeautifulSoup, Tag
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+import requests
+
 
 try:
     from loguru import logger

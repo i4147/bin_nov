@@ -19,17 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
-import sys
-import time
 from dataclasses import dataclass
 from multiprocessing import Pool
 from pathlib import Path
+import sys
+import time
 from typing import TYPE_CHECKING, Any, Optional, Sequence
 
 from dh import MAX_WORKERS, fsz
 from loguru import logger
+
 
 if TYPE_CHECKING:
     from fontTools.misc.psCharStrings import T2CharString

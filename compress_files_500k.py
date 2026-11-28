@@ -16,15 +16,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import bz2
 import gzip
 import lzma
 import os
+from pathlib import Path
 import shutil
 import sys
 import tempfile
-from pathlib import Path
+
 
 THRESHOLD: int = 500 * 1024
 CHUNK_SIZE: int = 1024 * 1024

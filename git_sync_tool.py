@@ -4,14 +4,19 @@ Bulk git sync: pull/restore every repo, rebase-sync, publish to GitHub. Analysis
 
 """
 
+from __future__ import annotations
 import argparse
 import json
 import os
+from pathlib import Path
 import subprocess
 import sys
+from typing import TYPE_CHECKING
 import urllib.request
-from collections.abc import Sequence
-from pathlib import Path
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 GITHUB_API: str = "https://api.github.com"
 

@@ -42,11 +42,12 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import multiprocessing as mp
-import re
 from dataclasses import dataclass
+import multiprocessing as mp
 from pathlib import Path
+import re
 from typing import Any, Optional
 
 from dh import MAX_WORKERS, atomic_write

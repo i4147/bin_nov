@@ -10,10 +10,12 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import atomic_write
+
 
 if __name__ == "__main__":
     atomic_write(Path(sys.argv[1].strip()), "")

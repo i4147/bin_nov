@@ -19,15 +19,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import multiprocessing as mp
-import sys
 from dataclasses import dataclass
+import multiprocessing as mp
 from pathlib import Path
+import sys
 from typing import Final, Iterable, Iterator, Optional
 
-import libcst as cst
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+import libcst as cst
 from libcst import (
     BaseStatement,
     ClassDef,
@@ -38,6 +39,7 @@ from libcst import (
     TrailingWhitespace,
 )
 from loguru import logger
+
 
 PRAGMA_PREFIXES: Final[tuple[str, ...]] = ("# type:", "# fmt:", "# fmt: skip", "# noqa")
 SHEBANG_PREFIX: Final[str] = "#!"

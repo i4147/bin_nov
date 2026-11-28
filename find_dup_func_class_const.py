@@ -16,13 +16,14 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from collections import defaultdict
 import concurrent.futures
 import os
-import sys
-from collections import defaultdict
 from pathlib import Path
+import sys
 
 from dh import atomic_write
 

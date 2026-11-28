@@ -10,10 +10,12 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import atomic_write, get_nobinary
+
 
 INVISIBLE_CHARS: set[str] = {
     "\u200b",

@@ -10,23 +10,25 @@ Examples:
 
 """
 
+from __future__ import annotations
+from contextlib import contextmanager
 import gzip
 import io
 import lzma
+from multiprocessing import Pool
+from pathlib import Path
 import shutil
 import sys
 import tarfile
-import zipfile
-from contextlib import contextmanager
-from multiprocessing import Pool
-from pathlib import Path
 from typing import BinaryIO, Iterator
+import zipfile
 
+from dh import MAX_WORKERS
 import lz4.block
 import lz4.frame
 import py7zr
 import zstandard
-from dh import MAX_WORKERS
+
 
 try:
     import brotli

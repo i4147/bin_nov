@@ -19,16 +19,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import shutil
-import tempfile
-from collections.abc import Generator
 from dataclasses import dataclass
 from pathlib import Path
+import shutil
+import tempfile
+from typing import TYPE_CHECKING
 
 from dh import MAX_WORKERS
 from joblib import Parallel, delayed
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 
 @dataclass(slots=True)

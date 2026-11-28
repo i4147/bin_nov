@@ -4,23 +4,25 @@ Unified zstandard compression and decompression toolkit.
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
+from dataclasses import dataclass
+from functools import partial
 import io
+from multiprocessing import Pool
+from pathlib import Path
 import shutil
 import sys
 import tarfile
 import threading
 import time
-from dataclasses import dataclass
-from functools import partial
-from multiprocessing import Pool
-from pathlib import Path
 from typing import Any, Iterable, Optional, Sequence
 
-import zstandard as zstd
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
+import zstandard as zstd
+
 
 with contextlib.suppress(ImportError):
     from loguru import logger

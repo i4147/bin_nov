@@ -10,9 +10,11 @@ Examples:
 
 """
 
+from __future__ import annotations
 import curses
 from pathlib import Path
 from typing import Any
+
 
 LINES_PER_FILE: int = 20
 

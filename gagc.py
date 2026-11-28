@@ -10,11 +10,12 @@ Examples:
 
 """
 
+from __future__ import annotations
+from datetime import datetime
 import os
+from pathlib import Path
 import subprocess
 import sys
-from datetime import datetime
-from pathlib import Path
 
 from git import Repo
 

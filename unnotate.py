@@ -4,18 +4,23 @@ Remove Python type annotations from files in place.
 
 """
 
+from __future__ import annotations
 import argparse
+from dataclasses import dataclass
 import multiprocessing as mp
 import os
-import re
-from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
 from pathlib import Path
+import re
+from typing import TYPE_CHECKING
 
-import libcst as cst
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+import libcst as cst
 from rich.console import Console
 from rich.text import Text
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
 
 TYPE_COMMENT_RE: re.Pattern[str] = re.compile(r"#\s*type:\s*(?!ignore\b)")
 NUM_WIDTH: int = 10

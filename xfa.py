@@ -4,17 +4,19 @@ Extract unique Persian words from files.
 
 """
 
+from __future__ import annotations
 import argparse
-import re
-import sys
 from collections import Counter
 from functools import partial
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
+import re
+import sys
 from typing import Any, Generator, Optional
 
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 try:
     import nltk

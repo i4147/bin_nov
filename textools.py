@@ -4,18 +4,20 @@ Text kit: count words and characters in text files in parallel.
 
 """
 
+from __future__ import annotations
 import argparse
-import json
-import mimetypes
-import re
-import sys
 from collections import Counter
 from datetime import datetime
+import json
+import mimetypes
 from multiprocessing import Pool
 from pathlib import Path
+import re
+import sys
 from typing import Any, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+
 
 try:
     import nltk

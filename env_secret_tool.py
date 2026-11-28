@@ -4,16 +4,21 @@ Environment-variable inventory, secret-leak scan, and token harvesting. Analysis
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
 import json
+from pathlib import Path
 import re
 import sys
-from collections import defaultdict
-from collections.abc import Sequence
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 ENV_ASSIGN: re.Pattern[str] = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*)=")
 ENV_CODE: re.Pattern[str] = re.compile(

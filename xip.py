@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import os
 from pathlib import Path
 
-import ipinfo
 from dh import cprint
 from dotenv import load_dotenv
+import ipinfo
+
 
 if __name__ == "__main__":
     env_path = Path.home() / ".env"

@@ -4,16 +4,18 @@ Scan archives in a directory (sizes, integrity, extraction).
 
 """
 
+from __future__ import annotations
 import argparse
 import gzip
 import json
 import os
+from pathlib import Path
 import struct
 import tarfile
 import zipfile
-from pathlib import Path
 
 from dh import fsz
+
 
 try:
     import py7zr

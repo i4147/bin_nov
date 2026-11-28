@@ -19,14 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import asyncio
 import base64
 import contextlib
 import csv
+from dataclasses import asdict, dataclass, field
+from datetime import datetime
 import email
 import hashlib
 import json
+from multiprocessing import Pool, cpu_count
+from pathlib import Path
 import platform
 import shutil
 import site
@@ -34,15 +39,12 @@ import subprocess
 import sys
 import sysconfig
 import tempfile
-import zipfile
-from dataclasses import asdict, dataclass, field
-from datetime import datetime
-from multiprocessing import Pool, cpu_count
-from pathlib import Path
 from typing import Any, Iterable, Optional, Sequence
+import zipfile
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 try:
     from wheel.wheelfile import WheelFile

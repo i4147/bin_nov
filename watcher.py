@@ -4,14 +4,15 @@ Unified recursive file/folder watcher.
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
+from pathlib import Path
 import shutil
 import sys
 import threading
 import time
 import traceback
-from pathlib import Path
 from typing import Any
 
 from dh import fsz

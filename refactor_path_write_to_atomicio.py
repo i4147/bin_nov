@@ -5,24 +5,21 @@ libcst-based codemod that finds path.write_text/open(...,'w')-style writes and r
 """
 
 from __future__ import annotations
-
-import argparse
+from concurrent.futures import Future, ProcessPoolExecutor, as_completed
+from dataclasses import dataclass
 import difflib
+from functools import partial
 import os
+from pathlib import Path
 import shutil
 import stat
 import sys
 import tempfile
 import traceback
-from collections.abc import Callable, Sequence
-from concurrent.futures import Future, ProcessPoolExecutor, as_completed
-from dataclasses import dataclass
-from functools import partial
-from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
-import libcst as cst
 from dh import SKIP_DIRS
+import libcst as cst
 from loguru import logger
 from parallel_runner import (
     FileFilter,
@@ -46,6 +43,12 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 from rich.text import Text
+
+
+if TYPE_CHECKING:
+    import argparse
+    from collections.abc import Callable, Sequence
+
 
 DEFAULT_WORKERS: int = os.cpu_count() or 1
 DEFAULT_LOG_FILE: str = "atomic_write_refactor.log"
@@ -73,7 +76,7 @@ class ReplaceWriteMethods(cst.CSTTransformer):
         super().__init__()
         self.target_methods: frozenset[str] = target_methods
         self.changed: bool = False
-        self.rewritten_counts: dict[str, int] = {m: 0 for m in sorted(target_methods)}
+        self.rewritten_counts: dict[str, int] = dict.fromkeys(sorted(target_methods), 0)
 
     def leave_Call(
         self,
@@ -583,7 +586,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         import_from=args.import_from,
         dry_run=runner_cfg.dry_run,
         check=runner_cfg.check,
-        diff=not runner_cfg.show_diff is False
+        diff=runner_cfg.show_diff is not False
         and bool(args.dry_run or args.check or args.diff),
         backup=bool(args.backup),
         workers=runner_cfg.workers,

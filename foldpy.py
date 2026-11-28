@@ -16,15 +16,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import shutil
-import warnings
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
+import shutil
 from typing import Literal
+import warnings
 
 from rich.progress import Progress
+
 
 Status = Literal["ok", "error", "warn"]
 

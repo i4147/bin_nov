@@ -10,11 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import shutil
 import sys
-from pathlib import Path
 
 from rignore import walk as _walk
+
 
 JUNK_FILE: Path = Path("/sdcard/data/junk")
 

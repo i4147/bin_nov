@@ -17,14 +17,16 @@ Usage:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
 import json
 import os
+from pathlib import Path
 import re
 import sys
 import tempfile
-from pathlib import Path
+
 
 # --- normalization -------------------------------------------------------
 

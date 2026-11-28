@@ -16,12 +16,13 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import html
-import re
 from collections import defaultdict, deque
+import html
 from importlib import metadata
 from pathlib import Path
+import re
 
 from dh import atomic_write, mpf
 from loguru import logger

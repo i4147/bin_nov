@@ -4,20 +4,25 @@ Convert SQL INSERT dump files to streaming newline-delimited JSON.
 
 """
 
+from __future__ import annotations
 import argparse
 import codecs
+from collections.abc import Sequence
+from dataclasses import dataclass
 import json
+from multiprocessing import Pool, freeze_support
 import os
+from pathlib import Path
 import re
 import tempfile
-from collections.abc import Iterator, Sequence
-from dataclasses import dataclass
-from multiprocessing import Pool, freeze_support
-from pathlib import Path
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 from dh import MAX_WORKERS
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 READ_CHUNK_BYTES: int = 1024 * 1024
 DEFAULT_ENCODING: str = "utf-8"

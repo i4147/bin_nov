@@ -4,26 +4,28 @@ Archive files by automatically choosing the best compression algorithm.
 
 """
 
+from __future__ import annotations
 import argparse
 import bz2
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from datetime import datetime
 import gzip
+from io import BytesIO
 import json
 import lzma
+from pathlib import Path
 import sys
 import tarfile
 import tempfile
 import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from datetime import datetime
-from io import BytesIO
-from pathlib import Path
 from typing import Any
 
 import brotli
-import lz4.frame
-import zstandard as zstd
 from dh import MAX_WORKERS
 from loguru import logger
+import lz4.frame
+import zstandard as zstd
+
 
 EXTENSION_MAP: dict[str, dict[str, str | int]] = {
     ".txt": {"algo": "brotli", "level": 11},

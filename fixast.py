@@ -19,23 +19,27 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import bisect
+from dataclasses import dataclass, field
 import difflib
 import fnmatch
 import io
 import json
 import os
+from pathlib import Path
 import re
 import sys
 import tokenize
-from collections.abc import Iterator, Sequence
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Final
+from typing import TYPE_CHECKING, Final
 
 from dh import SKIP_DIRS, atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 __version__: str = "1.1.0"
 DEPRECATED_FAMILY: Final[dict[str, str]] = {

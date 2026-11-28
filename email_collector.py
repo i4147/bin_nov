@@ -10,14 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import re
 import sys
 import traceback
+from typing import Any
 import urllib.error
 import urllib.parse
 import urllib.request
-from pathlib import Path
-from typing import Any
 
 from loguru import logger
 from sqlalchemy import (
@@ -30,6 +31,7 @@ from sqlalchemy import (
     create_engine,
     select,
 )
+
 
 DEBUG: bool = True
 DATABASE_NAME: str = "data/crawler.sqlite"

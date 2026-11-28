@@ -4,14 +4,15 @@
 With -s, strips leading/trailing whitespace (and comments and docstrings from .py files via libcst) before comparing; -m moves identical pairs into a group_N directory.
 """
 
+from __future__ import annotations
 import argparse
-import hashlib
-import shutil
 from concurrent.futures import ProcessPoolExecutor, as_completed
+import hashlib
 from pathlib import Path
+import shutil
 
-import libcst as cst
 from dh import MAX_WORKERS, cprint, read_lines
+import libcst as cst
 
 
 def count_lines(path: Path) -> int:

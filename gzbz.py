@@ -36,22 +36,24 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import bz2
+from concurrent.futures import ProcessPoolExecutor
 import contextlib
+from dataclasses import dataclass
+from datetime import timedelta
 import gzip
 import mmap
+from pathlib import Path
 import shutil
 import tarfile
 import time
-from concurrent.futures import ProcessPoolExecutor
-from dataclasses import dataclass
-from datetime import timedelta
-from pathlib import Path
 from typing import Optional, Self, Sequence
 
 from dh import MAX_WORKERS, atomic_write, workers
 from loguru import logger
+
 
 DEFAULT_CHUNK_SIZE: int = 524_288
 DEFAULT_GZIPER_CHUNK: int = 262_144

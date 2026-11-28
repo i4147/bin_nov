@@ -16,18 +16,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 import contextlib
 import difflib
 import hashlib
 import io
 import json
 import multiprocessing as mp
+from pathlib import Path
 import sys
 import time
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
-from pathlib import Path
 from tokenize import COMMENT, ENDMARKER, NEWLINE, NL, generate_tokens
 from typing import Any, NamedTuple
 
@@ -42,6 +43,7 @@ from rich.progress import (
     TextColumn,
 )
 from rich.table import Table
+
 
 console = Console()
 try:

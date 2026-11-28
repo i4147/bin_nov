@@ -5,15 +5,14 @@ Reads METADATA from *.dist-info, maps the core fields (name, version, dependenci
 """
 
 from __future__ import annotations
-
 import argparse
 import configparser
+from email.parser import HeaderParser
 import json
 import os
+from pathlib import Path
 import shutil
 import sys
-from email.parser import HeaderParser
-from pathlib import Path
 
 
 def toml_str(val: str) -> str:
@@ -207,7 +206,8 @@ def generate_pyproject(
     root = Path(base_dir).resolve()
     dist_info_dirs = sorted(p for p in root.glob("*.dist-info") if p.is_dir())
     if not dist_info_dirs:
-        raise FileNotFoundError(f"No .dist-info directory found in '{root}'.")
+        msg = f"No .dist-info directory found in '{root}'."
+        raise FileNotFoundError(msg)
     dist_info = dist_info_dirs[0]
 
     # 1. Process .data folder first

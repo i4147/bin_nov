@@ -46,18 +46,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import colorsys
 import contextlib
+from dataclasses import dataclass
 import os
+from pathlib import Path
 import random
 import re
 import sys
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Iterator, Optional, Sequence
 
 from dh import atomic_write
+
 
 try:
     from dh import cprint, is_binary, should_skip

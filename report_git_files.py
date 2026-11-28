@@ -19,13 +19,14 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from dataclasses import asdict, dataclass
 import json
 import os
+from pathlib import Path, PurePosixPath
 import subprocess
 import sys
-from dataclasses import asdict, dataclass
-from pathlib import Path, PurePosixPath
 from typing import Sequence
 
 

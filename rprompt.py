@@ -10,11 +10,12 @@ Examples:
 
 """
 
+from __future__ import annotations
 import io
+from pathlib import Path
 import re
 import sys
 import tokenize
-from pathlib import Path
 
 from dh import atomic_write, get_pyfiles, mpf
 

@@ -14,14 +14,14 @@ Supports:
 """
 
 from __future__ import annotations
-
 import argparse
 import os
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
-from pathlib import Path
+
 
 PREFIX = os.environ.get("PREFIX", "/data/data/com.termux/files/usr")
 ZSH_SHEBANG = f"#!{PREFIX}/bin/zsh"
@@ -99,7 +99,8 @@ def discover_scripts(
         elif target.is_dir():
             candidates = sorted(target.rglob("*"))
         else:
-            raise FileNotFoundError(f"path not found: {raw}")
+            msg = f"path not found: {raw}"
+            raise FileNotFoundError(msg)
 
         for item in candidates:
             if ".git" in item.parts:
@@ -290,7 +291,8 @@ def rewrite_references(converted: dict[str, str], base_dir: Path) -> int:
             check=True,
         ).stdout
     except (OSError, subprocess.SubprocessError) as error:
-        raise RuntimeError(f"could not enumerate repository files: {error}") from error
+        msg = f"could not enumerate repository files: {error}"
+        raise RuntimeError(msg) from error
 
     self_path = Path(__file__).resolve()
     changed = 0
@@ -344,7 +346,8 @@ def rewrite_references(converted: dict[str, str], base_dir: Path) -> int:
                 path.write_text(updated, encoding="utf-8", newline="")
                 changed += 1
             except OSError as error:
-                raise RuntimeError(f"could not update {path}: {error}") from error
+                msg = f"could not update {path}: {error}"
+                raise RuntimeError(msg) from error
 
     return changed
 
@@ -377,7 +380,8 @@ def migrate(
         try:
             text = read_script(source)
         except (OSError, UnicodeDecodeError) as error:
-            raise RuntimeError(f"could not read {source}: {error}") from error
+            msg = f"could not read {source}: {error}"
+            raise RuntimeError(msg) from error
 
         source_kind = detect_script_kind(source, text)
 
@@ -391,7 +395,8 @@ def migrate(
 
     if conflicts:
         names = ", ".join(str(path) for path in conflicts)
-        raise RuntimeError(f"refusing to overwrite existing destinations: {names}")
+        msg = f"refusing to overwrite existing destinations: {names}"
+        raise RuntimeError(msg)
 
     converted: dict[str, str] = {}
 
@@ -400,7 +405,8 @@ def migrate(
             text = read_script(source)
             mode = source.stat().st_mode
         except (OSError, UnicodeDecodeError) as error:
-            raise RuntimeError(f"could not read {source}: {error}") from error
+            msg = f"could not read {source}: {error}"
+            raise RuntimeError(msg) from error
 
         if source_kind == "sh":
             text = rewrite_sh_to_zsh(text)
@@ -414,9 +420,8 @@ def migrate(
             destination.chmod(mode)
             source.unlink()
         except OSError as error:
-            raise RuntimeError(
-                f"could not convert {source} to {destination}: {error}"
-            ) from error
+            msg = f"could not convert {source} to {destination}: {error}"
+            raise RuntimeError(msg) from error
 
     links_changed = retarget_symlinks(paths, base_dir, direction)
     references_changed = rewrite_references(converted, base_dir)
@@ -435,7 +440,8 @@ def retarget_symlinks(
         try:
             target = os.readlink(link)
         except OSError as error:
-            raise RuntimeError(f"could not read symlink {link}: {error}") from error
+            msg = f"could not read symlink {link}: {error}"
+            raise RuntimeError(msg) from error
 
         new_target: str | None = None
 
@@ -454,7 +460,8 @@ def retarget_symlinks(
             temporary.replace(link)
             changed += 1
         except OSError as error:
-            raise RuntimeError(f"could not retarget symlink {link}: {error}") from error
+            msg = f"could not retarget symlink {link}: {error}"
+            raise RuntimeError(msg) from error
 
     return changed
 

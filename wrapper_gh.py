@@ -10,13 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
 import datetime as dt
 import os
+from pathlib import Path
 import subprocess
 import sys
 import time
-from pathlib import Path
 from typing import Any
+
 
 LOG_DIR = Path.home() / "tmp" / "log" / "apps"
 REAL_GH: str = "/data/data/com.termux/files/usr/bin/gh"

@@ -22,17 +22,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
 import json
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
-from collections import defaultdict
-from pathlib import Path
 from typing import Optional, Sequence
 
 from dh import atomic_write
+
 
 PLUGIN_PATTERNS: dict[str, list[str]] = {
     "lazy.nvim": [

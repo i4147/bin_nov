@@ -19,13 +19,15 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 from typing import Iterator
 
 from dh import atomic_write
+
 
 if sys.version_info >= (3, 10):
     _STDLIB: set[str] | None = set(sys.stdlib_module_names)

@@ -17,18 +17,18 @@ Command-line script:
 """
 
 from __future__ import annotations
-
 import argparse
+from datetime import datetime
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
-from datetime import datetime
-from pathlib import Path
 from typing import Any
 
 from dh import SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 DEFAULT_OLD_USERNAME: str = "i4147"
 DEFAULT_OLD_EMAIL: str = "yesnacoc@gmail.com"

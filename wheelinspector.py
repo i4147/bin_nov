@@ -4,15 +4,17 @@ Unified tool for detecting and managing empty Python wheels.
 
 """
 
+from __future__ import annotations
 import argparse
 import csv
+from pathlib import Path
 import shutil
 import subprocess
 import sys
 import sysconfig
-import zipfile
-from pathlib import Path
 from typing import Optional
+import zipfile
+
 
 WheelInfo = dict[str, object]
 PackageInfo = dict[str, str]

@@ -4,20 +4,22 @@ Unified cleaner for Python comments, docstrings and unused code (AST, regex, jus
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import io
 import multiprocessing as mp
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
 import tokenize
 import traceback
-from pathlib import Path
 from typing import Callable, Iterable, NamedTuple, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+
 
 try:
     import libcst as cst
@@ -75,11 +77,11 @@ def gather_python_files(
     for raw in paths:
         p = Path(raw).resolve()
         if p.is_file():
-            if p.suffix == ".py" or (
-                include_shebang_scripts and _looks_like_python_script(p)
-            ):
-                if not any(part.lower() in excl for part in p.parts):
-                    seen.add(p)
+            if (
+                p.suffix == ".py"
+                or (include_shebang_scripts and _looks_like_python_script(p))
+            ) and not any(part.lower() in excl for part in p.parts):
+                seen.add(p)
         elif p.is_dir():
             for f in p.rglob("*.py"):
                 if f.is_symlink():

@@ -8,17 +8,17 @@ Usage:
 """
 
 from __future__ import annotations
-
 import argparse
-import os
-import stat
-import sys
 from collections import Counter
 from dataclasses import dataclass
 from functools import partial
 from multiprocessing import Pool
+import os
 from pathlib import Path
+import stat
+import sys
 from typing import TYPE_CHECKING, Literal
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator

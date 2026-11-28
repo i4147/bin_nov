@@ -10,12 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
 import os
+from pathlib import Path
 import select
 import sys
 import termios
 import tty
-from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 

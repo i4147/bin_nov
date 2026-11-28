@@ -5,9 +5,10 @@ Chunks text into 2,000-character segments with retries and delay, persists progr
 """
 
 from __future__ import annotations
-
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
+from pathlib import Path
 import random
 import re
 import signal
@@ -15,13 +16,12 @@ import sqlite3
 import sys
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
 from typing import Any, Callable, Sequence
 
 from dh import MAX_WORKERS
 from googletrans import Translator
 from loguru import logger
+
 
 RETRY_ATTEMPTS: int = 4
 RETRY_DELAY: float = 0.6

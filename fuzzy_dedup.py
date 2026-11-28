@@ -22,16 +22,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
 import csv
+from dataclasses import dataclass
 import json
 import os
+from pathlib import Path
 import shutil
 import sys
-from collections import defaultdict
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Iterable, Iterator, Mapping, Sequence
+
 
 try:
     import ssdeep
@@ -47,8 +49,6 @@ try:
     from colorama import (
         Fore,
         Style,
-    )
-    from colorama import (
         init as colorama_init,
     )
 except ImportError:

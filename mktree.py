@@ -19,12 +19,14 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import itertools
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 from typing import Any, Iterable
+
 
 NODE_MARKERS: tuple[str, str, str, str] = (
     "\u251c\u2500\u2500",

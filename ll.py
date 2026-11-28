@@ -10,10 +10,12 @@ Examples:
 
 """
 
+from __future__ import annotations
 import datetime as dt
-import sys
 from os import scandir as _scandir
 from pathlib import Path
+import sys
+
 
 # from dh import gsz2
 

@@ -4,10 +4,12 @@ Keep lines containing mkv or mp4 and a selected resolution in a file. Pass a fil
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import atomic_write
+
 
 if __name__ == "__main__":
     fn = Path(sys.argv[1])

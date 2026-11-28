@@ -9,17 +9,19 @@ Usage:
 Name matching is case-insensitive and exact.
 """
 
+from __future__ import annotations
 import argparse
+from dataclasses import dataclass
 import multiprocessing as mp
+from pathlib import Path
 import shutil
 import sys
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Sequence
 
 from loguru import logger
 from rich.console import Console
 from rich.text import Text
+
 
 TARGET_NAME: str = "readme.md"
 WORKERS: int = 4

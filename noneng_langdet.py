@@ -19,17 +19,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from dataclasses import dataclass, field
 import multiprocessing as mp
+from pathlib import Path
 import sys
 import time
-from collections.abc import Sequence
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 try:
     from langdet import LanguageDetector

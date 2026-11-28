@@ -10,15 +10,17 @@ Examples:
 
 """
 
+from __future__ import annotations
 import contextlib
 import os
+from pathlib import Path
 import shutil
 import sys
 import tempfile
-from pathlib import Path
 from typing import Any
 
 from fontTools import subset
+
 
 # Unicode blocks that carry Chinese (and CJK-shared) glyphs.
 CJK_BLOCKS: list[tuple[Any, ...]] = [

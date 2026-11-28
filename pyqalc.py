@@ -19,10 +19,12 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from decimal import getcontext
 import math
 import re
-from decimal import getcontext
+
 
 getcontext().prec = 28
 

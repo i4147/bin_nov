@@ -4,15 +4,20 @@ Rename non-English filenames to English (translate or transliterate). Analysis /
 
 """
 
+from __future__ import annotations
 import argparse
-import re
-import sys
-import unicodedata
-from collections.abc import Sequence
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+import re
+import sys
+from typing import TYPE_CHECKING
+import unicodedata
 
 from dh import MAX_WORKERS
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 NON_ASCII: re.Pattern[str] = re.compile(r"[^\x00-\x7F]")
 

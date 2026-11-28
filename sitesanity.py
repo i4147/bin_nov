@@ -4,9 +4,10 @@ Sanity check installed Termux Python packages.
 
 """
 
+from __future__ import annotations
 import argparse
-import importlib.metadata
 from fnmatch import fnmatch
+import importlib.metadata
 from pathlib import Path
 from typing import Any
 

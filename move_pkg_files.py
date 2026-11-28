@@ -4,18 +4,22 @@
 Run from inside site-packages; accepts package names, wildcards or `all`, preserves the site-packages layout, and can move or delete emptied source directories. --dry-run previews.
 """
 
+from __future__ import annotations
 import argparse
 import csv
-import fnmatch
-import shutil
-import sys
-from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from difflib import get_close_matches
+import fnmatch
 from pathlib import Path
-from typing import Final
+import shutil
+import sys
+from typing import TYPE_CHECKING, Final
 
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator, Sequence
 
 DEFAULT_OUTPUT_ROOT: Final[Path] = Path.home() / "tmp" / "pkgs"
 RECORD_FILENAME: Final[str] = "RECORD"

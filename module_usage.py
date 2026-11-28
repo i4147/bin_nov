@@ -19,17 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import contextlib
-import importlib
-import sys
 from collections import Counter, defaultdict
+import contextlib
 from datetime import datetime
+import importlib
 from pathlib import Path
+import sys
 from typing import Any, Sequence
 
 from dh import atomic_write
+
 
 DEFAULT_PACKAGE: str = "dh"
 DEFAULT_DIR = Path.home() / "bin"

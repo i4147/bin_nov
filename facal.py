@@ -10,10 +10,12 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from datetime import date
+import sys
 
 from faprint import faprint
+
 
 _PERSIAN_DIGITS: dict[int, str] = str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹")
 _JALALI_MONTHS_FA: list[str] = [

@@ -1,11 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/env python
 from __future__ import annotations
-
-import sys
 from pathlib import Path
+import sys
 
-import tree_sitter_xml
 from tree_sitter import Language, Parser
+import tree_sitter_xml
 
 
 def build_parser() -> Parser:

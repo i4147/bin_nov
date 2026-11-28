@@ -4,10 +4,12 @@ Distribute current-directory items into N size-balanced folders named by size ra
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import re
 import shutil
 import sys
-from pathlib import Path
+
 
 SKIP: set[str] = {".git", ".gitignore"}
 RANGE_RE = re.compile(

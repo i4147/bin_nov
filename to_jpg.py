@@ -10,6 +10,7 @@ Examples:
 
 """
 
+from __future__ import annotations
 from pathlib import Path
 
 from PIL import Image

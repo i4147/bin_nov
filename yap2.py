@@ -4,24 +4,24 @@ Format Python files (black, yapf, autopep8, ruff and more).
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import (
+    ProcessPoolExecutor,
+    TimeoutError as FuturesTimeout,
+)
 import difflib
 import fnmatch
 import json
 import os
+from pathlib import Path
 import shutil
 import sys
-from concurrent.futures import (
-    ProcessPoolExecutor,
-)
-from concurrent.futures import (
-    TimeoutError as FuturesTimeout,
-)
-from pathlib import Path
 from typing import Any, Callable
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write, runcmd
 from loguru import logger
+
 
 BACKENDS: tuple[str, ...] = ("black", "yapf", "autopep8", "ruff", "isort", "autoflake")
 DEFAULT_LINE_LENGTH: int = 120

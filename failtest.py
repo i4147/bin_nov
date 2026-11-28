@@ -19,10 +19,11 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import subprocess
 import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Optional, Sequence
 
 

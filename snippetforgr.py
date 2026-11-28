@@ -4,17 +4,19 @@ Unified code-snippet extractor for Markdown, HTML and other text files.
 
 """
 
+from __future__ import annotations
 import argparse
-import json
-import re
-import sys
 from dataclasses import dataclass
+import json
 from multiprocessing import Pool
 from pathlib import Path
+import re
+import sys
 from typing import Any, Iterable, Iterator, Sequence
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 SOURCE_CODE_EXTS: frozenset[str] = frozenset(
     {

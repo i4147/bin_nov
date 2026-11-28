@@ -19,17 +19,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import multiprocessing as mp
-import sys
-from collections.abc import Callable, Generator, Iterable
 from functools import partial
 from html.parser import HTMLParser
+import multiprocessing as mp
 from pathlib import Path
-from typing import Any
+import sys
+from typing import TYPE_CHECKING, Any
 
-import minify_html as mh
 from dh import MAX_WORKERS, atomic_write
+import minify_html as mh
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Generator, Iterable
 
 
 class _HTMLValidator(HTMLParser):

@@ -35,15 +35,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import re
 import sys
 import tempfile
-import unicodedata
-from pathlib import Path
 from typing import Final, Sequence
+import unicodedata
 
 from dh import atomic_write
+
 
 MAX_LEN: Final[int] = 120
 BREAK_PUNCTS: Final[list[str]] = [",", ";", ":", "?"]

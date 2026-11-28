@@ -19,15 +19,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
-import sys
-from collections.abc import Sequence
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+import re
+import sys
+from typing import TYPE_CHECKING
 
-import pymupdf
 from dh import MAX_WORKERS, atomic_write
+import pymupdf
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 MERGED_NAME: str = "merged.pdf"
 UNSAFE: re.Pattern[str] = re.compile(r"[^A-Za-z0-9._-]+")

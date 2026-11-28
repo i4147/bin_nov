@@ -16,14 +16,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
-import sys
 from html.parser import HTMLParser
 from pathlib import Path
+import sys
 from typing import Any
 
 from dh import atomic_write
+
 
 VOID_ELEMENTS = frozenset(
     {

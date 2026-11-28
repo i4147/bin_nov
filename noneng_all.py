@@ -19,12 +19,14 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import math
 import os
-import sys
 from pathlib import Path
+import sys
 from typing import Callable
+
 
 DetectionResult = tuple[str, float]
 

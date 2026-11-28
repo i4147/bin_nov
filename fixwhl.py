@@ -10,6 +10,7 @@ Examples:
 
 """
 
+from __future__ import annotations
 from collections import defaultdict
 from email.parser import Parser
 from pathlib import Path

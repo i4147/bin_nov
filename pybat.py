@@ -19,15 +19,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from dataclasses import dataclass, field
 import io
 import os
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
-from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Optional
 
 from pygments import highlight as pyg_highlight
@@ -41,6 +42,7 @@ from pygments.lexers import (
 )
 from pygments.styles import get_all_styles, get_style_by_name
 from pygments.util import ClassNotFound
+
 
 RESET: str = "\x1b[0m"
 GRID_COLOR: str = "\x1b[38;5;238m"

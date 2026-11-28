@@ -8,13 +8,15 @@ Requires Python 3.10+.
 
 """
 
+from __future__ import annotations
 import ast
-import sys
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+import sys
 from typing import Iterator, Sequence
 
 from dh import atomic_write, get_pyfiles
+
 
 # ---------------------------------------------------------------------------
 # core transformer (pure, testable)

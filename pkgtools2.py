@@ -46,23 +46,25 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import csv
+from datetime import datetime
 import hashlib
 import json
+from multiprocessing import Pool, freeze_support
 import os
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from datetime import datetime
-from multiprocessing import Pool, freeze_support
-from pathlib import Path
 from typing import Any, Iterable, Optional, Sequence
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 DEFAULT_CHUNK_SIZE: int = 8192
 DEFAULT_DEB_EXCLUDES = frozenset(

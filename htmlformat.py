@@ -19,18 +19,23 @@ Command-line script:
 
 """
 
-import multiprocessing as mp
-import sys
-from collections.abc import Iterator
+from __future__ import annotations
 from dataclasses import dataclass
+import multiprocessing as mp
 from pathlib import Path
+import sys
+from typing import TYPE_CHECKING
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
 
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
 try:
-    import tree_sitter_html as ts_html
     from tree_sitter import Language, Node, Parser
+    import tree_sitter_html as ts_html
 except ImportError:
     print("Error: Required packages not installed.", file=sys.stderr)
     print("Install with: pip install tree-sitter tree-sitter-html", file=sys.stderr)

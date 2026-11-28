@@ -10,11 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
 from pathlib import Path
 from random import choice as random_choice
 from typing import Any
 
 from dh import atomic_write
+
 
 extensions: list[str] = [
     ".Z",

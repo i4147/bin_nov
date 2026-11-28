@@ -20,19 +20,19 @@ Command-line script:
 """
 
 from __future__ import annotations
-
-import ast
-import re
-import sys
-import tarfile
-import zipfile
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
+import ast
 from dataclasses import dataclass, field
 from multiprocessing import Pool
 from pathlib import Path
+import re
+import sys
+import tarfile
 from typing import Any, Iterable
+import zipfile
 
 from dh import MAX_WORKERS
+
 
 try:
     import zstandard as zstd

@@ -16,17 +16,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import multiprocessing as mp
-import sys
 from pathlib import Path
+import sys
 from typing import Any, NamedTuple
 
-import tree_sitter_python as tspython
 from dh import atomic_write
 from loguru import logger
 from tree_sitter import Language, Parser
+import tree_sitter_python as tspython
+
 
 logger.remove()
 logger.add(

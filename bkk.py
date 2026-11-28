@@ -10,7 +10,9 @@ Examples:
 
 """
 
+from __future__ import annotations
 from pathlib import Path
+
 
 if __name__ == "__main__":
     cwd = Path.cwd()

@@ -19,17 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import subprocess
-import sys
-import time
 from dataclasses import dataclass, field
 from enum import Enum
 from multiprocessing import Pool
 from pathlib import Path
+import subprocess
+import sys
+import time
 
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 DEFAULT_TIMEOUT: float = 30.0
 MAX_ERROR_MSG_LEN: int = 200

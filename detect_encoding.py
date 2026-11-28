@@ -10,13 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
+from collections import Counter
 import json
+from pathlib import Path
 import sys
 import tokenize
-from collections import Counter
-from pathlib import Path
 
 from dh import atomic_write
+
 
 try:
     import chardet

@@ -2,20 +2,21 @@
 """simz: perceptual hash comparison and grouping for local files."""
 
 from __future__ import annotations
-
 import argparse
+from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor
 import importlib
+from itertools import combinations
 import json
 import os
+from pathlib import Path
 import re
 import sys
 import tempfile
-from collections import Counter, defaultdict
-from concurrent.futures import ThreadPoolExecutor
-from itertools import combinations
-from pathlib import Path
 from typing import Any, Callable, TypeAlias, TypedDict
+
 from dh import SKIP_DIRS
+
 
 Digest: TypeAlias = Callable[[bytes], Any]
 Compare: TypeAlias = Callable[[Any, Any], int]
@@ -123,8 +124,8 @@ def backend(name: str) -> Backend:
 
         return digest_simhash, compare_simhash
 
-    import numpy as np
     from datasketch import MinHash  # type: ignore[import-untyped]
+    import numpy as np
 
     def digest_minhash(data: bytes) -> Any:
         minhash = MinHash(num_perm=128)
@@ -351,7 +352,7 @@ def main() -> int:
             directories[:] = sorted(
                 directory
                 for directory in directories
-                if not GROUP_PATTERN.fullmatch(directory) and not directory in SKIP_DIRS
+                if not GROUP_PATTERN.fullmatch(directory) and directory not in SKIP_DIRS
             )
             for name in sorted(names):
                 path = Path(base) / name

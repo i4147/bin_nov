@@ -10,9 +10,11 @@ Examples:
 
 """
 
+from __future__ import annotations
 from pathlib import Path
 
 from dh import atomic_write
+
 
 if __name__ == "__main__":
     cwd = Path.cwd()

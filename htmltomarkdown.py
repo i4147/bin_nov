@@ -10,13 +10,15 @@ Examples:
 
 """
 
-import re
-import sys
+from __future__ import annotations
 from abc import ABCMeta
 from dataclasses import dataclass, field
 from html import unescape
 from html.parser import HTMLParser
+import re
+import sys
 from typing import Final, Optional, cast
+
 
 SELF_CLOSING_TAGS: Final[list[str]] = [
     "area",

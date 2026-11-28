@@ -11,23 +11,23 @@ Examples:
 """
 
 from __future__ import absolute_import, annotations
-
 import calendar
 import contextlib
 import csv
 import datetime as dt
+from decimal import Decimal
 import json
 import os
-import sys
-from decimal import Decimal
 from pathlib import Path
+import sys
 from typing import Any, Iterable, Optional
 from zoneinfo import ZoneInfo
 
-import fire
 from dateutil.relativedelta import relativedelta
+import fire
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
+
 
 __version__: str = "0.0.0"
 DATE_FIELDS: list[str] = [

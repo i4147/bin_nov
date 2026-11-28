@@ -49,23 +49,25 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from collections import defaultdict
+from dataclasses import dataclass, field
 import io
 import json
 import os
+from pathlib import Path
 import re
 import sqlite3
 import sys
 import tarfile
 import textwrap
-import zipfile
-from collections import defaultdict
-from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Iterable, Iterator
+import zipfile
 
 from dh import SKIP_DIRS, atomic_write
+
 
 try:
     import libcst as cst

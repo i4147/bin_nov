@@ -19,17 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 import mmap
+from pathlib import Path
 import shutil
 import tarfile
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
-from pathlib import Path
 from typing import Any, Sequence
 
 import brotli
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 try:
     from loguru import logger

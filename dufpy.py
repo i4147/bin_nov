@@ -16,21 +16,23 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import json
-import os
-import sys
-import tokenize
 from collections import defaultdict
 from collections.abc import Callable
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
+import json
+import os
 from pathlib import Path
+import sys
+import tokenize
 from typing import Callable, TypeAlias
 
 from dh import MAX_WORKERS, atomic_write, cprint, get_pyfiles
 from xxhash import xxh64_hexdigest
+
 
 DUPLICATES_CACHE_FILENAME: str = ".cache.json"
 

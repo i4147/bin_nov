@@ -5,13 +5,13 @@ Derives a directory name from each archive's stem (splitting on the first unders
 """
 
 from __future__ import annotations
-
+from pathlib import Path
 import shutil
 import tarfile
 import zipfile
-from pathlib import Path
 
 from loguru import logger
+
 
 TAR_MODES: dict[tuple[str, ...], str] = {
     (".tar.gz", ".tgz"): "r:gz",

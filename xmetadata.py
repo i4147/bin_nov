@@ -4,11 +4,13 @@ Extract fenced code snippets from site-package METADATA files.
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from pathlib import Path
+import re
 
 from dh import atomic_write
+
 
 EXTENSION_MAP: dict[str, str] = {
     "python": ".py",

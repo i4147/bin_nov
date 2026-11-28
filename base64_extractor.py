@@ -56,19 +56,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import base64 as _b64
 import concurrent.futures as _cf
+from dataclasses import dataclass
 import hashlib
 import mimetypes
 import os
+from pathlib import Path
 import re
 import sys
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Iterable, Iterator, Optional
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+
 
 MIME2EXT: dict[str, str] = {
     "image/png": ".png",
@@ -669,8 +671,8 @@ def cmd_extract_elements(args: argparse.Namespace) -> int:
 
 def cmd_extract_html(args: argparse.Namespace) -> int:
     try:
-        import requests
         from bs4 import BeautifulSoup
+        import requests
     except ImportError as e:
         print(
             "extract-html requires 'requests' and 'beautifulsoup4'. "
@@ -678,8 +680,8 @@ def cmd_extract_html(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 3
-    import requests
     from bs4 import BeautifulSoup
+    import requests
 
     root = Path(args.root).resolve()
     output = Path(args.out).resolve()

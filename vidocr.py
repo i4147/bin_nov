@@ -4,17 +4,21 @@ Extract burned-in subtitles from a video using OCR.
 
 """
 
+from __future__ import annotations
 import argparse
-import multiprocessing as mp
-import re
 from functools import partial
+import multiprocessing as mp
 from pathlib import Path
-from typing import Optional, Sequence
+import re
+from typing import TYPE_CHECKING, Optional, Sequence
 
 import cv2
-import numpy as np
-import pytesseract
 from dh import MAX_WORKERS
+import pytesseract
+
+
+if TYPE_CHECKING:
+    import numpy as np
 
 
 def parse_hms(value: str) -> float:

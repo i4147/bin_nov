@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
 import textwrap
-from pathlib import Path
+
 
 HOME = Path("~").expanduser()
 AGE_DIR = Path(HOME).joinpath(".config", "age")

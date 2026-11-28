@@ -10,10 +10,12 @@ Examples:
 
 """
 
-import subprocess
-import sys
+from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
+import subprocess
+import sys
+
 
 REPO_PATH = Path.home() / "bin"
 MAIN_BRANCH: str = "main"

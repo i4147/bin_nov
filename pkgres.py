@@ -19,13 +19,15 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from multiprocessing import Pool
 from pathlib import Path
+import re
 from typing import Any
 
 from dh import MAX_WORKERS, SKIPPED_DIRS, atomic_write
+
 
 REPLACEMENTS: list[tuple[re.Pattern[str], str, bool, bool]] = [
     (

@@ -22,13 +22,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
-import json
-import sys
-from collections.abc import Sequence
 from dataclasses import asdict, dataclass
+import json
 from pathlib import Path
+import sys
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 @dataclass(slots=True)

@@ -22,21 +22,23 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections.abc import Sequence
 import contextlib
+from dataclasses import dataclass
 import fnmatch
 import json
-import os
-import sys
-from collections.abc import Sequence
-from dataclasses import dataclass
 from multiprocessing import Pool
+import os
 from pathlib import Path
+import sys
 from typing import Sequence
 
-import zstandard as zstd
 from dh import DEFAULT_XZ_MAX_WORKERS, DEFAULT_ZSTD_MAX_WORKERS, atomic_write
 from loguru import logger
+import zstandard as zstd
+
 
 try:
     import lzma_mt

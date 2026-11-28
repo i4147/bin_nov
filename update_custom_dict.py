@@ -16,17 +16,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import Counter
 import contextlib
 import json
 import multiprocessing as mp
 import os
-import re
-from collections import Counter
 from pathlib import Path
+import re
 from typing import Any, Callable, Iterable, Iterator
 
 from dh import BINARY_EXT, SKIP_DIRS, atomic_write
+
 
 CWD = Path.cwd()
 DICT_PATH = Path.home() / ".personal_dict"

@@ -4,20 +4,22 @@
 Walks the target files (.txt/.md/.py/.js/...), translates their contents via GoogleTranslator into the requested language and writes the result back atomically with a process pool.
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import json
 import multiprocessing as mp
+from pathlib import Path
 import re
 import shutil
 import signal
 import sys
 import time
-from pathlib import Path
 from typing import Any, Iterator, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 try:
     from deep_translator import GoogleTranslator

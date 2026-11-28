@@ -10,11 +10,13 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import cprint, get_files, mpf, unique_path
 from fontTools.ttLib import TTFont
+
 
 cwd = Path.cwd()
 

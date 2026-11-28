@@ -10,12 +10,13 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+import sys
 
-import pymupdf
 from dh import atomic_write
+import pymupdf
 
 
 def split_pdf_by_page(pdf_path: Path, output_dir: Path) -> None:

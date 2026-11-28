@@ -19,21 +19,23 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import curses
+from dataclasses import dataclass, field
 import json
 import multiprocessing as mp
 import os
+from pathlib import Path
 import shutil
 import stat
 import sys
 import time
-from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Iterator
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 __version__: str = "2.0.0"
 PROGNAME: str = "ncdu2.py"

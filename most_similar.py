@@ -19,16 +19,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import hashlib
-import sys
 from dataclasses import dataclass, field
+import hashlib
 from pathlib import Path
+import sys
 from typing import Iterator
 
-import ssdeep
 from dh import SKIP_DIRS
+import ssdeep
+
 
 BOLD_BLUE: str = "\033[1;34m"
 RESET: str = "\033[0m"

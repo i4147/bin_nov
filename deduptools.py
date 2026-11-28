@@ -22,16 +22,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from concurrent.futures import ProcessPoolExecutor
 import copy
+from dataclasses import dataclass
 import hashlib
 import os
+from pathlib import Path
 import re
 import sys
-from concurrent.futures import ProcessPoolExecutor
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Iterator, Sequence
 
 from dh import MAX_WORKERS, atomic_write
@@ -270,8 +271,8 @@ def cmd_ast(args: argparse.Namespace) -> int:
 
 
 def _ts_make_parser():
-    import tree_sitter_python as tsp
     from tree_sitter import Language, Parser
+    import tree_sitter_python as tsp
 
     parser = Parser()
     parser.language = Language(tsp.language())

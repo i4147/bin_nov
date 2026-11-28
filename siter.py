@@ -5,18 +5,17 @@ Rebuild wheel files from packages installed in site-packages.
 """
 
 from __future__ import annotations
-
 import argparse
 import base64
 import csv
 import hashlib
+from multiprocessing import cpu_count
+from pathlib import Path
 import shutil
 import sys
 import tempfile
-import zipfile
-from multiprocessing import cpu_count
-from pathlib import Path
 from typing import Any, Iterable, Sequence
+import zipfile
 
 from dh import MAX_WORKERS
 

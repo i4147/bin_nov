@@ -4,11 +4,12 @@
 Recursively scans the Python files under the target directory (default: cwd) with libcst and rewrites each @dataclass decorator to @dataclass(slots=True), preserving formatting; files are rewritten in place.
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
-import libcst as cst
 from dh import atomic_write, cprint, get_pyfiles, mpf
+import libcst as cst
 from libcst import matchers as m
 
 

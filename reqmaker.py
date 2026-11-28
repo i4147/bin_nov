@@ -16,16 +16,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
+from datetime import date
+from pathlib import Path
 import re
 import subprocess
 import sys
 import time
-from collections import defaultdict
-from datetime import date
-from pathlib import Path
 
 from dh import atomic_write
+
 
 REQ: Path = Path("requirements.txt")
 CACHE_FILE: Path = Path(".installed_packages_cache.txt")

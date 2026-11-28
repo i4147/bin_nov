@@ -7,22 +7,21 @@ The script never edits scanned source files. An optional --output-module writes 
 """
 
 from __future__ import annotations
-
 import argparse
+from collections import Counter, defaultdict
 import concurrent.futures
 import csv
+from dataclasses import asdict, dataclass
 import fnmatch
 import io
 import json
 import os
-import sys
-from collections import Counter, defaultdict
-from dataclasses import asdict, dataclass
 from pathlib import Path
+import sys
 from typing import Any, Iterable, Sequence
 
-import libcst as cst
 from dh import atomic_write
+import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider, ScopeProvider
 from loguru import logger
 

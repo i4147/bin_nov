@@ -16,15 +16,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from collections import defaultdict
 import importlib.metadata
 import importlib.util
-import numbers
-import time
-from collections import defaultdict
 from multiprocessing import Pool
+import numbers
 from pathlib import Path
+import time
 
 from dh import MAX_WORKERS, SKIP_DIRS, STDLIB, atomic_write, get_installed_pkgs
 

@@ -10,12 +10,14 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from collections import deque
 from multiprocessing import get_context
 from pathlib import Path
+import sys
 
 from dh import cprint, get_files
+
 
 c_files: set[str] = {".c", ".h", ".inc"}
 cpp_files: set[str] = {".cpp", ".cc", ".cxx", ".hpp", ".hpp11", ".hh", ".hxx"}

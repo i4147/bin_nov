@@ -20,20 +20,23 @@ Command-line script:
 """
 
 from __future__ import annotations
-
 import argparse
 import json
 import multiprocessing as mp
+from pathlib import Path
 import sys
 import threading
-from collections.abc import Iterable, Iterator
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import gcld3
-import pycld2 as cld2
 from dh import MAX_WORKERS, is_binary
+import gcld3
 from langdetect import DetectorFactory, detect_langs
+import pycld2 as cld2
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
+
 
 DetectorFactory.seed = 0
 _print_lock = threading.Lock()

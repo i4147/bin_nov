@@ -16,21 +16,23 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import json
 import multiprocessing as mp
+from pathlib import Path
 import random
 import re
 import signal
 import sys
 import threading
 import time
-from pathlib import Path
 from typing import Any, Final
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 RETRY_ATTEMPTS: Final[int] = 4
 RETRY_DELAY: Final[float] = 0.6

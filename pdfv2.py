@@ -19,9 +19,11 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
 import os
+from pathlib import Path
 import re
 import select
 import shutil
@@ -30,7 +32,7 @@ import sys
 import tempfile
 import termios
 import tty
-from pathlib import Path
+
 
 RESET: str = "\x1b[0m"
 HOME: str = "\x1b[H"

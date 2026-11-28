@@ -39,20 +39,22 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+from difflib import get_close_matches
 import json
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
 import time
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
-from difflib import get_close_matches
-from pathlib import Path
 from typing import Any, Iterable, Optional, Self, Sequence
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 try:
     from deep_translator import GoogleTranslator

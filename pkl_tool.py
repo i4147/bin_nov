@@ -19,17 +19,22 @@ Examples:
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
 import datetime as dt
+from decimal import Decimal
 import json
+from pathlib import Path
 import pickle
 import sys
-from collections.abc import Sequence
-from decimal import Decimal
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 JSON_NATIVE: tuple[type, ...] = (str, int, float, bool, type(None))
 

@@ -16,11 +16,12 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import importlib.metadata
 import multiprocessing
-import sys
 from pathlib import Path
+import sys
 from typing import Any, Iterable
 
 from pip._internal.commands import main as pip_main

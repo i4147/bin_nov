@@ -2,21 +2,21 @@
 """ripgrep-like search across files, compressed archives, and removed Git files (Python 3.14+)."""
 
 from __future__ import annotations
-
 import argparse
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from dataclasses import dataclass
 import gzip
 import os
+from pathlib import Path
 import re
 import subprocess
 import sys
 import tarfile
-import zipfile
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Optional, Sequence
+import zipfile
 
 from compression import zstd
+
 
 TAR_SUFFIXES: tuple[str, ...] = (
     ".tar.gz",

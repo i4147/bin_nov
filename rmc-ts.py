@@ -4,26 +4,30 @@ Strip comments and docstrings from Python files in place using the tree-sitter p
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from collections import deque
+from concurrent.futures import Future, ProcessPoolExecutor
+from dataclasses import dataclass
 import functools
 import itertools
 import keyword
 import os
+from pathlib import Path
 import re
 import textwrap
-from collections import deque
-from collections.abc import Iterator
-from concurrent.futures import Future, ProcessPoolExecutor
-from dataclasses import dataclass
-from pathlib import Path
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
-import tree_sitter_python as tspy
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from rich.console import Console
 from rich.text import Text
 from tree_sitter import Language, Node, Parser
+import tree_sitter_python as tspy
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 Edit = tuple[int, int, bytes]
 DIRECTIVE = re.compile(

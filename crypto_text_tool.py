@@ -4,19 +4,24 @@ File/text ciphers: AES files, Morse code, and a ZIP password tester. Analysis / 
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from itertools import islice
 import os
+from pathlib import Path
 import secrets
 import string
 import sys
 import time
+from typing import TYPE_CHECKING
 import zipfile
-from collections.abc import Iterator, Sequence
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from itertools import islice
-from pathlib import Path
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 AES_BLOCK_SIZE: int = 16
 KEY_ALPHABET: str = string.ascii_letters + string.digits

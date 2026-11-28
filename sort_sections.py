@@ -9,10 +9,12 @@ Usage:
 
 """
 
+from __future__ import annotations
+from collections import OrderedDict
 import re
 import sys
-from collections import OrderedDict
 from typing import Any, Iterable
+
 
 SECTION_RE = re.compile(r"^\s*\[([^\]]+)\]\s*(.*)$")
 KV_RE = re.compile(r"^(\s*)([^=\s]+)\s*=\s*(.*)$")

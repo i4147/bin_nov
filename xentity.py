@@ -19,19 +19,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from collections import defaultdict
 import multiprocessing as mp
 import os
+from pathlib import Path
 import textwrap
 import time
-from collections import defaultdict
-from pathlib import Path
 from typing import Any, Iterable, Iterator
 
 from dh import SKIP_DIRS, atomic_write
 from rich.console import Console
 from rich.text import Text
+
 
 OUT_DIR: Path = Path("output")
 OUT_DIR.mkdir(exist_ok=True)
@@ -54,8 +56,8 @@ def _is_const_name(name: str) -> bool:
 
 
 def _make_ts_parser() -> object:
-    import tree_sitter_python as tsp
     from tree_sitter import Language, Parser
+    import tree_sitter_python as tsp
 
     parser = Parser()
     parser.language = Language(tsp.language())

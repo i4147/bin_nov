@@ -10,18 +10,20 @@ Examples:
 
 """
 
+from __future__ import annotations
+from multiprocessing import Pool, cpu_count
 import os
+from pathlib import Path
 import re
 import shutil
 import tarfile
-import zipfile
-from multiprocessing import Pool, cpu_count
-from pathlib import Path
 from typing import Any
+import zipfile
 
-import libcst as cst
 from dh import unique_path
+import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
+
 
 OUTPUT_DIR: Path = Path("output")
 ARCHIVE_EXT: tuple[str, ...] = (

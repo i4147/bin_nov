@@ -4,15 +4,20 @@ Clipboard helpers: file -> clipboard, clipboard -> script file. Analysis / dedup
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shlex
 import shutil
 import subprocess
 import sys
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 DEFAULT_GET_CMD: str = "termux-clipboard-get"
 DEFAULT_SET_CMD: str = "termux-clipboard-set"

@@ -16,20 +16,22 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from collections import defaultdict
 import io
 import multiprocessing as mp
 import os
+from pathlib import Path
 import re
 import tarfile
-import zipfile
-from collections import defaultdict
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, NamedTuple
+import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 if TYPE_CHECKING:
     from collections.abc import Callable

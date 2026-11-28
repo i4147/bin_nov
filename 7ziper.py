@@ -4,20 +4,22 @@ Compress or decompress entries in the current directory using 7-Zip modes. The b
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import mmap
 import multiprocessing
+from pathlib import Path
 import shutil
 import sys
 import tarfile
 import tempfile
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
 from typing import Any, Iterator, Optional
 
-import py7zr
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+import py7zr
+
 
 try:
     from loguru import logger as _log

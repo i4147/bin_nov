@@ -4,14 +4,16 @@ Translate a text file between languages.
 
 """
 
+from __future__ import annotations
 import argparse
 import json
+from pathlib import Path
 import sys
 import time
-from pathlib import Path
 
 from dh import atomic_write
 from translate import Translator
+
 
 SAVE_EVERY: int = 50
 SLEEP_BETWEEN: float = 0.5

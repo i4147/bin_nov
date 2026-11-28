@@ -4,18 +4,22 @@ Strip comments from source files recursively (Python, shell, JS, TOML, Rust, Lua
 
 """
 
+from __future__ import annotations
 import argparse
-import io
-import re
-import tokenize
-from collections.abc import Callable
 from dataclasses import dataclass
+import io
 from multiprocessing import Pool
 from pathlib import Path
-from typing import Final
+import re
+import tokenize
+from typing import TYPE_CHECKING, Final
 
 from dh import atomic_write, fsz
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 @dataclass(slots=True)

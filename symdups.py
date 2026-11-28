@@ -4,14 +4,16 @@ Find duplicate files and replace them with symlinks (reversible).
 
 """
 
+from __future__ import annotations
 import argparse
-import json
 from collections import defaultdict
 from datetime import UTC, datetime
+import json
 from pathlib import Path
 from typing import Any
 
 from xxhash import xxh64
+
 
 BACKUP_FILE: str = ".symlink_backup.json"
 MIN_FILE_SIZE: int = 1

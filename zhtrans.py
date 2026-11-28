@@ -4,17 +4,19 @@ Unified Chinese-to-English translation utility.
 
 """
 
+from __future__ import annotations
 import argparse
+from multiprocessing import Pool
+from pathlib import Path
 import re
 import sys
 import time
-from multiprocessing import Pool
-from pathlib import Path
 from typing import Any, Iterable, Optional, Sequence
 
 from deep_translator import GoogleTranslator, single_detection
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 CHINESE_RE = re.compile(
     "[\u4e00-\u9fff"

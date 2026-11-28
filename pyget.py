@@ -19,26 +19,28 @@ Command-line script:
 
 """
 
+from __future__ import annotations
+from abc import ABC, abstractmethod
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import contextmanager, suppress
+from dataclasses import dataclass
 import hashlib
 import os
+from pathlib import Path
 import queue
 import re
 import shutil
 import sys
 import threading
 import time
+from typing import Any, Iterator, Self
 import urllib.error
 import urllib.parse
 import urllib.request
-from abc import ABC, abstractmethod
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from contextlib import contextmanager, suppress
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Iterator, Self
 
 from dh import MAX_WORKERS
+
 
 __version__: str = "2.0.0"
 CHUNK_SMALL: int = 64 * 1024

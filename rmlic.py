@@ -10,10 +10,12 @@ Examples:
 
 """
 
-import re
+from __future__ import annotations
 from pathlib import Path
+import re
 
 from dh import atomic_write, cprint, fsz, get_nobinary, gsz
+
 
 LIC_FILE: Path = Path("/sdcard/lic")
 MIN_BLANK_LINES: int = 3

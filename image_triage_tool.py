@@ -4,11 +4,16 @@ Image triage: brightness, face presence, NSFW sorting, face boxing. Analysis / d
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shutil
 import sys
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 IMAGE_SUFFIXES: frozenset[str] = frozenset(
     {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"}

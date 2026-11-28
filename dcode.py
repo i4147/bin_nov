@@ -19,6 +19,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
 import binascii
@@ -26,13 +27,14 @@ import bz2
 import gzip
 import json
 import lzma
+from pathlib import Path
 import re
 import sys
+from typing import Any, Callable
 import urllib.parse
 import urllib.request
 import zlib
-from pathlib import Path
-from typing import Any, Callable
+
 
 ENGLISH_FREQS: dict[str, float] = {
     "E": 12.02,

@@ -4,13 +4,14 @@
 Tokenizes each file with word_tokenize, keeps tokens present in the NLTK words corpus and aggregates per-file sets with a process pool.
 """
 
-import tempfile
+from __future__ import annotations
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
+import tempfile
 
-import nltk
 from loguru import logger
+import nltk
 
 # Import specific NLTK submodules directly to avoid circular import
 from nltk.corpus import words as nltk_words
@@ -23,6 +24,7 @@ from rich.progress import (
     TimeElapsedColumn,
     TimeRemainingColumn,
 )
+
 
 nltk.download("punkt", quiet=True)
 nltk.download("words", quiet=True)
@@ -52,7 +54,7 @@ def get_text_files(root: Path) -> list[Path]:
 
 
 def main() -> None:
-    root = Path(".")
+    root = Path()
     files = get_text_files(root)
     if not files:
         logger.info("No text files found")

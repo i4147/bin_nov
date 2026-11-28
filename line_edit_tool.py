@@ -53,14 +53,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shutil
 import sys
 import textwrap
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import SKIP_DIRS, atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 DEFAULT_APPEND_TEXT: str = (
     "\n#migrate from logging with print and standard logging module to loguru\n"

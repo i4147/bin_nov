@@ -4,14 +4,16 @@ Shift SRT subtitle timestamps in place.
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+import re
 from re import Match
 from typing import Optional, Sequence
 
 from dh import MAX_WORKERS, atomic_write
+
 
 SHIFT_RE = re.compile(
     r"(\d{2,3}:\d{2}:\d{2},\d{3})\s*-->\s*(\d{2,3}:\d{2}:\d{2},\d{3})"

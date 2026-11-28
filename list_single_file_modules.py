@@ -2,15 +2,15 @@
 """List system-site distributions that install exactly one module: a top-level .py or a single-folder package with only __init__.py."""
 
 from __future__ import annotations
-
-import json
-import sys
-import sysconfig
 from importlib.metadata import Distribution
+import json
 from multiprocessing import Pool
 from pathlib import Path
+import sys
+import sysconfig
 
 from loguru import logger
+
 
 WORKERS = 4
 

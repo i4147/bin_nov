@@ -10,8 +10,9 @@ Examples:
 
 """
 
-import subprocess
+from __future__ import annotations
 from pathlib import Path
+import subprocess
 
 
 def run_git_command(args: list[str]) -> str:

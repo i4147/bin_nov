@@ -4,17 +4,19 @@ Build Python wheels from package sources.
 
 """
 
+from __future__ import annotations
 import argparse
+from multiprocessing import Pool, cpu_count
+from pathlib import Path
 import shutil
 import subprocess
 import sys
 import tarfile
 import tempfile
-from multiprocessing import Pool, cpu_count
-from pathlib import Path
 from typing import Optional
 
 from loguru import logger
+
 
 LOCAL_WHEELS: Path = Path("/sdcard/whl")
 

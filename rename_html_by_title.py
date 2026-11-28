@@ -10,19 +10,21 @@ Examples:
 
 """
 
-import re
-import sys
-import unicodedata
+from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime
 from functools import lru_cache
 from multiprocessing import Pool
 from pathlib import Path
+import re
+import sys
 from typing import Any
+import unicodedata
 
 from dh import WORKERS
 from loguru import logger
+
 
 try:
     TREE_SITTER_AVAILABLE = True

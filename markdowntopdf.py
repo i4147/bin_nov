@@ -20,13 +20,12 @@ Command-line script:
 """
 
 from __future__ import annotations
-
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import json
 import lzma
-import sys
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+import sys
 from time import time
 from typing import Any, Sequence
 
@@ -34,6 +33,7 @@ from dh import MAX_WORKERS
 from loguru import logger
 from markdown import markdown
 from weasyprint import CSS, HTML
+
 
 MARKDOWN_BASE_EXT: list[str] = [
     "markdown.extensions.tables",

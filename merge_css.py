@@ -19,14 +19,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import re
 import subprocess
 import sys
-from pathlib import Path
 from typing import Optional
 
 from dh import atomic_write
+
 
 GOOGLE_FONTS_RE = re.compile(
     r"@import\s+url\([^)]+fonts\.googleapis[^)]+\);?", re.IGNORECASE

@@ -4,12 +4,17 @@ Normalize line endings in text files (CRLF -> LF, or LF -> CRLF). Analysis / ded
 
 """
 
+from __future__ import annotations
 import argparse
-from collections.abc import Sequence
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 DEFAULT_WORKERS: int = 8
 SNIFF_BYTES: int = 8192

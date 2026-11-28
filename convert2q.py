@@ -4,10 +4,12 @@ Convert declarative sentences found in text files into questions written to qmad
 
 """
 
-import re
+from __future__ import annotations
 from pathlib import Path
+import re
 
 from dh import atomic_write
+
 
 EXTENSIONS: set[str] = {".txt", ".md", ".csv", ".json", ".xml", ".html", ".htm", ".log"}
 

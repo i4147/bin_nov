@@ -4,19 +4,21 @@ Remove comments and docstrings from Python files in place using tree-sitter.
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-from collections.abc import Iterator
 from multiprocessing import Pool
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import tree_sitter_python as tsp
 from dh import MAX_WORKERS, atomic_write, gsz, rrs
 from loguru import logger
 from tree_sitter import Language, Node, Parser
+import tree_sitter_python as tsp
+
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     from multiprocessing.pool import AsyncResult
 PY_EXTS: set[str] = {".py"}
 _PARSER: Parser | None = None

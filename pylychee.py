@@ -19,19 +19,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
 import mimetypes
-import re
-import urllib.error
-import urllib.request
 from multiprocessing import Pool
 from pathlib import Path
+import re
 from typing import TYPE_CHECKING, Final
+import urllib.error
 from urllib.parse import unquote, urldefrag
+import urllib.request
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterable

@@ -4,13 +4,18 @@ Organize files into folders by rule, plus related directory checks. Analysis / d
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
+from pathlib import Path
 import re
 import shutil
 import sys
-from collections import defaultdict
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 IMAGE_EXT: frozenset[str] = frozenset(
     {

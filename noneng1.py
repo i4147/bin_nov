@@ -19,15 +19,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import codecs
-import multiprocessing
 from dataclasses import dataclass
+import multiprocessing
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
 from dh import SKIP_DIRS, WORKERS
 from loguru import logger
+
 
 CHUNK_SIZE: int = 64 * 1024
 DETECTION_SIZE: int = 4000

@@ -4,13 +4,18 @@ Check (and optionally fix) a package's __init__.py exports. Analysis / deduplica
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import sys
-from collections.abc import Sequence
 from pathlib import Path
+import sys
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 Categories = dict[
     str, list[str]

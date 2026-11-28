@@ -10,11 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
 import sys
 
 from archive_walker import AdvancedWalker, VirtualFile
 from dh import atomic_write
 from loguru import logger
+
 
 logger.remove()
 logger.add(

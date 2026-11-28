@@ -42,29 +42,34 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
 import codecs
+from collections.abc import Sequence
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import contextlib
+from dataclasses import dataclass
+from datetime import date, datetime, time
+from decimal import Decimal
 import io
 import json
+from multiprocessing import Pool, freeze_support
 import os
+from pathlib import Path
 import re
 import sqlite3
 import sys
 import tempfile
 import traceback
-from collections.abc import Iterator, Sequence
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from dataclasses import dataclass
-from datetime import date, datetime, time
-from decimal import Decimal
-from multiprocessing import Pool, freeze_support
-from pathlib import Path
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 from dh import MAX_WORKERS, SQL_MAX_WORKERS, atomic_write
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 try:
     import py7zr

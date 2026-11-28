@@ -46,18 +46,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import difflib
 import filecmp
 import hashlib
 import os
-import shutil
-import sys
 from pathlib import Path
+import shutil
 from string import Template
+import sys
 from typing import Any, Optional
 
 from dh import atomic_write
+
 
 try:
     from dh import cprint

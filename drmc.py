@@ -19,26 +19,28 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from dataclasses import dataclass
 import difflib
 import io
+from itertools import chain
+from multiprocessing import Pool
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
 import tempfile
 import time
 import tokenize
-import zipfile
-from dataclasses import dataclass
-from itertools import chain
-from multiprocessing import Pool
-from pathlib import Path
 from typing import Callable, Iterable, Iterator
+import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 SKIP_DIR_GLOBS: tuple[str, ...] = ("*.dist-info",)
 ENCODINGS: tuple[str, ...] = ("utf-8", "utf-8-sig", "latin-1")
@@ -414,8 +416,8 @@ def backend_libcst(source: str, opts: Options) -> Stripped:
 
 
 def backend_tree_sitter(source: str, opts: Options) -> Stripped:
-    import tree_sitter_python as tspy
     from tree_sitter import Language, Parser
+    import tree_sitter_python as tspy
 
     lang = Language(tspy.language())
     try:

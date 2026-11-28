@@ -4,12 +4,14 @@
 Typer CLI wrapping pathlib-based recursive renames; supports --dry-run and --recursive, and skips symlinks and common ignore directories.
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 from typing import Annotated, Optional
 
-import typer
 from dh import SKIP_DIRS, unique_path
+import typer
+
 
 app = typer.Typer(
     help="Rename files and directories using pathlib.",

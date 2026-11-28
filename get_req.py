@@ -10,9 +10,10 @@ Examples:
 
 """
 
+from __future__ import annotations
+from importlib.metadata import PackageNotFoundError, distributions, metadata
 import json
 import sys
-from importlib.metadata import PackageNotFoundError, distributions, metadata
 from typing import Any
 
 

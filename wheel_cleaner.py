@@ -4,16 +4,18 @@ Detect and handle empty wheels and metadata-only installed packages.
 
 """
 
+from __future__ import annotations
 import argparse
 import csv
+from pathlib import Path
 import shutil
 import subprocess
 import sys
 import sysconfig
 import textwrap
-import zipfile
-from pathlib import Path
 from typing import Callable, Iterable, Optional, Sequence
+import zipfile
+
 
 DEFAULT_DEST: str = "empty_wheels"
 DEFAULT_DETECTOR: str = "dist-info-only"

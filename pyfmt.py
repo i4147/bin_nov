@@ -22,18 +22,22 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import json
-import shutil
-from collections.abc import Callable, Iterable, Sequence
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from functools import partial
+import json
 from pathlib import Path
-from typing import Any, Optional
+import shutil
+from typing import TYPE_CHECKING, Any, Optional
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable, Sequence
 
 LOG = logger
 HTML_EXTS: set[str] = {".html", ".htm", ".xhtml"}
@@ -153,8 +157,8 @@ class HtmlTagFormatter:
 
     def __init__(self) -> None:
         try:
-            import tree_sitter_html as ts_html
             from tree_sitter import Language, Parser
+            import tree_sitter_html as ts_html
         except ImportError as exc:
             msg = "Required packages not installed. Install with: pip install tree-sitter tree-sitter-html"
             raise RuntimeError(msg) from exc

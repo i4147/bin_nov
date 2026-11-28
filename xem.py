@@ -10,14 +10,16 @@ Examples:
 
 """
 
+from __future__ import annotations
 import base64
 import hashlib
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 from typing import Any, Iterator
 
 from dh import MIME2EXT, atomic_write, get_nobinary
+
 
 OUTPUT_DIR: Path = Path("extracted_base64")
 DATA_URL_RE = re.compile(

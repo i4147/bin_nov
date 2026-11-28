@@ -19,19 +19,23 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import shutil
-import sys
-from collections.abc import Iterator, Sequence
 from contextlib import ExitStack, suppress
 from dataclasses import dataclass
 from itertools import islice
 from multiprocessing import Pool
 from pathlib import Path
+import shutil
+import sys
 from tempfile import NamedTemporaryFile
-from typing import Any, Iterable
+from typing import TYPE_CHECKING, Any, Iterable
 
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 POOL_SIZE: int = 8
 CHUNK_SIZE: int = 10_000

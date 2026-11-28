@@ -4,11 +4,13 @@
 Strips any trailing version suffix from the parent folder name and renames each README to <folder>.<suffix>; reports renamed/unchanged/exists.
 """
 
-import re
+from __future__ import annotations
 from concurrent.futures import InterpreterPoolExecutor
 from pathlib import Path
+import re
 
 from loguru import logger
+
 
 VERSION_SUFFIX: re.Pattern[str] = re.compile(
     r"[-_]v?\d+(?:\.\d+)+(?:[-+][0-9A-Za-z.-]+)?$"

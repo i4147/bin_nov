@@ -4,23 +4,23 @@
 Typer app with repo/history/stage/log/crypt subcommands for scanning and pulling many repositories, rewriting or pruning history, staging deletions and squashes, exporting logs and encrypting paths with age.
 """
 
+from __future__ import annotations
 import concurrent.futures
 import csv
-import fnmatch
-import json
-import os
-import shutil
-import subprocess
-import sys
-import urllib.error
-import urllib.request
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta, timezone
 from enum import StrEnum
+import fnmatch
+import json
+import os
 from pathlib import Path
+import shutil
+import subprocess
+import sys
 from typing import Annotated, Any, Iterator, TextIO
+import urllib.error
+import urllib.request
 
-import typer
 from dh import atomic_write
 from loguru import logger
 from rich.console import Console
@@ -28,6 +28,8 @@ from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.prompt import Confirm
 from rich.table import Table
+import typer
+
 
 console = Console()
 err_console = Console(stderr=True)

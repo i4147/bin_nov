@@ -10,16 +10,18 @@ Examples:
 
 """
 
+from __future__ import annotations
 import contextlib
 import os
+from pathlib import Path
 import shutil
 import tarfile
-from pathlib import Path
 
 import apt
 import apt_pkg
-import unix_ar
 from dh import atomic_write
+import unix_ar
+
 
 BASE_DIR = Path.home() / "debs"
 BASE_DIR.mkdir(parents=True, exist_ok=True)

@@ -8,14 +8,14 @@ Usage:
 """
 
 from __future__ import annotations
-
 import argparse
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 from textwrap import dedent
 
 from dh import atomic_write
+
 
 PROJECT_NAME_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 

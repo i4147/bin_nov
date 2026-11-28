@@ -19,18 +19,23 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from multiprocessing import Pool
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import libcst as cst
 from dh import SKIP_DIRS, atomic_write
+import libcst as cst
 from libcst import RemovalSentinel
 from libcst.metadata import MetadataWrapper, PositionProvider
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
 
 PRESERVED_COMMENT_MARKERS: tuple[str, ...] = ("# fmt", "# type")
 DEFAULT_POOL_SIZE: int = 8

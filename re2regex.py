@@ -16,15 +16,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
-from collections.abc import Sequence
 from multiprocessing.pool import AsyncResult, Pool
 from pathlib import Path
-from typing import Final, TypeAlias
+import re
+from typing import TYPE_CHECKING, Final, TypeAlias
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 POOL_METHODS: Final[tuple[str, ...]] = (
     "map",

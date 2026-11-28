@@ -4,6 +4,7 @@ Compare two files and show their differences in a textual TUI.
 
 """
 
+from __future__ import annotations
 import argparse
 import difflib
 from pathlib import Path

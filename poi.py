@@ -5,11 +5,10 @@ Expands the given paths (directories or .whl files) into a sorted list, runs a s
 """
 
 from __future__ import annotations
-
 import argparse
+from pathlib import Path
 import subprocess
 import sys
-from pathlib import Path
 
 
 def collect_wheels(targets: list[str]) -> list[Path]:

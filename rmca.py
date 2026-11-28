@@ -4,15 +4,17 @@ Strip comments and docstrings from Python files (LibCST, AST and tree-sitter eng
 
 """
 
+from __future__ import annotations
 import argparse
 import ast as ast_module
 import multiprocessing as mp
-import sys
 from pathlib import Path
+import sys
 from typing import Sequence
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 try:
     import libcst as cst

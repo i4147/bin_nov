@@ -4,10 +4,12 @@ Extract sentences ending with Persian or English question marks into q.txt.
 
 """
 
-import re
+from __future__ import annotations
 from pathlib import Path
+import re
 
 from dh import atomic_write
+
 
 # Text-based file extensions to scan
 TEXT_EXT: set[str] = {

@@ -16,15 +16,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import concurrent.futures as cf
 import json
+from pathlib import Path
 import re
 import textwrap
-from pathlib import Path
 
 from dh import MAX_WORKERS, atomic_write
+
 
 OUTPUT_DIR: Path = Path.home() / "isaac" / "may" / "q1" / "prompts"
 MAX_LINE: int = 80

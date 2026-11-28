@@ -4,22 +4,24 @@ Build every Python project under the current directory.
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
+from dataclasses import dataclass
 import functools
 import importlib.util
 import multiprocessing as mp
 import os
+from pathlib import Path
 import signal
 import subprocess
 import sys
 import tempfile
 import time
-from dataclasses import dataclass
-from pathlib import Path
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
+
 
 try:
     import tomllib

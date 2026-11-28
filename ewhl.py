@@ -19,10 +19,11 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shutil
 import zipfile
-from pathlib import Path
 
 
 def is_empty_wheel(wheel_path: Path) -> bool:

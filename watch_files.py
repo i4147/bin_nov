@@ -4,12 +4,17 @@ Watch files/directories for changes (stdlib polling, no deps needed). Analysis /
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shutil
 import sys
 import time
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 ARCHIVE_SUFFIXES: tuple[str, ...] = (
     ".tar.gz",

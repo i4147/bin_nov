@@ -4,17 +4,22 @@ Extract inline CSS/JS from HTML files into external asset files. Analysis / dedu
 
 """
 
+from __future__ import annotations
 import argparse
-import hashlib
-import html.parser
-import secrets
-import sys
-from collections.abc import Sequence
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
+import hashlib
+import html.parser
 from pathlib import Path
+import secrets
+import sys
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 HTML_SUFFIXES: frozenset[str] = frozenset({".html", ".htm", ".xhtml"})
 MAX_FILE_BYTES: int = 50 * 1024 * 1024

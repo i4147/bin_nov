@@ -19,23 +19,27 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import bisect
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from dataclasses import dataclass, field
 import fnmatch
 import json
 import os
+from pathlib import Path
 import re
 import sys
 import time
-from collections.abc import Iterator
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any, TextIO
+from typing import TYPE_CHECKING, Any, TextIO
 from zlib import crc32
 
 from dh import MAX_WORKERS, SKIP_DIRS, is_binary
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 logger.remove()
 log_path = Path.home() / "tmp" / "apps" / "pyrg.log"

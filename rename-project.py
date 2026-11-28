@@ -12,10 +12,11 @@ Replaces the old name (the current directory name) in:
 Matching is case-insensitive and preserves UPPER / lower / Title casing.
 """
 
+from __future__ import annotations
 import os
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 from typing import Callable, Iterator
 
 from dh import SKIP_DIRS, atomic_write

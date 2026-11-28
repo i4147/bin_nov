@@ -39,17 +39,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from concurrent.futures import ProcessPoolExecutor
 import io
+from pathlib import Path
 import re
 import sys
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
 from typing import Any, Optional, Sequence
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 try:
     import libcst as cst
@@ -559,15 +561,19 @@ def _scan_file_for_findings(path_str: str) -> tuple[str, list[tuple[int, str, bo
     try:
         tree = ast.parse(src)
         for node in ast.walk(tree):
-            if isinstance(
-                node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+            if (
+                isinstance(
+                    node,
+                    (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef),
+                )
+                and node.body
+                and _is_docstring_node(node.body[0])
             ):
-                if node.body and _is_docstring_node(node.body[0]):
-                    ds = node.body[0]
-                    if hasattr(ds, "lineno"):
-                        last = getattr(ds, "end_lineno", ds.lineno) or ds.lineno
-                        for ln in range(ds.lineno, last + 1):
-                            doc_lines.add(ln - 1)
+                ds = node.body[0]
+                if hasattr(ds, "lineno"):
+                    last = getattr(ds, "end_lineno", ds.lineno) or ds.lineno
+                    for ln in range(ds.lineno, last + 1):
+                        doc_lines.add(ln - 1)
     except SyntaxError:
         pass
     lines = src.splitlines()

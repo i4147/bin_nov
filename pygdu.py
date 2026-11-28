@@ -10,16 +10,18 @@ Examples:
 
 """
 
-import sys
-import termios
-import tty
+from __future__ import annotations
 from dataclasses import dataclass, field
 from multiprocessing import Pool
 from pathlib import Path
+import sys
+import termios
+import tty
 from typing import Final
 
 from dh import fsz
 from loguru import logger
+
 
 POOL_SIZE: Final[int] = 8
 BAR_WIDTH: Final[int] = 10

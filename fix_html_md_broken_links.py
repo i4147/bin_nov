@@ -10,11 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
 import os
-import re
 from pathlib import Path
+import re
 
 from dh import atomic_write
+
 
 static_dir: str = "/sdcard/_static"
 

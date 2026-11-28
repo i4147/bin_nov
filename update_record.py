@@ -1,15 +1,15 @@
 #!/data/data/com.termux/files/usr/bin/env python
 from __future__ import annotations
-
 import argparse
-import hashlib
-import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
+import hashlib
 from pathlib import Path
+import sys
 from typing import Protocol
 
 from loguru import logger
+
 
 SITE_PACKAGES = Path("/data/data/com.termux/files/usr/lib/python3.14/site-packages")
 RECORD_NAME = "RECORD"

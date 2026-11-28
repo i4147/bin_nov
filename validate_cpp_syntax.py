@@ -11,13 +11,13 @@ Examples:
 """
 
 from __future__ import annotations
-
 import multiprocessing as mp
+from pathlib import Path
 import subprocess
 import sys
-from pathlib import Path
 
 from dh import MAX_WORKERS
+
 
 CPP_EXTS: set[str] = {".cpp", ".cc", ".cxx"}
 C_EXTS: set[str] = {".c"}

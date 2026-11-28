@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import multiprocessing as mp
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 
 from dh import get_nobinary
+
 
 HTML_ENTITIES: dict[str, str] = {
     "&lt;": "<",

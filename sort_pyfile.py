@@ -10,9 +10,10 @@ Examples:
 
 """
 
+from __future__ import annotations
 import ast
-import sys
 from pathlib import Path
+import sys
 
 
 def sort_python_script(path: Path) -> None:

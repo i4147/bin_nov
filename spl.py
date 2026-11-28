@@ -4,19 +4,21 @@ Unified text splitting and merging toolkit.
 
 """
 
+from __future__ import annotations
 import argparse
 import concurrent.futures
+from dataclasses import dataclass
+from pathlib import Path
 import re
 import string
 import sys
-import uuid
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Optional, Sequence
+import uuid
 
 from dh import MAX_WORKERS, atomic_write, is_binary, read_text
 from loguru import logger
 from nltk.tokenize import sent_tokenize
+
 
 PART_RE = re.compile(r"^(?P<prefix>.+)\.part(?P<num>\d+)$")
 SENTENCE_RE = re.compile(r"[.!?]\s+")

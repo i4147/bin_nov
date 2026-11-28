@@ -4,14 +4,19 @@ License-file utilities: find, collect, truncate, strip license text. Analysis / 
 
 """
 
+from __future__ import annotations
 import argparse
-import re
-import sys
-from collections.abc import Sequence
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+import re
+import sys
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 LICENSE_EXTS: frozenset[str] = frozenset({".md", ".txt", ".rst", ""})
 MIN_BLANK_LINES: int = 3

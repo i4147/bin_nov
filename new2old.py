@@ -10,12 +10,14 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
+import sys
 from typing import Any, Callable
 
 from dh import atomic_write
+
 
 if sys.version_info < (3, 11):
     import tomli as tomllib

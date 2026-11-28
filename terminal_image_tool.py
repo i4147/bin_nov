@@ -4,11 +4,16 @@ Display images in the terminal as ANSI blocks or ASCII art. Analysis / deduplica
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shutil
 import sys
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 IMAGE_SUFFIXES: frozenset[str] = frozenset(
     {
@@ -58,8 +63,6 @@ def load_image(path: Path, dpi: int, bg_color: str | None) -> object:
     if bg_color:
         from PIL import (
             Image as pil_image,
-        )
-        from PIL import (
             ImageColor,
         )
 

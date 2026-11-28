@@ -10,13 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
 import ctypes
+from pathlib import Path
 import subprocess
 import sys
-from pathlib import Path
 
 from dh import cprint, get_files
 from loguru import logger
+
 
 logger.remove()
 logger.add("/data/data/com.termux/files/home/tmp/apps/soverify.log")

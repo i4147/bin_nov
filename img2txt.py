@@ -10,15 +10,19 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from collections import deque
-from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+import sys
+from typing import TYPE_CHECKING, Any
 
 from dh import atomic_write
 from PIL import Image
 from pytesseract import image_to_string
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 def mpf(process_function: Callable, files: list[Path], **kwargs: Any):

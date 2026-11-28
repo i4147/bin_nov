@@ -10,13 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
+from html.parser import HTMLParser
 import multiprocessing as mp
 import os
-import sys
-from html.parser import HTMLParser
 from pathlib import Path
+import sys
 from tempfile import NamedTemporaryFile
 from typing import Any
+
 
 SKIP_CONTENT_TAGS: set[str] = {"script", "style", "noscript", "template", "head"}
 BLOCK_TAGS: set[str] = {

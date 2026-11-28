@@ -19,17 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import math
 import os
+from pathlib import Path
 import select
 import shutil
 import sys
 import termios
 import tty
-from pathlib import Path
 
 import pymupdf
+
 
 RESET: str = "\x1b[0m"
 HOME: str = "\x1b[H"

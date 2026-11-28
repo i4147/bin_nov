@@ -4,12 +4,14 @@
 Accepts file paths, recursive globs and -f LISTFILE lists; resolves matches, assigns unique names on collisions and moves each file into the target directory.
 """
 
+from __future__ import annotations
 import glob
+from pathlib import Path
 import shutil
 import sys
-from pathlib import Path
 
 from dh import unique_path
+
 
 h = Path.home() / "repos" / "text_utils"
 

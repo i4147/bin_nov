@@ -4,12 +4,14 @@
 Renders the picked quote rainbow-wrapped in the terminal with the author line; silently does nothing when the file is missing, invalid or empty.
 """
 
+from __future__ import annotations
 import json
-import random
 from pathlib import Path
+import random
 from shutil import get_terminal_size
 
 from dh import cprint, rainbow
+
 
 FILE_NAME: str = "/sdcard/data/quotes/quotes.json"
 

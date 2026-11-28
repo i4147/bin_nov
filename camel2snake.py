@@ -19,6 +19,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import base64
 import difflib
@@ -26,17 +27,18 @@ import hashlib
 import io
 import json
 import mmap
+from multiprocessing import Pool
 import os
+from pathlib import Path
 import re
 import sys
 import tokenize
-from multiprocessing import Pool
-from pathlib import Path
 from typing import Iterator, NamedTuple
 
-import libcst as cst
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+import libcst as cst
 from loguru import logger
+
 
 CAMEL_RE = re.compile(
     r"^(?P<pre>_*)(?P<body>[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)+)(?P<post>_*)$"

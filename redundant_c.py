@@ -1,8 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/env python
+from __future__ import annotations
 import argparse
-import sys
 from collections import defaultdict
 from pathlib import Path
+import sys
 
 
 def find_site_packages() -> Path:

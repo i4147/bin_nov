@@ -10,11 +10,12 @@ Examples:
 
 """
 
+from __future__ import annotations
+from datetime import date
 import os
+from pathlib import Path
 import re
 import sys
-from datetime import date
-from pathlib import Path
 from typing import Final
 
 import click

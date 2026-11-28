@@ -10,10 +10,11 @@ Examples:
 
 """
 
+from __future__ import annotations
 import operator
+from pathlib import Path
 import shutil
 import sys
-from pathlib import Path
 
 from dh import fsz, should_skip, unique_path
 

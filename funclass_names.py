@@ -10,15 +10,16 @@ Examples:
 
 """
 
+from __future__ import annotations
 import ast
+from collections import defaultdict
 import json
 import multiprocessing as mp
+from pathlib import Path
 import sys
 import tarfile
-import zipfile
-from collections import defaultdict
-from pathlib import Path
 from typing import Iterator
+import zipfile
 
 from dh import SKIP_DIRS, WorkerResult, atomic_write
 from rich.console import Console
@@ -30,6 +31,7 @@ from rich.progress import (
     TimeElapsedColumn,
     TimeRemainingColumn,
 )
+
 
 SKIP_NAMES: set[str] = {
     "main",

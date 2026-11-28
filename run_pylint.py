@@ -10,10 +10,12 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import get_pyfiles, runcmd
+
 
 CHUNK_SIZE: int = 1024 * 1024
 

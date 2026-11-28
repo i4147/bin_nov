@@ -5,12 +5,11 @@ Download a package from PyPI.
 """
 
 from __future__ import annotations
-
 import argparse
-import hashlib
-import sys
 from dataclasses import dataclass
+import hashlib
 from pathlib import Path
+import sys
 from typing import Any, Iterable
 from urllib.parse import unquote, urljoin, urlparse
 
@@ -41,6 +40,7 @@ from rich.progress import (
     TimeRemainingColumn,
     TransferSpeedColumn,
 )
+
 
 PYPI: str = "https://pypi.org/simple/"
 ACCEPT: str = "application/vnd.pypi.simple.v1+json"

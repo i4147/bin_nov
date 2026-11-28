@@ -16,15 +16,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
 import json
 import operator
-from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable, TextIO
 
-import ssdeep
 from dh import get_files
+import ssdeep
 
 
 def X(h: str, M: int = 1):

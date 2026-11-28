@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import compileall
 import os
-import sys
 from pathlib import Path
+import sys
 
 from dh import get_pyfiles, mpf
+
 
 REMOVE_ORIG: bool = False
 LEGACY_MODE: bool = False

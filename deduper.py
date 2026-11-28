@@ -5,28 +5,31 @@ Parses modules with libcst (including .zip/.tar archives), hashes top-level func
 """
 
 from __future__ import annotations
-
 import argparse
 import bz2
+from collections import defaultdict
+from dataclasses import dataclass
 import gzip
 import hashlib
 import json
 import lzma
 import multiprocessing as mp
+from pathlib import Path
 import sys
 import tarfile
 import tempfile
+from typing import TYPE_CHECKING, Literal
 import zipfile
-from collections import defaultdict
-from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Literal
 
-import libcst as cst
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+import libcst as cst
 from libcst import matchers as m
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
+
 
 ObjectKind = Literal["function", "class", "constant"]
 

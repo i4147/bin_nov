@@ -11,19 +11,19 @@ Two engines are bundled:
 """
 
 from __future__ import annotations
-
 import argparse
 import ast
+from collections.abc import Callable, Iterable, Iterator, Sequence
 import difflib
 import json
 import os
+from pathlib import Path
 import re
 import sys
-from collections.abc import Callable, Iterable, Iterator, Sequence
-from pathlib import Path
 from typing import Any, Iterable, NamedTuple, Sequence, TypedDict
 
 from dh import SKIP_DIRS, atomic_write
+
 
 try:
     import tomlkit

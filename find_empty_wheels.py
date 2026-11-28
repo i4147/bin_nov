@@ -10,8 +10,9 @@ Examples:
 
 """
 
-import zipfile
+from __future__ import annotations
 from pathlib import Path
+import zipfile
 
 
 def is_empty_wheel(whl_path: Path) -> bool | None:

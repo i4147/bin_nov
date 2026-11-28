@@ -42,14 +42,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import multiprocessing
+from pathlib import Path
 import subprocess
 import sys
-from pathlib import Path
 from typing import Any, Callable, Sequence
 
 from dh import MAX_WORKERS
+
 
 try:
     from fontTools.pens.ttGlyphPen import TTGlyphPen

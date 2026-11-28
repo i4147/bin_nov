@@ -4,15 +4,17 @@ Universal command wrapper with logging, colors, and clipboard support.
 
 """
 
+from __future__ import annotations
 import argparse
 import datetime as dt
 import glob
 import os
+from pathlib import Path
 import shlex
 import subprocess
 import sys
 import time
-from pathlib import Path
+
 
 LOG_DIR = Path.home() / "tmp" / "log" / "apps"
 CLIPBOARD_MAX_BYTES: int = 1 * 1024 * 1024

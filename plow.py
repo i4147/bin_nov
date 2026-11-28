@@ -4,18 +4,19 @@ Render Markdown or text (file, URL, stdin) in the terminal with rich and a pager
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 from typing import Annotated
 from urllib.request import urlopen
 
-import typer
 from loguru import logger
 from pygments.styles import get_all_styles
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.pager import SystemPager
 from rich.syntax import Syntax
+import typer
 
 
 def _read_source(source: str) -> str:

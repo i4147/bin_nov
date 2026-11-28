@@ -4,22 +4,24 @@ Unified command-line tool for cleaning requirements.txt files and inspecting ins
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import csv
 import importlib.metadata
+from pathlib import Path
 import re
 import shutil
 import site
 import sys
 import tarfile
 import tempfile
-import zipfile
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
 from typing import Any, Sequence
+import zipfile
 
 from dh import atomic_write
 from loguru import logger
+
 
 try:
     STDLIB = set(sys.stdlib_module_names)

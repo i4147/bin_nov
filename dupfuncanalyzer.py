@@ -19,6 +19,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 from collections import defaultdict
@@ -27,6 +28,7 @@ from pathlib import Path
 from typing import Any
 
 from dh import atomic_write
+
 
 POOL_SIZE: int = 8
 DEFAULT_OUTPUT_NAME: str = "repeated_functions.py"

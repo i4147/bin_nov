@@ -4,9 +4,10 @@
 Walks the tree, creates one folder per lowercased extension (no_extension when absent) and moves each file into it; hidden files and .git are skipped.
 """
 
+from __future__ import annotations
 import contextlib
-import shutil
 from pathlib import Path
+import shutil
 from typing import Any
 
 from dh import fsz

@@ -16,6 +16,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import multiprocessing as mp

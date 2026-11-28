@@ -19,21 +19,23 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import csv
 import importlib
 import io
 import json
 import mmap
+from multiprocessing import Pool
+from pathlib import Path
 import re
 import sqlite3
 import sys
-from multiprocessing import Pool
-from pathlib import Path
 from typing import Any, Callable, Iterator, Optional
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 Tables = dict[str, list[dict[str, Any]]]
 MMAP_THRESHOLD: int = 5 * 1024 * 1024

@@ -4,6 +4,7 @@
 Selects the largest embedded size where available, writes a .jpg next to each input and optionally removes the original.
 """
 
+from __future__ import annotations
 import argparse
 from pathlib import Path
 

@@ -19,10 +19,11 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from io import StringIO
 from pathlib import Path
+import re
 
 from dh import atomic_write
 

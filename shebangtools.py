@@ -4,16 +4,18 @@ Unified shebang inspection and editing tool for source files.
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import contextlib
 import os
+from pathlib import Path
 import re
 import sys
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
 from typing import Any, Iterator, Optional, Sequence
 
 from dh import MAX_WORKERS, atomic_write
+
 
 TERMUX_PREFIX: str = "/data/data/com.termux/files/usr"
 DEFAULT_SHEBANG_FIX: str = "#!/data/data/com.termux/usr"

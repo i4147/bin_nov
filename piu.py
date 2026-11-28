@@ -10,8 +10,9 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from importlib.metadata import distributions
+import sys
 
 from pip._internal.cli.main import main as pip_main
 

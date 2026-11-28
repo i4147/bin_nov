@@ -5,14 +5,14 @@ Parses a size like 512KB/10MB/1GB and writes sequential .partNNN files next to t
 """
 
 from __future__ import annotations
-
 import argparse
-import re
-import sys
 from dataclasses import dataclass
 from pathlib import Path
+import re
+import sys
 
 from dh import atomic_write, is_binary
+
 
 _SIZE_RE = re.compile(r"^(\d+(?:\.\d+)?)\s*([kKmMgG]?[bB]?)$")
 

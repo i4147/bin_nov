@@ -22,13 +22,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shutil
 import sys
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 DEFAULT_COMMENT: str = "#"
 COMMENT_TOKENS: dict[str, tuple[str, str]] = {

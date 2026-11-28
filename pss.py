@@ -2,14 +2,14 @@
 """Search PyPI package names using a compact SQLite FTS5 index or pip.json."""
 
 from __future__ import annotations
-
 import argparse
 import heapq
 import json
+from pathlib import Path
 import sqlite3
 import sys
-from pathlib import Path
 from typing import TypeAlias
+
 
 DB_PATH: Path = Path("/sdcard/data/pip.db")
 JSON_PATH: Path = Path("/sdcard/data/pip.json")
@@ -34,10 +34,12 @@ def load_json_records(json_path: Path) -> list[PackageRecord]:
         with json_path.open("r", encoding="utf-8") as file:
             data: object = json.load(file)
     except (OSError, json.JSONDecodeError) as exc:
-        raise SystemExit(f"Failed to read JSON file {json_path}: {exc}") from exc
+        msg = f"Failed to read JSON file {json_path}: {exc}"
+        raise SystemExit(msg) from exc
 
     if not isinstance(data, list):
-        raise SystemExit(f"Invalid JSON in {json_path}: expected a top-level list.")
+        msg = f"Invalid JSON in {json_path}: expected a top-level list."
+        raise SystemExit(msg)
 
     records: list[PackageRecord] = []
     for item in data:
@@ -45,7 +47,8 @@ def load_json_records(json_path: Path) -> list[PackageRecord]:
             records.append((str(item[0]), to_int(item[1]), to_int(item[2])))
 
     if not records:
-        raise SystemExit(f"No valid package records found in {json_path}.")
+        msg = f"No valid package records found in {json_path}."
+        raise SystemExit(msg)
 
     return records
 
@@ -185,7 +188,8 @@ def resolve_json_path(user_path: str | None, db_path: Path) -> Path:
     if user_path:
         path: Path = Path(user_path).expanduser()
         if not path.is_file():
-            raise SystemExit(f"JSON file not found: {path}")
+            msg = f"JSON file not found: {path}"
+            raise SystemExit(msg)
         return path
 
     candidates: tuple[Path, ...] = (
@@ -197,9 +201,8 @@ def resolve_json_path(user_path: str | None, db_path: Path) -> Path:
         if path.is_file():
             return path
 
-    raise SystemExit(
-        "Could not find pip.json. Put it at /sdcard/data/pip.json or provide its location with --json."
-    )
+    msg = "Could not find pip.json. Put it at /sdcard/data/pip.json or provide its location with --json."
+    raise SystemExit(msg)
 
 
 def main() -> int:
@@ -277,9 +280,8 @@ def main() -> int:
         )
     else:
         if not db_path.is_file():
-            raise SystemExit(
-                f"Index not found: {db_path}. Run with -u to create it, or use --json-only to search pip.json directly."
-            )
+            msg = f"Index not found: {db_path}. Run with -u to create it, or use --json-only to search pip.json directly."
+            raise SystemExit(msg)
         results = search_database(
             db_path,
             keyword,

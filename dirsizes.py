@@ -16,17 +16,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import heapq
 import os
+from pathlib import Path
 import sys
 import time
-from pathlib import Path
 from typing import Generator
 
 from dh import fsz
 from rich.console import Console
 from rich.status import Status
+
 
 console = Console()
 

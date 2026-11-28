@@ -4,9 +4,10 @@
 Reads a JSON dict (or a list of {orig, translated} objects), removes every entry whose candidates are empty or equal to the original text, and writes the cleaned data back in place.
 """
 
+from __future__ import annotations
 import json
-import sys
 from pathlib import Path
+import sys
 from typing import Any, TypedDict
 
 

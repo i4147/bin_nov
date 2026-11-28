@@ -10,11 +10,13 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import fsz
 from fastwalk import walk_files
+
 
 DARWIN_PATTERNS: set[str] = {
     ".DS_Store",

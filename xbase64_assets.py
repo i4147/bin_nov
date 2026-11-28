@@ -10,22 +10,24 @@ Examples:
 
 """
 
+from __future__ import annotations
 import base64
-import hashlib
-import mimetypes
-import re
-import shutil
-import sys
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime
 from functools import lru_cache
+import hashlib
+import mimetypes
 from multiprocessing import Pool
 from pathlib import Path
+import re
+import shutil
+import sys
 from typing import Any
 
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 SUPPORTED_EXT: set[str] = {".html", ".css", ".js", ".jsx", ".tsx", ".ts"}
 ASSETS_DIR: Path = Path("assets")

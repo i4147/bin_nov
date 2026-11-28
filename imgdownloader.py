@@ -20,16 +20,16 @@ Command-line script:
 """
 
 from __future__ import annotations
-
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import io
 import os
+from pathlib import Path
 import re
 import sys
-import urllib.parse
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
 from typing import Any, Iterable, Sequence
+import urllib.parse
+
 
 try:
     import requests

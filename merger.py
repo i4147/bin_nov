@@ -5,12 +5,12 @@ Concatenates the given files with boundary markers into one output; --unmerge sp
 """
 
 from __future__ import annotations
-
 import argparse
-import subprocess
 from pathlib import Path
+import subprocess
 
 from dh import atomic_write, get_nobinary, get_random_filename, should_skip
+
 
 MAX_CLIPBOARD_BYTES: int = 1024 * 1024
 

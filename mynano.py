@@ -10,10 +10,11 @@ Examples:
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import readline
 import rlcompleter
 import sys
-from pathlib import Path
 
 from dh import atomic_write
 from textual.app import App, ComposeResult

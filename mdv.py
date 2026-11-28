@@ -16,18 +16,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import sys
 from pathlib import Path
+import sys
 
 from rich.console import Console
 from rich.markdown import Markdown
 
+
 try:
     from readchar import (
         key as RKEY,
-    )
-    from readchar import (
         readkey,
     )
 

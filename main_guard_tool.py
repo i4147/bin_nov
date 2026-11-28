@@ -19,15 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import re
-from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
+import re
+from typing import TYPE_CHECKING, Literal
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 SKIP_DIRS: tuple[str, ...] = (
     ".git",

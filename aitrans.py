@@ -13,12 +13,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import argparse
 import glob
 import os
-import sys
 from pathlib import Path
+import sys
 from typing import Any
+
 
 try:
     from openai import OpenAI

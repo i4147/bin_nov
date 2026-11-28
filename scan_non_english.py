@@ -7,14 +7,14 @@ Recursively scan files under the current directory for non-English text (Persian
 """
 
 from __future__ import annotations
-
 import json
-import sys
 from pathlib import Path
+import sys
 from typing import Any, Iterable
 
 from binaryornot.helpers import is_binary_string
 from fswalk import Entry, WalkOptions, walk
+
 
 # ---------------------------------------------------------------------------
 # Unicode ranges for the target scripts

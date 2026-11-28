@@ -16,16 +16,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import sys
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+import sys
+from typing import TYPE_CHECKING, Any, Iterable, Sequence
 from urllib.parse import urljoin, urlparse
 
-import requests
 from bs4 import BeautifulSoup
 from dh import atomic_write
-from requests.sessions import Session
+import requests
+
+
+if TYPE_CHECKING:
+    from requests.sessions import Session
 
 
 def create_session() -> Session:

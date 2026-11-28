@@ -10,15 +10,19 @@ Examples:
 
 """
 
-import re
+from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from io import StringIO
-from pathlib import Path
-from typing import Any
+import re
+from typing import TYPE_CHECKING, Any
 
 from dh import atomic_write
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logger.enable("__main__")
 

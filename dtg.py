@@ -19,19 +19,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from io import BytesIO
 import json
+from pathlib import Path
 import re
 import sys
 import time
 import tokenize
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from io import BytesIO
-from pathlib import Path
 from typing import Any, Callable
 
 from dh import atomic_write
+
 
 STRING_RE = re.compile(r'^([rufbRUFB]*)([\'"]{3}|[\'"]{1})(.*)\2$', flags=re.DOTALL)
 COMMENT_RE = re.compile(r"^(#+)(\s*)(.*)$", flags=re.DOTALL)

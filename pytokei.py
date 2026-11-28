@@ -19,12 +19,14 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from pathlib import Path
+import re
 from typing import Any, Sequence
 
 from dh import SKIP_DIRS
+
 
 LANGUAGE_EXT: dict[str, list[str]] = {
     "python": [".py", ".pyi"],

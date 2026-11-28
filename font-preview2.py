@@ -4,10 +4,12 @@
 Scans for .ttf/.otf/.woff/.woff2 files, writes a self-contained HTML page with one card per font (relative URLs, inline CSS/JS filter) and reports the count.
 """
 
+from __future__ import annotations
 from html import escape
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
+
 
 OUTPUT: Path = Path("font_preview.html")
 FONT_FORMATS: dict[str, tuple[Any, ...]] = {
@@ -36,7 +38,7 @@ def main() -> None:
 
     for index, path in enumerate(fonts):
         family = f"PreviewFont{index}"
-        mime_type, css_format = FONT_FORMATS[path.suffix.lower()]
+        _mime_type, css_format = FONT_FORMATS[path.suffix.lower()]
         relative_path = path.relative_to(root).as_posix()
         font_url = quote(relative_path, safe="/")
 

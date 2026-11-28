@@ -1,23 +1,27 @@
 #!/data/data/com.termux/files/usr/bin/env python
 """Extract CSS hex colors (#RGB, #RGBA, #RRGGBB, #RRGGBBAA) from text files."""
 
+from __future__ import annotations
 import argparse
 import contextlib
 import csv
+from dataclasses import dataclass, field
 import fnmatch
 import html
 import json
+from multiprocessing import get_context
 import os
+from pathlib import Path
 import re
 import sys
-from collections.abc import Iterator
-from dataclasses import dataclass, field
-from multiprocessing import get_context
-from pathlib import Path
-from typing import Final, TextIO
+from typing import TYPE_CHECKING, Final, TextIO
 
 from dh import MAX_WORKERS
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 __version__: Final[str] = "2.1.0"
 READ_SIZE: Final[int] = 1 << 20
@@ -353,8 +357,9 @@ def _emit_stream(
 
     if opts.colors_only:
         for _path, items in records:
-            for color, _count in items:
-                out.write(f"{_display(color, opts)}{line_end}")
+            out.writelines(
+                f"{_display(color, opts)}{line_end}" for color, _count in items
+            )
         return
 
     if opts.fmt == "text":
@@ -429,8 +434,9 @@ def _emit_unique(
     line_end = _line_end(opts)
 
     if opts.colors_only:
-        for color, _count, _files in records:
-            out.write(f"{_display(color, opts)}{line_end}")
+        out.writelines(
+            f"{_display(color, opts)}{line_end}" for color, _count, _files in records
+        )
         return
 
     if opts.fmt == "text":

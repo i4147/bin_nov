@@ -16,15 +16,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import json
+from pathlib import Path
 import re
 import sys
 import time
-from pathlib import Path
 from typing import Iterator
 
 from dh import STDLIB
+
 
 PIP_JSON: Path = Path("/sdcard/data/pip.json")
 DEFAULT_REPORT: Path = Path("conflict_report.json")

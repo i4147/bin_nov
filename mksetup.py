@@ -4,18 +4,20 @@
 Reads METADATA (RFC 822 headers) and the license/readme files from *.dist-info in the current folder and emits a setup.py with the extracted fields.
 """
 
+from __future__ import annotations
 import configparser
+from email.parser import HeaderParser
 import glob
 import os
 import pprint
-from email.parser import HeaderParser
 
 
 def generate_setup(base_dir="."):
     # 1. Locate the .dist-info directory
     dist_info_dirs = glob.glob(os.path.join(base_dir, "*.dist-info"))
     if not dist_info_dirs:
-        raise FileNotFoundError("No .dist-info directory found in the current folder.")
+        msg = "No .dist-info directory found in the current folder."
+        raise FileNotFoundError(msg)
     dist_info = dist_info_dirs[0]
 
     # 2. Parse the METADATA file (uses RFC 822 email header format)

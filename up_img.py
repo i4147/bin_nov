@@ -4,22 +4,24 @@ Upload image from clipboard and return Markdown link.
 
 """
 
+from __future__ import annotations
 import argparse
-import pickle
-import platform
-import subprocess
-import sys
 from collections import namedtuple
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
+import pickle
+import platform
+import subprocess
+import sys
 from traceback import print_exc
 from typing import Any, Iterator
 from urllib.parse import urljoin
 
-import upyun
 from PIL import Image, ImageGrab
 from pyperclip import copy as copy2clipboard
+import upyun
+
 
 SYSTEM = platform.system()
 CONFIG_PATH = Path(Path("~").expanduser()).joinpath(".upimg_config.pkl")

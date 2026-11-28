@@ -10,14 +10,19 @@ Examples -------- python3 python_normalize_tool.py brackets src/ python3 python_
 
 """
 
+from __future__ import annotations
 import argparse
-import re
-import tokenize
-from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+import re
+import tokenize
+from typing import TYPE_CHECKING
 
 from dh import SKIP_DIRS, atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 SEPARATOR_RE: re.Pattern[str] = re.compile(
     r"""(cprint|print)\s*\(\s*['"](.)['"](\s*\*\s*)(\d+)([^)]*)\)"""

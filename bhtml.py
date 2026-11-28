@@ -19,18 +19,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import contextlib
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from pathlib import Path
 from typing import Iterable, Iterator
 
 from dh import MAX_WORKERS, SKIP_DIRS
 from loguru import logger
+
 
 BEAUTIFIER: tuple[str, ...] = ("html-beautify", "--quiet")
 DEFAULT_SUFFIXES: tuple[str, ...] = (".html", ".htm", ".xhtml")

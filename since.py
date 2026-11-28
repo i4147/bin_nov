@@ -10,6 +10,7 @@ Examples:
 
 """
 
+from __future__ import annotations
 import datetime as dt
 import sys
 from typing import Any

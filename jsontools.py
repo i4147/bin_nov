@@ -53,19 +53,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
 import json
 import multiprocessing
 import os
+from pathlib import Path
 import random
 import re
 import sys
 import tempfile
-from pathlib import Path
 from typing import Any, Iterator, Optional, Sequence
 
 from dh import MAX_WORKERS, atomic_write
+
 
 _CUSTOM_RULE_RE = re.compile(r"^(?:(\d+?)>)?(\d+)=")
 

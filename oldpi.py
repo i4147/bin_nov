@@ -4,14 +4,16 @@
 Walks a file or directory tree, tokenizes each source with tokenize and rewrites print statements to print() calls; a flag enables automatic in-place fixing.
 """
 
+from __future__ import annotations
 import mmap
 import os
+from pathlib import Path
 import re
 import tokenize
-from pathlib import Path
 from typing import Iterator
 
 from dh import SKIP_DIRS, atomic_write
+
 
 SIZE_THRESHOLD: int = 1 << 20
 _SKIP_IN_LOOKAHEAD: frozenset[int] = frozenset(

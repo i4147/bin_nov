@@ -19,15 +19,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import operator
-import sys
 from collections import defaultdict
+import operator
 from pathlib import Path
+import sys
 from typing import Any
 
-import matplotlib.pyplot as plt
 from dh import fsz
+import matplotlib.pyplot as plt
 
 
 def scan_directory(path: str = ".") -> tuple[int, int, int, set[Any]]:

@@ -19,21 +19,25 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import contextlib
+from functools import partial
+from multiprocessing import Pool
 import os
+from pathlib import Path
 import shutil
 import stat
 import subprocess
 import sys
 import tempfile
-from collections.abc import Iterator, Sequence
-from functools import partial
-from multiprocessing import Pool
-from pathlib import Path
-from typing import Final, NamedTuple
+from typing import TYPE_CHECKING, Final, NamedTuple
 
 from dh import MAX_WORKERS, SKIP_DIRS
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 PNG_SUFFIXES: Final[frozenset[str]] = frozenset({".png"})
 PNG_MAGIC: Final[bytes] = b"\x89PNG\r\n\x1a\n"

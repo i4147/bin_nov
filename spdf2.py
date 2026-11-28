@@ -11,8 +11,9 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import fsz, get_files, gsz, mpf, runcmd
 

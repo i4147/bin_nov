@@ -10,12 +10,14 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import atomic_write, get_files, mpf
 from markdownify import markdownify as md
 from readability import Document
+
 
 remove_orig: bool = True
 

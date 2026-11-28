@@ -19,15 +19,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import shlex
-import subprocess
-from collections.abc import Sequence
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
+import shlex
+import subprocess
+from typing import TYPE_CHECKING
 
 from dh import MAX_WORKERS, SKIP_DIRS
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 TIMEOUT_SECONDS: int = 60
 COMPILERS: dict[str, str] = {

@@ -54,20 +54,22 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
 import io
+from pathlib import Path
 import re
 import shutil
 import tokenize
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Callable, Iterator, Sequence
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 LOGGER = logger
 DEFAULT_MARKERS = frozenset(

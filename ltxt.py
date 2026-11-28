@@ -16,15 +16,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 from collections import Counter
-from collections.abc import Sequence
 from multiprocessing.pool import AsyncResult, Pool
 from pathlib import Path
-from typing import TypeAlias
+from typing import TYPE_CHECKING, TypeAlias
 
 from dh import BINARY_EXT, MAX_WORKERS
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 EXCLUDED_EXT: frozenset[str] = frozenset(BINARY_EXT)
 POOL_METHODS: tuple[str, ...] = ("map", "starmap", "imap_unordered", "apply_async")

@@ -19,19 +19,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import deque
 import hashlib
+from html.parser import HTMLParser
 import io
+from pathlib import Path
 import re
 import sys
-from collections import deque
-from html.parser import HTMLParser
-from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urljoin, urlparse
 
-import pycurl
 from dh import atomic_write
+import pycurl
+
 
 IMAGE_EXTS: set[str] = {
     ".jpg",

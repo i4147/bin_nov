@@ -4,9 +4,10 @@ Restore indentation to unindented Python files.
 
 """
 
+from __future__ import annotations
 import argparse
-import sys
 from pathlib import Path
+import sys
 
 from dh import atomic_write
 

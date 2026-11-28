@@ -19,17 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import functools
 import json
 import operator
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
-from pathlib import Path
 from typing import Optional
 from urllib.parse import urlparse
+
 
 CURRENT_DIR = Path.cwd()
 HOME_ENV = Path.home() / ".env"

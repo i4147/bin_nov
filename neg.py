@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import io
-import sys
 from pathlib import Path
+import sys
 
 from dh import atomic_write
 from PIL import Image, ImageOps, UnidentifiedImageError
+
 
 DIRECT_MODES: set[str] = {"L", "RGB", "CMYK"}
 

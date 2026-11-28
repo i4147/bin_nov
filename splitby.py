@@ -10,8 +10,9 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 
 def split_file_by_delimiter(fname: str, delimiter: str) -> None:

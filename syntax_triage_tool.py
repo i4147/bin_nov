@@ -4,16 +4,20 @@ Syntax-check files and move/copy the invalid ones aside. Analysis / deduplicatio
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import shutil
-import subprocess
-from collections.abc import Sequence
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
-from typing import Any
+import shutil
+import subprocess
+from typing import TYPE_CHECKING, Any
 
 from dh import SKIP_DIRS
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 def unique_destination(dest: Path) -> Path:
@@ -49,8 +53,8 @@ def check_python_black(path: Path) -> tuple[Path, bool, str]:
 def check_lua(path: Path) -> tuple[Path, bool, str]:
     """Return (path, ok, detail) using tree-sitter-lua."""
     try:
-        import tree_sitter_lua
         from tree_sitter import Language, Parser
+        import tree_sitter_lua
     except ImportError:
         return path, False, "missing deps: pip install tree-sitter tree-sitter-lua"
     parser = Parser(Language(tree_sitter_lua.language()))

@@ -4,8 +4,9 @@
 Skips __init__.py; lists every match and unlinks them in place. Permanent deletion with no confirmation prompt.
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import cprint, get_files
 

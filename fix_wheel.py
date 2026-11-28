@@ -16,14 +16,14 @@ Usage:
 """
 
 from __future__ import annotations
-
 import argparse
 import os
+from pathlib import Path
 import re
 import sys
 import tempfile
 import zipfile
-from pathlib import Path
+
 
 TARGET_TAG: str = "cp314-cp314-android_24_armeabi_v7a"
 

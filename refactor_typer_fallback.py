@@ -21,14 +21,14 @@ Usage ----- python refactor_typer_fallback.py [PATH] [--dry-run] [-v]
 """
 
 from __future__ import annotations
-
 import argparse
 import ast
-import sys
 from pathlib import Path
+import sys
 from typing import Any, Iterable, Iterator
 
 from dh import SKIP_DIRS, atomic_write
+
 
 MARKER: str = "# __typer_argparse_fallback__"
 

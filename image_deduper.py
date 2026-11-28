@@ -10,12 +10,14 @@ Examples:
 
 """
 
-import os
+from __future__ import annotations
 from collections import defaultdict
+import os
 from pathlib import Path
 
 import imagehash
 from PIL import Image
+
 
 DRY_RUN: bool = True
 IMAGE_EXT: tuple[str, ...] = (".webp", ".jpg", ".jpeg", ".png", ".tiff", ".tif")

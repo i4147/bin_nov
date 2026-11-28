@@ -4,11 +4,13 @@ Rename font files based on their internal metadata.
 
 """
 
+from __future__ import annotations
 import argparse
 from pathlib import Path
 
 from dh import FONT_EXT, unique_path
 from fontTools.ttLib import TTFont
+
 
 STYLE_MAPPING: dict[str, str] = {
     "normal": "Regular",

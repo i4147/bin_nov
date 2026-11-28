@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import ast
 import os
-import re
 from pathlib import Path
+import re
 
 from dh import atomic_write, unique_path
+
 
 ROOT = Path.cwd().resolve()
 

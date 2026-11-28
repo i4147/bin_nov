@@ -4,11 +4,12 @@ Remove comments from C/C++ files recursively.
 
 """
 
-import re
-import sys
+from __future__ import annotations
 from dataclasses import dataclass
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
+import re
+import sys
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger

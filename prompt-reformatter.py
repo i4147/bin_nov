@@ -10,10 +10,12 @@ Examples:
 
 """
 
-import re
+from __future__ import annotations
 from pathlib import Path
+import re
 
 from dh import SKIP_DIRS, atomic_write
+
 
 _BEFORE_MARKER = re.compile(
     r"[ \t\r\n]+(?=(?:\d+[.)]|\(\d+\)|[-*\u2022]|\*\*[^*\n]+\*\*)\s)"

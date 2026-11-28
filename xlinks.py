@@ -7,12 +7,13 @@ Usage:
 
 """
 
+from __future__ import annotations
 import re
 import sys
-import urllib.error
-import urllib.request
 from typing import Any, Iterable, Sequence
+import urllib.error
 from urllib.parse import urljoin, urlparse
+import urllib.request
 
 
 def fetch_html(url: str, timeout: int = 15) -> str:

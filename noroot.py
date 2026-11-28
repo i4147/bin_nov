@@ -10,11 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 
 from dh import atomic_write, get_nobinary
+
 
 IF_BLOCK_REGEX = re.compile(
     r"^if\s+\[\s*\$\((\S+)\)\s*\{\-ne\s+0\s*\}\]\s*;\s*then\s*\n((?:.|\n)*?)^\s*exit\s+1\s*$(.*?)^\s*fi",

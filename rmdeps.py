@@ -1,9 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/env python
+from __future__ import annotations
 import email
 import email.policy
-import sys
 from importlib.metadata import distributions
 from pathlib import Path
+import sys
 
 
 def remove_dep_from_metadata(dist, dep_name: str) -> None:

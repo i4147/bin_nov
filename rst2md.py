@@ -10,8 +10,9 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import atomic_write, get_files, mpf
 from docutils.core import publish_parts

@@ -19,17 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import json
-import sys
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
+import json
 from pathlib import Path
+import sys
 from typing import Optional, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS
+
 
 DEFAULT_EXT: frozenset[str] = frozenset(
     {

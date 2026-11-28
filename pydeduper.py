@@ -19,23 +19,25 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import bz2
+from collections import defaultdict
+from dataclasses import dataclass, field
 import gzip
 import hashlib
 import lzma
-import sys
-import tarfile
-import zipfile
-from collections import defaultdict
-from dataclasses import dataclass, field
 from multiprocessing import Pool
 from pathlib import Path
+import sys
+import tarfile
 from typing import Any, Iterable, Iterator, Optional
+import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 try:
     from loguru import logger

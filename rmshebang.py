@@ -10,12 +10,14 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from collections import deque
 from multiprocessing import get_context
 from pathlib import Path
+import sys
 
 from dh import atomic_write, fsz, get_files, gsz
+
 
 MAX_QUEUE: int = 16
 

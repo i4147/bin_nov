@@ -20,13 +20,12 @@ Requirements:
 """
 
 from __future__ import annotations
-
 import argparse
-import sys
 from concurrent.futures import (
     ProcessPoolExecutor,
     as_completed,
 )
+import sys
 from typing import Iterator
 
 from binaryornot.check import is_binary
@@ -39,6 +38,7 @@ from rich.progress import (
     TextColumn,
     TimeElapsedColumn,
 )
+
 
 try:
     import spasy
@@ -113,7 +113,7 @@ def iter_text_files(root: str) -> Iterator[str]:
     for dirpath, dirnames, filenames in os.walk(root):
         # prune hidden dirs and common VCS dirs
         dirnames[:] = [
-            d for d in dirnames if not d.startswith(".") and d not in ("__pycache__",)
+            d for d in dirnames if not d.startswith(".") and d != "__pycache__"
         ]
         for fname in filenames:
             if fname.startswith(".") or fname == OUTPUT_DEFAULT:
@@ -190,8 +190,7 @@ def main(argv: list[str] | None = None) -> int:
                 progress.advance(task)
 
     with open(args.output, "w", encoding="utf-8") as f:
-        for word in sorted(unique_words):
-            f.write(word + "\n")
+        f.writelines(word + "\n" for word in sorted(unique_words))
 
     print(
         "done: %d files scanned, %d unique Persian words -> %s"

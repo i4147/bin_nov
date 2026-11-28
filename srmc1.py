@@ -4,23 +4,25 @@ Strip selected Python comments, docstrings, and annotations in place.
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from dataclasses import asdict, dataclass
 import difflib
 import json
 import multiprocessing
+from pathlib import Path
 import re
 import stat
 import sys
 import textwrap
-from dataclasses import asdict, dataclass
-from pathlib import Path
 from typing import ClassVar, Iterable, Iterator, Literal, Sequence
 
-import libcst as cst
 from dh import MAX_WORKERS, atomic_write
+import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
 from loguru import logger
+
 
 VERSION: str = "1.0.0"
 UTF8_BOM: bytes = b"\xef\xbb\xbf"

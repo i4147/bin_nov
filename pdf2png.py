@@ -11,12 +11,11 @@ Examples:
 """
 
 from __future__ import annotations
-
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
-from pathlib import Path
 
 
 def pdf_to_png(pdf_path: Path, output_dir: Path | None = None, dpi: str = 200) -> None:

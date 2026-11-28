@@ -10,6 +10,7 @@ Examples:
 
 """
 
+from __future__ import annotations
 import ast
 import json
 import multiprocessing as mp

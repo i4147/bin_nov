@@ -8,16 +8,18 @@ Examples -------- python3 encoding_tool.py to-utf8 legacy/ python3 encoding_tool
 
 """
 
+from __future__ import annotations
 import argparse
-import html
-import re
-import sys
 from collections.abc import Sequence
 from concurrent.futures import ProcessPoolExecutor
+import html
 from pathlib import Path
+import re
+import sys
 from typing import Any, Sequence
 
 from dh import MAX_WORKERS, atomic_write, is_binary
+
 
 SAMPLE_SIZE: int = 100_000
 COMMON_ENCODINGS: tuple[str, ...] = (

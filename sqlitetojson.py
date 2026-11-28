@@ -15,17 +15,17 @@ Notes ----- * The database is opened read-only (falls back to read/write if the 
 """
 
 from __future__ import annotations
-
 import argparse
 import base64
 import contextlib
 import json
 import math
 import os
+from pathlib import Path
 import sqlite3
 import sys
-from pathlib import Path
 from typing import Any, Iterable, Iterator, TextIO
+
 
 __version__: str = "1.0.0"
 PROG: str = "sqlite2json"

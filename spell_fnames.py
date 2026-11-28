@@ -4,13 +4,15 @@ Detect misspelled words in filenames recursively.
 
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 from typing import Any, Iterable
 
 import hunspell
+
 
 DICT_PATHS: list[tuple[Any, ...]] = [
     (

@@ -10,9 +10,10 @@ Examples:
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import subprocess
 import sys
-from pathlib import Path
 
 
 def get_created_files(n_commits: int) -> list:

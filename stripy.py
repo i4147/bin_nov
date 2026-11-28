@@ -10,15 +10,16 @@ Examples:
 
 """
 
+from __future__ import annotations
 import ast
-import multiprocessing as mp
-import sys
 from dataclasses import dataclass
+import multiprocessing as mp
 from pathlib import Path
+import sys
 from typing import Sequence
 
-import libcst as cst
 from dh import MAX_WORKERS, atomic_write
+import libcst as cst
 from loguru import logger
 
 

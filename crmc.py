@@ -19,35 +19,36 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import codecs
+from collections import deque
 import contextlib
+from dataclasses import dataclass
 import difflib
 import enum
 import functools
 import io
 import multiprocessing as mp
 import os
+from pathlib import Path
 import re
 import shutil
 import signal
 import sys
 import tempfile
 import tokenize
-from collections import deque
-from collections.abc import Iterable, Iterator, Sequence
-from dataclasses import dataclass
-from multiprocessing.pool import Pool
-from pathlib import Path
 from typing import TYPE_CHECKING, Final, Literal, get_args
 
-import libcst as cst
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+import libcst as cst
 from loguru import logger
 
+
 if TYPE_CHECKING:
-    from multiprocessing.pool import AsyncResult
+    from collections.abc import Iterable, Iterator, Sequence
+    from multiprocessing.pool import AsyncResult, Pool
 
 CHUNKSIZE: Final[int] = 8
 MAX_IN_FLIGHT: Final[int] = MAX_WORKERS * 8
@@ -374,12 +375,12 @@ def iter_python_files(
                 candidate = root / name
                 if candidate.is_symlink():
                     continue
-                if candidate.suffix in PY_SUFFIXES or (
-                    not candidate.suffix and _looks_like_python_script(candidate)
-                ):
-                    if candidate not in seen:
-                        seen.add(candidate)
-                        yield candidate
+                if (
+                    candidate.suffix in PY_SUFFIXES
+                    or (not candidate.suffix and _looks_like_python_script(candidate))
+                ) and candidate not in seen:
+                    seen.add(candidate)
+                    yield candidate
 
 
 def iter_results(

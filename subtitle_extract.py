@@ -4,12 +4,14 @@
 Parses the EBML structure manually (segment, tracks, clusters), lists subtitle tracks and writes the selected track(s) out as SRT-like text with a progress display.
 """
 
+from __future__ import annotations
 import mmap
-import sys
 from pathlib import Path
+import sys
 from typing import BinaryIO, Callable, Optional, TextIO
 
 from dh import atomic_write
+
 
 SEGMENT: int = 0x18538067
 TRACKS: int = 0x1654AE6B

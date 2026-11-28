@@ -1,6 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/env python
+from __future__ import annotations
 import site
 import sys
+
 
 print("Python:", sys.executable)
 print("user base:", site.getuserbase())

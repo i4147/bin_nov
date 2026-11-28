@@ -10,11 +10,12 @@ Examples:
 
 """
 
+from __future__ import annotations
 import contextlib
 import lzma
 import os
-import sys
 from pathlib import Path
+import sys
 
 import py7zr
 

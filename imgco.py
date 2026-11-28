@@ -19,17 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import concurrent.futures
 import contextlib
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
-from pathlib import Path
 from typing import Callable, Optional, Sequence
 
 from dh import MAX_WORKERS
+
 
 cv2 = None
 np = None
@@ -55,8 +57,6 @@ try:
     import numpy as _np
     from skimage import (
         color as _ski_color,
-    )
-    from skimage import (
         io as _ski_io,
     )
 

@@ -18,23 +18,22 @@ Python processes. See --help for limitations.
 """
 
 from __future__ import annotations
-
 import argparse
 import base64
+from concurrent.futures import ProcessPoolExecutor
 import json
 import os
+from pathlib import Path
 import subprocess
 import sys
 import tempfile
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
+
 
 try:
     import libcst as cst
 except ImportError:
-    raise SystemExit(
-        "libcst is required; install it with: python -m pip install libcst"
-    )
+    msg = "libcst is required; install it with: python -m pip install libcst"
+    raise SystemExit(msg)
 
 
 class RewriteRelativeImports(cst.CSTTransformer):
@@ -48,9 +47,8 @@ class RewriteRelativeImports(cst.CSTTransformer):
             return updated_node
         parts = self.package.split(".") if self.package else []
         if level > len(parts):
-            raise ValueError(
-                f"{self.filename}: relative import beyond top-level package"
-            )
+            msg = f"{self.filename}: relative import beyond top-level package"
+            raise ValueError(msg)
         prefix = parts[: len(parts) - level + 1]
         if updated_node.module is not None:
             prefix.append(cst.Module([]).code_for_node(updated_node.module))
@@ -72,17 +70,18 @@ def process_module(task):
         text = tree.visit(RewriteRelativeImports(package, str(path))).code
         compile(text, str(path), "exec", dont_inherit=True)
     except (SyntaxError, UnicodeError, ValueError, cst.ParserSyntaxError) as exc:
-        raise ValueError(f"Cannot process {path}: {exc}") from exc
+        msg = f"Cannot process {path}: {exc}"
+        raise ValueError(msg) from exc
     return name, {"path": relative_path, "package": is_package, "source": text}
 
 
 def collect(root: Path, output: Path):
     if not (root / "__init__.py").is_file():
-        raise ValueError(
-            "Input must be a regular package directory containing __init__.py"
-        )
+        msg = "Input must be a regular package directory containing __init__.py"
+        raise ValueError(msg)
     if not root.name.isidentifier():
-        raise ValueError("Package directory name must be a Python identifier")
+        msg = "Package directory name must be a Python identifier"
+        raise ValueError(msg)
     modules = {}
     data = {}
     tasks = []
@@ -95,12 +94,14 @@ def collect(root: Path, output: Path):
         if path == output or any(path.is_relative_to(d) for d in excluded_dirs):
             continue
         if path.is_symlink():
-            raise ValueError(f"Symlinks are not supported: {path}")
+            msg = f"Symlinks are not supported: {path}"
+            raise ValueError(msg)
         if not path.is_file() or "__pycache__" in path.parts or ".git" in path.parts:
             continue
         rel = path.relative_to(root)
         if path.suffix in (".so", ".pyd", ".dll", ".dylib"):
-            raise ValueError(f"Native libraries cannot be bundled: {path}")
+            msg = f"Native libraries cannot be bundled: {path}"
+            raise ValueError(msg)
         if path.suffix == ".py":
             pieces = list(rel.parts)
             is_package = pieces[-1] == "__init__.py"
@@ -108,10 +109,12 @@ def collect(root: Path, output: Path):
             if is_package:
                 pieces.pop()
             if not all(p.isidentifier() for p in pieces):
-                raise ValueError(f"Invalid module path: {rel}")
+                msg = f"Invalid module path: {rel}"
+                raise ValueError(msg)
             name = ".".join([root.name, *pieces])
             if name in seen:
-                raise ValueError(f"A module and package have the same name: {name}")
+                msg = f"A module and package have the same name: {name}"
+                raise ValueError(msg)
             seen.add(name)
             tasks.append((str(path), rel.as_posix(), name, is_package))
         elif path.suffix not in (".pyc", ".pyo"):
@@ -267,14 +270,14 @@ print(json.dumps({'name':m.__name__,'doc':m.__doc__,'public':sorted(x for x in d
                 timeout=60,
             )
             if p.returncode:
-                raise RuntimeError(
-                    f"Verification import failed for {location}:\n{p.stderr}"
-                )
+                msg = f"Verification import failed for {location}:\n{p.stderr}"
+                raise RuntimeError(msg)
             results.append(p.stdout)
         if results[0] != results[1]:
-            raise RuntimeError(
+            msg = (
                 f"Verification mismatch:\noriginal: {results[0]}\nbundle: {results[1]}"
             )
+            raise RuntimeError(msg)
     print(
         "Verification passed: initializer import and public-name smoke test.",
         file=sys.stderr,
@@ -295,7 +298,7 @@ def main(argv=None):
         "package",
         type=Path,
         nargs="?",
-        default=Path("."),
+        default=Path(),
         help="path to the regular package directory (default: current directory)",
     )
     parser.add_argument(
@@ -318,11 +321,11 @@ def main(argv=None):
             else Path("output") / (root.name + ".py")
         ).resolve()
         if not root.is_dir():
-            raise ValueError("Package path must be a directory")
+            msg = "Package path must be a directory"
+            raise ValueError(msg)
         if output.name != root.name + ".py":
-            raise ValueError(
-                f"Output must be named {root.name}.py so imports resolve correctly"
-            )
+            msg = f"Output must be named {root.name}.py so imports resolve correctly"
+            raise ValueError(msg)
         modules, data = collect(root, output)
         content = render(root.name, modules, data)
         compile(content, str(output), "exec")

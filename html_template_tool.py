@@ -4,13 +4,18 @@ Generate HTML templates: blank pages, CodePen wrapping, multi-file merge. Analys
 
 """
 
+from __future__ import annotations
 import argparse
 import html.parser
-import sys
-from collections.abc import Sequence
 from pathlib import Path
+import sys
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 PAGE_CSS: str = (
     "body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; "

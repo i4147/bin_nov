@@ -4,18 +4,23 @@ Size-based file listings: largest files, thresholds, same-size groups. Analysis 
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
 import heapq
 import json
+from pathlib import Path
 import secrets
 import shutil
 import string
 import sys
-from collections import defaultdict
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 DEFAULT_THRESHOLD: int = 1024 * 1024
 TELEGRAM_CACHE: Path = Path("/sdcard/Android/data/org.telegram.messenger/cache")

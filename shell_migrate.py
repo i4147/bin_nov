@@ -7,17 +7,17 @@ Review changes in version control and test scripts before using them.
 """
 
 from __future__ import annotations
-
 import argparse
 import logging
 import os
+from pathlib import Path
 import re
 import shutil
 import stat
 import subprocess
 import sys
 import tempfile
-from pathlib import Path
+from dh import atomic_write
 
 ROOT = Path(__file__).resolve().parent.parent
 SELF = Path(__file__).resolve()
@@ -44,9 +44,8 @@ def repo_files() -> list[Path]:
             stderr=subprocess.PIPE,
         )
     except (OSError, subprocess.CalledProcessError) as exc:
-        raise RuntimeError(
-            f"cannot enumerate repository files with git: {exc}"
-        ) from exc
+        msg = f"cannot enumerate repository files with git: {exc}"
+        raise RuntimeError(msg) from exc
     return sorted({ROOT / os.fsdecode(p) for p in result.stdout.split(b"\0") if p})
 
 
@@ -58,18 +57,6 @@ def read_utf8(path: Path) -> str | None:
         return data.decode("utf-8")
     except (OSError, UnicodeDecodeError):
         return None
-
-
-def atomic_write(path: Path, text: str, mode: int) -> None:
-    fd, tmp = tempfile.mkstemp(prefix=".shell-migrate-", dir=path.parent)
-    try:
-        with os.fdopen(fd, "wb") as out:
-            out.write(text.encode("utf-8"))
-        os.chmod(tmp, stat.S_IMODE(mode))
-        os.replace(tmp, path)
-    finally:
-        if os.path.lexists(tmp):
-            os.unlink(tmp)
 
 
 def transform(text: str, reverse: bool) -> str:
@@ -219,7 +206,8 @@ def migrate(only: set[str] | None, reverse: bool) -> None:
     for source, destination in zip(sources, destinations):
         text = read_utf8(source)
         if text is None:
-            raise RuntimeError(f"cannot read {source.name} as UTF-8 text")
+            msg = f"cannot read {source.name} as UTF-8 text"
+            raise RuntimeError(msg)
         text = pattern.sub(lambda m: f"{m.group(1)}.{dst}", text)
         converted.append(
             (source, destination, transform(text, reverse), source.stat().st_mode)

@@ -10,13 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
+from collections import defaultdict
 import contextlib
 import os
+from pathlib import Path
 import re
 import shutil
-from collections import defaultdict
-from pathlib import Path
 from typing import Any, Iterable
+
 
 HOME = Path.home()
 ZSHRC = HOME / ".zshrc"

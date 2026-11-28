@@ -20,22 +20,22 @@ Command-line script:
 """
 
 from __future__ import annotations
-
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import contextlib
+from pathlib import Path
 import queue
 import re
 import shutil
 import sys
 import threading
 import time
+from typing import Any, Iterable, Iterator, Optional, Self, Sequence
 import urllib.parse
 import urllib.request
-from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
-from typing import Any, Iterable, Iterator, Optional, Self, Sequence
 
 from dh import MAX_WORKERS
+
 
 __version__: str = "2.0.0"
 CHUNK: int = 64 * 1024

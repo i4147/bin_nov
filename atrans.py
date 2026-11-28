@@ -16,18 +16,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import os
+from pathlib import Path
 import sys
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
 from typing import Any, Callable, TextIO
 
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 logger.remove()
 logger.add(

@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import json
-import re
 from multiprocessing import Pool
 from pathlib import Path
+import re
 
 from dh import atomic_write
+
 
 _BASE: str = (
     "\U0001f300-\U0001f5ff"

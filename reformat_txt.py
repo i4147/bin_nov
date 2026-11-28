@@ -4,22 +4,26 @@
 Greedy sentence-aware wrapper with an abbreviation list; defaults to 100 columns and supports backups (.bak), markdown suffixes and dry-run previews.
 """
 
+from __future__ import annotations
 import argparse
 import codecs
-import difflib
-import fnmatch
-import os
-import re
-import sys
-from collections.abc import Iterator, Sequence
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
+import difflib
+import fnmatch
 from functools import partial
+import os
 from pathlib import Path
-from typing import Final, Literal, NamedTuple
+import re
+import sys
+from typing import TYPE_CHECKING, Final, Literal, NamedTuple
 
-import rignore
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+import rignore
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 DEFAULT_WIDTH: Final[int] = 100
 MIN_PIECE: Final[int] = 20

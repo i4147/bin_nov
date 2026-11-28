@@ -19,18 +19,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import dataclasses
+from dataclasses import dataclass
 import multiprocessing
 import os
-import sys
-from dataclasses import dataclass
 from pathlib import Path
+import sys
 from typing import Any
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 try:
     import libcst as cst
@@ -41,8 +43,8 @@ except ImportError:
     HAS_LIBCST = False
 
 try:
-    import tree_sitter_python as tspython
     from tree_sitter import Language, Parser
+    import tree_sitter_python as tspython
 
     HAS_TREESITTER = True
 except ImportError:
@@ -288,11 +290,13 @@ if HAS_LIBCST:
                         else:
                             continue
 
-                elif idx == 0 and not is_module:
-                    if self._is_docstring_stmt(stmt) and (
-                        self.options.remove_docstrings or self.options.remove_all
-                    ):
-                        continue
+                elif (
+                    idx == 0
+                    and not is_module
+                    and self._is_docstring_stmt(stmt)
+                    and (self.options.remove_docstrings or self.options.remove_all)
+                ):
+                    continue
 
                 if (
                     idx > 0

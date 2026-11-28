@@ -39,15 +39,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import json
+from pathlib import Path
 import re
 import sys
-from collections.abc import Sequence
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import MAX_WORKERS, atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 MAGIC_PREFIXES: tuple[str, ...] = ("%", "!", "%%")
 CELL_MARKER: re.Pattern[str] = re.compile(r"^#\s*%%.*$")

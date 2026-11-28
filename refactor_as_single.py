@@ -19,13 +19,15 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import re
 from pathlib import Path
+import re
 from typing import Any, Optional
 
 from dh import MAX_WORKERS, atomic_write
+
 
 LOGURU_LOGFORMAT: str = (
     "{time:YYYY-MM-DD HH:mm:ss.SSS} {level} {file.name}:{line} {message}"

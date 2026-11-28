@@ -4,11 +4,13 @@ Sort .whl files in a directory into `installed/` and `not_installed/`. A wheel i
 
 """
 
+from __future__ import annotations
+from importlib import metadata
+from pathlib import Path
 import re
 import shutil
 import sys
-from importlib import metadata
-from pathlib import Path
+
 
 try:
     from packaging.utils import canonicalize_name, parse_wheel_filename

@@ -22,24 +22,26 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from collections import defaultdict
+from dataclasses import dataclass, field
 import io
 import json
 import multiprocessing as mp
 import os
+from pathlib import Path
 import re
 import shutil
 import sqlite3
 import tarfile
-import zipfile
-from collections import defaultdict
-from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Iterable, Iterator, Optional
+import zipfile
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 try:
     import tree_sitter

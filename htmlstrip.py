@@ -42,13 +42,15 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from pathlib import Path
+import re
 from typing import Iterable, Optional, Sequence
 
 from dh import atomic_write
 from loguru import logger
+
 
 try:
     from bs4 import BeautifulSoup

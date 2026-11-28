@@ -16,19 +16,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import asyncio
 import bz2
 import gzip
-import sys
 from pathlib import Path
+import sys
 from typing import Any
 
 import brotlicffi as brotli
+from dh import MAX_WORKERS, fsz, get_dirs, get_files
 import lz4.frame
 import py7zr
 import zstandard as zstd
-from dh import MAX_WORKERS, fsz, get_dirs, get_files
+
 
 CHUNK_SIZE: int = 1024 * 1024
 COMPRESSORS: dict[str, Any] = {}

@@ -62,19 +62,21 @@ Examples:
 
 """
 
+from __future__ import annotations
 import argparse
 import csv
-import json
-import sys
-import time
 from datetime import datetime
 from itertools import product
+import json
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
+import sys
+import time
 from typing import Any, Callable, Iterable, Sequence
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 try:
     import cv2
@@ -100,11 +102,7 @@ except ImportError:
 try:
     from skimage import (
         color as skcolor,
-    )
-    from skimage import (
         filters as skfilters,
-    )
-    from skimage import (
         io as skiio,
     )
     from skimage.filters import threshold_local

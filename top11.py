@@ -10,11 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
 import operator
-import sys
 from pathlib import Path
+import sys
 
 from dh import fsz, get_files
+
 
 cwd = Path.cwd()
 N: int = int(sys.argv[1]) if len(sys.argv) > 1 else 11

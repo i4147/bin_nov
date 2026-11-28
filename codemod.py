@@ -4,14 +4,18 @@
 Targets the second positional argument (foreground) and an on_-prefixed third (background) of cprint calls when their value is a known legacy color name, rewriting them as color= keyword arguments. Default is dry-run; --write applies.
 """
 
+from __future__ import annotations
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
-from pathlib import Path
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
+from dh import atomic_write
 import libcst as cst
 import typer
-from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 LEGACY_COLORS: frozenset[str] = frozenset(
     {

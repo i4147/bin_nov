@@ -19,24 +19,28 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from collections import Counter
+from dataclasses import dataclass, field
 import difflib
+from functools import partial
 import io
 import multiprocessing as mp
+from pathlib import Path
 import re
 import sys
 import tokenize
+from typing import TYPE_CHECKING, NamedTuple
 import warnings
-from collections import Counter
-from collections.abc import Iterator, Sequence
-from dataclasses import dataclass, field
-from functools import partial
-from pathlib import Path
-from typing import NamedTuple
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 PYTHON_SUFFIXES: frozenset[str] = frozenset({".py", ".pyw", ".pyi"})
 ALL_FIXES: frozenset[str] = frozenset({"regex", "escape", "bytes", "is"})

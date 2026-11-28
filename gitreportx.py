@@ -19,12 +19,14 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import subprocess
-import sys
 from dataclasses import dataclass
 from pathlib import Path
+import subprocess
+import sys
 from typing import Iterator, Literal, Protocol, Sequence
+
 
 try:
     import git as gitpython

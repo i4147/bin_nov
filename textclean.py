@@ -54,17 +54,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import json
+from pathlib import Path
 import re
 import shutil
 import string
 import sys
-from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
 from typing import Any, Callable, Iterator, Sequence
 
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
+
 
 DEFAULT_PATTERN_FILE: Path = Path("/sdcard/lic")
 DEFAULT_JOBS: int = 8

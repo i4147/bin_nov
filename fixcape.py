@@ -10,12 +10,13 @@ Examples:
 
 """
 
+from __future__ import annotations
 import ast
 import io
+from pathlib import Path
 import re
 import sys
 import tokenize
-from pathlib import Path
 from typing import Iterator
 
 from dh import atomic_write

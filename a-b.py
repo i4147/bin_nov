@@ -4,8 +4,9 @@ Remove lines from the first file that also occur in the second file. Pass the tw
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
 
 from dh import atomic_write
 

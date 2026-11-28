@@ -19,18 +19,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from dataclasses import dataclass
 import json
 import multiprocessing as mp
+from pathlib import Path
 import sys
 import time
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Final
 
-import ffmpeg
 from dh import NUM_WORKERS, fsz
+import ffmpeg
 from loguru import logger
+
 
 MIN_BITRATE_KBPS: Final[int] = 8
 STDERR_PREVIEW_LEN: Final[int] = 100

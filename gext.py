@@ -5,15 +5,15 @@ Parses each input module with libcst and writes one file per top-level class, fu
 """
 
 from __future__ import annotations
-
 import multiprocessing as mp
 import os
-import sys
 from pathlib import Path
+import sys
 
+from dh import MAX_WORKERS
 import libcst as cst
 import libcst.matchers as m
-from dh import MAX_WORKERS
+
 
 OUTPUT_DIR: str = "output"
 CLASSES_DIR: Path = Path(OUTPUT_DIR).joinpath("classes")
@@ -94,12 +94,15 @@ class EntityExtractor(cst.CSTVisitor):
         return False
 
     def visit_AnnAssign(self, node: cst.AnnAssign) -> bool:
-        if self._class_depth == 0 and self._func_depth == 0:
-            if m.matches(node.target, m.Name()):
-                assert isinstance(node.target, cst.Name)
-                name = node.target.value
-                if is_constant_name(name):
-                    self.consts[name] = self.module.code_for_node(node)
+        if (
+            self._class_depth == 0
+            and self._func_depth == 0
+            and m.matches(node.target, m.Name())
+        ):
+            assert isinstance(node.target, cst.Name)
+            name = node.target.value
+            if is_constant_name(name):
+                self.consts[name] = self.module.code_for_node(node)
         return False
 
 

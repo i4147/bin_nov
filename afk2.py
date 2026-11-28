@@ -19,20 +19,25 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from dataclasses import dataclass, field
 import io
+from multiprocessing import Pool
 import os
+from pathlib import Path
 import re
 import sys
 import tarfile
+from typing import TYPE_CHECKING
 import zipfile
-from collections.abc import Iterator
-from dataclasses import dataclass, field
-from multiprocessing import Pool
-from pathlib import Path
 
 from dh import MAX_WORKERS, atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 try:
     import zstandard as zstd

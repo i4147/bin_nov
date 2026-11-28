@@ -50,16 +50,21 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import hashlib
 import json
+from pathlib import Path
 import shutil
 import site
 import sys
-from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import SKIP_DIRS, atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 DEFAULT_TESTS_OUT: Path = Path.home() / "tmp" / "tests"
 DEFAULT_MOVE_LOG: Path = Path.home() / "tmp" / "moved_files.json"

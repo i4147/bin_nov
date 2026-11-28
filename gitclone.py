@@ -10,10 +10,11 @@ Examples:
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import re
 import subprocess
 import sys
-from pathlib import Path
 from typing import Any
 
 

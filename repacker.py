@@ -15,21 +15,21 @@ Usage ----- python repacker.py -a # repack every installed package python repack
 """
 
 from __future__ import annotations
-
 import argparse
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import contextlib
 import csv
+from dataclasses import dataclass
 import io
 import os
+from pathlib import Path
 import re
 import sys
-import zipfile
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Optional
+import zipfile
 
 from loguru import logger
+
 
 # zlib is required for ZIP_DEFLATED; degrade gracefully if unavailable.
 try:

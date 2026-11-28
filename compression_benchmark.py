@@ -10,17 +10,19 @@ Examples:
 
 """
 
+from __future__ import annotations
 import bz2
 import gzip
 import lzma
+from pathlib import Path
 import shutil
 import sys
 import tarfile
 import tempfile
 import time
-import zipfile
-from pathlib import Path
 from typing import Callable, Optional
+import zipfile
+
 
 try:
     import brotli

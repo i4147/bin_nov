@@ -10,12 +10,14 @@ Examples:
 
 """
 
+from __future__ import annotations
 import multiprocessing as mp
 import os
-import re
 from pathlib import Path
+import re
 
 from dh import MAX_WORKERS
+
 
 SUFFIXES: set[str] = {".py", ".sh", ".bash", ".pl", ".rb", ".pyw", ".txt"}
 BIN_DIRS: set[str] = {"sbin", "bin", ".bin"}

@@ -19,14 +19,16 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import json
+from pathlib import Path
 import pickle
 import sqlite3
-from pathlib import Path
 from typing import Any
 
 import pandas as pd
+
 
 SQLITE_MAGIC: bytes = b"SQLite format 3\x00"
 

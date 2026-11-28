@@ -16,18 +16,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-import sys
-from collections.abc import Sequence
 from multiprocessing import Pool
 from pathlib import Path
+import sys
 from typing import TYPE_CHECKING, Final
 
-import libcst as cst
 from dh import MAX_WORKERS, atomic_write
+import libcst as cst
+
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from multiprocessing.pool import AsyncResult
 PRESERVE_PREFIXES: Final[tuple[str, ...]] = ("#!", "# type:", "# fmt:")
 PRESERVE_EXACT: Final[frozenset[str]] = frozenset(

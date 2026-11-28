@@ -19,17 +19,19 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
-import shutil
-import zipfile
 from email.parser import HeaderParser
 from multiprocessing import Pool
 from pathlib import Path
+import re
+import shutil
 from typing import Any, Final
+import zipfile
 
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 WHEEL_SUFFIX: Final[str] = ".whl"
 METADATA_SUFFIX: Final[str] = ".dist-info/METADATA"

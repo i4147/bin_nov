@@ -16,23 +16,25 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import asyncio
+from collections import deque
+from concurrent.futures import ThreadPoolExecutor
 import contextlib
 import importlib
 import inspect
 import json
 import os
+from pathlib import Path
 import platform
 import shutil
 import signal
 import sys
 import tempfile
 import threading
-from collections import deque
-from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
 from typing import Any, Callable, Iterator, Optional
+
 
 try:
     from loguru import logger

@@ -4,10 +4,11 @@ Categorize installed packages (editable/pure/non-pure) into a requirements.txt f
 
 """
 
+from __future__ import annotations
 import importlib.metadata
 import json
-import sysconfig
 from pathlib import Path
+import sysconfig
 
 from dh import atomic_write
 

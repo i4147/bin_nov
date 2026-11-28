@@ -51,19 +51,20 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from functools import partial
 import io
+from pathlib import Path
 import re
 import subprocess
 import sys
+from textwrap import fill as _fill
 import time
 import tokenize
-import unicodedata
-from functools import partial
-from pathlib import Path
-from textwrap import fill as _fill
 from typing import Optional
+import unicodedata
 
 from dh import (
     atomic_write,
@@ -75,6 +76,7 @@ from dh import (
     is_binary,
     mpf,
 )
+
 
 _DOC_TOKENS: tuple[str, str] = ('"""', "'''")
 _FORMAT_STYLES: tuple[str, ...] = ("black", "isort", "autoflake", "autopep", "yapf")

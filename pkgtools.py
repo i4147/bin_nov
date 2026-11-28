@@ -43,16 +43,17 @@ pkgtools site-copy requests --dest ~/tmp/packages
 
 """
 
+from __future__ import annotations
 import argparse
 import concurrent.futures
 import csv
 import fnmatch
 import importlib.metadata
 import os
+from pathlib import Path
 import shutil
 import site
 import sys
-from pathlib import Path
 from typing import Any, Sequence
 
 from dh import MAX_WORKERS, atomic_write

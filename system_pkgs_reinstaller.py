@@ -10,14 +10,16 @@ Examples:
 
 """
 
+from __future__ import annotations
 import glob
 import json
 import os
-import sys
 from pathlib import Path
+import sys
 from typing import Any
 
 from dh import runcmd
+
 
 PROGRESS_SUFFIX: str = ".progress"
 APT_ARCHIVES: Path = Path("/data/data/com.termux/cache/apt/archives")

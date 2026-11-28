@@ -10,12 +10,14 @@ Examples:
 
 """
 
-import subprocess
-import sys
+from __future__ import annotations
 from multiprocessing import Pool
 from pathlib import Path
+import subprocess
+import sys
 
 from dh import MAX_WORKERS
+
 
 CURRENT_DIR = Path.cwd()
 OUTPUT_DIR = CURRENT_DIR / "wheels"

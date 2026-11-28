@@ -4,27 +4,29 @@
 Typer CLI with init/dev/new-script/wheel/setup/cargo/project command groups: scaffolds projects and scripts, generates setup.py from various sources, inspects wheels and Cargo.lock files.
 """
 
+from __future__ import annotations
 import configparser
+from dataclasses import dataclass, field
+from email.parser import Parser
+from enum import StrEnum
 import json
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
 import textwrap
-import zipfile
-from dataclasses import dataclass, field
-from email.parser import Parser
-from enum import StrEnum
-from pathlib import Path
 from typing import Annotated, Any, Iterable, NoReturn
+import zipfile
 
-import typer
 from dh import atomic_write
 from loguru import logger
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+import typer
+
 
 try:
     import tomllib

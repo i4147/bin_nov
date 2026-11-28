@@ -10,8 +10,9 @@ Examples:
 
 """
 
-import secrets
+from __future__ import annotations
 from pathlib import Path
+import secrets
 
 
 def convert_with_fonttools(src: Path, dst: Path) -> None:

@@ -19,23 +19,28 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import asyncio
+from collections import Counter
+from dataclasses import dataclass
 import fnmatch
+from os import environ
+from pathlib import Path
 import re
 import shutil
 import sys
 import time
+from typing import TYPE_CHECKING
 import warnings
-from collections import Counter
-from collections.abc import Sequence
-from dataclasses import dataclass
-from os import environ
-from pathlib import Path
 
 from dh import SKIP_DIRS, atomic_write
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 FELO_CLI: Path = Path(
     environ.get("FELO_CLI", "/data/data/com.termux/files/home/bashbin/felo-sa.mjs")

@@ -4,10 +4,11 @@
 Picks a random file from the ~/.cheats tree and renders it to the terminal with rich; exits with an error when the directory or its files are missing.
 """
 
-import random
-import sys
+from __future__ import annotations
 from pathlib import Path
+import random
 from secrets import randbelow
+import sys
 
 from dh import rainbow
 from rich.console import Console

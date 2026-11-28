@@ -22,12 +22,13 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import os
+from pathlib import Path
 import py_compile
 import sys
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
 
 from dh import fsz
 

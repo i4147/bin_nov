@@ -33,9 +33,10 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import re
 from pathlib import Path
+import re
 from typing import Generator
 
 from dh import atomic_write, fsz, get_nobinary

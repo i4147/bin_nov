@@ -5,14 +5,17 @@ Keeps the part of every line before (before) or after (after) the first occurren
 """
 
 from __future__ import annotations
-
 import argparse
+from pathlib import Path
 import shutil
 import sys
-from collections.abc import Iterator
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 def read_lines(

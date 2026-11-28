@@ -11,14 +11,14 @@ Examples:
 """
 
 from __future__ import annotations
-
 import contextlib
 import os
+from pathlib import Path
 import re
 import subprocess
-from pathlib import Path
 
 from dh import SKIP_DIRS
+
 
 OLD_USERNAME: str = "iho147"
 OLD_EMAIL: str = "isaacaunegh@gmail.com"

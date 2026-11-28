@@ -16,6 +16,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import concurrent.futures
@@ -23,18 +24,19 @@ import contextlib
 import hashlib
 import json
 import os
+from pathlib import Path
 import re
 import subprocess
 import sys
 import time
-from pathlib import Path
 from typing import Any, Iterable, Sequence
 
-import requests
 from dh import PKG_MAPPING, SKIP_DIRS, STDLIB, atomic_write
 from loguru import logger
+import requests
 from yarg import json2package
 from yarg.exceptions import HTTPError
+
 
 PYPI_INDEX_PATH: str = "/sdcard/data/pip.json"
 CACHE_DIR = Path.home() / ".cache" / "piplist"

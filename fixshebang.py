@@ -2,23 +2,23 @@
 """Normalise shebangs to Termux paths, including extensionless scripts."""
 
 from __future__ import annotations
-
 import argparse
+from concurrent.futures import Executor, ThreadPoolExecutor
+from dataclasses import dataclass
 import difflib
+from enum import StrEnum
 import os
+from pathlib import Path
 import re
 import shutil
 import stat
 import sys
-from concurrent.futures import Executor, ThreadPoolExecutor
-from dataclasses import dataclass
-from enum import StrEnum
-from pathlib import Path
 from typing import TYPE_CHECKING, Final
 
-import libcst as cst
 from dh import SKIP_DIRS, atomic_write
+import libcst as cst
 from loguru import logger
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -383,7 +383,7 @@ def main(argv: list[str] | None = None) -> int:
         diff=args.diff,
     )
 
-    counts: dict[Status, int] = {status: 0 for status in Status}
+    counts: dict[Status, int] = dict.fromkeys(Status, 0)
     error_count = 0
 
     with make_executor(args.workers) as executor:

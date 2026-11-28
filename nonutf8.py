@@ -16,12 +16,14 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import codecs
 from pathlib import Path
 from typing import Iterator, Optional
 
 from dh import atomic_write
+
 
 BOMS: tuple[tuple[bytes, str], ...] = (
     (codecs.BOM_UTF8, "utf-8"),

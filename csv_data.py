@@ -4,17 +4,22 @@ CSV utilities: CSV->JSON, duplicated-line reports, dpkg inventory. Analysis / de
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor
 import csv
 import json
+from pathlib import Path
 import subprocess
 import sys
-from collections import Counter, defaultdict
-from collections.abc import Sequence
-from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 BINARY_EXT: frozenset[str] = frozenset(
     {

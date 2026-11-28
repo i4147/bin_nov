@@ -10,14 +10,15 @@ Examples:
 
 """
 
+from __future__ import annotations
+from email import policy
+from email.parser import Parser
 import hashlib
 import json
+from pathlib import Path
 import shutil
 import subprocess
 import zipfile
-from email import policy
-from email.parser import Parser
-from pathlib import Path
 
 from dh import atomic_write
 from pip._internal.utils.compatibility_tags import interpreter_name, interpreter_version

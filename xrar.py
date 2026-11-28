@@ -10,10 +10,11 @@ Examples:
 
 """
 
+from __future__ import annotations
 import contextlib
 import multiprocessing as mp
-import sys
 from pathlib import Path
+import sys
 from typing import Iterable
 
 import rarfile

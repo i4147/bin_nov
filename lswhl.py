@@ -4,12 +4,14 @@
 Prints each wheel highlighted when it declares console entry points, and can folderize copies into with/without (and pure/nonpure) directories via CLI flags.
 """
 
+from __future__ import annotations
 import argparse
+from pathlib import Path
 import shutil
 import zipfile
-from pathlib import Path
 
 from dh import cprint
+
 
 HIGHLIGHT: tuple[int, int, int] = (206, 236, 132)
 DIM: tuple[int, int, int] = (

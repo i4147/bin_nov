@@ -19,13 +19,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
-from collections.abc import Iterator
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from dh import SKIP_DIRS, atomic_write
 from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 ICONS: dict[str, str] = {"functions": "🔧", "classes": "🏛️ ", "constants": "📌"}
 

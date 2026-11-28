@@ -10,8 +10,10 @@ Examples:
 
 """
 
-import sys
+from __future__ import annotations
 from pathlib import Path
+import sys
+
 
 PIP_LIST: Path = Path("/sdcard/data/pip.txt")
 TARGET_DIR = Path.cwd()

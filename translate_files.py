@@ -4,22 +4,24 @@ Translate text files into Vietnamese, Korean, Chinese or Russian (unified CLI).
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
 import json
+from multiprocessing.pool import Pool
+from pathlib import Path
 import random
 import re
 import signal
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime
-from multiprocessing.pool import Pool
-from pathlib import Path
 from typing import Any, Final, Iterable, Sequence
 
 from deep_translator import GoogleTranslator
 from dh import MAX_WORKERS, SKIP_DIRS, atomic_write
 from loguru import logger
+
 
 try:
     from tenacity import (

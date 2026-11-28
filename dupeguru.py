@@ -19,16 +19,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from collections import defaultdict
 import hashlib
 import multiprocessing as mp
 import os
-import sys
-from collections import defaultdict
 from pathlib import Path
+import sys
 from typing import Any, Iterable, Iterator
 
 from dh import MAX_WORKERS, SKIP_DIRS, fsz
+
 
 CHUNK_SIZE: int = 1 << 20
 PARTIAL_SIZE: int = 1 << 16

@@ -19,6 +19,7 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 from io import StringIO

@@ -22,16 +22,18 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import html
 from collections import namedtuple
 from datetime import datetime
 from functools import lru_cache
+import html
 from pathlib import Path
 from typing import Optional, Sequence
 
 from dh import atomic_write, fsz
 from loguru import logger
+
 
 LOG = logger
 FONT_EXTS: frozenset[str] = frozenset(

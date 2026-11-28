@@ -4,12 +4,17 @@ Find/list files by name pattern, prefix, extension, or script-ness. Analysis / d
 
 """
 
+from __future__ import annotations
 import argparse
-import fnmatch
-import sys
 from collections import Counter
-from collections.abc import Iterator, Sequence
+import fnmatch
 from pathlib import Path
+import sys
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 UNITS: tuple[str, ...] = ("B", "KB", "MB", "GB", "TB", "PB")
 

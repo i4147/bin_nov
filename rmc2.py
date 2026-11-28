@@ -5,20 +5,20 @@ Strip comments and docstrings from Python files in place, with backup/restore su
 """
 
 from __future__ import annotations
-
 import argparse
 import ast
 import contextlib
 import functools
 import io
 import multiprocessing as mp
+from pathlib import Path
 import sys
 import tokenize as _tokenize
-from pathlib import Path
 from typing import Any, Iterable, Iterator
 
-import libcst as cst
 from dh import SKIP_DIRS, atomic_replace, fsz
+import libcst as cst
+
 
 POOL_PROCESSES: int = 8
 CHUNK_SIZE: int = 4

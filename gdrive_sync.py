@@ -19,13 +19,15 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
-import os
-import pickle
 from datetime import datetime
+import os
 from pathlib import Path
+import pickle
 from typing import Any, Optional
 from urllib.parse import urlencode
+
 
 try:
     from dotenv import load_dotenv
@@ -35,13 +37,14 @@ except ImportError:
         return False
 
 
-import requests
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
+import requests
+
 
 SCOPES: list[str] = ["https://www.googleapis.com/auth/drive.readonly"]
 FOLDER_MIME: str = "application/vnd.google-apps.folder"

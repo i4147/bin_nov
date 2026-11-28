@@ -4,11 +4,14 @@ Translate lines in a text file with persistent caching and progress saving.
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import contextlib
 import io
 import json
+from pathlib import Path
 import random
 import re
 import signal
@@ -18,13 +21,12 @@ import threading
 import time
 import token
 import tokenize
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
 from typing import Any, Callable, Sequence
 
 from dh import MAX_WORKERS, atomic_write
 from googletrans import Translator
 from loguru import logger
+
 
 RETRY_ATTEMPTS: int = 4
 RETRY_DELAY: float = 0.6

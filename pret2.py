@@ -10,14 +10,16 @@ Examples:
 
 """
 
-import shutil
-import subprocess
+from __future__ import annotations
 from multiprocessing.pool import Pool
 from pathlib import Path
+import shutil
+import subprocess
 from typing import Final, NamedTuple
 
 from dh import MAX_WORKERS
 from loguru import logger
+
 
 PRETTIER_TIMEOUT_SECONDS: Final[int] = 900
 ERROR_DIR_NAME: Final[str] = "error"

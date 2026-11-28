@@ -7,11 +7,13 @@ Usage:
 
 """
 
+from __future__ import annotations
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 
 from dh import atomic_write
+
 
 # Package name (PEP 508 style) + optional extras, e.g. "lxml[html_clean]"
 REQ_RE = re.compile(r"^\s*([A-Za-z0-9][A-Za-z0-9._-]*)(\[[^\]]*\])?")

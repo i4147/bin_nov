@@ -6,13 +6,15 @@ Requires Pillow: pip install Pillow Run: python image_to_braille.py input.jpg -o
 
 """
 
+from __future__ import annotations
 import argparse
-import sys
 from pathlib import Path
+import sys
 from typing import Any
 
 from dh import atomic_write
 from PIL import Image, ImageDraw, ImageOps
+
 
 # Braille bit positions, indexed by [row][column] within each 2x4 cell.
 BRAILLE_BITS: tuple[

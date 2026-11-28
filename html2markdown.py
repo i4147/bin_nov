@@ -36,17 +36,22 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import html.parser
+from pathlib import Path
 import re
 import subprocess
 import sys
+from typing import TYPE_CHECKING
 import urllib.request
-from collections.abc import Sequence
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
 
 from dh import MAX_WORKERS, atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 HTML_SUFFIXES: frozenset[str] = frozenset({".html", ".htm", ".xhtml", ".xhtm"})
 SKIP_TAGS: frozenset[str] = frozenset(

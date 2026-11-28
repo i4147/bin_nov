@@ -22,11 +22,12 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import multiprocessing as mp
+from pathlib import Path
 import shutil
 import tarfile
-from pathlib import Path
 
 from dh import MAX_WORKERS
 

@@ -10,10 +10,11 @@ Examples:
 
 """
 
-import gzip
-import sys
+from __future__ import annotations
 from collections import deque
+import gzip
 from pathlib import Path
+import sys
 from tempfile import NamedTemporaryFile
 
 from dh import atomic_write, cprint, mpf, runcmd

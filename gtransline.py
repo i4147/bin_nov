@@ -19,15 +19,17 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import multiprocessing as mp
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 from typing import Final
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 try:
     from googletrans import Translator

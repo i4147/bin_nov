@@ -4,32 +4,34 @@ strip comments from files that use # as comment char
 
 """
 
+from __future__ import annotations
 import argparse
 import codecs
+from collections import deque
 import contextlib
+from dataclasses import dataclass
 import io
 import multiprocessing as mp
 import os
+from pathlib import Path
 import stat
 import tempfile
-from collections import deque
-from collections.abc import (
-    Iterable,
-    Iterator,
-    Sequence,
-)
-from collections.abc import (
-    Set as AbstractSet,
-)
-from dataclasses import dataclass
-from pathlib import Path
-from typing import IO, Final
+from typing import IO, TYPE_CHECKING, Final
 
 from dh import SKIP_DIRS
 from rich import filesize
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
+
+
+if TYPE_CHECKING:
+    from collections.abc import (
+        Iterable,
+        Iterator,
+        Sequence,
+        Set as AbstractSet,
+    )
 
 PROBE_BYTES: Final[int] = 8192
 COPY_CHUNK_BYTES: Final[int] = 65536

@@ -4,19 +4,24 @@ PyPI queries: newest packages (RSS), name search, download stats. Analysis / ded
 
 """
 
+from __future__ import annotations
 import argparse
-import csv
-import json
-import sys
-import urllib.request
-import xml.etree.ElementTree as ET
 from collections import defaultdict
-from collections.abc import Sequence
+import csv
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+import json
 from pathlib import Path
+import sys
+from typing import TYPE_CHECKING
+import urllib.request
+import xml.etree.ElementTree as ET
 
 from dh import atomic_write
+
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 FEEDS: dict[str, str] = {
     "updates": "https://pypi.org/rss/updates.xml",

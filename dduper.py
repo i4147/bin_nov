@@ -5,27 +5,26 @@ Parses modules with libcst (with tree-sitter as a fallback extractor) including 
 """
 
 from __future__ import annotations
-
 import argparse
 import bz2
+from collections import defaultdict
+from dataclasses import dataclass
 import gzip
 import hashlib
 import json
 import lzma
 import multiprocessing as mp
+from pathlib import Path
 import sys
 import tarfile
 import tempfile
-import zipfile
-from collections import defaultdict
-from dataclasses import dataclass
-from pathlib import Path
-from types import ModuleType
 from typing import TYPE_CHECKING, Literal, TypedDict
+import zipfile
 
-import libcst as cst
 from dh import SKIP_DIRS
+import libcst as cst
 from libcst.metadata import MetadataWrapper, PositionProvider
+
 
 try:
     import brotli as _brotli
@@ -38,9 +37,11 @@ except ImportError:
     _zstd = None
 
 try:
+    from tree_sitter import (
+        Language,
+        Parser as _TSParser,
+    )
     import tree_sitter_python as _ts_python
-    from tree_sitter import Language
-    from tree_sitter import Parser as _TSParser
 except ImportError:
     Language = None  # type: ignore[assignment]
     _TSParser = None
@@ -48,6 +49,7 @@ except ImportError:
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
+    from types import ModuleType
 
 try:
     from dh import MAX_WORKERS, atomic_write
@@ -408,9 +410,7 @@ def should_skip_dir(path: Path, *, include_tests: bool = False) -> bool:
     """Return `True` if directory `path` should be skipped during traversal."""
     if path.name in SKIP_DIRS:
         return True
-    if not include_tests and path.name.lower() in TEST_DIR_NAMES:
-        return True
-    return False
+    return bool(not include_tests and path.name.lower() in TEST_DIR_NAMES)
 
 
 def collect_python_files(base: Path, *, include_tests: bool = False) -> list[Path]:
@@ -575,9 +575,8 @@ def _insert_import_via_cst(
         new_body
         and isinstance(new_body[0], cst.EmptyLine)
         and new_body[0].comment is not None
-    ):
-        if new_body[0].comment.value.startswith("#!"):
-            insert_idx = 1
+    ) and new_body[0].comment.value.startswith("#!"):
+        insert_idx = 1
 
     new_body.insert(insert_idx, import_stmt)
     updated = module.with_changes(body=new_body)

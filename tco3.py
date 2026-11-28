@@ -4,19 +4,21 @@ Translate a text file in independently processed chunks.
 
 """
 
+from __future__ import annotations
 import argparse
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 import importlib
 import json
 import os
+from pathlib import Path
 import sys
 import threading
 import time
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from pathlib import Path
 from typing import Any, Callable
 
 from dh import MAX_WORKERS, atomic_write
 from loguru import logger
+
 
 Translator = Callable[[str], str]
 REQUEST_LOCK = threading.Lock()

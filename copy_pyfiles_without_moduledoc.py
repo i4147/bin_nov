@@ -10,8 +10,9 @@ Examples:
 
 """
 
-import shutil
+from __future__ import annotations
 from pathlib import Path
+import shutil
 
 
 def has_module_docstring(path: Path) -> bool:

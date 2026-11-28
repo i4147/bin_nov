@@ -5,15 +5,15 @@ Add short end-of-line explanations to zsh scripts for beginners.
 """
 
 from __future__ import annotations
-
 import argparse
+from pathlib import Path
 import re
 import sys
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from dh import atomic_write
 from loguru import logger
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

@@ -4,12 +4,14 @@ Generate an HTML preview page for the fonts found under the current directory.
 
 """
 
+from __future__ import annotations
 from base64 import b64encode
 from html import escape
 from pathlib import Path
 from typing import Any
 
 from dh import atomic_write
+
 
 OUTPUT: Path = Path("font_preview.html")
 FONT_FORMATS: dict[str, tuple[Any, ...]] = {

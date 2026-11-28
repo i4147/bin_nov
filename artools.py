@@ -54,30 +54,34 @@ Command-line script:
 
 """
 
+from __future__ import annotations
 import argparse
 import bz2
 import contextlib
+from datetime import datetime
 import gzip
 import io
 import lzma
+from multiprocessing import Pool
 import os
+from pathlib import Path
 import sys
 import tarfile
 import tempfile
+from typing import TYPE_CHECKING, Any, BinaryIO, Callable, Optional
 import zipfile
-from collections.abc import Iterable, Iterator
-from datetime import datetime
-from multiprocessing import Pool
-from pathlib import Path
-from typing import Any, BinaryIO, Callable, Optional
 
 import brotli
 import cramjam
+from dh import MAX_WORKERS, atomic_write
+from loguru import logger
 import lz4.frame
 import py7zr
 import zstandard as zstd
-from dh import MAX_WORKERS, atomic_write
-from loguru import logger
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
 
 CHUNK: int = 1024 * 1024
 """Read/write block size for streaming codecs (matches originals)."""

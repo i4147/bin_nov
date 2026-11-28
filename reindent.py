@@ -9,15 +9,17 @@ Usage:
 
 """
 
+from __future__ import annotations
 import argparse
 import ast
 import io
+from pathlib import Path
 import re
 import sys
 import tokenize
-from pathlib import Path
 
 from dh import atomic_write
+
 
 _CLOSING: set[str] = {"return", "raise", "break", "continue", "pass"}
 _DEDENT_KW: set[str] = {"else", "elif", "except", "finally", "case"}
