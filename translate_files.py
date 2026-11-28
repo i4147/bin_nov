@@ -36,9 +36,7 @@ try:
 except ImportError:
     _HAS_TENACITY = False
 ENCODINGS: Final = ("utf-8", "utf-8-sig", "utf-16", "cp1258", "gb18030")
-CYRILLIC_RE: Final = re.compile(
-    r"[\u0400-\u04FF\u0500-\u052F\u2DE0-\u2DFF\uA640-\uA69F\u1C80-\u1C8F]"
-)
+CYRILLIC_RE: Final = re.compile(r"[\u0400-\u04FF\u0500-\u052F\u2DE0-\u2DFF\uA640-\uA69F\u1C80-\u1C8F]")
 NON_ASCII_RE: Final = re.compile(r"[^\x00-\x7F]")
 
 
@@ -231,9 +229,7 @@ def _clear_vi_progress(src: Path) -> None:
     make_progress_path(src).unlink(missing_ok=True)
 
 
-def _translate_one_vi_file(
-    src: Path, args: argparse.Namespace, flag: InterruptFlag
-) -> bool:
+def _translate_one_vi_file(src: Path, args: argparse.Namespace, flag: InterruptFlag) -> bool:
     out = make_output_path(src, "suffix")
     print(f"\n📄 {src.name}  →  {out.name}")
     try:
@@ -285,9 +281,7 @@ def _translate_one_vi_file(
         atomic_write(out, final_text, encoding="utf-8")
         _clear_vi_progress(src)
         if failures:
-            print(
-                f"   ⚠️  Done with {failures} chunk(s) untranslated — check {out.name}"
-            )
+            print(f"   ⚠️  Done with {failures} chunk(s) untranslated — check {out.name}")
         else:
             print(f"   ✅ Saved → {out}")
         return True
@@ -297,9 +291,7 @@ def _translate_one_vi_file(
 
 
 def run_vi(args: argparse.Namespace) -> int:
-    files = [
-        p for p in Path.cwd().glob("*.txt") if p.is_file() and p.name not in SKIP_DIRS
-    ]
+    files = [p for p in Path.cwd().glob("*.txt") if p.is_file() and p.name not in SKIP_DIRS]
     if not files:
         print("No .txt files found to translate.")
         return 0
@@ -416,9 +408,7 @@ def _ru_per_line(lines: Iterable[str], args: argparse.Namespace) -> dict[str, st
     out: dict[str, str] = {}
     for line in lines:
         try:
-            translated = GoogleTranslator(
-                source=args.source, target=args.target
-            ).translate(line)
+            translated = GoogleTranslator(source=args.source, target=args.target).translate(line)
             out[line] = translated if translated is not None else line
         except Exception as exc:
             logger.error("Per-line fallback failed for {}: {}", line[:50], exc)
@@ -478,16 +468,12 @@ def run_ru(args: argparse.Namespace) -> int:
         return 0
     cyrillic = [ln for ln in lines if CYRILLIC_RE.search(ln)]
     skipped = len(lines) - len(cyrillic)
-    print(
-        f"Loaded {len(lines)} lines: {len(cyrillic)} with Cyrillic, {skipped} already non-Cyrillic/skipped"
-    )
+    print(f"Loaded {len(lines)} lines: {len(cyrillic)} with Cyrillic, {skipped} already non-Cyrillic/skipped")
     if not cyrillic:
         print(f"No Russian/Cyrillic lines to translate in {src.name}")
         return 0
     unique = dedupe_preserve_order(cyrillic)
-    print(
-        f"Deduplicated Russian lines: {len(unique)} unique from {len(cyrillic)} total"
-    )
+    print(f"Deduplicated Russian lines: {len(unique)} unique from {len(cyrillic)} total")
     groups = chunk_lines(unique, args.chunk_size)
     if not groups:
         print("Nothing to translate after chunking.")
@@ -500,9 +486,7 @@ def run_ru(args: argparse.Namespace) -> int:
     total = len(groups)
     pool = Pool(processes=MAX_WORKERS)
     try:
-        async_results = [
-            pool.apply_async(_ru_translate_chunk, (g, args)) for g in groups
-        ]
+        async_results = [pool.apply_async(_ru_translate_chunk, (g, args)) for g in groups]
         for idx, async_res in enumerate(async_results, start=1):
             group = groups[idx - 1]
             try:
@@ -533,18 +517,14 @@ def run_ru(args: argparse.Namespace) -> int:
                     replaced += 1
                 else:
                     fh.write(f"{line}\n")
-        print(
-            f"Updated {src.name}: translated {replaced} lines, kept {len(lines) - replaced} lines unchanged"
-        )
+        print(f"Updated {src.name}: translated {replaced} lines, kept {len(lines) - replaced} lines unchanged")
     except Exception as exc:
         logger.error("Error updating input file: {}", exc)
     return 0
 
 
 def _add_common_translation_args(p: argparse.ArgumentParser) -> None:
-    p.add_argument(
-        "--source", default=None, help="Source language code (mode-specific default)."
-    )
+    p.add_argument("--source", default=None, help="Source language code (mode-specific default).")
     p.add_argument("--target", default="en", help="Target language code (default: en).")
 
 
@@ -557,9 +537,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     sub = parser.add_subparsers(dest="mode", required=True)
-    p_vi = sub.add_parser(
-        "vi", help="Vietnamese → English, batch over cwd *.txt (vitrans.py)."
-    )
+    p_vi = sub.add_parser("vi", help="Vietnamese → English, batch over cwd *.txt (vitrans.py).")
     p_vi.add_argument(
         "--chunk-size",
         type=int,
@@ -630,9 +608,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_common_translation_args(p_zh)
     p_zh.set_defaults(source="auto", _handler=run_zh)
-    p_ru = sub.add_parser(
-        "ru", help="Russian → English, line-based single file (trans_ru.py)."
-    )
+    p_ru = sub.add_parser("ru", help="Russian → English, line-based single file (trans_ru.py).")
     p_ru.add_argument("input_path", help="Path to the input file.")
     p_ru.add_argument(
         "--chunk-size",
@@ -640,9 +616,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=2000,
         help="Max characters per line-group (default: 2000).",
     )
-    p_ru.add_argument(
-        "--attempts", type=int, default=4, help="Max attempts per chunk (default: 4)."
-    )
+    p_ru.add_argument("--attempts", type=int, default=4, help="Max attempts per chunk (default: 4).")
     p_ru.add_argument(
         "--retry-base-delay",
         type=float,

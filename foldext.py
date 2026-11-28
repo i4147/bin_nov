@@ -44,9 +44,7 @@ def folderize_by_extension(cwd: Path) -> tuple[set[Any], dict[str, Any]]:
                 counter += 1
             with contextlib.suppress(BaseException):
                 shutil.move(str(path), str(target_path))
-    for dir_path in sorted(
-        root_path.glob("**/*"), key=lambda p: len(p.parts), reverse=True
-    ):
+    for dir_path in sorted(root_path.glob("**/*"), key=lambda p: len(p.parts), reverse=True):
         if dir_path.is_dir() and dir_path != root_path:
             with contextlib.suppress(OSError):
                 dir_path.rmdir()
@@ -60,9 +58,7 @@ def folderize_by_extension(cwd: Path) -> tuple[set[Any], dict[str, Any]]:
         total_size += stats["total_size"]
         size_str = f"{fsz(total_size)}"
 
-        print(
-            f"{ext_display:<15} : {stats['count']:4} file{'s' if stats['count'] != 1 else ' '}  {size_str:>8}"
-        )
+        print(f"{ext_display:<15} : {stats['count']:4} file{'s' if stats['count'] != 1 else ' '}  {size_str:>8}")
     print("-" * 40)
     print(f"{'TOTAL':<15} : {total_files:4} files  {fsz(total_size):>8}")
     print("=" * 40)

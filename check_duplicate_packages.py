@@ -64,12 +64,9 @@ def process_system_directories(
     system_dirs: list[pathlib.Path],
 ) -> dict[str, pathlib.Path]:
     system_packages = {}
-    with concurrent.futures.ThreadPoolExecutor(
-        max_workers=len(system_dirs) or 1
-    ) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(system_dirs) or 1) as executor:
         future_to_dir = {
-            executor.submit(scan_directory_for_packages, directory): directory
-            for directory in system_dirs
+            executor.submit(scan_directory_for_packages, directory): directory for directory in system_dirs
         }
         for future in concurrent.futures.as_completed(future_to_dir):
             directory = future_to_dir[future]
@@ -83,13 +80,8 @@ def process_system_directories(
 
 def process_user_directories(user_dirs: list[pathlib.Path]) -> dict[str, pathlib.Path]:
     user_packages = {}
-    with concurrent.futures.ThreadPoolExecutor(
-        max_workers=len(user_dirs) or 1
-    ) as executor:
-        future_to_dir = {
-            executor.submit(scan_directory_for_packages, directory): directory
-            for directory in user_dirs
-        }
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(user_dirs) or 1) as executor:
+        future_to_dir = {executor.submit(scan_directory_for_packages, directory): directory for directory in user_dirs}
         for future in concurrent.futures.as_completed(future_to_dir):
             directory = future_to_dir[future]
             try:
@@ -118,9 +110,7 @@ def analyze_package_versions(
                             for line in f:
                                 if line.startswith("Version:"):
                                     version_key = f"{location_type}_version"
-                                    versions[version_key] = line.split(":", 1)[
-                                        1
-                                    ].strip()
+                                    versions[version_key] = line.split(":", 1)[1].strip()
                                     break
             else:
                 parent_dir = location.parent if location.is_file() else location
@@ -136,9 +126,7 @@ def analyze_package_versions(
                             for line in f:
                                 if line.startswith("Version:"):
                                     version_key = f"{location_type}_version"
-                                    versions[version_key] = line.split(":", 1)[
-                                        1
-                                    ].strip()
+                                    versions[version_key] = line.split(":", 1)[1].strip()
                                     break
         except Exception:
             pass
@@ -186,10 +174,9 @@ def main() -> None:
             print(f"   User:    {user_loc}")
             if versions["user_version"] != "unknown":
                 print(f"            Version: {versions['user_version']}")
-            if (
-                versions["system_version"] != "unknown"
-                and versions["user_version"] != "unknown"
-            ) and versions["system_version"] != versions["user_version"]:
+            if (versions["system_version"] != "unknown" and versions["user_version"] != "unknown") and versions[
+                "system_version"
+            ] != versions["user_version"]:
                 print("   ⚠️  Version mismatch!")
     else:
         print("\n✅ No duplicate packages found.")

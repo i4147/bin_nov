@@ -96,9 +96,7 @@ def _run_pool(packages: Sequence[str], method: str) -> list[PackageResult]:
         if method == "starmap":
             return pool.starmap(check_package, [(pkg,) for pkg in packages])
         if method == "imap_unordered":
-            return list(
-                pool.imap_unordered(_check_package_tuple, [(pkg,) for pkg in packages])
-            )
+            return list(pool.imap_unordered(_check_package_tuple, [(pkg,) for pkg in packages]))
         if method == "apply_async":
             async_results: list[AsyncResult[PackageResult]] = [
                 pool.apply_async(check_package, (pkg,)) for pkg in packages
@@ -110,11 +108,7 @@ def _run_pool(packages: Sequence[str], method: str) -> list[PackageResult]:
 
 def load_packages(path: Path) -> list[str]:
     try:
-        return [
-            line.strip()
-            for line in path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        ]
+        return [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
     except OSError as exc:
         logger.error(f"Error reading {path}: {exc}")
         return []
@@ -129,9 +123,7 @@ def write_lines(path: Path, lines: Sequence[str]) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "package_list", help="Path to a file with one package per line."
-    )
+    parser.add_argument("package_list", help="Path to a file with one package per line.")
     parser.add_argument(
         "--pool-method",
         choices=POOL_METHODS,

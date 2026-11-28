@@ -90,19 +90,13 @@ def compress_file(
         return False
     try:
         if size < chunk_threshold or workers <= 1:
-            atomic_write(
-                dst, _compress_bytes(src.read_bytes(), level, block_size, checksum)
-            )
+            atomic_write(dst, _compress_bytes(src.read_bytes(), level, block_size, checksum))
             return True
         n = (size + chunk_size - 1) // chunk_size
         with src.open("rb") as f:
             chunks = [f.read(chunk_size) for _ in range(n)]
         with ProcessPoolExecutor(max_workers=workers) as ex:
-            results = list(
-                ex.map(
-                    _chunk_worker, [(c, level, block_size, checksum) for c in chunks]
-                )
-            )
+            results = list(ex.map(_chunk_worker, [(c, level, block_size, checksum) for c in chunks]))
         with dst.open("wb") as o:
             for r in results:
                 o.write(r)
@@ -115,9 +109,7 @@ def compress_file(
         return False
 
 
-def tar_compress_folder(
-    folder: Path, *, level: int, checksum: bool, block_size: int, keep: bool
-) -> tuple[bool, str]:
+def tar_compress_folder(folder: Path, *, level: int, checksum: bool, block_size: int, keep: bool) -> tuple[bool, str]:
     dst = folder.parent / (folder.name + ".tar.lz4")
     if dst.exists():
         return False, f"Skipped {folder.name}: {dst.name} already exists"
@@ -273,9 +265,7 @@ def cmd_compress(args: list[Any]) -> int:
                 elif p.is_file():
                     _do_file(p)
     print(f"\n{'=' * 40}")
-    print(
-        f"Compressed: {stats['ok']}  skipped: {stats['skip']}  errors: {stats['err']}"
-    )
+    print(f"Compressed: {stats['ok']}  skipped: {stats['skip']}  errors: {stats['err']}")
     if stats["before"]:
         saved = stats["before"] - stats["after"]
         print(
@@ -378,9 +368,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="File extensions to skip (default: archive formats)",
     )
-    c.add_argument(
-        "--no-checksum", action="store_true", help="Disable LZ4 content checksum"
-    )
+    c.add_argument("--no-checksum", action="store_true", help="Disable LZ4 content checksum")
     c.set_defaults(func=cmd_compress)
     d = sub.add_parser("decompress", help="Decompress .lz4 and .tar.lz4 files")
     d.add_argument(
@@ -389,9 +377,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=["."],
         help="Paths to process (default: current directory)",
     )
-    d.add_argument(
-        "--recursive", action="store_true", help="Walk directories recursively"
-    )
+    d.add_argument("--recursive", action="store_true", help="Walk directories recursively")
     d.set_defaults(func=cmd_decompress)
     return p
 

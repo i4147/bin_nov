@@ -39,9 +39,7 @@ def walk_files(root: Path) -> Iterator[tuple[os.DirEntry, Optional[str]]]:
                     if entry.is_file(follow_symlinks=False):
                         yield entry, top_level
                     elif entry.is_dir(follow_symlinks=False):
-                        child_top_level = (
-                            top_level if top_level is not None else entry.name
-                        )
+                        child_top_level = top_level if top_level is not None else entry.name
                         stack.append((entry.path, child_top_level))
         except OSError:
             continue

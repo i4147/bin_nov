@@ -122,9 +122,7 @@ logs/
 
     def check_python_version(self) -> bool:
         try:
-            result = subprocess.run(
-                [sys.executable, "--version"], capture_output=True, text=True
-            )
+            result = subprocess.run([sys.executable, "--version"], capture_output=True, text=True)
             version_str = result.stdout.strip()
             print(f"Found Python: {version_str}")
             version = version_str.split()[-1]
@@ -132,9 +130,7 @@ logs/
             if int(major) >= 3 and int(minor) >= 11:
                 return True
             else:
-                print(
-                    f"Warning: Python {major}.{minor} detected. Recommended: Python 3.11+"
-                )
+                print(f"Warning: Python {major}.{minor} detected. Recommended: Python 3.11+")
                 return True
         except Exception as e:
             print(f"Error checking Python version: {e}")
@@ -446,9 +442,7 @@ def main() -> None:
     else:
         print("Python Development Environment Setup")
         print("-" * 40)
-        project_name = input(
-            "Enter project name (or press Enter for current directory): "
-        ).strip()
+        project_name = input("Enter project name (or press Enter for current directory): ").strip()
         if project_name:
             project_path = Path(project_name)
             if not project_path.exists():

@@ -63,9 +63,7 @@ def _make_nltk() -> Callable[..., Any]:
 
     def tok(text: str) -> list[str]:
         try:
-            return [
-                t.lower() for t in word_tokenize(text) if t.isalpha() and len(t) > 1
-            ]
+            return [t.lower() for t in word_tokenize(text) if t.isalpha() and len(t) > 1]
         except Exception:
             return []
 

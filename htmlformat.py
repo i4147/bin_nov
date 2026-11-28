@@ -241,11 +241,7 @@ def find_html_files(paths: list[Path]) -> Iterator[Path]:
                     yield path
             elif path.is_dir():
                 for html_file in path.rglob("*"):
-                    if (
-                        html_file.is_file()
-                        and html_file.suffix.lower() in HTML_EXT
-                        and html_file not in seen
-                    ):
+                    if html_file.is_file() and html_file.suffix.lower() in HTML_EXT and html_file not in seen:
                         seen.add(html_file)
                         yield html_file
             else:
@@ -259,9 +255,7 @@ def process_file(path: Path) -> ProcessingResult:
     try:
         content = read_file_safe(path)
         if content is None:
-            return ProcessingResult(
-                path=path, success=False, error="Failed to read file"
-            )
+            return ProcessingResult(path=path, success=False, error="Failed to read file")
         formatter = HTMLFormatter()
         formatted, tag_count = formatter.format_html(content)
         was_modified = formatted != content
@@ -305,9 +299,7 @@ Examples:
         type=Path,
         help="Files or directories to process (default: current directory)",
     )
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Enable verbose logging"
-    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging")
     parser.add_argument(
         "--dry-run",
         action="store_true",

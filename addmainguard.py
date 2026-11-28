@@ -36,9 +36,7 @@ from loguru import logger
 
 
 DEFAULT_INDENT: int = 4
-MAIN_GUARD_RE: re.Pattern[str] = re.compile(
-    r'if\s+__name__\s*==\s*["\']__main__["\']\s*:'
-)
+MAIN_GUARD_RE: re.Pattern[str] = re.compile(r'if\s+__name__\s*==\s*["\']__main__["\']\s*:')
 MAIN_TEMPLATE: str = (
     "\n\n"
     "def main() -> None:\n"
@@ -73,11 +71,7 @@ def is_movable(node: ast.stmt) -> bool:
         return False
     if isinstance(node, (ast.Import, ast.ImportFrom)):
         return False
-    if (
-        isinstance(node, ast.Expr)
-        and isinstance(node.value, ast.Constant)
-        and isinstance(node.value.value, str)
-    ):
+    if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
         return False
     return not (isinstance(node, ast.If) and is_main_guard_if(node))
 
@@ -248,9 +242,7 @@ def run_check(args: argparse.Namespace) -> int:
     if not files:
         logger.warning("No Python files found")
         return 0
-    print(
-        f"Found {len(files)} Python files (detect={args.detect}, workers={MAX_WORKERS}, excludes={len(excludes)})"
-    )
+    print(f"Found {len(files)} Python files (detect={args.detect}, workers={MAX_WORKERS}, excludes={len(excludes)})")
     missing: list[Path] = []
     skipped = 0
     errors: list[tuple[Path, str]] = []
@@ -367,9 +359,7 @@ def _add_common_options(parser: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="add_main_guard",
-        description=(
-            "Detect and add `if __name__ == '__main__':` guards to Python files."
-        ),
+        description=("Detect and add `if __name__ == '__main__':` guards to Python files."),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"

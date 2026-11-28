@@ -29,9 +29,7 @@ from typing import Any, Sequence
 from dh import MAX_WORKERS, atomic_write
 
 
-def _extract_plumber(
-    pdf_path: str, page_indices: Sequence[int], opts: dict
-) -> list[tuple[int, str]]:
+def _extract_plumber(pdf_path: str, page_indices: Sequence[int], opts: dict) -> list[tuple[int, str]]:
     import pdfplumber
 
     out: list[tuple[int, str]] = []
@@ -49,9 +47,7 @@ def _extract_plumber(
     return out
 
 
-def _extract_pymupdf(
-    pdf_path: str, page_indices: Sequence[int], opts: dict
-) -> list[tuple[int, str]]:
+def _extract_pymupdf(pdf_path: str, page_indices: Sequence[int], opts: dict) -> list[tuple[int, str]]:
     import pymupdf
 
     sort = bool(opts.get("sort", False))
@@ -74,9 +70,7 @@ def _extract_pymupdf(
     return out
 
 
-def _extract_pypdf(
-    pdf_path: str, page_indices: Sequence[int], opts: dict
-) -> list[tuple[int, str]]:
+def _extract_pypdf(pdf_path: str, page_indices: Sequence[int], opts: dict) -> list[tuple[int, str]]:
     from pypdf import PdfReader
 
     out: list[tuple[int, str]] = []
@@ -95,9 +89,7 @@ def _extract_pypdf(
     return out
 
 
-def _extract_pypdf2(
-    pdf_path: str, page_indices: Sequence[int], opts: dict
-) -> list[tuple[int, str]]:
+def _extract_pypdf2(pdf_path: str, page_indices: Sequence[int], opts: dict) -> list[tuple[int, str]]:
     import PyPDF2
 
     out: list[tuple[int, str]] = []
@@ -116,9 +108,7 @@ def _extract_pypdf2(
     return out
 
 
-def _extract_pdfminer(
-    pdf_path: str, page_indices: Sequence[int], opts: dict
-) -> list[tuple[int, str]]:
+def _extract_pdfminer(pdf_path: str, page_indices: Sequence[int], opts: dict) -> list[tuple[int, str]]:
     from pdfminer.high_level import extract_text
     from pdfminer.layout import LAParams
 
@@ -143,12 +133,7 @@ def _extract_pdfminer(
     out: list[tuple[int, str]] = []
     for idx in page_indices:
         try:
-            text = (
-                extract_text(
-                    pdf_path, page_numbers=[idx], password=password, laparams=laparams
-                )
-                or ""
-            )
+            text = extract_text(pdf_path, page_numbers=[idx], password=password, laparams=laparams) or ""
         except Exception as exc:
             print(
                 f"Error extracting page {idx + 1} from {pdf_path}: {exc}",
@@ -169,9 +154,7 @@ _BACKENDS: dict[str, Any] = {
 _THREAD_BACKENDS: set[str] = {"pymupdf", "plumber"}
 
 
-def _extract_chunk(
-    pdf_path: str, page_indices: Sequence[int], backend: str, opts: dict
-) -> list[tuple[int, str]]:
+def _extract_chunk(pdf_path: str, page_indices: Sequence[int], backend: str, opts: dict) -> list[tuple[int, str]]:
     return _BACKENDS[backend](pdf_path, page_indices, opts)
 
 
@@ -300,10 +283,7 @@ def process_pdf(pdf: Path, args: argparse.Namespace) -> int:
         chunks: list[list[int]] = [[idx] for idx in to_process]
     else:
         chunk_size = max(1, (len(to_process) + workers - 1) // workers)
-        chunks = [
-            to_process[i : i + chunk_size]
-            for i in range(0, len(to_process), chunk_size)
-        ]
+        chunks = [to_process[i : i + chunk_size] for i in range(0, len(to_process), chunk_size)]
     opts = _build_opts(args)
     parallel = args.parallel
     if parallel == "auto":
@@ -315,18 +295,12 @@ def process_pdf(pdf: Path, args: argparse.Namespace) -> int:
                 results.extend(_extract_chunk(str(pdf), chunk, args.backend, opts))
         elif parallel == "thread":
             with ThreadPoolExecutor(max_workers=workers) as ex:
-                futures = [
-                    ex.submit(_extract_chunk, str(pdf), c, args.backend, opts)
-                    for c in chunks
-                ]
+                futures = [ex.submit(_extract_chunk, str(pdf), c, args.backend, opts) for c in chunks]
                 for fut in as_completed(futures):
                     results.extend(fut.result())
         elif parallel == "process":
             with ProcessPoolExecutor(max_workers=workers) as ex:
-                futures = [
-                    ex.submit(_extract_chunk, str(pdf), c, args.backend, opts)
-                    for c in chunks
-                ]
+                futures = [ex.submit(_extract_chunk, str(pdf), c, args.backend, opts) for c in chunks]
                 for fut in as_completed(futures):
                     results.extend(fut.result())
         else:
@@ -351,14 +325,10 @@ def build_parser() -> argparse.ArgumentParser:
         description="Extract every PDF page into its own .txt file.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            __doc__.split("Original script equivalents", 1)[-1]
-            if "Original script equivalents" in __doc__
-            else None
+            __doc__.split("Original script equivalents", 1)[-1] if "Original script equivalents" in __doc__ else None
         ),
     )
-    p.add_argument(
-        "inputs", nargs="*", help="PDF files and/or directories (default: cwd)."
-    )
+    p.add_argument("inputs", nargs="*", help="PDF files and/or directories (default: cwd).")
     p.add_argument(
         "-b",
         "--backend",
@@ -410,9 +380,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Password for encrypted PDFs (pdfminer backend).",
     )
-    p.add_argument(
-        "-m", "--maxpages", type=int, default=0, help="Maximum pages per PDF (0 = all)."
-    )
+    p.add_argument("-m", "--maxpages", type=int, default=0, help="Maximum pages per PDF (0 = all).")
     p.add_argument(
         "-p",
         "--page-numbers",
@@ -421,9 +389,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Specific 1-based page numbers to extract.",
     )
-    p.add_argument(
-        "--no-laparams", action="store_true", help="Disable pdfminer layout analysis."
-    )
+    p.add_argument("--no-laparams", action="store_true", help="Disable pdfminer layout analysis.")
     p.add_argument(
         "--line-overlap",
         type=float,
@@ -459,9 +425,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="pdfminer LAParams.detect_vertical.",
     )
-    p.add_argument(
-        "--all-texts", action="store_true", help="pdfminer LAParams.all_texts."
-    )
+    p.add_argument("--all-texts", action="store_true", help="pdfminer LAParams.all_texts.")
     return p
 
 

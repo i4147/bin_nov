@@ -127,31 +127,18 @@ def _sql_literal(value: Any) -> str:
         return repr(value)
     if isinstance(value, str):
         return "'" + value.replace("'", "''") + "'"
-    return (
-        "'"
-        + json.dumps(value, ensure_ascii=False, default=str).replace("'", "''")
-        + "'"
-    )
+    return "'" + json.dumps(value, ensure_ascii=False, default=str).replace("'", "''") + "'"
 
 
 def _is_table_dict(data: Any) -> bool:
-    return (
-        isinstance(data, dict)
-        and bool(data)
-        and all(isinstance(v, list) for v in data.values())
-    )
+    return isinstance(data, dict) and bool(data) and all(isinstance(v, list) for v in data.values())
 
 
 def _as_tables(data: Any, fallback_name: str) -> Tables:
     if _is_table_dict(data):
-        return {
-            str(k): [r if isinstance(r, dict) else {"value": r} for r in v]
-            for k, v in data.items()
-        }
+        return {str(k): [r if isinstance(r, dict) else {"value": r} for r in v] for k, v in data.items()}
     if isinstance(data, list):
-        return {
-            fallback_name: [r if isinstance(r, dict) else {"value": r} for r in data]
-        }
+        return {fallback_name: [r if isinstance(r, dict) else {"value": r} for r in data]}
     return {fallback_name: [data if isinstance(data, dict) else {"value": data}]}
 
 
@@ -166,11 +153,7 @@ def write_csv(tables: Tables, out_path: Path) -> list[Path]:
     multi = len(tables) > 1
     written: list[Path] = []
     for name, rows in tables.items():
-        target = (
-            out_path.with_name(f"{out_path.stem}.{name}{out_path.suffix}")
-            if multi
-            else out_path
-        )
+        target = out_path.with_name(f"{out_path.stem}.{name}{out_path.suffix}") if multi else out_path
         cols = _columns(rows)
         with target.open("w", newline="", encoding="utf-8") as fh:
             writer = csv.DictWriter(fh, fieldnames=cols)
@@ -224,10 +207,7 @@ def load_db(path: Path) -> Tables:
             logger.debug(f"sqlite mmap_size for {path} ({size / 1_048_576:.1f} MB)")
             con.execute(f"PRAGMA mmap_size={size}")
         names = [
-            r[0]
-            for r in con.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
-            )
+            r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")
         ]
         out: Tables = {}
         for name in names:
@@ -409,9 +389,7 @@ def _parse_value_tuples(raw: str) -> list[list[Any]]:
             if in_str:
                 if c == "\\" and quote == "'" and i + 1 < n:
                     nxt = raw[i + 1]
-                    cur.append(
-                        {"n": "\n", "t": "\t", "r": "\r", "0": "\0"}.get(nxt, nxt)
-                    )
+                    cur.append({"n": "\n", "t": "\t", "r": "\r", "0": "\0"}.get(nxt, nxt))
                     i += 2
                     continue
                 if c == quote:
@@ -502,10 +480,7 @@ def load_xlsx(path: Path) -> Tables:
         for ws in wb.worksheets:
             rows_iter = ws.iter_rows(values_only=True)
             try:
-                header = [
-                    str(c) if c is not None else f"c{i}"
-                    for i, c in enumerate(next(rows_iter))
-                ]
+                header = [str(c) if c is not None else f"c{i}" for i, c in enumerate(next(rows_iter))]
             except StopIteration:
                 out[ws.title] = []
                 continue
@@ -525,8 +500,7 @@ def load_xls(path: Path) -> Tables:
             continue
         header = [str(sheet.cell_value(0, c)) for c in range(sheet.ncols)]
         out[sheet.name] = [
-            {header[c]: sheet.cell_value(r, c) for c in range(sheet.ncols)}
-            for r in range(1, sheet.nrows)
+            {header[c]: sheet.cell_value(r, c) for c in range(sheet.ncols)} for r in range(1, sheet.nrows)
         ]
     return out
 
@@ -539,16 +513,11 @@ def load_xlsb(path: Path) -> Tables:
             with wb.get_sheet(name) as sheet:
                 rows_iter = sheet.rows()
                 try:
-                    header = [
-                        str(c.v) if c.v is not None else f"c{i}"
-                        for i, c in enumerate(next(rows_iter))
-                    ]
+                    header = [str(c.v) if c.v is not None else f"c{i}" for i, c in enumerate(next(rows_iter))]
                 except StopIteration:
                     out[name] = []
                     continue
-                out[name] = [
-                    {header[i]: c.v for i, c in enumerate(row)} for row in rows_iter
-                ]
+                out[name] = [{header[i]: c.v for i, c in enumerate(row)} for row in rows_iter]
     return out
 
 
@@ -573,12 +542,7 @@ def load_ods(path: Path) -> Tables:
             if header is None:
                 header = [str(v) if v != "" else f"c{i}" for i, v in enumerate(values)]
                 continue
-            rows_out.append(
-                {
-                    header[i] if i < len(header) else f"c{i}": v
-                    for i, v in enumerate(values)
-                }
-            )
+            rows_out.append({header[i] if i < len(header) else f"c{i}": v for i, v in enumerate(values)})
         out[name] = rows_out
     return out
 
@@ -638,11 +602,7 @@ def write_parquet(tables: Tables, out_path: Path) -> list[Path]:
         cols = _columns(rows)
         arrays = {c: [r.get(c) for r in rows] for c in cols}
         tbl = pa.table(arrays)
-        target = (
-            out_path.with_name(f"{out_path.stem}.{name}{out_path.suffix}")
-            if multi
-            else out_path
-        )
+        target = out_path.with_name(f"{out_path.stem}.{name}{out_path.suffix}") if multi else out_path
         pq.write_table(tbl, target, compression="snappy")
         written.append(target)
     return written
@@ -860,10 +820,7 @@ def load_netcdf(path: Path) -> Tables:
     xr = _require("xarray")
     ds = xr.open_dataset(path)
     try:
-        return {
-            var: ds[var].to_dataframe().reset_index().to_dict("records")
-            for var in ds.data_vars
-        }
+        return {var: ds[var].to_dataframe().reset_index().to_dict("records") for var in ds.data_vars}
     finally:
         ds.close()
 
@@ -883,10 +840,7 @@ def load_zarr(path: Path) -> Tables:
     xr = _require("xarray")
     ds = xr.open_zarr(path)
     try:
-        return {
-            var: ds[var].to_dataframe().reset_index().to_dict("records")
-            for var in ds.data_vars
-        }
+        return {var: ds[var].to_dataframe().reset_index().to_dict("records") for var in ds.data_vars}
     finally:
         ds.close()
 
@@ -957,9 +911,7 @@ def write_dbf(tables: Tables, out_path: Path) -> list[Path]:
     table.open(dbf.READ_WRITE)
     try:
         for row in rows:
-            table.append(
-                tuple("" if row.get(c) is None else str(row.get(c)) for c in cols)
-            )
+            table.append(tuple("" if row.get(c) is None else str(row.get(c)) for c in cols))
     finally:
         table.close()
     return [out_path]
@@ -968,9 +920,7 @@ def write_dbf(tables: Tables, out_path: Path) -> list[Path]:
 def _geo_to_tables(gdf: Any) -> Tables:
     df = gdf.copy()
     if "geometry" in df.columns:
-        df["geometry"] = df["geometry"].apply(
-            lambda g: g.wkt if g is not None else None
-        )
+        df["geometry"] = df["geometry"].apply(lambda g: g.wkt if g is not None else None)
     return {df.attrs.get("name", "features"): df.to_dict(orient="records")}
 
 
@@ -990,14 +940,10 @@ def write_geojson(tables: Tables, out_path: Path) -> list[Path]:
 
     df = pd.DataFrame(rows)
     if "geometry" in df.columns:
-        df["geometry"] = df["geometry"].apply(
-            lambda w: shapely_wkt.loads(w) if isinstance(w, str) and w else None
-        )
+        df["geometry"] = df["geometry"].apply(lambda w: shapely_wkt.loads(w) if isinstance(w, str) and w else None)
         gdf = gpd.GeoDataFrame(df, geometry="geometry")
     else:
-        gdf = gpd.GeoDataFrame(
-            df, geometry=gpd.points_from_xy([0] * len(df), [0] * len(df))
-        )
+        gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy([0] * len(df), [0] * len(df)))
     gdf.to_file(out_path, driver="GeoJSON")
     return [out_path]
 
@@ -1017,14 +963,10 @@ def write_shapefile(tables: Tables, out_path: Path) -> list[Path]:
     _, rows = next(iter(tables.items()))
     df = pd.DataFrame(rows)
     if "geometry" in df.columns:
-        df["geometry"] = df["geometry"].apply(
-            lambda w: shapely_wkt.loads(w) if isinstance(w, str) and w else None
-        )
+        df["geometry"] = df["geometry"].apply(lambda w: shapely_wkt.loads(w) if isinstance(w, str) and w else None)
         gdf = gpd.GeoDataFrame(df, geometry="geometry")
     else:
-        gdf = gpd.GeoDataFrame(
-            df, geometry=gpd.points_from_xy([0] * len(df), [0] * len(df))
-        )
+        gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy([0] * len(df), [0] * len(df)))
     gdf.to_file(out_path)
     return [out_path]
 
@@ -1045,11 +987,7 @@ def write_ini(tables: Tables, out_path: Path) -> list[Path]:
 
     cp = configparser.ConfigParser()
     for name, rows in tables.items():
-        cp[name] = {
-            str(r.get("key")): str(r.get("value", ""))
-            for r in rows
-            if r.get("key") is not None
-        }
+        cp[name] = {str(r.get("key")): str(r.get("value", "")) for r in rows if r.get("key") is not None}
     with out_path.open("w", encoding="utf-8") as fh:
         cp.write(fh)
     return [out_path]
@@ -1268,9 +1206,7 @@ def convert_job(
         if not tables:
             msg = "no tables / rows found in input"
             raise ValueError(msg)
-        out_path = _output_path(
-            src, target_fmt, Path(out_dir_str) if out_dir_str else None
-        )
+        out_path = _output_path(src, target_fmt, Path(out_dir_str) if out_dir_str else None)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         written = WRITERS[target_fmt](tables, out_path)
         return src_str, True, [str(p) for p in written], "ok"
@@ -1328,10 +1264,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     if not sources:
         logger.error("no usable inputs")
         return 2
-    jobs = [
-        (str(p), target_fmt, str(args.output_dir) if args.output_dir else None)
-        for p in sources
-    ]
+    jobs = [(str(p), target_fmt, str(args.output_dir) if args.output_dir else None) for p in sources]
     if len(jobs) > 1 and MAX_WORKERS > 1:
         workers = min(MAX_WORKERS, len(jobs))
         logger.info(f"converting {len(jobs)} files with {workers} workers")

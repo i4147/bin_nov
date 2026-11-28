@@ -66,9 +66,7 @@ def fuzzy_score(query: str, text: str):
     return (score, positions)
 
 
-def render_match(
-    text: str, positions: Iterable[Any], width: int, selected: bool = False
-) -> str:
+def render_match(text: str, positions: Iterable[Any], width: int, selected: bool = False) -> str:
     RESET = "\033[0m"
     SELECTED = "\033[7m"
     MATCH = "\033[1;33m"

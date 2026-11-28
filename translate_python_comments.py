@@ -32,50 +32,48 @@ _NON_LATIN_RE: Final[re.Pattern[str]] = re.compile(
     r"[^\x00-\x7f]|[\u0400-\u04ff\u0600-\u06ff\u0900-\u097f"
     r"\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]"
 )
-_NON_ENGLISH_WORDS: Final[frozenset[str]] = frozenset(
-    {
-        " el ",
-        " la ",
-        " los ",
-        " las ",
-        " una ",
-        " uno ",
-        " que ",
-        " para ",
-        " con ",
-        " por ",
-        " como ",
-        " del ",
-        " der ",
-        " die ",
-        " das ",
-        " und ",
-        " nicht ",
-        " ist ",
-        " ein ",
-        " eine ",
-        " des ",
-        " les ",
-        " une ",
-        " dans ",
-        " pour ",
-        " avec ",
-        " est ",
-        " de ",
-        " en ",
-        " un ",
-        " uma ",
-        " não ",
-        " não",
-        " são ",
-        " com ",
-        " هذا ",
-        " هذه ",
-        " من ",
-        " إلى ",
-        " و ",
-    }
-)
+_NON_ENGLISH_WORDS: Final[frozenset[str]] = frozenset({
+    " el ",
+    " la ",
+    " los ",
+    " las ",
+    " una ",
+    " uno ",
+    " que ",
+    " para ",
+    " con ",
+    " por ",
+    " como ",
+    " del ",
+    " der ",
+    " die ",
+    " das ",
+    " und ",
+    " nicht ",
+    " ist ",
+    " ein ",
+    " eine ",
+    " des ",
+    " les ",
+    " une ",
+    " dans ",
+    " pour ",
+    " avec ",
+    " est ",
+    " de ",
+    " en ",
+    " un ",
+    " uma ",
+    " não ",
+    " não",
+    " são ",
+    " com ",
+    " هذا ",
+    " هذه ",
+    " من ",
+    " إلى ",
+    " و ",
+})
 _WORKER_BACKEND: str
 _WORKER_LIBRE_URL: str
 _WORKER_TIMEOUT: float
@@ -99,9 +97,7 @@ class TranslationJob:
 
 
 def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Translate detectable non-English Python comments and strings."
-    )
+    parser = argparse.ArgumentParser(description="Translate detectable non-English Python comments and strings.")
     parser.add_argument(
         "paths",
         nargs="*",
@@ -163,11 +159,7 @@ def discover_python_files(inputs: list[Path]) -> list[Path]:
             if path.suffix == ".py":
                 discovered.add(path.resolve())
         elif path.is_dir():
-            discovered.update(
-                candidate.resolve()
-                for candidate in path.rglob("*.py")
-                if candidate.is_file()
-            )
+            discovered.update(candidate.resolve() for candidate in path.rglob("*.py") if candidate.is_file())
         else:
             msg = f"Input path is neither a regular file nor directory: {path}"
             raise OSError(msg)
@@ -238,16 +230,10 @@ def extract_jobs(
     tokens = tokenize.generate_tokens(iter(source.splitlines(keepends=True)).__next__)
     for token in tokens:
         if token.type == tokenize.COMMENT:
-            absolute_start = position_to_offset(
-                line_offsets, token.start[0], token.start[1]
-            )
+            absolute_start = position_to_offset(line_offsets, token.start[0], token.start[1])
             marker_end = absolute_start + 1
             text_start = marker_end
-            text = source[
-                text_start : position_to_offset(
-                    line_offsets, token.end[0], token.end[1]
-                )
-            ]
+            text = source[text_start : position_to_offset(line_offsets, token.end[0], token.end[1])]
             if contains_probable_non_english(text):
                 for relative_start, relative_end, piece in split_text(text, chunk_size):
                     jobs.append(
@@ -258,9 +244,7 @@ def extract_jobs(
                         )
                     )
         elif token.type == tokenize.STRING:
-            token_start = position_to_offset(
-                line_offsets, token.start[0], token.start[1]
-            )
+            token_start = position_to_offset(line_offsets, token.start[0], token.start[1])
             token_end = position_to_offset(line_offsets, token.end[0], token.end[1])
             token_text = source[token_start:token_end]
             prefix_match = re.match(r"(?i)^([rubf]*)", token_text)
@@ -283,9 +267,7 @@ def extract_jobs(
             payload_start, payload_end = bounds
             payload = source[payload_start:payload_end]
             if contains_probable_non_english(payload):
-                for relative_start, relative_end, piece in split_text(
-                    payload, chunk_size
-                ):
+                for relative_start, relative_end, piece in split_text(payload, chunk_size):
                     jobs.append(
                         TranslationJob(
                             piece,
@@ -316,15 +298,13 @@ def http_json_request(
 
 
 def translate_google(text: str, timeout: float) -> str:
-    query = urlencode(
-        {
-            "client": "gtx",
-            "sl": "auto",
-            "tl": "en",
-            "dt": "t",
-            "q": text,
-        }
-    )
+    query = urlencode({
+        "client": "gtx",
+        "sl": "auto",
+        "tl": "en",
+        "dt": "t",
+        "q": text,
+    })
     request = Request(
         f"https://translate.googleapis.com/translate_a/single?{query}",
         headers={"User-Agent": "python-translation-script/1.0"},
@@ -333,11 +313,7 @@ def translate_google(text: str, timeout: float) -> str:
     if not isinstance(payload, list) or not payload or not isinstance(payload[0], list):
         msg = "Google returned an unexpected response"
         raise ValueError(msg)
-    translated = "".join(
-        item[0]
-        for item in payload[0]
-        if isinstance(item, list) and item and isinstance(item[0], str)
-    )
+    translated = "".join(item[0] for item in payload[0] if isinstance(item, list) and item and isinstance(item[0], str))
     if not translated:
         msg = "Google returned empty translation"
         raise ValueError(msg)
@@ -345,9 +321,7 @@ def translate_google(text: str, timeout: float) -> str:
 
 
 def translate_libretranslate(text: str, url: str, timeout: float) -> str:
-    body = json.dumps(
-        {"q": text, "source": "auto", "target": "en", "format": "text"}
-    ).encode("utf-8")
+    body = json.dumps({"q": text, "source": "auto", "target": "en", "format": "text"}).encode("utf-8")
     request = Request(
         url,
         data=body,
@@ -359,9 +333,7 @@ def translate_libretranslate(text: str, url: str, timeout: float) -> str:
         },
     )
     payload = http_json_request(request, timeout)
-    if not isinstance(payload, dict) or not isinstance(
-        payload.get("translatedText"), str
-    ):
+    if not isinstance(payload, dict) or not isinstance(payload.get("translatedText"), str):
         msg = "LibreTranslate returned an unexpected response"
         raise ValueError(msg)
     translated = payload["translatedText"]

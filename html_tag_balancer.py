@@ -27,24 +27,22 @@ from typing import Any
 from dh import atomic_write
 
 
-VOID_ELEMENTS = frozenset(
-    {
-        "area",
-        "base",
-        "br",
-        "col",
-        "embed",
-        "hr",
-        "img",
-        "input",
-        "link",
-        "meta",
-        "param",
-        "source",
-        "track",
-        "wbr",
-    }
-)
+VOID_ELEMENTS = frozenset({
+    "area",
+    "base",
+    "br",
+    "col",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr",
+})
 
 
 class TagBalanceChecker(HTMLParser):
@@ -96,14 +94,8 @@ def check_html_file(path: Path) -> tuple[bool, list[str]]:
         parser.feed(source)
     except Exception as e:
         return False, [f"⚠️  Parsing error: {e}"]
-    missing_closings = [
-        f"Missing </{tag}> (opened at line {pos[0]}, col {pos[1]})"
-        for tag, pos in parser.stack
-    ]
-    unexpected_closings = [
-        f"Unexpected </{tag}> at line {pos[0]}, col {pos[1]}"
-        for _, tag, pos in parser.errors
-    ]
+    missing_closings = [f"Missing </{tag}> (opened at line {pos[0]}, col {pos[1]})" for tag, pos in parser.stack]
+    unexpected_closings = [f"Unexpected </{tag}> at line {pos[0]}, col {pos[1]}" for _, tag, pos in parser.errors]
     issues = missing_closings + unexpected_closings
     is_balanced = len(issues) == 0
     return is_balanced, issues

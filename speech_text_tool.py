@@ -27,9 +27,7 @@ DEFAULT_WHISPER_MODEL: str = "base"
 
 
 def _missing(package: str, pip_name: str) -> SystemExit:
-    return SystemExit(
-        f"Missing optional dependency '{package}'. Install it with: pip install {pip_name}"
-    )
+    return SystemExit(f"Missing optional dependency '{package}'. Install it with: pip install {pip_name}")
 
 
 def chunk_text(text: str, max_chars: int = DEFAULT_MAX_CHARS) -> list[str]:
@@ -149,9 +147,7 @@ def cmd_play(args: argparse.Namespace) -> int:
         raise _missing(msg, "PyGObject  # plus distro GStreamer") from None
     sound: str = args.sound
     uri: str = (
-        sound
-        if sound.startswith(("http://", "https://"))
-        else "file://" + pathname2url(str(Path(sound).absolute()))
+        sound if sound.startswith(("http://", "https://")) else "file://" + pathname2url(str(Path(sound).absolute()))
     )
     Gst.init(None)
     playbin = Gst.ElementFactory.make("playbin", "playbin")
@@ -167,9 +163,7 @@ def cmd_play(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Speech <-> text utilities.")
     sub = parser.add_subparsers(dest="command", required=True)
-    tr = sub.add_parser(
-        "transcribe", help="Audio -> text (Google Web Speech or Whisper)"
-    )
+    tr = sub.add_parser("transcribe", help="Audio -> text (Google Web Speech or Whisper)")
     tr.add_argument("input", type=Path, help="Input audio file (wav/m4a/mp3/...)")
     tr.add_argument(
         "-o",

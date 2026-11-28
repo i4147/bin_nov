@@ -17,19 +17,17 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-IMAGE_EXT: frozenset[str] = frozenset(
-    {
-        ".jpg",
-        ".jpeg",
-        ".png",
-        ".gif",
-        ".bmp",
-        ".tiff",
-        ".tif",
-        ".webp",
-        ".ico",
-    }
-)
+IMAGE_EXT: frozenset[str] = frozenset({
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".bmp",
+    ".tiff",
+    ".tif",
+    ".webp",
+    ".ico",
+})
 UNITS: tuple[str, ...] = ("B", "KB", "MB", "GB", "TB")
 
 
@@ -61,9 +59,7 @@ def gather(root: Path, recursive: bool) -> list[Path]:
     return sorted(p for p in candidates if p.is_file() and ".git" not in p.parts)
 
 
-def execute_plan(
-    plan: list[tuple[Path, Path]], apply: bool, cleanup: bool, root: Path
-) -> int:
+def execute_plan(plan: list[tuple[Path, Path]], apply: bool, cleanup: bool, root: Path) -> int:
     """Print/apply (src -> dst) moves; return how many were planned."""
     moved: int = 0
     for src, dst in plan:
@@ -141,9 +137,7 @@ def cmd_by_name(args: argparse.Namespace) -> int:
     """Group files into folders named by their normalized filename."""
     root: Path = args.root.resolve()
     self_path: Path = Path(__file__).resolve()
-    files: list[Path] = [
-        p for p in root.rglob(args.glob) if p.is_file() and p.resolve() != self_path
-    ]
+    files: list[Path] = [p for p in root.rglob(args.glob) if p.is_file() and p.resolve() != self_path]
     groups: dict[str, list[Path]] = defaultdict(list)
     for path in files:
         groups[normalize_name(path, True)].append(path)
@@ -241,9 +235,7 @@ def cmd_rename_by_parent(args: argparse.Namespace) -> int:
 def add_common(child: argparse.ArgumentParser, recursive_default: bool) -> None:
     """Shared --apply/--recursive/--cleanup options for movers."""
     child.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    child.add_argument(
-        "--apply", action="store_true", help="Actually move (default: dry-run plan)"
-    )
+    child.add_argument("--apply", action="store_true", help="Actually move (default: dry-run plan)")
     child.add_argument(
         "-r",
         "--recursive",
@@ -251,9 +243,7 @@ def add_common(child: argparse.ArgumentParser, recursive_default: bool) -> None:
         default=recursive_default,
         help=f"Collect recursively (default: {recursive_default})",
     )
-    child.add_argument(
-        "--cleanup", action="store_true", help="Remove emptied dirs after moving"
-    )
+    child.add_argument("--cleanup", action="store_true", help="Remove emptied dirs after moving")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -277,9 +267,7 @@ def build_parser() -> argparse.ArgumentParser:
     bs.set_defaults(handler=cmd_by_image_size)
     ld = sub.add_parser("leaf-dirs", help="Leaf dirs containing .py files (nosubdir)")
     ld.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    ld.add_argument(
-        "-s", "--max-kb", type=float, default=None, help="Max dir size in KB"
-    )
+    ld.add_argument("-s", "--max-kb", type=float, default=None, help="Max dir size in KB")
     ld.set_defaults(handler=cmd_leaf_dirs)
     rp = sub.add_parser("rename-by-parent", help="README.pdf -> <parent>.pdf")
     rp.add_argument("root", nargs="?", type=Path, default=Path.cwd())

@@ -56,17 +56,11 @@ EnvFileOpt = Annotated[Path, typer.Option("--env-file", help="Env file path")]
 UsernameOpt = Annotated[str, typer.Option("--username", help="GitHub username")]
 
 
-def _run(
-    cmd: list[str], cwd: Optional[Path] = None, check: bool = False
-) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        cmd, cwd=str(cwd) if cwd else None, text=True, capture_output=True, check=check
-    )
+def _run(cmd: list[str], cwd: Optional[Path] = None, check: bool = False) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(cmd, cwd=str(cwd) if cwd else None, text=True, capture_output=True, check=check)
 
 
-def _git(
-    args: list[str], cwd: Path, check: bool = False
-) -> subprocess.CompletedProcess[str]:
+def _git(args: list[str], cwd: Path, check: bool = False) -> subprocess.CompletedProcess[str]:
     return _run(["git", *args], cwd=cwd, check=check)
 
 
@@ -172,9 +166,7 @@ class GitHubClient:
 
     def repo_exists(self, name: str) -> bool:
         if _gh_authed():
-            return (
-                _run(["gh", "repo", "view", f"{self.username}/{name}"]).returncode == 0
-            )
+            return _run(["gh", "repo", "view", f"{self.username}/{name}"]).returncode == 0
         if self.token:
             status, _ = self._rest("GET", f"/repos/{self.username}/{name}", None)
             return status == 200
@@ -197,9 +189,7 @@ class GitHubClient:
         msg = "No GitHub auth available: run `gh auth login` or provide GITHUB_TOKEN"
         raise RuntimeError(msg)
 
-    def _create_gh(
-        self, name: str, description: str, private: bool, auto_init: bool
-    ) -> dict[str, Any]:
+    def _create_gh(self, name: str, description: str, private: bool, auto_init: bool) -> dict[str, Any]:
         cmd = [
             "gh",
             "repo",
@@ -220,9 +210,7 @@ class GitHubClient:
             raise RuntimeError(r.stderr.strip() or "gh repo create failed")
         return self._default_payload(name)
 
-    def _create_rest(
-        self, name: str, description: str, private: bool, auto_init: bool
-    ) -> dict[str, Any]:
+    def _create_rest(self, name: str, description: str, private: bool, auto_init: bool) -> dict[str, Any]:
         payload = {
             "name": name,
             "description": description,
@@ -246,9 +234,7 @@ class GitHubClient:
             "ssh_url": f"git@github.com:{self.username}/{name}.git",
         }
 
-    def _rest(
-        self, method: str, path: str, payload: Optional[dict[str, Any]]
-    ) -> tuple[int, Any]:
+    def _rest(self, method: str, path: str, payload: Optional[dict[str, Any]]) -> tuple[int, Any]:
         url = f"https://api.github.com{path}"
         data = json.dumps(payload).encode() if payload else None
         req = urllib.request.Request(url, method=method, data=data)
@@ -289,32 +275,20 @@ def _version_cb(value: bool) -> None:
 def _main(
     version: Annotated[
         bool,
-        typer.Option(
-            "--version", callback=_version_cb, is_eager=True, help="Show version"
-        ),
+        typer.Option("--version", callback=_version_cb, is_eager=True, help="Show version"),
     ] = False,
-    verbose: Annotated[
-        bool, typer.Option("--verbose", "-v", help="Enable debug logging to stderr")
-    ] = False,
+    verbose: Annotated[bool, typer.Option("--verbose", "-v", help="Enable debug logging to stderr")] = False,
 ) -> None:
     if verbose:
-        logger.add(
-            sys.stderr, level="DEBUG", format="<level>{level}</level> | {message}"
-        )
+        logger.add(sys.stderr, level="DEBUG", format="<level>{level}</level> | {message}")
 
 
 @app.command()
 def create(
     name: Annotated[str, typer.Argument(help="Repository name")],
-    description: Annotated[
-        str, typer.Option("-d", "--description", help="Repo description")
-    ] = DEFAULT_DESCRIPTION,
-    private: Annotated[
-        bool, typer.Option("--private/--public", help="Visibility")
-    ] = False,
-    auto_init: Annotated[
-        bool, typer.Option("--auto-init", help="Initialize with README")
-    ] = False,
+    description: Annotated[str, typer.Option("-d", "--description", help="Repo description")] = DEFAULT_DESCRIPTION,
+    private: Annotated[bool, typer.Option("--private/--public", help="Visibility")] = False,
+    auto_init: Annotated[bool, typer.Option("--auto-init", help="Initialize with README")] = False,
     token: TokenOpt = None,
     env_file: EnvFileOpt = DEFAULT_ENV_FILE,
     username: UsernameOpt = DEFAULT_USERNAME,
@@ -337,60 +311,34 @@ def create(
 
 @app.command()
 def push(
-    name: Annotated[
-        Optional[str], typer.Argument(help="Repo name (default: cwd basename)")
-    ] = None,
-    branch: Annotated[
-        str, typer.Option("--branch", "-b", help="Branch name")
-    ] = DEFAULT_BRANCH,
-    message: Annotated[
-        Optional[str], typer.Option("-m", "--message", help="Commit message")
-    ] = None,
+    name: Annotated[Optional[str], typer.Argument(help="Repo name (default: cwd basename)")] = None,
+    branch: Annotated[str, typer.Option("--branch", "-b", help="Branch name")] = DEFAULT_BRANCH,
+    message: Annotated[Optional[str], typer.Option("-m", "--message", help="Commit message")] = None,
     remote: Annotated[str, typer.Option("--remote", help="Remote name")] = "origin",
-    protocol: Annotated[
-        Literal["ssh", "https"], typer.Option("--protocol", help="URL protocol")
-    ] = "ssh",
-    private: Annotated[
-        bool, typer.Option("--private/--public", help="Visibility")
-    ] = False,
-    description: Annotated[
-        Optional[str], typer.Option("-d", "--description", help="Repo description")
-    ] = None,
+    protocol: Annotated[Literal["ssh", "https"], typer.Option("--protocol", help="URL protocol")] = "ssh",
+    private: Annotated[bool, typer.Option("--private/--public", help="Visibility")] = False,
+    description: Annotated[Optional[str], typer.Option("-d", "--description", help="Repo description")] = None,
     existing: Annotated[
         Literal["ask", "merge", "new", "exit"],
         typer.Option("--existing", help="Behavior when a git repo already exists"),
     ] = "merge",
-    no_gitignore: Annotated[
-        bool, typer.Option("--no-gitignore", help="Skip copying ~/.gitignore")
-    ] = False,
-    no_readme: Annotated[
-        bool, typer.Option("--no-readme", help="Skip auto README creation")
-    ] = False,
-    no_commit: Annotated[
-        bool, typer.Option("--no-commit", help="Skip commit step")
-    ] = False,
+    no_gitignore: Annotated[bool, typer.Option("--no-gitignore", help="Skip copying ~/.gitignore")] = False,
+    no_readme: Annotated[bool, typer.Option("--no-readme", help="Skip auto README creation")] = False,
+    no_commit: Annotated[bool, typer.Option("--no-commit", help="Skip commit step")] = False,
     no_push: Annotated[
         bool,
         typer.Option("--no-push", help="Local-only: skip remote creation and push"),
     ] = False,
     pull_rebase: Annotated[
         bool,
-        typer.Option(
-            "--pull-rebase/--no-pull-rebase", help="Auto-rebase on push rejection"
-        ),
+        typer.Option("--pull-rebase/--no-pull-rebase", help="Auto-rebase on push rejection"),
     ] = True,
-    yes: Annotated[
-        bool, typer.Option("--yes", "-y", help="Non-interactive mode")
-    ] = False,
+    yes: Annotated[bool, typer.Option("--yes", "-y", help="Non-interactive mode")] = False,
     token: TokenOpt = None,
     env_file: EnvFileOpt = DEFAULT_ENV_FILE,
     username: UsernameOpt = DEFAULT_USERNAME,
-    git_user: Annotated[
-        str, typer.Option("--git-user", help="git user.name")
-    ] = DEFAULT_GIT_USER,
-    git_email: Annotated[
-        str, typer.Option("--git-email", help="git user.email")
-    ] = DEFAULT_GIT_EMAIL,
+    git_user: Annotated[str, typer.Option("--git-user", help="git user.name")] = DEFAULT_GIT_USER,
+    git_email: Annotated[str, typer.Option("--git-email", help="git user.email")] = DEFAULT_GIT_EMAIL,
     global_gitignore: Annotated[
         Path, typer.Option("--global-gitignore", help="Path to global .gitignore")
     ] = DEFAULT_GLOBAL_GITIGNORE,
@@ -457,12 +405,8 @@ def push(
 
     try:
         if not client.repo_exists(repo_name):
-            client.create(
-                repo_name, description or DEFAULT_DESCRIPTION, private, auto_init=False
-            )
-            console.print(
-                f"[green]✓ Created GitHub repo {username}/{repo_name}[/green]"
-            )
+            client.create(repo_name, description or DEFAULT_DESCRIPTION, private, auto_init=False)
+            console.print(f"[green]✓ Created GitHub repo {username}/{repo_name}[/green]")
         else:
             console.print(f"[green]✓ Repo exists: {username}/{repo_name}[/green]")
     except RuntimeError as exc:
@@ -536,13 +480,9 @@ def config_cmd(env_file: EnvFileOpt = DEFAULT_ENV_FILE) -> None:
     table.add_row("Version", __version__)
     table.add_row("Env file", str(env_file))
     table.add_row("Token", "[green]✓ set[/green]" if token else "[red]✗ missing[/red]")
-    table.add_row(
-        "gh CLI", f"[green]✓ {gh_bin}[/green]" if gh_bin else "[red]✗ not found[/red]"
-    )
+    table.add_row("gh CLI", f"[green]✓ {gh_bin}[/green]" if gh_bin else "[red]✗ not found[/red]")
     table.add_row("gh authed", "[green]✓[/green]" if _gh_authed() else "[red]✗[/red]")
-    table.add_row(
-        "git", f"[green]✓ {git_bin}[/green]" if git_bin else "[red]✗ not found[/red]"
-    )
+    table.add_row("git", f"[green]✓ {git_bin}[/green]" if git_bin else "[red]✗ not found[/red]")
     table.add_row("Log file", str(LOG_DIR / "ghrepo.log"))
     console.print(table)
 

@@ -114,9 +114,7 @@ def backend(name: str) -> Backend:
         from simhash import Simhash  # type: ignore[import-untyped]
 
         def digest_simhash(data: bytes) -> int:
-            counts = Counter(
-                data[index : index + 3].hex() for index in range(max(1, len(data) - 2))
-            )
+            counts = Counter(data[index : index + 3].hex() for index in range(max(1, len(data) - 2)))
             return int(Simhash(counts, f=64).value)
 
         def compare_simhash(first: int, second: int) -> int:
@@ -131,10 +129,7 @@ def backend(name: str) -> Backend:
         minhash = MinHash(num_perm=128)
         ngrams = max(1, len(data) - 4)
         for start in range(0, ngrams, 1024):
-            batch = {
-                data[index : index + 5]
-                for index in range(start, min(start + 1024, ngrams))
-            }
+            batch = {data[index : index + 5] for index in range(start, min(start + 1024, ngrams))}
             minhash.update_batch(batch)
         return minhash.hashvalues
 
@@ -207,12 +202,10 @@ def move_groups(
             destination = root / f"group{index:03}"
             if not destination.exists():
                 break
-        moves.append(
-            {
-                "destination": str(destination),
-                "files": [str(p) for p in group],
-            }
-        )
+        moves.append({
+            "destination": str(destination),
+            "files": [str(p) for p in group],
+        })
         if dry_run:
             continue
         destination.mkdir(parents=True, exist_ok=True)
@@ -227,9 +220,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     mode = parser.add_mutually_exclusive_group()
-    mode.add_argument(
-        "-a", "--all", action="store_true", help="report all five algorithms"
-    )
+    mode.add_argument("-a", "--all", action="store_true", help="report all five algorithms")
     mode.add_argument("--alg", choices=NAMES, default="ssdeep", help="algorithm to use")
     parser.add_argument(
         "-g",
@@ -246,15 +237,9 @@ def build_parser() -> argparse.ArgumentParser:
             "'name' = name pattern only; 'score' = any pair meeting threshold"
         ),
     )
-    parser.add_argument(
-        "--threshold", type=int, default=0, help="minimum score to report (0..100)"
-    )
-    parser.add_argument(
-        "--jobs", type=int, default=1, help="number of parallel file readers"
-    )
-    parser.add_argument(
-        "--output", type=Path, default=Path("simz.json"), help="JSON report path"
-    )
+    parser.add_argument("--threshold", type=int, default=0, help="minimum score to report (0..100)")
+    parser.add_argument("--jobs", type=int, default=1, help="number of parallel file readers")
+    parser.add_argument("--output", type=Path, default=Path("simz.json"), help="JSON report path")
     parser.add_argument(
         "--move-root",
         type=Path,
@@ -280,12 +265,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="EXT",
         help="only process these extensions (repeatable, e.g. .txt)",
     )
-    parser.add_argument(
-        "--min-size", type=int, default=0, help="minimum file size in bytes"
-    )
-    parser.add_argument(
-        "--max-size", type=int, default=None, help="maximum file size in bytes"
-    )
+    parser.add_argument("--min-size", type=int, default=0, help="minimum file size in bytes")
+    parser.add_argument("--max-size", type=int, default=None, help="maximum file size in bytes")
     return parser
 
 
@@ -309,10 +290,7 @@ def main() -> int:
     if args.max_size is not None and args.max_size < args.min_size:
         parser.error("max-size must be >= min-size")
 
-    extensions = tuple(
-        ext.lower() if ext.startswith(".") else f".{ext.lower()}"
-        for ext in args.extensions
-    )
+    extensions = tuple(ext.lower() if ext.startswith(".") else f".{ext.lower()}" for ext in args.extensions)
     exclude = tuple(args.exclude)
 
     output_path: Path = args.output.absolute()
@@ -411,14 +389,12 @@ def main() -> int:
                     continue
                 if score == 0 or score < args.threshold:
                     continue
-                pair_records.append(
-                    {
-                        "algorithm": name,
-                        "file1": str(first_path),
-                        "file2": str(second_path),
-                        "similarity_score": score,
-                    }
-                )
+                pair_records.append({
+                    "algorithm": name,
+                    "file1": str(first_path),
+                    "file2": str(second_path),
+                    "similarity_score": score,
+                })
                 if not args.group_similar or args.group_mode == "name":
                     continue
                 if first_path.parent != second_path.parent:
@@ -467,10 +443,7 @@ def main() -> int:
                 json.dump(moves, handle, indent=2)
                 handle.write("\n")
             verb = "Would move" if args.dry_run else "Moved"
-            print(
-                f"{verb} {sum(len(g) for g in groups)} file(s) into "
-                f"{len(groups)} group(s): {moves_path}"
-            )
+            print(f"{verb} {sum(len(g) for g in groups)} file(s) into {len(groups)} group(s): {moves_path}")
 
     print(f"Report: {output_path} ({len(errors)} errors)")
     return 0

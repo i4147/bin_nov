@@ -181,9 +181,7 @@ def _dir_size(p: Path) -> int:
     return sum(f.stat().st_size for f in p.rglob("*") if f.is_file())
 
 
-def _pmap(
-    fn: Callable[[Any], Any], items: Sequence[Any], workers: int | None = None
-) -> list[Any]:
+def _pmap(fn: Callable[[Any], Any], items: Sequence[Any], workers: int | None = None) -> list[Any]:
     items = list(items)
     if not items:
         return []
@@ -264,9 +262,7 @@ def _enhance_cv(path: Path, suffix: str) -> bool:
     g = cv2.GaussianBlur(gray, (5, 5), 0)
     h = cv2.GaussianBlur(g, (0, 0), 3)
     i = cv2.addWeighted(g, 1.5, h, -0.5, 0)
-    j = cv2.adaptiveThreshold(
-        i, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-    )
+    j = cv2.adaptiveThreshold(i, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
     out = path.with_stem(path.stem + suffix)
     cv2.imwrite(str(out), j)
     return True
@@ -332,9 +328,7 @@ def _prepare_cv(path: Path) -> bool:
             return False
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         g = cv2.GaussianBlur(gray, (5, 5), 0)
-        y = cv2.adaptiveThreshold(
-            g, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-        )
+        y = cv2.adaptiveThreshold(g, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
         z = cv2.fastNlMeansDenoising(y, None, 10, 7, 21)
         cv2.imwrite(str(path), z)
         return True
@@ -387,17 +381,13 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 
 def _resize_scale(bgr: "np.ndarray", scale: float) -> "np.ndarray":
     h, w = bgr.shape[:2]
-    return cv2.resize(
-        bgr, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_CUBIC
-    )
+    return cv2.resize(bgr, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_CUBIC)
 
 
 def _rotate_center(bgr: "np.ndarray", angle: float) -> "np.ndarray":
     h, w = bgr.shape[:2]
     m = cv2.getRotationMatrix2D((w // 2, h // 2), angle, 1.0)
-    return cv2.warpAffine(
-        bgr, m, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE
-    )
+    return cv2.warpAffine(bgr, m, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
 
 
 def _deskew_min_area_rect(bgr: "np.ndarray") -> "np.ndarray":
@@ -427,15 +417,9 @@ def cmd_grid_variants(args: argparse.Namespace) -> int:
     variants: dict[str, "Image.Image"] = {
         "original": pil_img,
         "grayscale": Image.fromarray(gray),
-        "rescaled": Image.fromarray(
-            cv2.cvtColor(_resize_scale(bgr, 2.0), cv2.COLOR_BGR2RGB)
-        ),
-        "deskewed": Image.fromarray(
-            cv2.cvtColor(_deskew_min_area_rect(bgr), cv2.COLOR_BGR2RGB)
-        ),
-        "rotated_90": Image.fromarray(
-            cv2.cvtColor(_rotate_center(bgr, 90), cv2.COLOR_BGR2RGB)
-        ),
+        "rescaled": Image.fromarray(cv2.cvtColor(_resize_scale(bgr, 2.0), cv2.COLOR_BGR2RGB)),
+        "deskewed": Image.fromarray(cv2.cvtColor(_deskew_min_area_rect(bgr), cv2.COLOR_BGR2RGB)),
+        "rotated_90": Image.fromarray(cv2.cvtColor(_rotate_center(bgr, 90), cv2.COLOR_BGR2RGB)),
     }
     index: list[dict[str, Any]] = []
     for name, img in variants.items():
@@ -464,18 +448,14 @@ def cmd_grid_variants(args: argparse.Namespace) -> int:
                 ),
                 encoding="utf-8",
             )
-            index.append(
-                {
-                    "variant": name,
-                    "psm": psm,
-                    "oem": oem,
-                    "dpi": dpi,
-                    "text_file": str(d / f"{tag}.txt"),
-                }
-            )
-    atomic_write(
-        (out_root / "index.json"), json.dumps(index, indent=2), encoding="utf-8"
-    )
+            index.append({
+                "variant": name,
+                "psm": psm,
+                "oem": oem,
+                "dpi": dpi,
+                "text_file": str(d / f"{tag}.txt"),
+            })
+    atomic_write((out_root / "index.json"), json.dumps(index, indent=2), encoding="utf-8")
     print(f"done: {len(index)} runs -> {out_root}")
     return 0
 
@@ -487,9 +467,7 @@ def _grid_search_preprocess(path: Path) -> "np.ndarray":
         raise AppError(msg)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     denoised = cv2.fastNlMeansDenoising(gray, h=15)
-    bw = cv2.adaptiveThreshold(
-        denoised, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2
-    )
+    bw = cv2.adaptiveThreshold(denoised, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
     coords = cv2.findNonZero(bw)
     if coords is not None:
         rect = cv2.minAreaRect(coords)
@@ -532,20 +510,16 @@ def cmd_grid_search(args: argparse.Namespace) -> int:
                 text = ""
                 err = str(e)
             elapsed = time.time() - t0
-            atomic_write(
-                (out_dir / f"{w2.stem}__oem{oem}_psm{psm}.txt"), text, encoding="utf-8"
-            )
-            rows.append(
-                {
-                    "image": w2.name,
-                    "config": config,
-                    "oem": oem,
-                    "psm": psm,
-                    "duration_sec": elapsed,
-                    "error": err,
-                    "text": text,
-                }
-            )
+            atomic_write((out_dir / f"{w2.stem}__oem{oem}_psm{psm}.txt"), text, encoding="utf-8")
+            rows.append({
+                "image": w2.name,
+                "config": config,
+                "oem": oem,
+                "psm": psm,
+                "duration_sec": elapsed,
+                "error": err,
+                "text": text,
+            })
     _write_csv(rows, out_dir / "ocr_summary.csv")
     print(f"\ndone. all results saved in: {out_dir}")
     return 0
@@ -702,9 +676,7 @@ def cmd_translate(args: argparse.Namespace) -> int:
         raise AppError(msg)
     lang = args.lang if args.lang != "auto" else _detect_lang(text)
     translator = GoogleTranslator(source=lang, target="en")
-    translated = "".join(
-        translator.translate(c) for c in _chunks(text, args.chunk_size)
-    )
+    translated = "".join(translator.translate(c) for c in _chunks(text, args.chunk_size))
     if suffix in PHOTO_EXT:
         out = p.with_name(f"{p.stem}_eng.txt")
     else:
@@ -738,9 +710,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "enhance",
         help="Binarise/enhance images, saving alongside originals (image2text.py).",
     )
-    pe.add_argument(
-        "paths", nargs="*", type=Path, help="Image files or directories (default: cwd)."
-    )
+    pe.add_argument("paths", nargs="*", type=Path, help="Image files or directories (default: cwd).")
     pe.add_argument("--backend", choices=["auto", "cv", "skimage"], default="auto")
     pe.add_argument(
         "--variants",
@@ -749,9 +719,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Output suffix set. 'auto' = pil for one file, both for many (matches image2text.py).",
     )
     pe.set_defaults(func=cmd_enhance)
-    pp = sub.add_parser(
-        "prepare", help="Prepare images for Tesseract OCR, in-place (ocr_prepare.py)."
-    )
+    pp = sub.add_parser("prepare", help="Prepare images for Tesseract OCR, in-place (ocr_prepare.py).")
     pp.add_argument("paths", nargs="*", type=Path)
     pp.add_argument(
         "-r",
@@ -767,20 +735,12 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     pp.add_argument("--backend", choices=["auto", "cv", "pillow"], default="auto")
     pp.set_defaults(func=cmd_prepare)
-    pv = sub.add_parser(
-        "grid-variants", help="Tesseract grid over 5 image variants (ocrgrid.py)."
-    )
+    pv = sub.add_parser("grid-variants", help="Tesseract grid over 5 image variants (ocrgrid.py).")
     pv.add_argument("image", type=Path)
     pv.add_argument("-o", "--out", type=Path, default=Path("ocr_output"))
-    pv.add_argument(
-        "--psm", type=int, nargs="+", default=list(DEFAULT_GRID_VARIANTS_PSM)
-    )
-    pv.add_argument(
-        "--oem", type=int, nargs="+", default=list(DEFAULT_GRID_VARIANTS_OEM)
-    )
-    pv.add_argument(
-        "--dpi", type=int, nargs="+", default=list(DEFAULT_GRID_VARIANTS_DPI)
-    )
+    pv.add_argument("--psm", type=int, nargs="+", default=list(DEFAULT_GRID_VARIANTS_PSM))
+    pv.add_argument("--oem", type=int, nargs="+", default=list(DEFAULT_GRID_VARIANTS_OEM))
+    pv.add_argument("--dpi", type=int, nargs="+", default=list(DEFAULT_GRID_VARIANTS_DPI))
     pv.set_defaults(func=cmd_grid_variants)
     ps = sub.add_parser(
         "grid-search",
@@ -790,9 +750,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ps.add_argument("-o", "--out", type=Path, default=Path("ocr_results"))
     ps.add_argument("--oem", type=int, nargs="+", default=list(DEFAULT_GRID_SEARCH_OEM))
     ps.add_argument("--psm", type=int, nargs="+", default=list(DEFAULT_GRID_SEARCH_PSM))
-    ps.add_argument(
-        "--lang", default="eng", help="Tesseract language(s) (default: eng)."
-    )
+    ps.add_argument("--lang", default="eng", help="Tesseract language(s) (default: eng).")
     ps.set_defaults(func=cmd_grid_search)
     po = sub.add_parser("ocr", help="Extract text from image(s) (pyocr.py / ruimg.py).")
     po.add_argument("paths", nargs="*", type=Path)
@@ -815,18 +773,14 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Suppress per-file output (summary only).",
     )
-    po.add_argument(
-        "-r", "--recursive", action="store_true", help="Walk directories recursively."
-    )
+    po.add_argument("-r", "--recursive", action="store_true", help="Walk directories recursively.")
     po.set_defaults(func=cmd_ocr)
     pt = sub.add_parser(
         "translate",
         help="OCR a text/image file and translate it to English (transocr.py).",
     )
     pt.add_argument("input_path", type=Path)
-    pt.add_argument(
-        "--lang", default="auto", help="Source language code or 'auto' (default)."
-    )
+    pt.add_argument("--lang", default="auto", help="Source language code or 'auto' (default).")
     pt.add_argument(
         "--chunk-size",
         type=int,

@@ -44,9 +44,7 @@ def main() -> None:
         with open("requirements.json", "w", encoding="utf-8") as f:
             json.dump(requirements, f, indent=2, sort_keys=True)
 
-        print(
-            f"Saved dependencies for {len(requirements)} packages to requirements.json"
-        )
+        print(f"Saved dependencies for {len(requirements)} packages to requirements.json")
 
 
 if __name__ == "__main__":

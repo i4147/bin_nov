@@ -98,9 +98,7 @@ def kill_tree(process: subprocess.Popen) -> None:
             process.kill()
 
 
-def build_one(
-    task: tuple[str, str], *, out_root: str | None, no_isolation: bool, timeout: int
-) -> Result:
+def build_one(task: tuple[str, str], *, out_root: str | None, no_isolation: bool, timeout: int) -> Result:
     path_str, rel = task
     directory = Path(path_str)
     started = time.perf_counter()
@@ -172,15 +170,9 @@ def tail(text: str | None) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Build every Python project under the current directory."
-    )
-    parser.add_argument(
-        "--out", metavar="DIR", help="keep built artifacts here (default: discard)"
-    )
-    parser.add_argument(
-        "--no-isolation", action="store_true", help="build in the current environment"
-    )
+    parser = argparse.ArgumentParser(description="Build every Python project under the current directory.")
+    parser.add_argument("--out", metavar="DIR", help="keep built artifacts here (default: discard)")
+    parser.add_argument("--no-isolation", action="store_true", help="build in the current environment")
     parser.add_argument(
         "--timeout",
         type=int,
@@ -188,9 +180,7 @@ def parse_args() -> argparse.Namespace:
         metavar="SEC",
         help="per-project timeout (default: 900)",
     )
-    parser.add_argument(
-        "--log-file", metavar="FILE", help="also write errors to this file"
-    )
+    parser.add_argument("--log-file", metavar="FILE", help="also write errors to this file")
     args = parser.parse_args()
     if args.timeout < 1:
         parser.error("--timeout must be at least 1")

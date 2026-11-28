@@ -53,9 +53,7 @@ def convert_to_jpg(input_path: Path, remove_orig: bool = False) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Convert .ico or .icns files to .jpg in-place."
-    )
+    parser = argparse.ArgumentParser(description="Convert .ico or .icns files to .jpg in-place.")
     parser.add_argument(
         "files",
         nargs="+",

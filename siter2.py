@@ -45,9 +45,7 @@ class WheelBuilder:
         self.max_workers: int = max_workers or min(cpu_count(), 8)
         self.venv_root: Optional[Path] = self._find_venv_root()
         self.bin_dir: Optional[Path] = self._find_bin_dir()
-        self.share_dir: Optional[Path] = (
-            self.venv_root / "share" if self.venv_root else None
-        )
+        self.share_dir: Optional[Path] = self.venv_root / "share" if self.venv_root else None
         self.processed_packages: set[str] = set()
 
     def _find_venv_root(self) -> Optional[Path]:
@@ -96,9 +94,7 @@ class WheelBuilder:
                 }
         return records
 
-    def _find_scripts_for_package(
-        self, records: dict[str, dict[str, str]]
-    ) -> list[Path]:
+    def _find_scripts_for_package(self, records: dict[str, dict[str, str]]) -> list[Path]:
         if not self.bin_dir or not self.bin_dir.exists():
             return []
         scripts: list[Path] = []
@@ -261,9 +257,7 @@ class WheelBuilder:
                     writer = csv.writer(f)
                     writer.writerows(new_record)
                     writer.writerow([str(record_file.relative_to(tmp_path)), "", ""])
-                with zipfile.ZipFile(
-                    wheel_path, "w", compression=zipfile.ZIP_DEFLATED
-                ) as zf:
+                with zipfile.ZipFile(wheel_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
                     for file_path in tmp_path.rglob("*"):
                         if file_path.is_file():
                             arcname = file_path.relative_to(tmp_path)
@@ -286,9 +280,7 @@ class WheelBuilder:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Build wheel packages from a virtual environment's site-packages."
-    )
+    parser = argparse.ArgumentParser(description="Build wheel packages from a virtual environment's site-packages.")
     parser.add_argument(
         "site_packages",
         type=Path,

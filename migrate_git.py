@@ -114,9 +114,7 @@ def backup_file(path: Path) -> Path:
     return backup_path
 
 
-def run_cmd(
-    cmd: str, input_text: str | None = None, check: bool = False
-) -> subprocess.CompletedProcess[str]:
+def run_cmd(cmd: str, input_text: str | None = None, check: bool = False) -> subprocess.CompletedProcess[str]:
     logger.debug(f"Running command: {' '.join(cmd)}")
     result = subprocess.run(
         cmd,
@@ -129,9 +127,7 @@ def run_cmd(
     return result
 
 
-def update_global_git_config(
-    new_username: str, new_email: str, apply_changes: Any
-) -> None:
+def update_global_git_config(new_username: str, new_email: str, apply_changes: Any) -> None:
     logger.info(color("\n=== Step 1: Global git config ===", C.BOLD))
     result = run_cmd(["git", "config", "--global", "--get", "user.name"])
     current_name = result.stdout.strip()
@@ -178,17 +174,13 @@ def update_local_git_configs(
             continue
         if old_username not in content and old_email not in content:
             continue
-        new_content = content.replace(old_username, new_username).replace(
-            old_email, new_email
-        )
+        new_content = content.replace(old_username, new_username).replace(old_email, new_email)
         changed.append(cfg)
         logger.info(f"  Would update: {cfg}")
         if apply_changes:
             backup_path = backup_file(cfg)
             atomic_write(cfg, new_content, encoding="utf-8")
-            logger.info(
-                color(f"    [APPLIED] Updated (backup: {backup_path})", C.GREEN)
-            )
+            logger.info(color(f"    [APPLIED] Updated (backup: {backup_path})", C.GREEN))
     if not changed:
         logger.info("No local repo configs reference the old identity.")
     elif not apply_changes:
@@ -238,9 +230,7 @@ def preview_and_replace(
             continue
         if old_username not in content and old_email not in content:
             continue
-        new_content = content.replace(old_username, new_username).replace(
-            old_email, new_email
-        )
+        new_content = content.replace(old_username, new_username).replace(old_email, new_email)
         old_lines = content.splitlines()
         new_lines = new_content.splitlines()
         diff_preview = []
@@ -284,14 +274,10 @@ def preview_and_replace(
     for fpath, _, new_content, _ in to_change:
         backup_path = backup_file(fpath)
         atomic_write(fpath, new_content, encoding="utf-8")
-        logger.info(
-            color(f"[APPLIED] Updated {fpath} (backup: {backup_path})", C.GREEN)
-        )
+        logger.info(color(f"[APPLIED] Updated {fpath} (backup: {backup_path})", C.GREEN))
 
 
-def create_new_ssh_key(
-    new_email: str, key_path: Path, apply_changes: Any
-) -> Path | None:
+def create_new_ssh_key(new_email: str, key_path: Path, apply_changes: Any) -> Path | None:
     logger.info(color("\n=== Step 3: Create new SSH key ===", C.BOLD))
     logger.info(f"Target key path: {key_path}")
     logger.info(f"Key type: ed25519, comment: {new_email}")
@@ -299,16 +285,10 @@ def create_new_ssh_key(
         logger.warning(f"Key already exists at {key_path}. Skipping generation.")
         return key_path.with_suffix(".pub")
     if not apply_changes:
-        logger.info(
-            color("[DRY-RUN] Would run ssh-keygen to create a new key.", C.YELLOW)
-        )
+        logger.info(color("[DRY-RUN] Would run ssh-keygen to create a new key.", C.YELLOW))
         return None
     key_path.parent.mkdir(parents=True, exist_ok=True)
-    use_passphrase = (
-        input("Set a passphrase for the new SSH key? [y/N] (recommended): ")
-        .strip()
-        .lower()
-    )
+    use_passphrase = input("Set a passphrase for the new SSH key? [y/N] (recommended): ").strip().lower()
     passphrase = ""
     if use_passphrase == "y":
         import getpass
@@ -361,9 +341,7 @@ def find_old_ssh_keys(ssh_dir: Path, old_username: str, old_email: str):
     return matches
 
 
-def remove_old_ssh_keys(
-    ssh_dir: Path, old_username: str, old_email: str, apply_changes: Any
-) -> None:
+def remove_old_ssh_keys(ssh_dir: Path, old_username: str, old_email: str, apply_changes: Any) -> None:
     logger.info(color("\n=== Step 4: Find and remove old SSH keys ===", C.BOLD))
     old_keys = find_old_ssh_keys(ssh_dir, old_username, old_email)
     if not old_keys:
@@ -380,11 +358,7 @@ def remove_old_ssh_keys(
             )
         )
         return
-    confirm = (
-        input(color(f"Remove these {len(old_keys)} key(s)? [y/N]: ", C.BOLD))
-        .strip()
-        .lower()
-    )
+    confirm = input(color(f"Remove these {len(old_keys)} key(s)? [y/N]: ", C.BOLD)).strip().lower()
     if confirm != "y":
         logger.info("Aborted by user. No keys removed.")
         return
@@ -399,38 +373,22 @@ def remove_old_ssh_keys(
             shutil.copy2(priv_path, backup_dir / priv_path.name)
             priv_path.unlink()
             logger.info(f"Removed {priv_path} (backed up)")
-    logger.info(
-        color(f"[APPLIED] Old SSH keys removed. Backups in {backup_dir}", C.GREEN)
-    )
+    logger.info(color(f"[APPLIED] Old SSH keys removed. Backups in {backup_dir}", C.GREEN))
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Migrate GitHub identity on local machine."
-    )
+    parser = argparse.ArgumentParser(description="Migrate GitHub identity on local machine.")
     parser.add_argument(
         "--apply",
         action="store_true",
         help="Actually apply changes (default is dry-run).",
     )
-    parser.add_argument(
-        "--old-username", default=DEFAULT_OLD_USERNAME, help="Old GitHub username"
-    )
-    parser.add_argument(
-        "--old-email", default=DEFAULT_OLD_EMAIL, help="Old GitHub email"
-    )
-    parser.add_argument(
-        "--new-username", default=DEFAULT_NEW_USERNAME, help="New GitHub username"
-    )
-    parser.add_argument(
-        "--new-email", default=DEFAULT_NEW_EMAIL, help="New GitHub email"
-    )
-    parser.add_argument(
-        "--home-dir", type=Path, default=Path.home(), help="Home directory to scan"
-    )
-    parser.add_argument(
-        "--ssh-dir", type=Path, default=Path.home() / ".ssh", help="SSH directory"
-    )
+    parser.add_argument("--old-username", default=DEFAULT_OLD_USERNAME, help="Old GitHub username")
+    parser.add_argument("--old-email", default=DEFAULT_OLD_EMAIL, help="Old GitHub email")
+    parser.add_argument("--new-username", default=DEFAULT_NEW_USERNAME, help="New GitHub username")
+    parser.add_argument("--new-email", default=DEFAULT_NEW_EMAIL, help="New GitHub email")
+    parser.add_argument("--home-dir", type=Path, default=Path.home(), help="Home directory to scan")
+    parser.add_argument("--ssh-dir", type=Path, default=Path.home() / ".ssh", help="SSH directory")
     parser.add_argument(
         "--key-path",
         type=Path,
@@ -446,9 +404,7 @@ def main() -> None:
     logger.info(f"SSH directory: {args.ssh_dir}")
     logger.info(f"New key path: {args.key_path}")
     if not args.apply:
-        logger.info(
-            color("Running in DRY-RUN mode. No changes will be made.", C.YELLOW)
-        )
+        logger.info(color("Running in DRY-RUN mode. No changes will be made.", C.YELLOW))
     update_global_git_config(args.new_username, args.new_email, args.apply)
     update_local_git_configs(
         args.home_dir,

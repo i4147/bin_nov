@@ -15,9 +15,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-IMAGE_SUFFIXES: frozenset[str] = frozenset(
-    {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"}
-)
+IMAGE_SUFFIXES: frozenset[str] = frozenset({".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"})
 CASCADE_NAMES: tuple[str, ...] = (
     "haarcascade_frontalface_default.xml",
     "haarcascade_frontalface_alt.xml",
@@ -26,23 +24,19 @@ CASCADE_NAMES: tuple[str, ...] = (
     "frontalface_default.xml",
     "frontalface_alt.xml",
 )
-SEXY_LABELS: frozenset[str] = frozenset(
-    {
-        "FEMALE_BREAST_COVERED",
-        "BUTTOCKS_COVERED",
-        "BELLY",
-        "ARMPITS",
-    }
-)
-PORN_LABELS: frozenset[str] = frozenset(
-    {
-        "FEMALE_GENITALIA_EXPOSED",
-        "FEMALE_BREAST_EXPOSED",
-        "MALE_GENITALIA_EXPOSED",
-        "ANUS_EXPOSED",
-        "BUTTOCKS_EXPOSED",
-    }
-)
+SEXY_LABELS: frozenset[str] = frozenset({
+    "FEMALE_BREAST_COVERED",
+    "BUTTOCKS_COVERED",
+    "BELLY",
+    "ARMPITS",
+})
+PORN_LABELS: frozenset[str] = frozenset({
+    "FEMALE_GENITALIA_EXPOSED",
+    "FEMALE_BREAST_EXPOSED",
+    "MALE_GENITALIA_EXPOSED",
+    "ANUS_EXPOSED",
+    "BUTTOCKS_EXPOSED",
+})
 
 
 def need(module_hint: str) -> SystemExit:
@@ -55,15 +49,11 @@ def find_images(root: Path, recursive: bool = True) -> list[Path]:
     if root.is_file():
         return [root]
     candidates = root.rglob("*") if recursive else root.iterdir()
-    return sorted(
-        p for p in candidates if p.is_file() and p.suffix.lower() in IMAGE_SUFFIXES
-    )
+    return sorted(p for p in candidates if p.is_file() and p.suffix.lower() in IMAGE_SUFFIXES)
 
 
 # -------------------------------------------------------------- brightness
-def analyze_brightness(
-    path: Path, dark_threshold: int, ratio_threshold: float
-) -> tuple[str, float]:
+def analyze_brightness(path: Path, dark_threshold: int, ratio_threshold: float) -> tuple[str, float]:
     """Return (Mostly Dark|Mostly Bright|Mixed, dark-ratio 0..1)."""
     try:
         from PIL import Image
@@ -73,9 +63,7 @@ def analyze_brightness(
     with Image.open(path) as img:
         rgb = img.convert("RGB")
         pixels = list(rgb.getdata())
-    dark: int = sum(
-        1 for r, g, b in pixels if 0.299 * r + 0.587 * g + 0.114 * b < dark_threshold
-    )
+    dark: int = sum(1 for r, g, b in pixels if 0.299 * r + 0.587 * g + 0.114 * b < dark_threshold)
     ratio: float = dark / max(len(pixels), 1)
     if ratio > ratio_threshold:
         return "Mostly Dark", ratio
@@ -91,9 +79,7 @@ def cmd_brightness(args: argparse.Namespace) -> int:
         print("No images found.")
         return 0
     for path in images:
-        label, ratio = analyze_brightness(
-            path, args.dark_threshold, args.ratio_threshold
-        )
+        label, ratio = analyze_brightness(path, args.dark_threshold, args.ratio_threshold)
         print(f"{path.name}: {label} (dark pixel ratio: {ratio * 100:.1f}%)")
         if args.sort_dir is not None:
             dest_dir: Path = args.sort_dir / label.lower().replace(" ", "-")
@@ -134,15 +120,11 @@ def count_faces(path: Path, cascade: object, max_dimension: int) -> int | None:
     if image is None:
         return None
     height, width = image.shape[:2]
-    scale: float = (
-        min(1.0, max_dimension / max(width, height)) if max(width, height) else 1.0
-    )
+    scale: float = min(1.0, max_dimension / max(width, height)) if max(width, height) else 1.0
     if scale < 1.0:
         image = cv2.resize(image, (int(width * scale), int(height * scale)))  # type: ignore[attr-defined]
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # type: ignore[attr-defined]
-    faces = cascade.detectMultiScale(
-        gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30)
-    )  # type: ignore[attr-defined]
+    faces = cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))  # type: ignore[attr-defined]
     return len(faces)
 
 
@@ -202,14 +184,10 @@ def cmd_box_faces(args: argparse.Namespace) -> int:
             break
         frames += 1
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # type: ignore[attr-defined]
-        faces = cascade.detectMultiScale(
-            gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30)
-        )  # type: ignore[attr-defined]
+        faces = cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))  # type: ignore[attr-defined]
         for x, y, w, h in faces:
             total_faces += 1
-            cv2.rectangle(
-                frame, (int(x), int(y)), (int(x + w), int(y + h)), (255, 0, 0), 2
-            )  # type: ignore[attr-defined]
+            cv2.rectangle(frame, (int(x), int(y)), (int(x + w), int(y + h)), (255, 0, 0), 2)  # type: ignore[attr-defined]
         writer.write(frame)
     capture.release()
     writer.release()
@@ -296,31 +274,21 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     br = sub.add_parser("brightness", help="Mostly-dark vs mostly-bright")
     br.add_argument("target", type=Path, help="Image file or directory")
-    br.add_argument(
-        "--dark-threshold", type=int, default=50, help="Luma below = dark (default: 50)"
-    )
+    br.add_argument("--dark-threshold", type=int, default=50, help="Luma below = dark (default: 50)")
     br.add_argument(
         "--ratio-threshold",
         type=float,
         default=0.6,
         help="Dark ratio cutoff (default: 0.6)",
     )
-    br.add_argument(
-        "--sort-dir", type=Path, default=None, help="Also copy into label subdirs here"
-    )
+    br.add_argument("--sort-dir", type=Path, default=None, help="Also copy into label subdirs here")
     br.set_defaults(handler=cmd_brightness)
     fa = sub.add_parser("faces", help="Count faces; collect the faceless ones")
     fa.add_argument("target", type=Path)
-    fa.add_argument(
-        "--move-to", type=Path, default=None, help="Copy no-face images here"
-    )
-    fa.add_argument(
-        "--move", action="store_true", help="Move instead of copy (with --move-to)"
-    )
+    fa.add_argument("--move-to", type=Path, default=None, help="Copy no-face images here")
+    fa.add_argument("--move", action="store_true", help="Move instead of copy (with --move-to)")
     fa.add_argument("--cascade-dir", type=Path, default=None)
-    fa.add_argument(
-        "--max-dimension", type=int, default=640, help="Downscale cap (default: 640)"
-    )
+    fa.add_argument("--max-dimension", type=int, default=640, help="Downscale cap (default: 640)")
     fa.set_defaults(handler=cmd_faces)
     bx = sub.add_parser("box-faces", help="Draw face boxes on a video")
     bx.add_argument("input", type=Path)
@@ -332,12 +300,8 @@ def build_parser() -> argparse.ArgumentParser:
     ns.add_argument("target", type=Path)
     ns.add_argument("--detector", choices=("nudenet", "nude"), default="nudenet")
     ns.add_argument("--threshold", type=float, default=0.5, help="NudeNet score cutoff")
-    ns.add_argument(
-        "-r", "--resize", action="store_true", help="nude: shrink >800px first"
-    )
-    ns.add_argument(
-        "--move", action="store_true", help="Move flagged files into label dirs"
-    )
+    ns.add_argument("-r", "--resize", action="store_true", help="nude: shrink >800px first")
+    ns.add_argument("--move", action="store_true", help="Move flagged files into label dirs")
     ns.add_argument("--out-dir", type=Path, default=Path.cwd())
     ns.set_defaults(handler=cmd_nsfw)
     return parser

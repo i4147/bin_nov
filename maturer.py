@@ -31,9 +31,7 @@ def get_cargo_metadata() -> tuple[str, str]:
     name = package.get("name", "").replace("-", "_")
     version = package.get("version", "0.1.0")
     if not name:
-        print(
-            "[-] Error: Could not parse package name from Cargo.toml", file=sys.stderr
-        )
+        print("[-] Error: Could not parse package name from Cargo.toml", file=sys.stderr)
         sys.exit(1)
     return name, version
 
@@ -100,11 +98,7 @@ def create_wheel() -> None:
     def add_to_record(file_path: Path) -> None:
         rel_path = file_path.relative_to(build_dir)
         content = file_path.read_bytes()
-        digest = (
-            base64.urlsafe_b64encode(hashlib.sha256(content).digest())
-            .decode("utf-8")
-            .rstrip("=")
-        )
+        digest = base64.urlsafe_b64encode(hashlib.sha256(content).digest()).decode("utf-8").rstrip("=")
         record_entries.append(f"{rel_path},sha256={digest},{len(content)}")
 
     add_to_record(build_dir / so_target_name)
@@ -116,9 +110,7 @@ def create_wheel() -> None:
     dist_out.mkdir(exist_ok=True)
     wheel_file_path = dist_out / f"{wheel_stem}.whl"
     print(f"[+] Packing files into wheel archive: {wheel_file_path}")
-    with zipfile.ZipFile(
-        wheel_file_path, "w", compression=zipfile.ZIP_DEFLATED
-    ) as zipf:
+    with zipfile.ZipFile(wheel_file_path, "w", compression=zipfile.ZIP_DEFLATED) as zipf:
         for root, _, files in os.walk(build_dir):
             for file in files:
                 full_path = Path(root) / file

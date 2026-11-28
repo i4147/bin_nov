@@ -391,9 +391,7 @@ def iter_candidate_files(
     ignore_set = set(ignore)
     root_path = Path(root)
     for dirpath, dirnames, filenames in os.walk(root_path):
-        dirnames[:] = [
-            d for d in dirnames if d not in ignore_set and not d.endswith(".dist-info")
-        ]
+        dirnames[:] = [d for d in dirnames if d not in ignore_set and not d.endswith(".dist-info")]
         for name in filenames:
             p = Path(dirpath) / name
             if p.is_symlink():
@@ -413,9 +411,7 @@ def detect_local_modules(root: str | os.PathLike, ignore: Iterable[str]) -> set[
     local: set[str] = set()
     ignore_set = set(ignore)
     for dirpath, dirnames, filenames in os.walk(Path(root)):
-        dirnames[:] = [
-            d for d in dirnames if d not in ignore_set and not d.endswith(".dist-info")
-        ]
+        dirnames[:] = [d for d in dirnames if d not in ignore_set and not d.endswith(".dist-info")]
         if "__init__.py" in filenames:
             local.add(Path(dirpath).name)
         for name in filenames:
@@ -449,9 +445,7 @@ def extract_ast(source: str) -> dict[str, set[str]]:
                 res["imports"].add(alias.name.split(".", 1)[0])
         elif isinstance(node, ast.ImportFrom):
             if node.level and node.level > 0:
-                res["relative"].add(
-                    node.module.split(".", 1)[0] if node.module else "."
-                )
+                res["relative"].add(node.module.split(".", 1)[0] if node.module else ".")
                 continue
             if node.module:
                 if any(a.name == "*" for a in node.names):
@@ -588,9 +582,7 @@ def _extract_from_tar(path: Path, extractor: str) -> dict[str, set[str]]:
     return res
 
 
-def process_path(
-    path: str | os.PathLike, extractor: str = "ast"
-) -> dict[str, set[str]]:
+def process_path(path: str | os.PathLike, extractor: str = "ast") -> dict[str, set[str]]:
     p = Path(path)
     low = p.name.lower()
     if p.suffix in (".py", ".pyw") or (p.suffix == "" and p.is_file()):
@@ -739,9 +731,7 @@ def run_scan(args: argparse.Namespace) -> int:
     if args.check_installed:
         installed = _pip_freeze(args.pip_cmd)
         if installed is not None:
-            print(
-                f"[i] {len(installed)} packages installed via `{args.pip_cmd} freeze`"
-            )
+            print(f"[i] {len(installed)} packages installed via `{args.pip_cmd} freeze`")
     cache: dict[str, Any] = {}
     cache_path = Path(args.cache) if args.cache else None
     if cache_path and not args.no_cache and cache_path.exists():
@@ -872,9 +862,7 @@ def run_metadata(args: argparse.Namespace) -> int:
     with out.open(mode, encoding="utf-8") as f:
         for r in found:
             f.write(r + "\n")
-    print(
-        f"[✓] {len(found)} requirements {'appended to' if args.append else 'written to'} {out}"
-    )
+    print(f"[✓] {len(found)} requirements {'appended to' if args.append else 'written to'} {out}")
     return 0
 
 
@@ -910,12 +898,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_PIP_FILE,
         help=f"Offline pip package list (default: {DEFAULT_PIP_FILE})",
     )
-    s.add_argument(
-        "-m", "--mapping", default=None, help="module=package mapping file (optional)"
-    )
-    s.add_argument(
-        "--stdlib-file", default=None, help="Extra stdlib names file (optional)"
-    )
+    s.add_argument("-m", "--mapping", default=None, help="module=package mapping file (optional)")
+    s.add_argument("--stdlib-file", default=None, help="Extra stdlib names file (optional)")
     s.add_argument(
         "--stdlib-source",
         choices=["embedded", "python", "both"],
@@ -969,15 +953,9 @@ def build_parser() -> argparse.ArgumentParser:
         default="pip",
         help="Command used for the installed-check (default: pip)",
     )
-    s.add_argument(
-        "--cache", default=None, help=f"Enable cache file (e.g. {DEFAULT_CACHE_FILE})"
-    )
-    s.add_argument(
-        "--no-cache", action="store_true", help="Disable cache even if --cache is set"
-    )
-    s.add_argument(
-        "--clear-cache", action="store_true", help="Delete the cache file and exit"
-    )
+    s.add_argument("--cache", default=None, help=f"Enable cache file (e.g. {DEFAULT_CACHE_FILE})")
+    s.add_argument("--no-cache", action="store_true", help="Disable cache even if --cache is set")
+    s.add_argument("--clear-cache", action="store_true", help="Delete the cache file and exit")
     s.add_argument(
         "--format",
         choices=["requirements", "flat"],
@@ -991,9 +969,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_common_ignore(s)
     s.set_defaults(func=_dispatch_scan)
-    md = sub.add_parser(
-        "metadata", help="Extract Requires-Dist lines from METADATA files."
-    )
+    md = sub.add_parser("metadata", help="Extract Requires-Dist lines from METADATA files.")
     md.add_argument("-d", "--directory", default=".", help="Root directory")
     md.add_argument(
         "-o",

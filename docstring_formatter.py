@@ -18,9 +18,7 @@ import re
 from dh import SKIP_DIRS, atomic_write
 
 
-_BEFORE_MARKER = re.compile(
-    r"[ \t\r\n]+(?=(?:\d+[.)]|\(\d+\)|[-*\u2022]|\*\*[^*\n]+\*\*)\s)"
-)
+_BEFORE_MARKER = re.compile(r"[ \t\r\n]+(?=(?:\d+[.)]|\(\d+\)|[-*\u2022]|\*\*[^*\n]+\*\*)\s)")
 _COMMA_SPLIT = re.compile(r",[ \t]+")
 _SEMICOLON_SPLIT = re.compile(r";[ \t]+")
 MAX_LINE: int = 80
@@ -53,11 +51,7 @@ def _module_docstring_node(tree: ast.Module) -> ast.Constant | None:
     if not tree.body:
         return None
     first = tree.body[0]
-    if (
-        isinstance(first, ast.Expr)
-        and isinstance(first.value, ast.Constant)
-        and isinstance(first.value.value, str)
-    ):
+    if isinstance(first, ast.Expr) and isinstance(first.value, ast.Constant) and isinstance(first.value.value, str):
         return first.value
     return None
 

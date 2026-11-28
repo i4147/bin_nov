@@ -54,9 +54,7 @@ def main() -> int:
             shutil.copyfile(source, destination)
             copies.append(destination)
         started = time.perf_counter()
-        results = list(
-            sc._result_iterator(copies, options, MAX_WORKERS, sc.DEFAULT_CHUNK_SIZE)
-        )
+        results = list(sc._result_iterator(copies, options, MAX_WORKERS, sc.DEFAULT_CHUNK_SIZE))
         elapsed = time.perf_counter() - started
     errors = sum(result.error is not None for result in results)
     total_bytes = sum(result.old_size for result in results)

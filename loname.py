@@ -25,9 +25,7 @@ recursive: bool = "-r" in sys.argv
 _CYAN: str = "\033[36m"
 _RESET: str = "\033[0m"
 
-_PUNCT_TO_REMOVE: str = (
-    string.punctuation.replace("_", "").replace("-", "").replace(":", "")
-)
+_PUNCT_TO_REMOVE: str = string.punctuation.replace("_", "").replace("-", "").replace(":", "")
 _TRANSLATE_TABLE = str.maketrans(dict.fromkeys(_PUNCT_TO_REMOVE) | {" ": "_"})
 _COLLAPSE_RE = re.compile(r"[_:\-]+")
 

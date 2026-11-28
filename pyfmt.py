@@ -141,19 +141,17 @@ def _move_to_error(path: Path, dest_dir: str) -> None:
 
 
 class HtmlTagFormatter:
-    INLINE_TAGS: frozenset[str] = frozenset(
-        {
-            "b",
-            "i",
-            "u",
-            "em",
-            "strong",
-            "code",
-            "small",
-            "sub",
-            "sup",
-        }
-    )
+    INLINE_TAGS: frozenset[str] = frozenset({
+        "b",
+        "i",
+        "u",
+        "em",
+        "strong",
+        "code",
+        "small",
+        "sub",
+        "sup",
+    })
 
     def __init__(self) -> None:
         try:
@@ -243,9 +241,7 @@ def _get_formatter() -> HtmlTagFormatter:
     return _FORMATTER_CACHE
 
 
-def _beautify_treesitter(
-    path: Path, *, max_bytes: int = 50 * 1024 * 1024
-) -> FileResult:
+def _beautify_treesitter(path: Path, *, max_bytes: int = 50 * 1024 * 1024) -> FileResult:
     src = read_text(path, max_bytes=max_bytes)
     if src is None:
         return FileResult(path, success=False, error="Failed to read file")
@@ -487,9 +483,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Unified HTML/CSS/JS/JSON formatter (merges 8 scripts).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Enable debug logging."
-    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable debug logging.")
     sub = parser.add_subparsers(dest="command", required=True)
     ll = sub.add_parser(
         "list-large",

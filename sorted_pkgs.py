@@ -78,9 +78,7 @@ def render(packages: list[tuple[str, int]], width: int) -> str:
     lines: list[str] = []
     for name, size in entries:
         if len(name) > name_width:
-            name = (
-                name[: name_width - 2] + ".." if name_width >= 3 else name[:name_width]
-            )
+            name = name[: name_width - 2] + ".." if name_width >= 3 else name[:name_width]
         lines.append(f"{name:<{name_width}}{size}")
     return "\n".join(lines)
 

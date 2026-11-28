@@ -35,9 +35,7 @@ def process_wheels(cwd: Path = Path.cwd()) -> None:
             wheel_path.unlink()
             logger.success("Extracted and removed {}", wheel_path.name)
         except BadZipFile:
-            logger.exception(
-                "{} is not a valid ZIP/wheel file; original kept", wheel_path
-            )
+            logger.exception("{} is not a valid ZIP/wheel file; original kept", wheel_path)
         except PermissionError:
             logger.exception("Permission error on {}; original kept", wheel_path)
         except OSError:

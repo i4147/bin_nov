@@ -53,9 +53,7 @@ class FileStats:
         if not self.success:
             return f"✗ {relpath}: {self.error_msg}"
         size_delta = self.new_size - self.original_size
-        size_change = (
-            f"({size_delta:+d} bytes)" if size_delta != 0 else "(no size change)"
-        )
+        size_change = f"({size_delta:+d} bytes)" if size_delta != 0 else "(no size change)"
         return f"✓ {relpath}: {self.replacements} replacements {size_change}"
 
 
@@ -109,9 +107,7 @@ def process_file_chunked(
             temp_path = Path(temp_file.name)
             try:
                 total_replacements = 0
-                with open(
-                    path, "r", encoding="utf-8", errors="strict", newline=""
-                ) as f:
+                with open(path, "r", encoding="utf-8", errors="strict", newline="") as f:
                     buffer = ""
                     while True:
                         chunk = f.read(chunk_size)
@@ -189,9 +185,7 @@ Examples:
         action="store_true",
         help="Process binary files (not recommended)",
     )
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Show detailed logging"
-    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Show detailed logging")
     args = parser.parse_args()
     if args.verbose:
         pass
@@ -219,9 +213,7 @@ Examples:
         return 0
     print(f"Found {len(files)} files to process")
     print(f"Starting parallel processing with {MAX_WORKERS} workers")
-    results = Parallel(n_jobs=MAX_WORKERS, verbose=0)(
-        delayed(process_file_chunked)(path, chunk_size) for path in files
-    )
+    results = Parallel(n_jobs=MAX_WORKERS, verbose=0)(delayed(process_file_chunked)(path, chunk_size) for path in files)
     print("\n" + "=" * 40)
     print("PROCESSING RESULTS")
     print("=" * 40)
@@ -236,9 +228,7 @@ Examples:
             total_size_change += stats.new_size - stats.original_size
     failed = len(results) - successful
     print("=" * 40)
-    print(
-        f"Summary: {successful} succeeded, {failed} failed out of {len(results)} files"
-    )
+    print(f"Summary: {successful} succeeded, {failed} failed out of {len(results)} files")
     print(f"Total replacements: {total_replacements}")
     print(f"Total size change: {total_size_change:+d} bytes")
     print("=" * 40 + "\n")

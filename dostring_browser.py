@@ -47,9 +47,7 @@ def _key_set(*names: str) -> set[str]:
     return keys
 
 
-NEXT_KEYS = {" ", "j", "f", "\n", "\r"} | _key_set(
-    "SPACE", "ENTER", "PAGE_DOWN", "RIGHT", "DOWN", "TAB"
-)
+NEXT_KEYS = {" ", "j", "f", "\n", "\r"} | _key_set("SPACE", "ENTER", "PAGE_DOWN", "RIGHT", "DOWN", "TAB")
 PREV_KEYS = {"b", "k"} | _key_set("PAGE_UP", "LEFT", "UP", "BACKSPACE")
 NEXT_FILE_KEYS: set[str] = {"n", "]", ">"}
 PREV_FILE_KEYS: set[str] = {"p", "[", "<"}

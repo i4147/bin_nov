@@ -47,9 +47,7 @@ class ScanResult:
 
 
 def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Detect non-English text in text-based files."
-    )
+    parser = argparse.ArgumentParser(description="Detect non-English text in text-based files.")
     parser.add_argument(
         "paths",
         nargs="*",
@@ -172,9 +170,7 @@ def is_usable_text(text: str) -> bool:
     letters = sum(character.isalpha() for character in text)
     if letters < MIN_LETTERS:
         return False
-    printable = sum(
-        character.isprintable() or character in "\n\r\t" for character in text
-    )
+    printable = sum(character.isprintable() or character in "\n\r\t" for character in text)
     return printable / len(text) >= 0.85
 
 

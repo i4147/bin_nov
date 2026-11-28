@@ -33,11 +33,7 @@ def parse_extensions(spec: str | None) -> frozenset[str] | None:
     """Parse ``"py,.txt"`` into ``{'.py', '.txt'}`` (None = all)."""
     if not spec:
         return None
-    return frozenset(
-        (p if p.startswith(".") else "." + p).lower()
-        for p in spec.split(",")
-        if p.strip()
-    )
+    return frozenset((p if p.startswith(".") else "." + p).lower() for p in spec.split(",") if p.strip())
 
 
 def suffixes_of(path: Path) -> tuple[str, ...]:
@@ -46,9 +42,7 @@ def suffixes_of(path: Path) -> tuple[str, ...]:
     return tuple(name[i:] for i, ch in enumerate(name) if ch == ".")
 
 
-def matches(
-    path: Path, allow: frozenset[str] | None, deny: frozenset[str] | None
-) -> bool:
+def matches(path: Path, allow: frozenset[str] | None, deny: frozenset[str] | None) -> bool:
     """Extension filter used for copy decisions."""
     suffixes: tuple[str, ...] = suffixes_of(path)
     if deny and any(s in deny for s in suffixes):
@@ -71,9 +65,7 @@ def snapshot(root: Path, recursive: bool) -> dict[Path, float]:
 
 def safe_copy(src: Path, dest_root: Path, root: Path, preserve: bool) -> Path | None:
     """Copy *src* into *dest_root*, optionally preserving relative dirs."""
-    dest: Path = dest_root / (
-        src.relative_to(root) if preserve and root in src.parents else Path(src.name)
-    )
+    dest: Path = dest_root / (src.relative_to(root) if preserve and root in src.parents else Path(src.name))
     try:
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)
@@ -120,29 +112,21 @@ def cmd_watch(args: argparse.Namespace) -> int:
             time.sleep(args.interval)
             current: dict[Path, float] = snapshot(root, args.recursive)
             for path in sorted(set(state) - set(current)):
-                print(
-                    f"[DELETED]  {path.relative_to(root) if root in path.parents else path}"
-                )
+                print(f"[DELETED]  {path.relative_to(root) if root in path.parents else path}")
             for path in sorted(current):
                 old: float | None = state.get(path)
                 if old is not None and current[path] <= old:
                     continue
                 event: str = "CREATED" if old is None else "MODIFIED"
-                print(
-                    f"[{event}] {path.relative_to(root) if root in path.parents else path}"
-                )
+                print(f"[{event}] {path.relative_to(root) if root in path.parents else path}")
                 if args.copy_to is not None and matches(path, allow, deny):
-                    dest: Path | None = safe_copy(
-                        path, args.copy_to, root, args.preserve
-                    )
+                    dest: Path | None = safe_copy(path, args.copy_to, root, args.preserve)
                     if dest is not None:
                         print(f"           copied -> {dest}")
                 if args.tail:
                     for line in tail_lines(path, args.tail):
                         print(f"           {line}")
-                if args.until and until_hit(
-                    tail_lines(path, args.tail or 10), args.until
-                ):
+                if args.until and until_hit(tail_lines(path, args.tail or 10), args.until):
                     print("Stop pattern seen; exiting.")
                     return 0
                 if args.run:
@@ -199,33 +183,17 @@ def run_command(template: str, changed: Path) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line parser."""
-    parser = argparse.ArgumentParser(
-        description="Polling file/directory watcher (stdlib only)."
-    )
+    parser = argparse.ArgumentParser(description="Polling file/directory watcher (stdlib only).")
     sub = parser.add_subparsers(dest="command", required=True)
     wa = sub.add_parser("watch", help="Watch a file or directory for changes")
     wa.add_argument("target", nargs="?", type=Path, default=Path.cwd())
-    wa.add_argument(
-        "-i", "--interval", type=float, default=1.0, help="Poll seconds (default: 1.0)"
-    )
-    wa.add_argument(
-        "--no-recursive", dest="recursive", action="store_false", help="Top level only"
-    )
-    wa.add_argument(
-        "-c", "--copy-to", type=Path, default=None, help="Copy changed files here"
-    )
-    wa.add_argument(
-        "--preserve", action="store_true", help="Preserve relative dirs when copying"
-    )
-    wa.add_argument(
-        "--scan-first", action="store_true", help="Copy existing matches at startup"
-    )
-    wa.add_argument(
-        "-e", "--extensions", default=None, help="Allowlist, e.g. py,txt (copy only)"
-    )
-    wa.add_argument(
-        "-x", "--exclude-extensions", default=None, help="Denylist, e.g. pyc,log"
-    )
+    wa.add_argument("-i", "--interval", type=float, default=1.0, help="Poll seconds (default: 1.0)")
+    wa.add_argument("--no-recursive", dest="recursive", action="store_false", help="Top level only")
+    wa.add_argument("-c", "--copy-to", type=Path, default=None, help="Copy changed files here")
+    wa.add_argument("--preserve", action="store_true", help="Preserve relative dirs when copying")
+    wa.add_argument("--scan-first", action="store_true", help="Copy existing matches at startup")
+    wa.add_argument("-e", "--extensions", default=None, help="Allowlist, e.g. py,txt (copy only)")
+    wa.add_argument("-x", "--exclude-extensions", default=None, help="Denylist, e.g. pyc,log")
     wa.add_argument(
         "--tail",
         type=int,
@@ -240,17 +208,11 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="TEXT",
         help="Exit when seen in tail",
     )
-    wa.add_argument(
-        "--run", default=None, metavar="CMD", help="Run CMD on change ({} = path)"
-    )
-    wa.add_argument(
-        "--once", action="store_true", help="Single scan (with --scan-first) then exit"
-    )
+    wa.add_argument("--run", default=None, metavar="CMD", help="Run CMD on change ({} = path)")
+    wa.add_argument("--once", action="store_true", help="Single scan (with --scan-first) then exit")
     wa.set_defaults(handler=cmd_watch, recursive=True)
     ta = sub.add_parser("tail", help="Follow a log until a pattern appears")
-    ta.add_argument(
-        "file", nargs="?", type=Path, default=Path("~/.tor/tor.log").expanduser()
-    )
+    ta.add_argument("file", nargs="?", type=Path, default=Path("~/.tor/tor.log").expanduser())
     ta.add_argument("-i", "--interval", type=float, default=0.5)
     ta.add_argument("--until", action="append", default=[], metavar="TEXT")
     ta.set_defaults(handler=cmd_tail)

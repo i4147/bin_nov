@@ -153,11 +153,7 @@ def find_pdf_files(paths: Sequence[Path], recursive: bool) -> list[Path]:
                 continue
             if path.is_dir():
                 for child in path.iterdir():
-                    if (
-                        not child.is_symlink()
-                        and child.is_file()
-                        and child.suffix.lower() in PDF_SUFFIXES
-                    ):
+                    if not child.is_symlink() and child.is_file() and child.suffix.lower() in PDF_SUFFIXES:
                         resolved = child.resolve()
                         if resolved not in seen:
                             seen.add(resolved)
@@ -326,9 +322,7 @@ def extract_pymupdf_page(path: Path, page_number: int) -> str:
 
 def extract_system_page(path: Path, page_number: int) -> str:
     required_tools: tuple[str, ...] = ("gs", "tesseract")
-    missing: list[str] = [
-        tool for tool in required_tools if not executable_exists(tool)
-    ]
+    missing: list[str] = [tool for tool in required_tools if not executable_exists(tool)]
     if missing:
         msg = f"System OCR backend requires missing tools: {', '.join(missing)}"
         raise RuntimeError(msg)
@@ -526,9 +520,7 @@ def extract_file(path: Path, backend: str, workers: int) -> list[str]:
         path,
         backend,
     )
-    tasks: list[tuple[str, int, str]] = [
-        (str(path), page_number, backend) for page_number in range(1, page_count + 1)
-    ]
+    tasks: list[tuple[str, int, str]] = [(str(path), page_number, backend) for page_number in range(1, page_count + 1)]
     with ProcessPoolExecutor(max_workers=workers) as executor:
         return list(executor.map(extract_page, tasks, chunksize=1))
 

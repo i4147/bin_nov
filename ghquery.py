@@ -114,15 +114,11 @@ def get_textpage(url: str) -> str:
     try:
         import requests
 
-        response = requests.get(
-            url, timeout=30, headers={"User-Agent": "github-query-tool"}
-        )
+        response = requests.get(url, timeout=30, headers={"User-Agent": "github-query-tool"})
         response.raise_for_status()
         return response.text
     except ImportError:
-        request = urllib.request.Request(
-            url, headers={"User-Agent": "github-query-tool"}
-        )
+        request = urllib.request.Request(url, headers={"User-Agent": "github-query-tool"})
         with urllib.request.urlopen(request, timeout=30) as response:
             return response.read().decode("utf-8", errors="replace")
 
@@ -163,18 +159,14 @@ def save_repos(repos: list[Repo], output: Path | None, fmt: str) -> None:
         )
     elif fmt == "csv" or output.suffix == ".csv":
         with output.open("w", newline="", encoding="utf-8") as handle:
-            writer = csv.DictWriter(
-                handle, fieldnames=list(asdict(repos[0]).keys()) if repos else ["name"]
-            )
+            writer = csv.DictWriter(handle, fieldnames=list(asdict(repos[0]).keys()) if repos else ["name"])
             writer.writeheader()
             for repo in repos:
                 writer.writerow(asdict(repo))
     else:
         lines: list[str] = []
         for repo in repos:
-            lines.append(
-                f"{repo.full_name}\n  URL: {repo.url}\n  Updated: {repo.updated_at}\n  Stars: {repo.stars}\n"
-            )
+            lines.append(f"{repo.full_name}\n  URL: {repo.url}\n  Updated: {repo.updated_at}\n  Stars: {repo.stars}\n")
         atomic_write(output, "\n".join(lines), encoding="utf-8")
     print(f"Saved {len(repos)} repo(s) to {output}")
 
@@ -206,9 +198,7 @@ def cmd_search(args: argparse.Namespace) -> int:
         query: str = args.query
         sort: str = args.sort
     elif args.preset == "new":
-        since: str = (datetime.now(timezone.utc) - timedelta(days=args.days)).strftime(
-            "%Y-%m-%d"
-        )
+        since: str = (datetime.now(timezone.utc) - timedelta(days=args.days)).strftime("%Y-%m-%d")
         query = f"language:Python created:>{since}"
         sort = "stars"
     else:
@@ -219,11 +209,7 @@ def cmd_search(args: argparse.Namespace) -> int:
         {"q": query, "sort": sort, "order": "desc", "per_page": args.per_page},
     )
     items: object = data.get("items") if isinstance(data, dict) else []
-    repos: list[Repo] = (
-        [to_repo(raw) for raw in items if isinstance(raw, dict)]
-        if isinstance(items, list)
-        else []
-    )
+    repos: list[Repo] = [to_repo(raw) for raw in items if isinstance(raw, dict)] if isinstance(items, list) else []
     save_repos(
         repos,
         (
@@ -262,17 +248,13 @@ def cmd_trending(args: argparse.Namespace) -> int:
                 description=desc,
             )
         )
-    out: Path | None = (
-        args.output or Path("trending_repos") / f"{args.timeframe}.{args.format}"
-    )
+    out: Path | None = args.output or Path("trending_repos") / f"{args.timeframe}.{args.format}"
     save_repos(repos, out, args.format)
     return 0
 
 
 def cmd_trending_users(args: argparse.Namespace) -> int:
-    since: str = (datetime.now(timezone.utc) - timedelta(days=args.days)).strftime(
-        "%Y-%m-%d"
-    )
+    since: str = (datetime.now(timezone.utc) - timedelta(days=args.days)).strftime("%Y-%m-%d")
     data: object = get_json(
         f"{API}/search/users",
         {
@@ -292,26 +274,18 @@ def cmd_trending_users(args: argparse.Namespace) -> int:
             if not isinstance(detail, dict):
                 continue
             login: str = str(detail.get("login", ""))
-            repos_raw: object = get_json(
-                f"{API}/users/{login}/repos", {"per_page": 100, "sort": "updated"}
-            )
+            repos_raw: object = get_json(f"{API}/users/{login}/repos", {"per_page": 100, "sort": "updated"})
             repos: list[dict[str, object]] = (
-                [
-                    asdict(to_repo(r))
-                    for r in repos_raw
-                    if isinstance(r, dict) and r.get("language") == "Python"
-                ]
+                [asdict(to_repo(r)) for r in repos_raw if isinstance(r, dict) and r.get("language") == "Python"]
                 if isinstance(repos_raw, list)
                 else []
             )
-            users.append(
-                {
-                    "username": login,
-                    "name": detail.get("name", ""),
-                    "followers": detail.get("followers", 0),
-                    "repositories": repos,
-                }
-            )
+            users.append({
+                "username": login,
+                "name": detail.get("name", ""),
+                "followers": detail.get("followers", 0),
+                "repositories": repos,
+            })
             print(
                 f"{login} ({detail.get('name', '')}) followers={detail.get('followers', 0)} python-repos={len(repos)}"
             )
@@ -329,11 +303,7 @@ def cmd_trending_users(args: argparse.Namespace) -> int:
 
 
 def parse_repo_spec(spec: str) -> tuple[str, str]:
-    cleaned: str = (
-        spec.strip()
-        .removeprefix("https://github.com/")
-        .removeprefix("http://github.com/")
-    )
+    cleaned: str = spec.strip().removeprefix("https://github.com/").removeprefix("http://github.com/")
     cleaned = cleaned.rstrip("/").removesuffix(".git")
     parts: list[str] = cleaned.split("/")
     if len(parts) != 2 or not all(parts):
@@ -350,9 +320,7 @@ def cmd_repo_size(args: argparse.Namespace) -> int:
         return 1
     size_kb: object = data.get("size")
     kib: int = size_kb if isinstance(size_kb, int) else 0
-    print(
-        f"{user}/{repo}: {kib:,} KiB ({kib / 1024:.2f} MiB, {kib / 1024 / 1024:.3f} GiB)"
-    )
+    print(f"{user}/{repo}: {kib:,} KiB ({kib / 1024:.2f} MiB, {kib / 1024 / 1024:.3f} GiB)")
     print(
         f"  stars={data.get('stargazers_count')} forks={data.get('forks_count')} "
         f"language={data.get('language')} default_branch={data.get('default_branch')}"
@@ -361,9 +329,7 @@ def cmd_repo_size(args: argparse.Namespace) -> int:
 
 
 def add_output(child: argparse.ArgumentParser) -> None:
-    child.add_argument(
-        "-o", "--output", type=Path, default=None, help="Output file (default: print)"
-    )
+    child.add_argument("-o", "--output", type=Path, default=None, help="Output file (default: print)")
     child.add_argument("--format", choices=("txt", "json", "csv"), default="txt")
 
 
@@ -383,28 +349,20 @@ def build_parser() -> argparse.ArgumentParser:
         default="active",
         help="active: latest updated Python (ghpy); new: created recently (ghpy10)",
     )
-    se.add_argument(
-        "--days", type=int, default=10, help="Window for --preset new (default: 10)"
-    )
+    se.add_argument("--days", type=int, default=10, help="Window for --preset new (default: 10)")
     se.add_argument("--sort", choices=("stars", "updated", "forks"), default="updated")
     se.add_argument("--per-page", type=int, default=50)
     add_output(se)
     se.set_defaults(handler=cmd_search)
     tr = sub.add_parser("trending", help="github.com/trending scrape")
     tr.add_argument("--language", default="python")
-    tr.add_argument(
-        "--timeframe", choices=("daily", "weekly", "monthly"), default="daily"
-    )
+    tr.add_argument("--timeframe", choices=("daily", "weekly", "monthly"), default="daily")
     add_output(tr)
     tr.set_defaults(handler=cmd_trending)
-    tu = sub.add_parser(
-        "trending-users", help="New users by followers + their Python repos"
-    )
+    tu = sub.add_parser("trending-users", help="New users by followers + their Python repos")
     tu.add_argument("--days", type=int, default=7)
     tu.add_argument("--limit", type=int, default=10)
-    tu.add_argument(
-        "-o", "--output", type=Path, default=Path("trending_github_python_users.json")
-    )
+    tu.add_argument("-o", "--output", type=Path, default=Path("trending_github_python_users.json"))
     tu.set_defaults(handler=cmd_trending_users)
     rs = sub.add_parser("repo-size", help="Size of one repository")
     rs.add_argument("repo", help="user/repo or https://github.com/user/repo")

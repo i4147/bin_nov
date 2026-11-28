@@ -29,16 +29,14 @@ RED: str = "\033[31m"
 MAGENTA: str = "\033[35m"
 CYAN: str = "\033[36m"
 
-DEFAULT_EXEC_DIRS: frozenset[str] = frozenset(
-    {
-        "bin",
-        "sbin",
-        ".bin",
-        "libexec",
-        "scripts",
-        "tools",
-    }
-)
+DEFAULT_EXEC_DIRS: frozenset[str] = frozenset({
+    "bin",
+    "sbin",
+    ".bin",
+    "libexec",
+    "scripts",
+    "tools",
+})
 DEFAULT_SUFFIX_EXEC: tuple[str, ...] = (".sh", ".so")
 DEFAULT_DEEXEC_PATTERNS: tuple[str, ...] = ("*.py",)
 DEFAULT_KEEP_EXEC_PARENTS: frozenset[str] = frozenset({"bin", "sbin"})
@@ -95,9 +93,7 @@ def rel_str(p: Path, root: Path) -> str:
         return str(p)
 
 
-def convert_file_content(
-    p: Path, dry_run: bool
-) -> tuple[bool, bool, bool, Optional[str]]:
+def convert_file_content(p: Path, dry_run: bool) -> tuple[bool, bool, bool, Optional[str]]:
     try:
         raw = p.read_bytes()
     except (OSError, PermissionError):
@@ -198,9 +194,7 @@ class Config:
             return False
 
 
-def walk_items(
-    cfg: Config, include_dirs: bool = True, include_files: bool = True
-) -> Iterator[tuple[str, Path]]:
+def walk_items(cfg: Config, include_dirs: bool = True, include_files: bool = True) -> Iterator[tuple[str, Path]]:
     stack = [cfg.root]
     while stack:
         current_dir = stack.pop()
@@ -240,9 +234,7 @@ class Stats:
         self.errors: int = 0
 
 
-def process_item(
-    cfg: Config, kind: str, path: Path, mode: str, dry_run: bool
-) -> tuple[Stats, Optional[str]]:
+def process_item(cfg: Config, kind: str, path: Path, mode: str, dry_run: bool) -> tuple[Stats, Optional[str]]:
     s = Stats()
     s.total = 1
     rp = rel_str(path, cfg.root)
@@ -268,11 +260,7 @@ def process_item(
         s.errors = 1
         return s, f"{RED}[ERR]{RESET} {rp}: stat failed"
     if mode == "deexec":
-        if (
-            not cfg.matches_deexec(path)
-            or cfg.keeps_exec_by_parent(path)
-            or not (cur & EXEC_BITS)
-        ):
+        if not cfg.matches_deexec(path) or cfg.keeps_exec_by_parent(path) or not (cur & EXEC_BITS):
             s.skipped = 1
             return s, None
         target = cur & ~EXEC_BITS
@@ -300,12 +288,7 @@ def process_item(
             return s, f"{RED}[ERR]{RESET} {rp}: chmod failed"
         s.files_made_exec = 1
         return s, f"{GREEN}[EXEC+]{RESET} {rp} {oct(cur)}->{oct(target)}"
-    if (
-        kind == "file"
-        and is_executable(path)
-        and not cfg.looks_executable(path)
-        and not cfg.keeps_exec_by_parent(path)
-    ):
+    if kind == "file" and is_executable(path) and not cfg.looks_executable(path) and not cfg.keeps_exec_by_parent(path):
         target = cur & ~EXEC_BITS
         if not dry_run and not chmod_safe(path, target):
             s.errors = 1
@@ -329,9 +312,7 @@ def process_item(
         return s, f"{BLUE}[FILE]{RESET} {rp} {oct(cur)}->{oct(target)}"
 
 
-def run_serial(
-    cfg: Config, mode: str, dry_run: bool, include_dirs: bool, include_files: bool
-) -> Stats:
+def run_serial(cfg: Config, mode: str, dry_run: bool, include_dirs: bool, include_files: bool) -> Stats:
     total = Stats()
     gen = walk_items(cfg, include_dirs=include_dirs, include_files=include_files)
     for kind, path in gen:
@@ -411,11 +392,7 @@ def build_config(args: argparse.Namespace) -> Config:
     else:
         suffix = DEFAULT_SUFFIX_EXEC
     patterns = tuple(args.patterns) if args.patterns else DEFAULT_DEEXEC_PATTERNS
-    keep = (
-        frozenset(args.keep_exec_parent)
-        if args.keep_exec_parent
-        else DEFAULT_KEEP_EXEC_PARENTS
-    )
+    keep = frozenset(args.keep_exec_parent) if args.keep_exec_parent else DEFAULT_KEEP_EXEC_PARENTS
     return Config(
         root=Path(args.path).resolve(),
         skip_dirs=skip,

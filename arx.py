@@ -282,9 +282,7 @@ def find_archives(directory: str = ".") -> list[Path]:
 
 def main() -> None:
     if len(sys.argv) > 1:
-        archives: list[Path] = sorted(
-            {Path(arg).resolve() for arg in sys.argv[1:] if Path(arg).is_file()}
-        )
+        archives: list[Path] = sorted({Path(arg).resolve() for arg in sys.argv[1:] if Path(arg).is_file()})
     else:
         archives = find_archives()
     if not archives:

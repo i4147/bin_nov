@@ -188,11 +188,7 @@ def discover_fixers(fixer_module: str = DEFAULT_FIXER_MODULE) -> list[str]:
     except ImportError:
         return list(FALLBACK_FIXERS)
     return [
-        name
-        for _finder, name, is_pkg in pkgutil.iter_modules(
-            mod.__path__, prefix=fixer_module + "."
-        )
-        if not is_pkg
+        name for _finder, name, is_pkg in pkgutil.iter_modules(mod.__path__, prefix=fixer_module + ".") if not is_pkg
     ]
 
 
@@ -290,9 +286,7 @@ def _refactor_file(
     options = {"print_function": True} if print_function else {}
     try:
         if show_errors:
-            tool, captured_errors, captured_output = _CapturingTool.build(
-                fixers, options
-            )
+            tool, captured_errors, captured_output = _CapturingTool.build(fixers, options)
         else:
             tool = _import_refactoring_tool()(fixers, options)
             captured_errors, captured_output = [], []
@@ -630,9 +624,7 @@ def _process_tar(path: Path, targets: frozenset[str], tag: str) -> bool:
         return True
 
 
-def _strip_tag_file(
-    path: Path, targets: frozenset[str], tag: str
-) -> tuple[Path, bool, str]:
+def _strip_tag_file(path: Path, targets: frozenset[str], tag: str) -> tuple[Path, bool, str]:
     low = path.name.lower()
     try:
         if low.endswith((".zip", ".whl")) or zipfile.is_zipfile(path):
@@ -737,9 +729,7 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument(
         "--fixers",
         default="auto",
-        help=(
-            "'auto' (discover from --fixer-module) or comma-separated list of fixer module names."
-        ),
+        help=("'auto' (discover from --fixer-module) or comma-separated list of fixer module names."),
     )
     r.add_argument(
         "--fixer-module",
@@ -840,9 +830,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--target",
         action="append",
         default=list(DEFAULT_TARGETS),
-        help=(
-            f"Filename to look for inside archives (repeatable, default: {list(DEFAULT_TARGETS)})."
-        ),
+        help=(f"Filename to look for inside archives (repeatable, default: {list(DEFAULT_TARGETS)})."),
     )
     s.add_argument(
         "--no-recursive",

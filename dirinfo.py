@@ -65,9 +65,7 @@ def write_summary(filename: Path | None = None) -> None:
     summary_lines.append(f"Number of files: {file_count}\n")
     summary_lines.append(f"Number of folders: {folder_count}\n")
     summary_lines.append("Size by extension:\n")
-    sorted_size_by_ext = sorted(
-        size_by_ext.items(), key=operator.itemgetter(1), reverse=True
-    )
+    sorted_size_by_ext = sorted(size_by_ext.items(), key=operator.itemgetter(1), reverse=True)
     for ext, size in sorted_size_by_ext:
         summary_lines.append(f"  {ext}: {fsz(size)}\n")
         if filename is None or filename == sys.stderr:
@@ -87,9 +85,7 @@ def write_summary(filename: Path | None = None) -> None:
         print(summary_string)
 
 
-def create_bar_chart(
-    chart_type: str, output_filename: str = "/sdcard/dirinfo.png"
-) -> None:
+def create_bar_chart(chart_type: str, output_filename: str = "/sdcard/dirinfo.png") -> None:
     _, _, _, _, size_by_ext = scan_directory()
     sorted_items = sorted(
         [(ext, size) for ext, size in size_by_ext.items() if size > 0],

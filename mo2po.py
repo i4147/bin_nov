@@ -79,9 +79,7 @@ def mo_to_po(mo_path: Path, remove_orig: bool = True, verbose: bool = False) -> 
         return False
 
 
-def mo_to_po_python_only(
-    mo_path: Path, remove_orig: bool = True, verbose: bool = False
-) -> bool:
+def mo_to_po_python_only(mo_path: Path, remove_orig: bool = True, verbose: bool = False) -> bool:
     import struct
 
     mo_path = Path(mo_path)
@@ -187,21 +185,15 @@ Examples:
   %(prog)s --fallback file.mo
         """,
     )
-    parser.add_argument(
-        "path", help="Path to .mo file or directory containing .mo files"
-    )
+    parser.add_argument("path", help="Path to .mo file or directory containing .mo files")
     parser.add_argument(
         "-k",
         "--keep",
         action="store_true",
         help="Keep original .mo files (don't remove)",
     )
-    parser.add_argument(
-        "-r", "--recursive", action="store_true", help="Process directories recursively"
-    )
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Show detailed progress messages"
-    )
+    parser.add_argument("-r", "--recursive", action="store_true", help="Process directories recursively")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Show detailed progress messages")
     parser.add_argument(
         "--fallback",
         action="store_true",
@@ -211,21 +203,15 @@ Examples:
     path = Path(args.path)
     remove_orig = not args.keep
     if not args.fallback and not check_msgunfmt():
-        print(
-            "Warning: 'msgunfmt' not found. Install gettext utilities or use --fallback"
-        )
-        print(
-            "Install with: sudo apt install gettext (Debian/Ubuntu) or sudo dnf install gettext (Fedora/RHEL)"
-        )
+        print("Warning: 'msgunfmt' not found. Install gettext utilities or use --fallback")
+        print("Install with: sudo apt install gettext (Debian/Ubuntu) or sudo dnf install gettext (Fedora/RHEL)")
         sys.exit(1)
     if path.is_file():
         converter = mo_to_po if not args.fallback else mo_to_po_python_only
         success = converter(path, remove_orig, args.verbose)
         sys.exit(0 if success else 1)
     elif path.is_dir():
-        process_directory(
-            path, args.recursive, remove_orig, args.verbose, args.fallback
-        )
+        process_directory(path, args.recursive, remove_orig, args.verbose, args.fallback)
         sys.exit(0)
     else:
         print(f"Error: Path does not exist: {path}")

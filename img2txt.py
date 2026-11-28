@@ -29,9 +29,7 @@ def mpf(process_function: Callable, files: list[Path], **kwargs: Any):
     from joblib import Parallel, delayed
 
     file_strings = [str(f) for f in files]
-    return Parallel(n_jobs=4)(
-        delayed(process_function)(file_str, **kwargs) for file_str in file_strings
-    )
+    return Parallel(n_jobs=4)(delayed(process_function)(file_str, **kwargs) for file_str in file_strings)
 
 
 def get_files(path: str | Path, ext: list[str] | None = None) -> list[Path]:

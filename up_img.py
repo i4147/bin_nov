@@ -54,9 +54,7 @@ def get_clipboard_file_paths():
     if SYSTEM == "Darwin":
         try:
             script = 'tell application "Finder" to set theFiles to selection\nreturn POSIX path of (theFiles as text)'
-            proc = subprocess.run(
-                ["osascript", "-e", "clipboard info"], capture_output=True, text=True
-            )
+            proc = subprocess.run(["osascript", "-e", "clipboard info"], capture_output=True, text=True)
             if "file" in proc.stdout:
                 file_path_proc = subprocess.run(
                     ["osascript", "-e", "POSIX path of (the clipboard as alias)"],
@@ -98,9 +96,7 @@ class ClipboardFile:
             for path in file_paths:
                 if Path(path).is_file():
                     fp = open(path, "rb")
-                    ext = (str(Path(path).with_suffix("")), Path(path).suffix)[
-                        1
-                    ].lower()
+                    ext = (str(Path(path).with_suffix("")), Path(path).suffix)[1].lower()
                     yield fp, ext
             return
         image = ImageGrab.grabclipboard()
@@ -164,12 +160,7 @@ class UpImage:
         path_list = []
         clipboard_file = ClipboardFile()
         for file, ext in clipboard_file.file_objects:
-            full_path = (
-                self.upload_path.rstrip("/")
-                + "/"
-                + datetime.now().strftime("%Y%m%d%H%M%S%f")
-                + ext
-            )
+            full_path = self.upload_path.rstrip("/") + "/" + datetime.now().strftime("%Y%m%d%H%M%S%f") + ext
             self.upyun.put(full_path, file)
             file.close()
             path_list.append(full_path)
@@ -177,12 +168,8 @@ class UpImage:
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Upload image from clipboard and return Markdown link."
-    )
-    parser.add_argument(
-        "-c", "--config", action="store_true", help="file upload config"
-    )
+    parser = argparse.ArgumentParser(description="Upload image from clipboard and return Markdown link.")
+    parser.add_argument("-c", "--config", action="store_true", help="file upload config")
     return parser.parse_args()
 
 
@@ -191,9 +178,7 @@ def main() -> None:
     if args.config:
         try:
             set_config()
-            print(
-                '\nConfig success! Execute script or use global hotkey "Ctrl + 1" (Windows).'
-            )
+            print('\nConfig success! Execute script or use global hotkey "Ctrl + 1" (Windows).')
         except Exception:
             print_exc()
     else:
@@ -209,9 +194,7 @@ def main() -> None:
         try:
             send_notify(title="UpImg", message="Uploading file payload...")
             up = UpImage(config)
-            markdown_links = [
-                f"![]({urljoin(config.url_base, path)})" for path in up.upload()
-            ]
+            markdown_links = [f"![]({urljoin(config.url_base, path)})" for path in up.upload()]
             files_count = len(markdown_links)
             if files_count > 0:
                 joined_markdown = "\n".join(markdown_links)
@@ -230,12 +213,8 @@ def main() -> None:
             error_log = Path("./upimg-error.log").absolute()
             with open(error_log, "w") as fp:
                 print_exc(file=fp)
-            send_notify(
-                "Execution Error!!!", message=f"Trace log written to: {error_log}"
-            )
-            print(
-                f"Error detected. Visual diagnostic footprint isolated inside {error_log}"
-            )
+            send_notify("Execution Error!!!", message=f"Trace log written to: {error_log}")
+            print(f"Error detected. Visual diagnostic footprint isolated inside {error_log}")
 
 
 if __name__ == "__main__":

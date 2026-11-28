@@ -36,9 +36,7 @@ def sort_python_script(path: Path) -> None:
         print(f"Error parsing Python code in {path}: {e}")
         return
     if (
-        tree.body
-        and isinstance(tree.body[0], ast.Expr)
-        and isinstance(tree.body[0].value, ast.Constant)
+        tree.body and isinstance(tree.body[0], ast.Expr) and isinstance(tree.body[0].value, ast.Constant)
     ) and isinstance(tree.body[0].value.value, str):
         docstring_node = tree.body[0]
         module_docstring = ast.get_source_segment(remaining_code, docstring_node) or ""
@@ -71,10 +69,7 @@ def sort_python_script(path: Path) -> None:
         if isinstance(node, (ast.Import, ast.ImportFrom)):
             imports.append(node)
         elif isinstance(node, ast.Assign):
-            is_constant = all(
-                isinstance(target, ast.Name) and target.id.isupper()
-                for target in node.targets
-            )
+            is_constant = all(isinstance(target, ast.Name) and target.id.isupper() for target in node.targets)
             if is_constant:
                 constants.append(node)
             else:

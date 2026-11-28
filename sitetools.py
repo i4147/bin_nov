@@ -57,19 +57,17 @@ def cmd_clean_meta(args: list[Any]) -> None:
                 v.append("\n")
                 a += 1
                 continue
-            if j.startswith(
-                (
-                    "Metadata-Version",
-                    "Home-page",
-                    "Author",
-                    "Maintainer",
-                    "License",
-                    "Platform",
-                    "Requires-Python",
-                    "Description-Content-Type",
-                    "Provides-Extra",
-                )
-            ):
+            if j.startswith((
+                "Metadata-Version",
+                "Home-page",
+                "Author",
+                "Maintainer",
+                "License",
+                "Platform",
+                "Requires-Python",
+                "Description-Content-Type",
+                "Provides-Extra",
+            )):
                 v.append("\n")
                 a += 1
                 continue
@@ -107,17 +105,13 @@ def cmd_clean_record(args: list[Any]) -> None:
                     print(f"Removed dist-info reference:{n_val}")
                     continue
                 f_list.append(k)
-            atomic_write(
-                d_file, "\n".join(f_list) + ("\n" if f_list else ""), encoding="utf-8"
-            )
+            atomic_write(d_file, "\n".join(f_list) + ("\n" if f_list else ""), encoding="utf-8")
             print(f"record file in {d_file.parent.name} cleaned.")
 
 
 def cmd_clean_distinfo(args: list[Any]) -> None:
     py_ver = f"{sys.version_info.major}.{sys.version_info.minor}"
-    default_sp = Path(
-        f"/data/data/com.termux/files/usr/lib/python{py_ver}/site-packages"
-    )
+    default_sp = Path(f"/data/data/com.termux/files/usr/lib/python{py_ver}/site-packages")
     sp = Path(args.site_dir) if args.site_dir else default_sp
     if not sp.exists():
         print(f"Site-packages directory {sp} does not exist.")
@@ -188,11 +182,7 @@ def cmd_rename_json(args: list[Any]) -> None:
                 i_data = json.load(f)
             d_name = None
             if isinstance(i_data, dict):
-                if (
-                    "info" in i_data
-                    and isinstance(i_data["info"], dict)
-                    and "name" in i_data["info"]
-                ):
+                if "info" in i_data and isinstance(i_data["info"], dict) and "name" in i_data["info"]:
                     d_name = i_data["info"]["name"]
                 elif "name" in i_data:
                     d_name = i_data["name"]
@@ -216,9 +206,7 @@ def cmd_rename_meta(args: list[Any]) -> None:
     target_c.mkdir(parents=True, exist_ok=True)
     p_path = Path.cwd()
     for o_file in get_files(p_path):
-        if o_file.is_file() and (
-            o_file.name == "METADATA" or o_file.suffix == ".metadata"
-        ):
+        if o_file.is_file() and (o_file.name == "METADATA" or o_file.suffix == ".metadata"):
             _process_meta_file(o_file, target_c)
 
 
@@ -329,11 +317,7 @@ def _parse_record_line(line: str):
 
 def _is_valid_record_file(q: Path) -> bool:
     p_name = q.name
-    return not (
-        q.suffix == ".pyc"
-        or p_name.endswith(".pyc")
-        or p_name in ("direct_url.json", "INSTALLER", "RECORD")
-    )
+    return not (q.suffix == ".pyc" or p_name.endswith(".pyc") or p_name in ("direct_url.json", "INSTALLER", "RECORD"))
 
 
 def _update_single_record(i_dir: Path) -> bool:
@@ -375,9 +359,7 @@ def _update_single_record(i_dir: Path) -> bool:
     rel_p = str(p_file.relative_to(i_dir.parent))
     v_list.append(f"{rel_p},,")
     if missing:
-        logger.warning(
-            "{} missing files in {}: {}", len(missing), i_dir.name, ",".join(missing)
-        )
+        logger.warning("{} missing files in {}: {}", len(missing), i_dir.name, ",".join(missing))
     try:
         atomic_write(p_file, "\n".join(v_list) + "\n", encoding="utf-8")
         print(f"Updated {p_file}")
@@ -439,11 +421,7 @@ def _clean_single_urecord_file(k_path: Path, verbose: bool) -> bool:
             if not row:
                 continue
             y_val = row[0] if row else ""
-            if (
-                y_val.endswith(".pyc")
-                or y_val in {"direct_url.json", "INSTALLER"}
-                or y_val.startswith("LICENSE")
-            ):
+            if y_val.endswith(".pyc") or y_val in {"direct_url.json", "INSTALLER"} or y_val.startswith("LICENSE"):
                 continue
             g_rows.append(row)
         if len(g_rows) == h_len:
@@ -476,31 +454,19 @@ def _scan_and_clean_urecord(site_dirs: Iterable[Any], verbose: bool) -> tuple[in
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Unified Python Package and Metadata Manager"
-    )
+    parser = argparse.ArgumentParser(description="Unified Python Package and Metadata Manager")
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("clean-meta", help="Clean metadata and markdown files")
-    subparsers.add_parser(
-        "clean-record", help="Clean dist-info RECORD files of invalid entries"
-    )
+    subparsers.add_parser("clean-record", help="Clean dist-info RECORD files of invalid entries")
     p_cd = subparsers.add_parser(
         "clean-distinfo",
         help="Remove empty or single-item dist-info dirs in site-packages",
     )
     p_cd.add_argument("--site-dir", "-s", help="Specific site-packages directory")
-    p_ft = subparsers.add_parser(
-        "fix-targz", help="Fix and standardize .tar.gz package filenames"
-    )
-    p_ft.add_argument(
-        "directory", nargs="?", default=".", help="Directory containing .tar.gz files"
-    )
-    subparsers.add_parser(
-        "rename-json", help="Rename JSON files based on internal package name"
-    )
-    p_rm = subparsers.add_parser(
-        "rename-meta", help="Rename and move METADATA/.metadata files"
-    )
+    p_ft = subparsers.add_parser("fix-targz", help="Fix and standardize .tar.gz package filenames")
+    p_ft.add_argument("directory", nargs="?", default=".", help="Directory containing .tar.gz files")
+    subparsers.add_parser("rename-json", help="Rename JSON files based on internal package name")
+    p_rm = subparsers.add_parser("rename-meta", help="Rename and move METADATA/.metadata files")
     p_rm.add_argument(
         "--target-dir",
         default="/data/data/com.termux/files/home/tmp/metadata",
@@ -510,16 +476,12 @@ def main() -> None:
         "clean-pyc-record",
         help="Remove .pyc and license entries from purelib RECORD files",
     )
-    p_ur = subparsers.add_parser(
-        "update-record", help="Update SHA256 hashes and sizes in dist-info RECORD files"
-    )
+    p_ur = subparsers.add_parser("update-record", help="Update SHA256 hashes and sizes in dist-info RECORD files")
     p_cu = subparsers.add_parser(
         "clean-urecord",
         help="Remove .pyc, direct_url.json, INSTALLER, LICENSE from RECORD files",
     )
-    p_cu.add_argument(
-        "--site-dir", "-s", action="append", help="Specific site-packages directory"
-    )
+    p_cu.add_argument("--site-dir", "-s", action="append", help="Specific site-packages directory")
     p_cu.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     args = parser.parse_args()
     if args.command == "clean-meta":

@@ -61,9 +61,7 @@ def strip_small_statements(
 
 
 class AnnotationStripper(cst.CSTTransformer):
-    def leave_Param(
-        self, original_node: cst.Param, updated_node: cst.Param
-    ) -> cst.Param:
+    def leave_Param(self, original_node: cst.Param, updated_node: cst.Param) -> cst.Param:
         if updated_node.annotation is None:
             return updated_node
         equal: cst.AssignEqual | cst.MaybeSentinel = updated_node.equal
@@ -78,9 +76,7 @@ class AnnotationStripper(cst.CSTTransformer):
             )
         return updated_node.with_changes(annotation=None, equal=equal)
 
-    def leave_FunctionDef(
-        self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-    ) -> cst.FunctionDef:
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
         if updated_node.returns is None:
             return updated_node
         return updated_node.with_changes(returns=None)
@@ -110,13 +106,9 @@ class AnnotationStripper(cst.CSTTransformer):
     ) -> cst.IndentedBlock:
         if updated_node.body:
             return updated_node
-        return updated_node.with_changes(
-            body=[cst.SimpleStatementLine(body=[cst.Pass()])]
-        )
+        return updated_node.with_changes(body=[cst.SimpleStatementLine(body=[cst.Pass()])])
 
-    def leave_Comment(
-        self, original_node: cst.Comment, updated_node: cst.Comment
-    ) -> cst.Comment | cst.RemovalSentinel:
+    def leave_Comment(self, original_node: cst.Comment, updated_node: cst.Comment) -> cst.Comment | cst.RemovalSentinel:
         if TYPE_COMMENT_RE.match(updated_node.value):
             return cst.RemoveFromParent()
         return updated_node
@@ -247,9 +239,7 @@ def main(argv: list[str] | None = None) -> int:
     results: list[Result] = []
     try:
         with mp.Pool(processes=workers) as pool:
-            for i, res in enumerate(
-                pool.imap_unordered(process_file, [str(f) for f in files]), start=1
-            ):
+            for i, res in enumerate(pool.imap_unordered(process_file, [str(f) for f in files]), start=1):
                 results.append(res)
                 console.print(
                     format_line(i, total, res, counter_width, path_width),
@@ -268,9 +258,7 @@ def main(argv: list[str] | None = None) -> int:
     summary.append(f"processed={len(results)} ")
     summary.append(f"updated={updated} ", style="green" if updated else "dim")
     summary.append(f"no-change={unchanged} ", style="dim")
-    summary.append(
-        f"errors={failed + len(missing)} ", style="red" if failed or missing else "dim"
-    )
+    summary.append(f"errors={failed + len(missing)} ", style="red" if failed or missing else "dim")
     summary.append(f"bytes-reduced={saved:,}", style="green" if saved > 0 else "dim")
     console.print(summary)
     return 2 if failed or missing else 0

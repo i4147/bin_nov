@@ -144,11 +144,7 @@ def _basic_compress_dir(payload: tuple[str, int]) -> tuple[str, bool, str]:
 def _basic_compress_file(payload: tuple[str, int]) -> tuple[str, bool, str]:
     path_str, preset = payload
     path = Path(path_str)
-    archive_path = (
-        path.with_suffix(path.suffix + ".7z")
-        if path.suffix
-        else path.with_name(path.name + ".7z")
-    )
+    archive_path = path.with_suffix(path.suffix + ".7z") if path.suffix else path.with_name(path.name + ".7z")
     try:
         if archive_path.exists():
             archive_path.unlink()
@@ -181,9 +177,7 @@ def run_basic(args: argparse.Namespace) -> int:
     if dirs:
         logger.info("Found {} top-level directories", len(dirs))
         with multiprocessing.Pool(processes=MAX_WORKERS) as pool:
-            for src, ok, msg in pool.imap_unordered(
-                _basic_compress_dir, [(str(d), preset) for d in dirs]
-            ):
+            for src, ok, msg in pool.imap_unordered(_basic_compress_dir, [(str(d), preset) for d in dirs]):
                 (logger.info if ok else logger.error)("{}: {}", src, msg)
     else:
         logger.info("No top-level directories found")
@@ -192,9 +186,7 @@ def run_basic(args: argparse.Namespace) -> int:
         logger.info("Found {} top-level files", len(files))
         file_workers = max(1, multiprocessing.cpu_count() - 1)
         with multiprocessing.Pool(processes=file_workers) as pool:
-            for src, ok, msg in pool.imap_unordered(
-                _basic_compress_file, [(str(f), preset) for f in files]
-            ):
+            for src, ok, msg in pool.imap_unordered(_basic_compress_file, [(str(f), preset) for f in files]):
                 (logger.info if ok else logger.error)("{}: {}", src, msg)
     else:
         logger.info("No top-level files found")
@@ -335,9 +327,7 @@ def _full_is_compressible(path: Path, min_size: int) -> bool:
 def _full_list_files(base: Path, min_size: int, mode: str = "compress") -> list[Path]:
     if mode == "compress":
         return sorted(
-            p
-            for p in base.glob("*")
-            if p.is_file() and not p.is_symlink() and _full_is_compressible(p, min_size)
+            p for p in base.glob("*") if p.is_file() and not p.is_symlink() and _full_is_compressible(p, min_size)
         )
     return sorted(p for p in base.glob("*.7z") if p.is_file() and not p.is_symlink())
 
@@ -455,9 +445,7 @@ def _full_compress_dir(dir_path: Path, archive_path: Path) -> bool:
         if comp < orig:
             shutil.rmtree(dir_path)
             saved = (orig - comp) / orig * 100
-            print(
-                f"  ✓ Compressed archive: {saved:.1f}% saved ({_human_size(orig)} -> {_human_size(comp)})"
-            )
+            print(f"  ✓ Compressed archive: {saved:.1f}% saved ({_human_size(orig)} -> {_human_size(comp)})")
             return True
         _log_warning("  ✗ Archive compression didn't save space")
         archive_path.unlink()
@@ -496,9 +484,7 @@ def _full_compress_file(
             if comp < size:
                 src.unlink()
                 saved = (size - comp) / size * 100
-                print(
-                    f"  ✓ {src.name}: {saved:.1f}% saved ({_human_size(size)} -> {_human_size(comp)})"
-                )
+                print(f"  ✓ {src.name}: {saved:.1f}% saved ({_human_size(size)} -> {_human_size(comp)})")
                 return (True, size, comp)
             _log_warning("  ✗ {}: No space saved, removing compressed file", src.name)
             dst.unlink()
@@ -521,12 +507,8 @@ def _full_decompress_one(archive: Path) -> tuple[bool, int, int]:
             if out.is_file():
                 decomp_size = out.stat().st_size
             else:
-                decomp_size = sum(
-                    f.stat().st_size for f in out.rglob("*") if f.is_file()
-                )
-            print(
-                f"  ✓ Decompressed {archive.name}: {_human_size(comp_size)} → {_human_size(decomp_size)}"
-            )
+                decomp_size = sum(f.stat().st_size for f in out.rglob("*") if f.is_file())
+            print(f"  ✓ Decompressed {archive.name}: {_human_size(comp_size)} → {_human_size(decomp_size)}")
             archive.unlink()
             return (True, comp_size, decomp_size)
     except Exception as exc:
@@ -539,9 +521,7 @@ def _full_compress(base: Path, args: argparse.Namespace) -> None:
     print("\n🔧 7-Zip Compression Settings:")
     print("   Format: 7z")
     print(f"   Filter: LZMA2 (preset {args.preset} - maximum)")
-    print(
-        f"   Dictionary size: {_FULL_SETTINGS['dictionary_size'] // (1024 * 1024)} MB"
-    )
+    print(f"   Dictionary size: {_FULL_SETTINGS['dictionary_size'] // (1024 * 1024)} MB")
     print("   Solid compression: Yes")
     print("   Header compression: Yes")
     print("   Block size: 4 MB")
@@ -566,9 +546,7 @@ def _full_compress(base: Path, args: argparse.Namespace) -> None:
     orig_total = comp_total = ok_count = 0
     for i, f in enumerate(files, 1):
         print(f"\n[{i}/{len(files)}] {f.name}")
-        ok, orig, comp = _full_compress_file(
-            f, args.chunk_size, args.min_size, MAX_WORKERS
-        )
+        ok, orig, comp = _full_compress_file(f, args.chunk_size, args.min_size, MAX_WORKERS)
         if ok:
             ok_count += 1
             orig_total += orig
@@ -632,9 +610,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_basic.add_argument("--log-file", default="compress.log")
     p_basic.add_argument("--preset", type=int, default=9)
     p_basic.set_defaults(func=run_basic)
-    p_named = sub.add_parser(
-        "named", help="7zer2.py: dirs->tar, files->7z, best method"
-    )
+    p_named = sub.add_parser("named", help="7zer2.py: dirs->tar, files->7z, best method")
     p_named.add_argument("--log-file", default="compress.log")
     p_named.set_defaults(func=run_named)
     p_full = sub.add_parser("full", help="7zr.py: full compress/decompress")

@@ -197,9 +197,7 @@ def parallel_map(
         futures = [executor.submit(func, item) for item in items]
         iterator: Iterable[Any] = as_completed(futures)
         if tqdm is not None:
-            iterator = tqdm(
-                iterator, total=len(futures), desc=desc, unit="item", ncols=80
-            )
+            iterator = tqdm(iterator, total=len(futures), desc=desc, unit="item", ncols=80)
         for fut in iterator:
             try:
                 results.append(fut.result())
@@ -272,9 +270,7 @@ def cmd_auto_enhance(args: argparse.Namespace) -> int:
     if args.parallel:
         workers = MAX_WORKERS or os.cpu_count() or 1
         print(f"[SYSTEM] Utilizing {workers} parallel CPU threads.")
-        results = parallel_map(
-            _auto_enhance_one, tasks, workers=workers, desc="Enhancing"
-        )
+        results = parallel_map(_auto_enhance_one, tasks, workers=workers, desc="Enhancing")
     else:
         print("[SYSTEM] Processing sequentially (default mode)...")
         results = []
@@ -320,9 +316,7 @@ def cmd_downscale(args: argparse.Namespace) -> int:
     print("IMAGE DOWNSCALER")
     print("-" * 40)
     print(f"[INIT] Root directory: {root.resolve()}")
-    print(
-        f"[INIT] Scale factor: {args.scale_factor} (new size = original x {args.scale_factor})"
-    )
+    print(f"[INIT] Scale factor: {args.scale_factor} (new size = original x {args.scale_factor})")
     print(f"[INIT] CPU cores available: {os.cpu_count()}")
     exts = DEFAULT_IMAGE_EXTS | {".gif"}
     files = iter_files([root], exts, recursive=True)
@@ -331,9 +325,7 @@ def cmd_downscale(args: argparse.Namespace) -> int:
         print("[WARN] No images to process!")
         return 0
     workers = MAX_WORKERS or os.cpu_count() or 1
-    print(
-        f"\n[PROCESS] Downscaling {len(files)} image(s) with {workers} process(es)..."
-    )
+    print(f"\n[PROCESS] Downscaling {len(files)} image(s) with {workers} process(es)...")
     tasks = [(f, args.scale_factor) for f in files]
     results = parallel_map(_downscale_one, tasks, workers=workers, desc="Downscaling")
     ok = 0
@@ -401,9 +393,7 @@ def _optimize_embedded_resource(
             if not _run_embed_tool([args.png_command, str(src)], "pngq", args.timeout):
                 return None, None
         elif kind == "jpg":
-            if not _run_embed_tool(
-                [args.jpg_command, str(src)], "jpegoptim", args.timeout
-            ):
+            if not _run_embed_tool([args.jpg_command, str(src)], "jpegoptim", args.timeout):
                 return None, None
         elif kind == "webp":
             jpg = src.with_suffix(".jpg")
@@ -417,9 +407,7 @@ def _optimize_embedded_resource(
                 print(f"to_jpg did not produce output: {jpg}")
                 return None, None
             temp_paths.append(jpg)
-            if not _run_embed_tool(
-                [args.jpg_command, str(jpg)], "jpegoptim", args.timeout
-            ):
+            if not _run_embed_tool([args.jpg_command, str(jpg)], "jpegoptim", args.timeout):
                 return None, None
             result_path = jpg
             result_mime = "image/jpeg"
@@ -433,9 +421,7 @@ def _optimize_embedded_resource(
         elif kind == "css":
             if not _run_embed_tool([args.css_command, str(src)], "ccss", args.timeout):
                 return None, None
-        elif kind == "js" and not _run_embed_tool(
-            [args.js_command, str(src)], "ter_ser", args.timeout
-        ):
+        elif kind == "js" and not _run_embed_tool([args.js_command, str(src)], "ter_ser", args.timeout):
             return None, None
         if not result_path.exists():
             print(f"Result file missing after optimization: {result_path}")
@@ -489,9 +475,7 @@ def _process_embed_file(path: Path, args: argparse.Namespace) -> dict[str, Any]:
             else:
                 parts.append(match.group(0))
                 if new_data is not None and not is_webp:
-                    print(
-                        f"[DEBUG] No size improvement for {mime} in {path.name} ({len(new_data)} >= {len(data)})"
-                    )
+                    print(f"[DEBUG] No size improvement for {mime} in {path.name} ({len(new_data)} >= {len(data)})")
             last = match.end()
         parts.append(text[last:])
         if optimized > 0:
@@ -569,9 +553,7 @@ def cmd_embed_optimize(args: argparse.Namespace) -> int:
         futures = [executor.submit(_process_embed_file_task, task) for task in tasks]
         iterator: Iterable[Any] = as_completed(futures)
         if tqdm is not None:
-            iterator = tqdm(
-                iterator, total=len(futures), desc="Embed", unit="file", ncols=80
-            )
+            iterator = tqdm(iterator, total=len(futures), desc="Embed", unit="file", ncols=80)
         for fut in iterator:
             stats = fut.result()
             results.append(stats)
@@ -637,14 +619,9 @@ def cmd_optimize_png(args: argparse.Namespace) -> int:
         print("No PNG files found.")
         return 0
     print(f"Found {len(files)} PNG files to optimize.")
-    tasks = [
-        (f, args.tool, args.optipng_args, args.oxipng_args, args.show_output)
-        for f in files
-    ]
+    tasks = [(f, args.tool, args.optipng_args, args.oxipng_args, args.show_output) for f in files]
     workers = MAX_WORKERS or os.cpu_count() or 1
-    results = parallel_map(
-        _optimize_png_one, tasks, workers=workers, desc="Optimizing PNGs"
-    )
+    results = parallel_map(_optimize_png_one, tasks, workers=workers, desc="Optimizing PNGs")
     ok = 0
     fail = 0
     total_freed = 0
@@ -694,9 +671,7 @@ def cmd_pil_enhance(args: argparse.Namespace) -> int:
         print("No image files found.")
         return 0
     print(f"Found {len(files)} image file(s) to process...")
-    tasks = [
-        (f, args.contrast, args.brightness, args.sharpness, args.color) for f in files
-    ]
+    tasks = [(f, args.contrast, args.brightness, args.sharpness, args.color) for f in files]
     workers = MAX_WORKERS or os.cpu_count() or 1
     parallel_map(_pil_enhance_one, tasks, workers=workers, desc="Enhancing")
     print("All images processed!")
@@ -776,9 +751,7 @@ def _strip_exif_one(task: tuple[Path, bool, bool]) -> dict[str, Any]:
             stats["message"] = f"Stripped EXIF: {delta:+.0f}B ({pct:+.1f}%)"
             if verbose:
                 print(f"✅ {path.name}")
-                print(
-                    f"   {human_size(original_size)} -> {human_size(len(new_bytes))} ({pct:+.1f}%)"
-                )
+                print(f"   {human_size(original_size)} -> {human_size(len(new_bytes))} ({pct:+.1f}%)")
     except Exception as exc:
         stats["success"] = False
         stats["message"] = f"Error: {exc}"
@@ -806,9 +779,7 @@ def cmd_strip_exif(args: argparse.Namespace) -> int:
     print(f"📁 Recursive: {'Yes' if recursive else 'No'}")
     print("-" * 40)
     tasks = [(f, args.backup, args.verbose) for f in files]
-    results = parallel_map(
-        _strip_exif_one, tasks, workers=MAX_WORKERS, desc="Stripping EXIF"
-    )
+    results = parallel_map(_strip_exif_one, tasks, workers=MAX_WORKERS, desc="Stripping EXIF")
     ok = 0
     fail = 0
     total_original = 0
@@ -827,9 +798,7 @@ def cmd_strip_exif(args: argparse.Namespace) -> int:
         else:
             fail += 1
             if not args.verbose:
-                print(
-                    f"  [{i}/{len(files)}] ❌ {result['path'].name}: {result['message']}"
-                )
+                print(f"  [{i}/{len(files)}] ❌ {result['path'].name}: {result['message']}")
     print("-" * 40)
     delta = total_new - total_original
     print("📊 Summary:")
@@ -839,9 +808,7 @@ def cmd_strip_exif(args: argparse.Namespace) -> int:
     print(f"   📦 Original size: {human_size(total_original)}")
     print(f"   📦 New size: {human_size(total_new)}")
     if total_original > 0:
-        print(
-            f"   💰 Change: {human_size(delta)} ({delta / total_original * 100:+.1f}%)"
-        )
+        print(f"   💰 Change: {human_size(delta)} ({delta / total_original * 100:+.1f}%)")
     else:
         print(f"   💰 Change: {human_size(delta)} (N/A)")
     if not args.no_size_report and size_before:
@@ -853,9 +820,7 @@ def cmd_strip_exif(args: argparse.Namespace) -> int:
             if change != 0:
                 pct = change / before * 100 if before > 0 else 0.0
                 print(f"   {parent}:")
-                print(
-                    f"      {human_size(before)} -> {human_size(after)} ({pct:+.1f}%)"
-                )
+                print(f"      {human_size(before)} -> {human_size(after)} ({pct:+.1f}%)")
     backups = [r for r in results if isinstance(r, dict) and r.get("backup_created")]
     if backups:
         print(f"💾 Backups created for {len(backups)} file(s)")
@@ -916,15 +881,9 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=__doc__,
     )
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser(
-        "auto-enhance", help="Google-Photos-style in-place image enhancement"
-    )
-    p.add_argument(
-        "inputs", nargs="*", help="Files or folders. Defaults to recursive '.'."
-    )
-    p.add_argument(
-        "-v", "--verbose", action="store_true", help="Print per-image details."
-    )
+    p = sub.add_parser("auto-enhance", help="Google-Photos-style in-place image enhancement")
+    p.add_argument("inputs", nargs="*", help="Files or folders. Defaults to recursive '.'.")
+    p.add_argument("-v", "--verbose", action="store_true", help="Print per-image details.")
     p.add_argument("--parallel", action="store_true", help="Enable multiprocessing.")
     p.set_defaults(func=cmd_auto_enhance)
     p = sub.add_parser("downscale", help="Downscale images in-place by a scale factor")
@@ -941,35 +900,25 @@ def build_parser() -> argparse.ArgumentParser:
         help="Root directory to scan. Default: current directory.",
     )
     p.set_defaults(func=cmd_downscale)
-    p = sub.add_parser(
-        "embed-optimize", help="Optimize base64 resources inside CSS/HTML/JS"
-    )
+    p = sub.add_parser("embed-optimize", help="Optimize base64 resources inside CSS/HTML/JS")
     p.add_argument(
         "inputs",
         nargs="*",
         type=Path,
         help="Files or directories. Default: current directory.",
     )
-    p.add_argument(
-        "--dry-run", action="store_true", help="List files without processing."
-    )
+    p.add_argument("--dry-run", action="store_true", help="List files without processing.")
     p.add_argument("-v", "--verbose", action="store_true", help="Verbose logging.")
-    p.add_argument(
-        "--timeout", type=int, default=300, help="External command timeout in seconds."
-    )
+    p.add_argument("--timeout", type=int, default=300, help="External command timeout in seconds.")
     p.add_argument("--png-command", default="pngq", help="PNG optimizer command.")
     p.add_argument("--jpg-command", default="jpegoptim", help="JPEG optimizer command.")
-    p.add_argument(
-        "--webp-to-jpg-command", default="to_jpg", help="WebP-to-JPEG command."
-    )
+    p.add_argument("--webp-to-jpg-command", default="to_jpg", help="WebP-to-JPEG command.")
     p.add_argument("--svg-command", default="svgo", help="SVG optimizer command.")
     p.add_argument("--js-command", default="ter_ser", help="JS optimizer command.")
     p.add_argument("--css-command", default="ccss", help="CSS optimizer command.")
     p.set_defaults(func=cmd_embed_optimize)
     p = sub.add_parser("optimize-png", help="Optimize PNG files with optipng or oxipng")
-    p.add_argument(
-        "inputs", nargs="*", help="Files or directories. Default: current directory."
-    )
+    p.add_argument("inputs", nargs="*", help="Files or directories. Default: current directory.")
     p.add_argument(
         "--tool",
         choices=["optipng", "oxipng"],
@@ -988,39 +937,27 @@ def build_parser() -> argparse.ArgumentParser:
         default=True,
         help="Recurse into directories.",
     )
-    p.add_argument(
-        "--no-recursive", dest="recursive", action="store_false", help="Do not recurse."
-    )
+    p.add_argument("--no-recursive", dest="recursive", action="store_false", help="Do not recurse.")
     p.add_argument("--show-output", action="store_true", help="Show tool output.")
     p.set_defaults(func=cmd_optimize_png)
     p = sub.add_parser("pil-enhance", help="PIL ImageEnhance in-place enhancement")
-    p.add_argument(
-        "inputs", nargs="*", help="Files or directories. Default: current directory."
-    )
+    p.add_argument("inputs", nargs="*", help="Files or directories. Default: current directory.")
     p.add_argument("--contrast", type=float, default=1.1, help="Contrast factor.")
     p.add_argument("--brightness", type=float, default=1.1, help="Brightness factor.")
     p.add_argument("--sharpness", type=float, default=1.1, help="Sharpness factor.")
     p.add_argument("--color", type=float, default=1.1, help="Color factor.")
-    p.add_argument(
-        "--extensions", default=".jpg,.png,.webp", help="Comma-separated extensions."
-    )
+    p.add_argument("--extensions", default=".jpg,.png,.webp", help="Comma-separated extensions.")
     p.add_argument(
         "--recursive",
         action="store_true",
         default=True,
         help="Recurse into directories.",
     )
-    p.add_argument(
-        "--no-recursive", dest="recursive", action="store_false", help="Do not recurse."
-    )
+    p.add_argument("--no-recursive", dest="recursive", action="store_false", help="Do not recurse.")
     p.set_defaults(func=cmd_pil_enhance)
     p = sub.add_parser("resize", help="PIL in-place downscale by scale factor")
-    p.add_argument(
-        "inputs", nargs="*", help="Files or directories. Default: current directory."
-    )
-    p.add_argument(
-        "--scale", type=float, default=0.75, help="Scale factor. Default: 0.75."
-    )
+    p.add_argument("inputs", nargs="*", help="Files or directories. Default: current directory.")
+    p.add_argument("--scale", type=float, default=0.75, help="Scale factor. Default: 0.75.")
     p.add_argument("--quality", type=int, default=85, help="JPEG quality. Default: 85.")
     p.add_argument(
         "--extensions",
@@ -1047,9 +984,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Create .backup files before stripping.",
     )
-    p.add_argument(
-        "--no-recursive", action="store_true", help="Do not process subdirectories."
-    )
+    p.add_argument("--no-recursive", action="store_true", help="Do not process subdirectories.")
     p.add_argument(
         "--extensions",
         nargs="+",
@@ -1057,14 +992,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Extensions to process.",
     )
     p.add_argument("-v", "--verbose", action="store_true", help="Show detailed output.")
-    p.add_argument(
-        "--no-size-report", action="store_true", help="Skip folder size change report."
-    )
+    p.add_argument("--no-size-report", action="store_true", help="Skip folder size change report.")
     p.set_defaults(func=cmd_strip_exif)
     p = sub.add_parser("upscale", help="Upscale small images by width-based factors")
-    p.add_argument(
-        "inputs", nargs="*", help="Files or directories. Default: current directory."
-    )
+    p.add_argument("inputs", nargs="*", help="Files or directories. Default: current directory.")
     p.add_argument(
         "--extensions",
         default=".webp,.jpg,.jpeg,.png",
@@ -1076,9 +1007,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=True,
         help="Recurse into directories.",
     )
-    p.add_argument(
-        "--no-recursive", dest="recursive", action="store_false", help="Do not recurse."
-    )
+    p.add_argument("--no-recursive", dest="recursive", action="store_false", help="Do not recurse.")
     p.set_defaults(func=cmd_upscale)
     return parser
 

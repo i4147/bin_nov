@@ -141,10 +141,7 @@ def iter_targets(inputs: Iterable[Path]) -> Iterator[Path]:
             continue
         for dirpath, dirnames, filenames in os.walk(root):
             dirnames[:] = [
-                d
-                for d in dirnames
-                if d not in SKIP_DIRS
-                and not any(Path(d).match(g) for g in SKIP_DIR_GLOBS)
+                d for d in dirnames if d not in SKIP_DIRS and not any(Path(d).match(g) for g in SKIP_DIR_GLOBS)
             ]
             base = Path(dirpath)
             for name in filenames:
@@ -185,11 +182,7 @@ def _is_preserved_comment(text: str, lineno: int) -> bool:
 
 
 def _is_string_stmt(node: ast.AST) -> bool:
-    return (
-        isinstance(node, ast.Expr)
-        and isinstance(node.value, ast.Constant)
-        and isinstance(node.value.value, str)
-    )
+    return isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str)
 
 
 def _docstring_edits(source: str, tree: ast.Module, opts: Options) -> list[Edit]:
@@ -359,9 +352,7 @@ def backend_libcst(source: str, opts: Options) -> Stripped:
             self.comments = 0
             self.docstrings = 0
 
-        def _maybe_strip_docstring(
-            self, body: cst.BaseSuite, is_module: bool
-        ) -> cst.BaseSuite:
+        def _maybe_strip_docstring(self, body: cst.BaseSuite, is_module: bool) -> cst.BaseSuite:
             if not isinstance(body, cst.IndentedBlock) or not body.body:
                 return body
             first = body.body[0]
@@ -369,9 +360,7 @@ def backend_libcst(source: str, opts: Options) -> Stripped:
                 isinstance(first, cst.SimpleStatementLine)
                 and first.body
                 and isinstance(first.body[0], cst.Expr)
-                and isinstance(
-                    first.body[0].value, (cst.SimpleString, cst.ConcatenatedString)
-                )
+                and isinstance(first.body[0].value, (cst.SimpleString, cst.ConcatenatedString))
             ):
                 return body
             if is_module and not (opts.strip_all or opts.remove_module_docstring):
@@ -385,24 +374,14 @@ def backend_libcst(source: str, opts: Options) -> Stripped:
             return body.with_changes(body=rest)
 
         def leave_Module(self, original: cst.Module, updated: cst.Module) -> cst.Module:
-            new_body = self._maybe_strip_docstring(
-                cst.IndentedBlock(body=list(updated.body)), is_module=True
-            )
+            new_body = self._maybe_strip_docstring(cst.IndentedBlock(body=list(updated.body)), is_module=True)
             return updated.with_changes(body=list(new_body.body))
 
-        def leave_FunctionDef(
-            self, original: cst.FunctionDef, updated: cst.FunctionDef
-        ) -> cst.FunctionDef:
-            return updated.with_changes(
-                body=self._maybe_strip_docstring(updated.body, is_module=False)
-            )
+        def leave_FunctionDef(self, original: cst.FunctionDef, updated: cst.FunctionDef) -> cst.FunctionDef:
+            return updated.with_changes(body=self._maybe_strip_docstring(updated.body, is_module=False))
 
-        def leave_ClassDef(
-            self, original: cst.ClassDef, updated: cst.ClassDef
-        ) -> cst.ClassDef:
-            return updated.with_changes(
-                body=self._maybe_strip_docstring(updated.body, is_module=False)
-            )
+        def leave_ClassDef(self, original: cst.ClassDef, updated: cst.ClassDef) -> cst.ClassDef:
+            return updated.with_changes(body=self._maybe_strip_docstring(updated.body, is_module=False))
 
     module = cst.parse_module(source)
     stripper = _Stripper()
@@ -438,17 +417,9 @@ def backend_tree_sitter(source: str, opts: Options) -> Stripped:
                 continue
             line_start = data.rfind(b"\n", 0, n.start_byte) + 1
             before = data[line_start : n.start_byte]
-            s = (
-                line_start
-                if before.strip() == b""
-                else line_start + len(before.rstrip())
-            )
+            s = line_start if before.strip() == b"" else line_start + len(before.rstrip())
             edits.append(Edit(s, n.end_byte, "", "comment"))
-        elif (
-            n.type == "expression_statement"
-            and n.children
-            and n.children[0].type == "string"
-        ):
+        elif n.type == "expression_statement" and n.children and n.children[0].type == "string":
             parent = n.parent
             is_module = parent is not None and parent.type == "module"
             is_body = (
@@ -464,9 +435,7 @@ def backend_tree_sitter(source: str, opts: Options) -> Stripped:
             if not (is_module or is_body):
                 continue
             only = is_body and parent is not None and parent.named_child_count == 1
-            edits.append(
-                Edit(n.start_byte, n.end_byte, "pass" if only else "", "docstring")
-            )
+            edits.append(Edit(n.start_byte, n.end_byte, "pass" if only else "", "docstring"))
     out_bytes = bytearray(data)
     for e in sorted(edits, key=lambda x: x.start, reverse=True):
         out_bytes[e.start : e.end] = e.replacement.encode("utf-8")
@@ -508,9 +477,7 @@ def check_backend_available(name: str) -> None:
             import tree_sitter
             import tree_sitter_python
         except ImportError as exc:
-            msg = (
-                "tree-sitter not installed: pip install tree-sitter tree-sitter-python"
-            )
+            msg = "tree-sitter not installed: pip install tree-sitter tree-sitter-python"
             raise SystemExit(msg) from exc
 
 
@@ -610,9 +577,7 @@ def process_wheel(path: Path, opts: Options) -> FileResult:
                 return result
             total_removed = c_total = d_total = 0
             changed_any = False
-            with zipfile.ZipFile(
-                out_tmp, "w", compression=zipfile.ZIP_DEFLATED
-            ) as zout:
+            with zipfile.ZipFile(out_tmp, "w", compression=zipfile.ZIP_DEFLATED) as zout:
                 for info in zin.infolist():
                     data = zin.read(info.filename)
                     if info.filename.endswith(".py"):
@@ -623,9 +588,7 @@ def process_wheel(path: Path, opts: Options) -> FileResult:
                         try:
                             s = process_source(text, opts)
                             if s.code != text:
-                                total_removed += len(text.encode()) - len(
-                                    s.code.encode()
-                                )
+                                total_removed += len(text.encode()) - len(s.code.encode())
                                 c_total += s.comments_removed
                                 d_total += s.docstrings_removed
                                 changed_any = True
@@ -706,9 +669,7 @@ def _iter_joblib(args_iter: Iterable[tuple[Path, Options]]) -> Iterator[FileResu
     except ImportError as exc:
         msg = "joblib not installed: pip install joblib"
         raise SystemExit(msg) from exc
-    for r in Parallel(n_jobs=MAX_WORKERS)(
-        delayed(_worker_dispatch)(a) for a in args_iter
-    ):
+    for r in Parallel(n_jobs=MAX_WORKERS)(delayed(_worker_dispatch)(a) for a in args_iter):
         yield r
 
 
@@ -754,12 +715,8 @@ def run_parallel(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(
-        description="Strip comments and docstrings from Python files."
-    )
-    p.add_argument(
-        "paths", nargs="*", type=Path, help="Files or directories (default: cwd)"
-    )
+    p = argparse.ArgumentParser(description="Strip comments and docstrings from Python files.")
+    p.add_argument("paths", nargs="*", type=Path, help="Files or directories (default: cwd)")
     p.add_argument("-c", "--comments", action="store_true", help="Remove all comments")
     p.add_argument(
         "-d",
@@ -786,13 +743,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Backend (default: libcst if installed, else ast).",
     )
-    p.add_argument(
-        "--dry-run", action="store_true", help="Show changes without writing."
-    )
+    p.add_argument("--dry-run", action="store_true", help="Show changes without writing.")
     p.add_argument("--diff", action="store_true", help="Show unified diff of changes.")
-    p.add_argument(
-        "--backup", action="store_true", help="Create .bak backup before writing."
-    )
+    p.add_argument("--backup", action="store_true", help="Create .bak backup before writing.")
     p.add_argument(
         "--remove-module-docstring",
         action="store_true",
@@ -861,9 +814,7 @@ def main(argv: list[str] | None = None) -> int:
         report(r)
         results.append(r)
     else:
-        args_iter: Iterable[tuple[Path, Options]] = (
-            (t, opts) for t in chain([first, second], target_iter)
-        )
+        args_iter: Iterable[tuple[Path, Options]] = ((t, opts) for t in chain([first, second], target_iter))
         for r in run_parallel(args_iter, mp_method):
             report(r)
             results.append(r)

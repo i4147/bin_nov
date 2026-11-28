@@ -143,11 +143,7 @@ def list_commits(repo: Path, revision: str, first_parent: bool = False) -> list[
     if first_parent:
         args.append("--first-parent")
     args.append(revision)
-    return [
-        parse_commit_header(line)
-        for line in git(repo, *args).splitlines()
-        if UNIT_SEP in line
-    ]
+    return [parse_commit_header(line) for line in git(repo, *args).splitlines() if UNIT_SEP in line]
 
 
 @dataclass(frozen=True, slots=True)
@@ -309,9 +305,7 @@ def walk_ledger(
                 )
             )
             previous = current
-            log(
-                f"  [{number}/{total}] {commit.short} +{len(entries[-1].added)} -{len(entries[-1].removed)}"
-            )
+            log(f"  [{number}/{total}] {commit.short} +{len(entries[-1].added)} -{len(entries[-1].removed)}")
     finally:
         drop_worktree(repo, tree)
         shutil.rmtree(sandbox, ignore_errors=True)
@@ -412,10 +406,7 @@ def render_text(
 ) -> str:
     out: list[str] = []
     width = 74
-    out.append(
-        paint("addel", "bold", "teal")
-        + paint(" · ledger of added & removed files", "dim")
-    )
+    out.append(paint("addel", "bold", "teal") + paint(" · ledger of added & removed files", "dim"))
     out.append(paint("repository ", "dim") + str(repo))
     out.append(paint("revision   ", "dim") + f"{revision}  ({mode} mode)")
     out.append(paint("span       ", "dim") + f"{summary.span[0]} → {summary.span[1]}")
@@ -429,10 +420,7 @@ def render_text(
         commit = entry.commit
         head = f"{number}/{summary.commits} "
         out.append("")
-        out.append(
-            paint("─" * 3 + " " + head, "dim")
-            + paint("─" * max(0, width - len(head) - 3), "dim")
-        )
+        out.append(paint("─" * 3 + " " + head, "dim") + paint("─" * max(0, width - len(head) - 3), "dim"))
         flags = " merge" if commit.is_merge else (" root" if commit.is_root else "")
         out.append(
             paint(commit.short, "bold", "amber")
@@ -460,14 +448,9 @@ def render_text(
             shown += 1
         hidden = len(entry.added) + len(entry.removed) - shown
         if hidden > 0:
-            out.append(
-                "  " + paint(f"… {hidden} more path(s) — raise --max-files", "dim")
-            )
+            out.append("  " + paint(f"… {hidden} more path(s) — raise --max-files", "dim"))
         out.append(
-            "  "
-            + paint(f"+{len(entry.added)}", "green")
-            + paint(" / ", "dim")
-            + paint(f"-{len(entry.removed)}", "red")
+            "  " + paint(f"+{len(entry.added)}", "green") + paint(" / ", "dim") + paint(f"-{len(entry.removed)}", "red")
         )
 
     out.append("")
@@ -495,12 +478,7 @@ def render_text(
         peak = summary.hot_directories[0][1] or 1
         for name, count in summary.hot_directories:
             bar = "█" * max(1, round(count / peak * 28))
-            out.append(
-                "    "
-                + name.ljust(28)[:28]
-                + paint(bar, "teal")
-                + paint(f" {count}", "dim")
-            )
+            out.append("    " + name.ljust(28)[:28] + paint(bar, "teal") + paint(f" {count}", "dim"))
 
     if summary.churn:
         out.append("")
@@ -539,9 +517,7 @@ def render_text(
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    atomic_write(
-        path, json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-    )
+    atomic_write(path, json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def write_csv(path: Path, entries: Sequence[CommitEntry]) -> None:
@@ -552,17 +528,15 @@ def write_csv(path: Path, entries: Sequence[CommitEntry]) -> None:
         for entry in entries:
             for status, paths in (("added", entry.added), ("removed", entry.removed)):
                 for item in paths:
-                    writer.writerow(
-                        [
-                            entry.commit.sha,
-                            entry.commit.short,
-                            entry.commit.date,
-                            entry.commit.author,
-                            entry.commit.subject,
-                            status,
-                            item,
-                        ]
-                    )
+                    writer.writerow([
+                        entry.commit.sha,
+                        entry.commit.short,
+                        entry.commit.date,
+                        entry.commit.author,
+                        entry.commit.subject,
+                        status,
+                        item,
+                    ])
 
 
 def write_markdown(
@@ -627,9 +601,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         default=Path.cwd(),
         help="any path inside the repository (default: cwd)",
     )
-    parser.add_argument(
-        "--revision", default="HEAD", help="revision or range to walk (default: HEAD)"
-    )
+    parser.add_argument("--revision", default="HEAD", help="revision or range to walk (default: HEAD)")
     parser.add_argument(
         "--mode",
         choices=("diff-tree", "walk"),
@@ -658,9 +630,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     )
     parser.add_argument("--json", type=Path, metavar="FILE", help="write a JSON report")
     parser.add_argument("--csv", type=Path, metavar="FILE", help="write a CSV report")
-    parser.add_argument(
-        "--md", type=Path, metavar="FILE", help="write a Markdown report"
-    )
+    parser.add_argument("--md", type=Path, metavar="FILE", help="write a Markdown report")
     parser.add_argument(
         "--max-files",
         type=int,
@@ -675,9 +645,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         metavar="N",
         help="rows in the hot-directory and churn tables (default: 8)",
     )
-    parser.add_argument(
-        "--no-color", action="store_true", help="never emit ANSI escapes"
-    )
+    parser.add_argument("--no-color", action="store_true", help="never emit ANSI escapes")
     parser.add_argument("--quiet", action="store_true", help="no progress on stderr")
     return parser.parse_args(list(sys.argv[1:] if argv is None else argv))
 
@@ -687,13 +655,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     if os.name == "nt":
         os.system("")
-    use_color = (
-        not args.no_color and os.environ.get("NO_COLOR") is None and sys.stdout.isatty()
-    )
+    use_color = not args.no_color and os.environ.get("NO_COLOR") is None and sys.stdout.isatty()
     paint = painter(use_color)
-    log: Callable[[str], None] = (
-        (lambda _m: None) if args.quiet else (lambda m: print(m, file=sys.stderr))
-    )
+    log: Callable[[str], None] = (lambda _m: None) if args.quiet else (lambda m: print(m, file=sys.stderr))
 
     if shutil.which("git") is None:
         print("error: the `git` executable was not found on PATH", file=sys.stderr)

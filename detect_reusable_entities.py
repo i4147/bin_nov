@@ -72,12 +72,7 @@ def constant_names(statement: cst.CSTNode, all_assignments: bool) -> list[str]:
     else:
         return []
 
-    names = {
-        name
-        for target in targets
-        for name in assigned_names(target)
-        if all_assignments or name.isupper()
-    }
+    names = {name for target in targets for name in assigned_names(target) if all_assignments or name.isupper()}
     return sorted(names)
 
 
@@ -137,10 +132,7 @@ class DefinitionCollector(cst.CSTVisitor):
                 "functions",
                 node.name.value,
                 node,
-                [
-                    self.source_module.code_for_node(d.decorator)
-                    for d in node.decorators
-                ],
+                [self.source_module.code_for_node(d.decorator) for d in node.decorators],
             )
         self._scope_depth += 1
         return True
@@ -196,9 +188,7 @@ def analyze_file(task: tuple[str, str, bool, bool, bool]) -> FileResult:
             path=relative_path,
             definitions=collector.definitions,
             references=dict(collector.references),
-            reference_files={
-                name: sorted(paths) for name, paths in collector.reference_files.items()
-            },
+            reference_files={name: sorted(paths) for name, paths in collector.reference_files.items()},
         )
     except Exception as exc:
         logger.exception("Failed to analyze {}: {}", relative_path, exc)
@@ -214,22 +204,14 @@ def matches_exclusion(path: Path, root: Path, patterns: Sequence[str]) -> bool:
     )
 
 
-def find_files(
-    root: Path, exclusions: Sequence[str], follow_symlinks: bool
-) -> list[Path]:
+def find_files(root: Path, exclusions: Sequence[str], follow_symlinks: bool) -> list[Path]:
     found: list[Path] = []
     for current, dirs, filenames in os.walk(root, followlinks=follow_symlinks):
         current_path = Path(current)
-        dirs[:] = [
-            name
-            for name in dirs
-            if not matches_exclusion(current_path / name, root, exclusions)
-        ]
+        dirs[:] = [name for name in dirs if not matches_exclusion(current_path / name, root, exclusions)]
         for filename in filenames:
             path = current_path / filename
-            if filename.endswith(".py") and not matches_exclusion(
-                path, root, exclusions
-            ):
+            if filename.endswith(".py") and not matches_exclusion(path, root, exclusions):
                 found.append(path)
     return sorted(found)
 
@@ -263,8 +245,7 @@ def get_candidates(
         files_used = {
             path
             for path, count in ref_files[definition.name].items()
-            if count >= min_uses_per_file
-            and (not cross_file_only or path != definition.path)
+            if count >= min_uses_per_file and (not cross_file_only or path != definition.path)
         }
         use_count = sum(
             count
@@ -319,9 +300,7 @@ def text_report(
             output.extend(("(none)", ""))
             continue
         for item in group:
-            output.append(
-                f"# {item.name}: {item.references} reference(s); defined at {item.path}:{item.line}"
-            )
+            output.append(f"# {item.name}: {item.references} reference(s); defined at {item.path}:{item.line}")
             output.append(f"# Referenced in: {', '.join(item.reference_files or [])}")
             for warning in item.warnings or []:
                 output.append(f"# Review: {warning}")
@@ -338,9 +317,7 @@ def text_report(
         output.append(f"Candidates: {len(candidates)}")
         output.append(f"Duplicate-name definitions: {len(duplicates)}")
         for kind, title in sections:
-            output.append(
-                f"{title.split('. ', 1)[1].title()}: {sum(item.kind == kind for item in candidates)}"
-            )
+            output.append(f"{title.split('. ', 1)[1].title()}: {sum(item.kind == kind for item in candidates)}")
     return "\n".join(output).rstrip() + "\n"
 
 
@@ -358,8 +335,7 @@ def json_report(
             "candidate_count": len(candidates),
             "duplicate_definition_count": len(duplicates),
             "by_kind": {
-                kind: sum(item.kind == kind for item in candidates)
-                for kind in ("constants", "classes", "functions")
+                kind: sum(item.kind == kind for item in candidates) for kind in ("constants", "classes", "functions")
             },
         }
     return json.dumps(payload, indent=2) + "\n"
@@ -408,20 +384,16 @@ def draft_module(candidates: Sequence[Definition]) -> str:
         if group:
             output.extend((title, ""))
             for item in group:
-                output.extend(
-                    (
-                        f"# Original: {item.path}:{item.line}",
-                        item.source,
-                        "",
-                    )
-                )
+                output.extend((
+                    f"# Original: {item.path}:{item.line}",
+                    item.source,
+                    "",
+                ))
     return "\n".join(output).rstrip() + "\n"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Find reusable constants, classes, and functions with LibCST."
-    )
+    parser = argparse.ArgumentParser(description="Find reusable constants, classes, and functions with LibCST.")
     parser.add_argument("directory", nargs="?", default=".", help="Scan root.")
     parser.add_argument("-o", "--output", default="utilz.txt", help="Report path.")
     parser.add_argument(
@@ -523,9 +495,7 @@ def main() -> int:
         logger.error("Not a directory: {}", root)
         return 2
 
-    defaults = (
-        [] if args.no_default_excludes else [".git", ".venv", "venv", "__pycache__"]
-    )
+    defaults = [] if args.no_default_excludes else [".git", ".venv", "venv", "__pycache__"]
     exclusions = defaults + args.exclude
     files = find_files(root, exclusions, args.follow_symlinks)
 
@@ -544,9 +514,7 @@ def main() -> int:
         if args.jobs == 1:
             results = [analyze_file(task) for task in tasks]
         else:
-            with concurrent.futures.ProcessPoolExecutor(
-                max_workers=args.jobs
-            ) as executor:
+            with concurrent.futures.ProcessPoolExecutor(max_workers=args.jobs) as executor:
                 results = list(executor.map(analyze_file, tasks))
     except Exception:
         logger.exception("Parallel analysis failed")
@@ -554,9 +522,7 @@ def main() -> int:
 
     for result in results:
         if result.error:
-            logger.error(
-                "Skipping {} after analysis error: {}", result.path, result.error
-            )
+            logger.error("Skipping {} after analysis error: {}", result.path, result.error)
 
     candidates, duplicates = get_candidates(
         results,
@@ -593,9 +559,7 @@ def main() -> int:
         len(duplicates),
     )
     if not args.quiet:
-        print(
-            f"Scanned {len(files)} Python file(s); found {len(candidates)} candidate(s)."
-        )
+        print(f"Scanned {len(files)} Python file(s); found {len(candidates)} candidate(s).")
         print(f"Report written to {Path(args.output).resolve()}.")
 
     if args.check and candidates:

@@ -69,9 +69,7 @@ def find_upgradable(
     with requests.Session() as session:
         session.headers["User-Agent"] = "requirements-updater/1.0"
         with ThreadPoolExecutor(max_workers=max_workers) as pool:
-            futures = {
-                pool.submit(fetch_latest, session, name): name for name in installed
-            }
+            futures = {pool.submit(fetch_latest, session, name): name for name in installed}
             for fut in as_completed(futures):
                 name, ver = fut.result()
                 latest[name] = ver

@@ -126,9 +126,7 @@ def build_parser() -> argparse.ArgumentParser:
         nargs="*",
         type=Path,
         metavar="PATH",
-        help=(
-            "Files or directories to process. Defaults to the current directory, walked recursively."
-        ),
+        help=("Files or directories to process. Defaults to the current directory, walked recursively."),
     )
     return parser
 

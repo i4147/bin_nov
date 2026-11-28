@@ -55,9 +55,7 @@ REPLACEMENTS: list[tuple[re.Pattern[str], str, bool, bool]] = [
         True,
     ),
     (
-        re.compile(
-            r"pkg_resources\.resource_filename\(\s*([^,]+?)\s*,\s*([^)]+?)\s*\)"
-        ),
+        re.compile(r"pkg_resources\.resource_filename\(\s*([^,]+?)\s*,\s*([^)]+?)\s*\)"),
         r"str(importlib.resources.files(\1).joinpath(\2))",
         False,
         True,
@@ -186,9 +184,7 @@ def autofix_file(path: Path) -> dict[str, Any]:
                 imports_needed.add("packaging.requirements")
     if imports_needed:
         import_lines = "\n".join(f"import {imp}" for imp in sorted(imports_needed))
-        match = re.search(
-            r"^(#!.*\n)?(\"\"\".*?\"\"\")?", content, re.MULTILINE | re.DOTALL
-        )
+        match = re.search(r"^(#!.*\n)?(\"\"\".*?\"\"\")?", content, re.MULTILINE | re.DOTALL)
         if match:
             insert_pos = match.end()
             content = content[:insert_pos] + import_lines + "\n" + content[insert_pos:]
@@ -208,9 +204,7 @@ def autofix_file(path: Path) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Detect and autofix deprecated pkg_resources usage."
-    )
+    parser = argparse.ArgumentParser(description="Detect and autofix deprecated pkg_resources usage.")
     parser.add_argument(
         "paths",
         nargs="*",
@@ -228,9 +222,7 @@ def main(argv: list[str] | None = None) -> int:
     if not py_files:
         print("No .py files found.")
         return 0
-    print(
-        f"Found {len(py_files)} file(s) | Mode: {'AUTOFIX' if args.autofix else 'REPORT'}\n"
-    )
+    print(f"Found {len(py_files)} file(s) | Mode: {'AUTOFIX' if args.autofix else 'REPORT'}\n")
     try:
         if args.autofix:
             with Pool(processes=MAX_WORKERS) as pool:

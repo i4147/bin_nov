@@ -33,9 +33,7 @@ def main() -> None:
             output_name = Path(name).name
             output_path = Path(output_name).with_suffix(".txt")
             if output_path.exists():
-                output_path = output_path.with_name(
-                    f"{output_path.stem}_{index}{output_path.suffix}"
-                )
+                output_path = output_path.with_name(f"{output_path.stem}_{index}{output_path.suffix}")
             atomic_write(output_path, str(content), encoding="utf-8")
             print(f"Saved {output_path}")
 

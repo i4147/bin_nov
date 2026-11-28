@@ -169,9 +169,7 @@ def build_parser() -> argparse.ArgumentParser:
     common.add_argument(
         "--engine",
         choices=("pypdf2", "pdfplumber"),
-        help=(
-            "PDF extraction engine. Defaults: pypdf2 for concat, pdfplumber for split."
-        ),
+        help=("PDF extraction engine. Defaults: pypdf2 for concat, pdfplumber for split."),
     )
     concat = subparsers.add_parser(
         "concat",
@@ -196,9 +194,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--output-dir",
         type=Path,
         default=None,
-        help=(
-            "Directory for per-page text files. Default: directory named after the PDF stem."
-        ),
+        help=("Directory for per-page text files. Default: directory named after the PDF stem."),
     )
     split.add_argument(
         "--pad-width",

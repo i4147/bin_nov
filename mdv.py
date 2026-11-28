@@ -73,9 +73,7 @@ def main() -> int:
         err_console.print(f"[red]Error:[/red] Permission denied: {args.file}")
         return 1
     except UnicodeDecodeError:
-        err_console.print(
-            f"[red]Error:[/red] {args.file} is not a valid UTF-8 text file."
-        )
+        err_console.print(f"[red]Error:[/red] {args.file} is not a valid UTF-8 text file.")
         return 1
     except OSError as error:
         err_console.print(f"[red]Error:[/red] {error}")

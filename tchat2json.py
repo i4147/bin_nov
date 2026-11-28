@@ -60,9 +60,7 @@ def group_by_user(messages: list[dict[str, str]]) -> list[dict[str, object]]:
 
 
 def write_json(records: list[dict[str, object]], dst: Path) -> None:
-    atomic_write(
-        dst, json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    atomic_write(dst, json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def write_csv(records: list[dict[str, object]], dst: Path, fields: list[str]) -> None:
@@ -88,9 +86,7 @@ def write_db(records: list[dict[str, object]], dst: Path, fields: list[str]) -> 
         if isinstance(row.get("msg"), list):
             row["msg"] = json.dumps(row["msg"], ensure_ascii=False)
         rows.append(row)
-    cur.executemany(
-        f"INSERT INTO messages ({', '.join(fields)}) VALUES ({placeholders})", rows
-    )
+    cur.executemany(f"INSERT INTO messages ({', '.join(fields)}) VALUES ({placeholders})", rows)
     conn.commit()
     conn.close()
 

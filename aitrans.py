@@ -125,9 +125,7 @@ def process_file(file_path: Path, translator: Any, target_lang: str) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Inplace file translator using ChatGPT (with Gemini fallback)."
-    )
+    parser = argparse.ArgumentParser(description="Inplace file translator using ChatGPT (with Gemini fallback).")
     parser.add_argument(
         "-e",
         "--extensions",
@@ -163,9 +161,7 @@ def main() -> None:
     for ext in extensions:
         files_to_translate.extend(glob.glob(f"*.{ext}"))
     if not files_to_translate:
-        print(
-            f"No files found matching extensions ({', '.join(extensions)}) in the current directory."
-        )
+        print(f"No files found matching extensions ({', '.join(extensions)}) in the current directory.")
         return
     print(f"Found {len(files_to_translate)} target file(s) for inplace translation.")
     for path in files_to_translate:

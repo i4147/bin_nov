@@ -82,9 +82,7 @@ def walk(
 ) -> Generator[Path, None, None]:
     for root in roots:
         root = root.resolve() if follow_symlinks else root
-        for dirpath, _dirnames, filenames in os.walk(
-            root, followlinks=follow_symlinks, onerror=_walk_err
-        ):
+        for dirpath, _dirnames, filenames in os.walk(root, followlinks=follow_symlinks, onerror=_walk_err):
             dp = Path(dirpath)
             if yield_dirs:
                 yield dp
@@ -132,9 +130,7 @@ def findup(roots: list[Path]) -> int:
         if len(paths) < 2:
             continue
         size = paths[0].stat().st_size
-        print(
-            f"\n  {_c(BOLD, 'Hash:')} {digest[:16]}…  {_c(GREY, f'({size:,} bytes × {len(paths)})')}"
-        )
+        print(f"\n  {_c(BOLD, 'Hash:')} {digest[:16]}…  {_c(GREY, f'({size:,} bytes × {len(paths)})')}")
         for p in paths:
             found(p)
         total += len(paths) - 1

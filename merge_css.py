@@ -30,12 +30,8 @@ from typing import Optional
 from dh import atomic_write
 
 
-GOOGLE_FONTS_RE = re.compile(
-    r"@import\s+url\([^)]+fonts\.googleapis[^)]+\);?", re.IGNORECASE
-)
-FONT_URL_RE = re.compile(
-    r'url\((["\']?)(https?://[^)]+?\.(?:woff2?|ttf|otf|eot))\1\)', re.IGNORECASE
-)
+GOOGLE_FONTS_RE = re.compile(r"@import\s+url\([^)]+fonts\.googleapis[^)]+\);?", re.IGNORECASE)
+FONT_URL_RE = re.compile(r'url\((["\']?)(https?://[^)]+?\.(?:woff2?|ttf|otf|eot))\1\)', re.IGNORECASE)
 
 
 def get_css_files(paths: list[str]) -> list[Path]:
@@ -59,9 +55,7 @@ def get_css_files(paths: list[str]) -> list[Path]:
     return files
 
 
-def process_css_files(
-    files: list[Path], font_dir: str
-) -> tuple[Optional[str], list[tuple[Path, str]]]:
+def process_css_files(files: list[Path], font_dir: str) -> tuple[Optional[str], list[tuple[Path, str]]]:
     charset = None
     processed_files = []
 
@@ -129,30 +123,18 @@ def cmd_minify(args: argparse.Namespace) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Unified CSS Merger and Minifier")
     subparsers = parser.add_subparsers(dest="command", required=True)
-    parser_join = subparsers.add_parser(
-        "join", help="Join CSS files and rewrite font URLs"
-    )
-    parser_join.add_argument(
-        "-i", "--input", nargs="+", default=["."], help="Input directories or CSS files"
-    )
-    parser_join.add_argument(
-        "-o", "--output", default="merged.css", help="Output file path"
-    )
+    parser_join = subparsers.add_parser("join", help="Join CSS files and rewrite font URLs")
+    parser_join.add_argument("-i", "--input", nargs="+", default=["."], help="Input directories or CSS files")
+    parser_join.add_argument("-o", "--output", default="merged.css", help="Output file path")
     parser_join.add_argument(
         "--font-dir",
         default="/sdcard/_static/fonts",
         help="Local path to rewrite external fonts to",
     )
     parser_join.set_defaults(func=cmd_join)
-    parser_minify = subparsers.add_parser(
-        "minify", help="Minify CSS files using 'cleancss' utility"
-    )
-    parser_minify.add_argument(
-        "-i", "--input", default="*.css", help="Input glob pattern for CSS files"
-    )
-    parser_minify.add_argument(
-        "-o", "--output", default="merged.css", help="Output file path"
-    )
+    parser_minify = subparsers.add_parser("minify", help="Minify CSS files using 'cleancss' utility")
+    parser_minify.add_argument("-i", "--input", default="*.css", help="Input glob pattern for CSS files")
+    parser_minify.add_argument("-o", "--output", default="merged.css", help="Output file path")
     parser_minify.add_argument(
         "-l",
         "--level",

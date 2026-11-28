@@ -148,12 +148,8 @@ def main() -> int:
         help="Deduplicate PATH and update shell rc",
     )
     parser.add_argument("--rc-file", type=str, default="", help="Path to shell rc file")
-    parser.add_argument(
-        "--alias-file", type=str, default="", help="Path to aliases file"
-    )
-    parser.add_argument(
-        "--func-file", type=str, default="", help="Path to functions file"
-    )
+    parser.add_argument("--alias-file", type=str, default="", help="Path to aliases file")
+    parser.add_argument("--func-file", type=str, default="", help="Path to functions file")
     args = parser.parse_args()
     raw_entries = get_path_entries()
     valid_dirs = [Path(d).expanduser() for d in raw_entries if Path(d).exists()]
@@ -183,12 +179,8 @@ def main() -> int:
         print("No shadowed or duplicate binaries found.")
     home = Path.home()
     rc_path = Path(args.rc_file) if args.rc_file else home / ".zshrc"
-    alias_path = (
-        Path(args.alias_file) if args.alias_file else home / ".config/zsh.d/aliases.zsh"
-    )
-    func_path = (
-        Path(args.func_file) if args.func_file else home / ".config/zsh.d/functions.zsh"
-    )
+    alias_path = Path(args.alias_file) if args.alias_file else home / ".config/zsh.d/aliases.zsh"
+    func_path = Path(args.func_file) if args.func_file else home / ".config/zsh.d/functions.zsh"
     aliases = extract_aliases(alias_path)
     functions = extract_functions(func_path)
     alias_conflicts = {cmd: executables[cmd] for cmd in aliases if cmd in executables}

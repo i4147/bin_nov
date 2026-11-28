@@ -186,9 +186,7 @@ def _reindent(src: str, unit: str, aggressive: bool) -> str:
             depth += 1
 
         prev_closed = first in _CLOSING and bracket == 0
-        prev_augassign = bool(
-            re.search(r"\b\w+\s*(?:\+=|-=|\*=|/=|//=|%=|&=|\|=|\^=)", stripped)
-        )
+        prev_augassign = bool(re.search(r"\b\w+\s*(?:\+=|-=|\*=|/=|//=|%=|&=|\|=|\^=)", stripped))
         bracket, triple = _scan_brackets(stripped, 0, None)
 
     return "\n".join(out)
@@ -207,8 +205,7 @@ def _repair_with_ast(text: str, unit: str) -> str:
 
     for _ in range(500):
         rebuilt = "\n".join(
-            ((" " * indents[i]) + lines[i].lstrip()) if lines[i].strip() else ""
-            for i in range(len(lines))
+            ((" " * indents[i]) + lines[i].lstrip()) if lines[i].strip() else "" for i in range(len(lines))
         )
         try:
             ast.parse(rebuilt)
@@ -258,9 +255,7 @@ def reindent(src: str, unit: str = "    ") -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(
-        description="Heuristically restore lost indentation in Python."
-    )
+    ap = argparse.ArgumentParser(description="Heuristically restore lost indentation in Python.")
     ap.add_argument("input", type=Path, help="input .py file")
     ap.add_argument(
         "-o",
@@ -269,17 +264,13 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="output path (default: overwrite input)",
     )
-    ap.add_argument(
-        "--indent", type=int, default=4, help="spaces per indent level (default: 4)"
-    )
+    ap.add_argument("--indent", type=int, default=4, help="spaces per indent level (default: 4)")
     ap.add_argument(
         "--stdout",
         action="store_true",
         help="print the result to stdout instead of writing",
     )
-    ap.add_argument(
-        "--check", action="store_true", help="only report whether the result parses"
-    )
+    ap.add_argument("--check", action="store_true", help="only report whether the result parses")
     args = ap.parse_args(argv)
 
     src = args.input.read_text(encoding="utf-8")

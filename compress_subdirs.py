@@ -277,17 +277,13 @@ def _compress_one(task: CompressTask) -> Result:
         if Path(archive).exists() or (Path(archive).is_symlink() and not force):
             return archive, "skipped", "Archive already exists"
 
-        with tempfile.TemporaryDirectory(
-            prefix=".tardirs-", dir=directory.parent
-        ) as temporary:
+        with tempfile.TemporaryDirectory(prefix=".tardirs-", dir=directory.parent) as temporary:
             temporary_root = Path(temporary)
             output = temporary_root / archive.name
 
             if compressor == "snappy":
                 with tempfile.TemporaryFile(mode="w+b", dir=temporary_root) as raw:
-                    with tarfile.open(
-                        fileobj=raw, mode="w", format=tarfile.PAX_FORMAT
-                    ) as tar:
+                    with tarfile.open(fileobj=raw, mode="w", format=tarfile.PAX_FORMAT) as tar:
                         tar.add(directory, arcname=directory.name)
                     raw.seek(0)
                     with output.open("wb") as destination:
@@ -295,9 +291,7 @@ def _compress_one(task: CompressTask) -> Result:
             else:
                 with (
                     _open_writer(output, compressor, level, extreme) as writer,
-                    tarfile.open(
-                        fileobj=writer, mode="w|", format=tarfile.PAX_FORMAT
-                    ) as tar,
+                    tarfile.open(fileobj=writer, mode="w|", format=tarfile.PAX_FORMAT) as tar,
                 ):
                     tar.add(directory, arcname=directory.name)
 
@@ -317,9 +311,7 @@ def _compress_one(task: CompressTask) -> Result:
 
 
 def _extract_tar(reader: BinaryIO, staging: Path, expected_name: str) -> None:
-    def safe_filter(
-        member: tarfile.TarInfo, destination: str
-    ) -> tarfile.TarInfo | None:
+    def safe_filter(member: tarfile.TarInfo, destination: str) -> tarfile.TarInfo | None:
         filtered = tarfile.data_filter(member, destination)
         if filtered is None:
             return None
@@ -348,9 +340,7 @@ def _decompress_one(task: DecompressTask) -> Result:
         if Path(destination).exists() or Path(destination).is_symlink():
             return archive, "skipped", f"Destination already exists: {destination}"
 
-        with tempfile.TemporaryDirectory(
-            prefix=".tardirs-", dir=archive.parent
-        ) as temporary:
+        with tempfile.TemporaryDirectory(prefix=".tardirs-", dir=archive.parent) as temporary:
             staging = Path(temporary)
             if compressor == "snappy":
                 with tempfile.TemporaryFile(mode="w+b", dir=staging) as raw:
@@ -513,22 +503,12 @@ def main() -> None:
         parser.error("Python 3.12 or later is required")
     if MAX_WORKERS < 0:
         parser.error("--jobs must be nonnegative")
-    if (
-        ns.min_size is not None
-        and ns.max_size is not None
-        and ns.min_size > ns.max_size
-    ):
+    if ns.min_size is not None and ns.max_size is not None and ns.min_size > ns.max_size:
         parser.error("--min cannot exceed --max")
     if ns.decompress and (
-        ns.min_size is not None
-        or ns.max_size is not None
-        or ns.level is not None
-        or ns.extreme
-        or ns.force
+        ns.min_size is not None or ns.max_size is not None or ns.level is not None or ns.extreme or ns.force
     ):
-        parser.error(
-            "--min, --max, --level, --extreme, and --force are compression-only"
-        )
+        parser.error("--min, --max, --level, --extreme, and --force are compression-only")
 
     compressor = cast("Compressor", ns.compressor)
     if ns.level is not None:
@@ -554,16 +534,12 @@ def main() -> None:
             if path.is_symlink():
                 continue
             if ns.decompress:
-                if not path.is_file() or not path.name.endswith(
-                    tuple(EXTENSIONS.values())
-                ):
+                if not path.is_file() or not path.name.endswith(tuple(EXTENSIONS.values())):
                     continue
             elif not path.is_dir():
                 continue
 
-            if ns.include and not any(
-                fnmatch.fnmatchcase(path.name, pattern) for pattern in ns.include
-            ):
+            if ns.include and not any(fnmatch.fnmatchcase(path.name, pattern) for pattern in ns.include):
                 continue
             if any(fnmatch.fnmatchcase(path.name, pattern) for pattern in ns.exclude):
                 continue
@@ -605,9 +581,7 @@ def main() -> None:
             print(f"{path} -> {destination}")
         raise SystemExit(1 if scan_errors else 0)
 
-    required: set[Compressor] = (
-        {archive_format(path)[0] for path in targets} if ns.decompress else {compressor}
-    )
+    required: set[Compressor] = {archive_format(path)[0] for path in targets} if ns.decompress else {compressor}
     for algorithm in sorted(required):
         try:
             check_dependencies(algorithm)
@@ -621,9 +595,7 @@ def main() -> None:
 
     results: list[Result]
     if ns.decompress:
-        decompress_tasks: list[DecompressTask] = [
-            (path, bool(ns.keep)) for path in targets
-        ]
+        decompress_tasks: list[DecompressTask] = [(path, bool(ns.keep)) for path in targets]
         results = parallel_map(method, _decompress_one, decompress_tasks, workers)
     else:
         compress_tasks: list[CompressTask] = [
@@ -645,9 +617,7 @@ def main() -> None:
         stream = sys.stderr if status == "error" else sys.stdout
         print(f"{status}: {path}: {message}", file=stream)
 
-    print(
-        f"Completed: {counts['ok']} succeeded, {counts['skipped']} skipped, {counts['error']} failed"
-    )
+    print(f"Completed: {counts['ok']} succeeded, {counts['skipped']} skipped, {counts['error']} failed")
     raise SystemExit(1 if counts["error"] else 0)
 
 

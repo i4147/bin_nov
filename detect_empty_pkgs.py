@@ -189,12 +189,8 @@ def _check_only_metadata(members: list[Any]) -> str | None:
 def _check_only_pyc(members: list[Any]) -> str | None:
     if any(_is_py(m) for m in members):
         return None
-    has_compiled = any(
-        m.name.endswith((".pyc", ".pyo")) or "__pycache__" in m.name for m in members
-    )
-    if has_compiled and all(
-        m.name.endswith((".pyc", ".pyo")) or "__pycache__" in m.name for m in members
-    ):
+    has_compiled = any(m.name.endswith((".pyc", ".pyo")) or "__pycache__" in m.name for m in members)
+    if has_compiled and all(m.name.endswith((".pyc", ".pyo")) or "__pycache__" in m.name for m in members):
         return "only compiled Python files"
     return None
 
@@ -221,11 +217,7 @@ def _py_is_trivial(src: str) -> bool:
     for node in tree.body:
         if isinstance(node, (ast.Import, ast.ImportFrom, ast.Pass)):
             continue
-        if (
-            isinstance(node, ast.Expr)
-            and isinstance(node.value, ast.Constant)
-            and isinstance(node.value.value, str)
-        ):
+        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
             continue
         return False
     return True
@@ -326,14 +318,9 @@ def main() -> None:
     empty_dir = cwd / "empty"
     if args.apply:
         empty_dir.mkdir(exist_ok=True)
-    targets = sorted(
-        {
-            p
-            for pattern in TARGET_GLOBS
-            for p in cwd.rglob(pattern)
-            if p.is_file() and empty_dir not in p.parents
-        }
-    )
+    targets = sorted({
+        p for pattern in TARGET_GLOBS for p in cwd.rglob(pattern) if p.is_file() and empty_dir not in p.parents
+    })
     mode = "APPLY" if args.apply else "DRY-RUN"
     print(f"[{mode}] scanning {len(targets)} archive(s) with {MAX_WORKERS} workers\n")
     matched = 0
@@ -359,9 +346,7 @@ def main() -> None:
     if args.apply:
         print(f"Moved {moved} of {len(targets)} archives into {empty_dir}")
     else:
-        print(
-            f"Dry run: {matched} of {len(targets)} archives would be moved. Re-run with -a / --apply to do it."
-        )
+        print(f"Dry run: {matched} of {len(targets)} archives would be moved. Re-run with -a / --apply to do it.")
 
 
 if __name__ == "__main__":

@@ -132,11 +132,7 @@ def detect_top_level_modules(base_dir: Path, exclude_names: set[str]) -> list[st
     py_modules: list[str] = []
     with os.scandir(base_dir) as entries:
         for entry in entries:
-            if (
-                entry.is_file()
-                and entry.name.endswith(".py")
-                and entry.name not in exclude_names
-            ):
+            if entry.is_file() and entry.name.endswith(".py") and entry.name not in exclude_names:
                 py_modules.append(Path(entry.name).stem)
     return sorted(py_modules)
 
@@ -172,11 +168,7 @@ def preserve_wheel_tags(
             if plat not in plat_tags:
                 plat_tags.append(plat)
 
-    is_pure_universal = (
-        set(py_tags) <= {"py3", "py2", "py2.py3"}
-        and abi_tags == ["none"]
-        and plat_tags == ["any"]
-    )
+    is_pure_universal = set(py_tags) <= {"py3", "py2", "py2.py3"} and abi_tags == ["none"] and plat_tags == ["any"]
     if is_pure_universal:
         return None
 
@@ -211,9 +203,7 @@ def generate_pyproject(
     dist_info = dist_info_dirs[0]
 
     # 1. Process .data folder first
-    data_files_map, script_files = handle_data_folder(
-        root, overwrite=overwrite, dry_run=dry_run
-    )
+    data_files_map, script_files = handle_data_folder(root, overwrite=overwrite, dry_run=dry_run)
 
     # 2. Preserve platform/ABI wheel tags into setup.cfg if platform-specific
     preserved_tags = preserve_wheel_tags(root, dist_info, dry_run=dry_run)
@@ -331,37 +321,29 @@ def generate_pyproject(
             lines.append(f"{toml_str(k)} = {toml_str(v)}")
 
     # 8. Setuptools configuration
-    lines.extend(
-        [
-            "",
-            "[tool.setuptools]",
-            "include-package-data = true",
-        ]
-    )
+    lines.extend([
+        "",
+        "[tool.setuptools]",
+        "include-package-data = true",
+    ])
     if py_modules:
         lines.append(f"py-modules = {toml_list(py_modules)}")
     if script_files:
         lines.append(f"script-files = {toml_list(script_files)}")
 
-    lines.extend(
-        [
-            "",
-            "[tool.setuptools.packages.find]",
-            'where = ["."]',
-            (
-                'exclude = ["*.dist-info*", "_dist_info_backup*", "_wheel_data*", "_wheel_scripts*"]'
-            ),
-        ]
-    )
+    lines.extend([
+        "",
+        "[tool.setuptools.packages.find]",
+        'where = ["."]',
+        ('exclude = ["*.dist-info*", "_dist_info_backup*", "_wheel_data*", "_wheel_scripts*"]'),
+    ])
 
     if preserved_tags:
-        lines.extend(
-            [
-                "",
-                "[tool.setuptools.package-data]",
-                '"*" = ["*.so", "*.so.*", "*.pyd", "*.dylib", "*.dll"]',
-            ]
-        )
+        lines.extend([
+            "",
+            "[tool.setuptools.package-data]",
+            '"*" = ["*.so", "*.so.*", "*.pyd", "*.dylib", "*.dll"]',
+        ])
 
     if data_files_map:
         lines.extend(["", "[tool.setuptools.data-files]"])
@@ -385,15 +367,11 @@ def generate_pyproject(
         prefix = "[dry-run] " if dry_run else ""
         print(f"{prefix}Generated {output_path} for {name} ({version})")
         if preserved_tags:
-            print(
-                f"{prefix}Preserved wheel tags in setup.cfg: {', '.join(preserved_tags)}"
-            )
+            print(f"{prefix}Preserved wheel tags in setup.cfg: {', '.join(preserved_tags)}")
         if py_modules:
             print(f"{prefix}Detected top-level modules: {', '.join(py_modules)}")
         if cleanup_dist_info != "keep":
-            print(
-                f"{prefix}Handled .dist-info via '{cleanup_dist_info}' mode (ready for rebuild)."
-            )
+            print(f"{prefix}Handled .dist-info via '{cleanup_dist_info}' mode (ready for rebuild).")
 
     return output_path
 

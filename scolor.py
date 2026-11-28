@@ -75,9 +75,7 @@ def _parse_int_strict(token: str) -> int | None:
         return None
 
 
-def parse_color_tokens(
-    tokens: list[str], *, force_cube: bool = False
-) -> tuple[tuple[int, int, int], str | None]:
+def parse_color_tokens(tokens: list[str], *, force_cube: bool = False) -> tuple[tuple[int, int, int], str | None]:
     """Parse CLI color arguments (RGB triplet, cube index/coords, or hex) into RGB + optional label."""
     if not tokens:
         msg = "No color tokens provided."
@@ -96,9 +94,7 @@ def parse_color_tokens(
         if coord_payload is not None:
             parts: list[str] = [p.strip() for p in coord_payload.split(",")]
             if len(parts) != 3:
-                msg = (
-                    f"Invalid cube coordinate format: '{raw}' (expected r,g,b in 0..5)"
-                )
+                msg = f"Invalid cube coordinate format: '{raw}' (expected r,g,b in 0..5)"
                 raise ValueError(msg)
             parsed_coords: list[int] = []
             for part in parts:
@@ -148,9 +144,7 @@ def parse_color_tokens(
                     msg = f"Invalid cube coordinate: '{tok}'"
                     raise ValueError(msg)
                 coords.append(val_c)
-            return cube_coords_to_rgb(
-                coords[0], coords[1], coords[2]
-            ), f"cube({coords[0]},{coords[1]},{coords[2]})"
+            return cube_coords_to_rgb(coords[0], coords[1], coords[2]), f"cube({coords[0]},{coords[1]},{coords[2]})"
 
         rgb_vals: list[int] = []
         for tok in tokens:
@@ -185,9 +179,7 @@ def load_swatches_from_file(filepath: str) -> list[str]:
             if stripped_line.startswith("#"):
                 token_part: str = stripped_line.split(maxsplit=1)[0]
                 hex_body: str = token_part.lstrip("#")
-                if len(hex_body) not in (3, 6) or any(
-                    c not in "0123456789abcdefABCDEF" for c in hex_body
-                ):
+                if len(hex_body) not in (3, 6) or any(c not in "0123456789abcdefABCDEF" for c in hex_body):
                     continue
                 candidate = token_part
 
@@ -215,9 +207,7 @@ def browse_with_less(swatches: list[str]) -> int:
         )
         return browse_swatches(swatches)
 
-    payload: str = (
-        "\n".join(f"{idx + 1:>5}: {row}" for idx, row in enumerate(swatches)) + "\n"
-    )
+    payload: str = "\n".join(f"{idx + 1:>5}: {row}" for idx, row in enumerate(swatches)) + "\n"
     try:
         completed: subprocess.CompletedProcess[str] = subprocess.run(
             [less_path, "-R"],
@@ -296,8 +286,7 @@ def showcolor(n: int = DEFAULT_COUNT) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
         description=(
-            "Display terminal RGB color swatches from random generation, "
-            "hex/RGB/cube arguments, or a hex file."
+            "Display terminal RGB color swatches from random generation, hex/RGB/cube arguments, or a hex file."
         )
     )
     parser.add_argument(
@@ -378,9 +367,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.color:
         try:
-            (r, g, b), label = parse_color_tokens(
-                args.color, force_cube=bool(args.cube)
-            )
+            (r, g, b), label = parse_color_tokens(args.color, force_cube=bool(args.cube))
         except ValueError as exc:
             print(f"Error: {exc}", file=sys.stderr)
             return 1

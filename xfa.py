@@ -138,9 +138,7 @@ class PersianTokenizer:
             self.tokenizer = None
         self.persian_pattern = re.compile(f"^[{PERSIAN_UNICODE_RANGE}]+$")
 
-    def clean_and_tokenize(
-        self, text: str, min_len: int = 0
-    ) -> Generator[str, None, None]:
+    def clean_and_tokenize(self, text: str, min_len: int = 0) -> Generator[str, None, None]:
         if HAZM_AVAILABLE:
             normalized_text = self.normalizer.normalize(text)
             raw_tokens = self.tokenizer.tokenize(normalized_text)
@@ -222,12 +220,8 @@ def print_statistics(counter: Counter, file_count: int) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Extract unique Persian words from files."
-    )
-    parser.add_argument(
-        "source", type=str, help="Input directory or single file to scan"
-    )
+    parser = argparse.ArgumentParser(description="Extract unique Persian words from files.")
+    parser.add_argument("source", type=str, help="Input directory or single file to scan")
     parser.add_argument(
         "--min-length",
         type=int,
@@ -247,9 +241,7 @@ def main() -> None:
         help=f"Output file path (default: {DEFAULT_OUTPUT})",
     )
     parser.add_argument("--verbose", action="store_true", help="Enable debug logging")
-    parser.add_argument(
-        "--stats", action="store_true", help="Print statistics after extraction"
-    )
+    parser.add_argument("--stats", action="store_true", help="Print statistics after extraction")
     parser.add_argument(
         "--remove-stopwords",
         action="store_true",
@@ -275,9 +267,7 @@ def main() -> None:
         logger.warning("No valid text files found.")
         sys.exit(0)
     worker_count = MAX_WORKERS or cpu_count()
-    logger.info(
-        f"Processing {len(valid_files)} file(s) with {worker_count} worker(s)..."
-    )
+    logger.info(f"Processing {len(valid_files)} file(s) with {worker_count} worker(s)...")
     counter: Counter = Counter()
     worker = partial(process_file, min_length=args.min_length)
     try:
@@ -291,9 +281,7 @@ def main() -> None:
         logger.warning("No Persian words extracted.")
         sys.exit(0)
     if args.max_length and args.max_length > 0:
-        counter = Counter(
-            {w: c for w, c in counter.items() if len(w) <= args.max_length}
-        )
+        counter = Counter({w: c for w, c in counter.items() if len(w) <= args.max_length})
     if args.remove_stopwords:
         stops = build_combined_stopwords()
         counter = Counter({w: c for w, c in counter.items() if w not in stops})

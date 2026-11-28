@@ -128,14 +128,10 @@ class BaseTransformer(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(body=[cst.Pass()])
 
-    def leave_IndentedBlock(
-        self, original_node: cst.IndentedBlock, updated_node: cst.IndentedBlock
-    ) -> cst.CSTNode:
+    def leave_IndentedBlock(self, original_node: cst.IndentedBlock, updated_node: cst.IndentedBlock) -> cst.CSTNode:
         if updated_node.body:
             return updated_node
-        return updated_node.with_changes(
-            body=[cst.SimpleStatementLine(body=[cst.Pass()])]
-        )
+        return updated_node.with_changes(body=[cst.SimpleStatementLine(body=[cst.Pass()])])
 
 
 class CodeCleaner(BaseTransformer):
@@ -147,10 +143,7 @@ class CodeCleaner(BaseTransformer):
         self.hints_removed = 0
 
     def _is_protected(self, comment_text: str) -> bool:
-        return (
-            self.config.preserve_special_comments
-            and COMMENT_REGEX.match(comment_text) is not None
-        )
+        return self.config.preserve_special_comments and COMMENT_REGEX.match(comment_text) is not None
 
     def leave_TrailingWhitespace(
         self,
@@ -165,9 +158,7 @@ class CodeCleaner(BaseTransformer):
         self.comments_removed += 1
         return updated_node.with_changes(comment=None)
 
-    def _filter_comment_lines(
-        self, comment_nodes: Sequence[cst.CSTNode]
-    ) -> list[cst.CSTNode]:
+    def _filter_comment_lines(self, comment_nodes: Sequence[cst.CSTNode]) -> list[cst.CSTNode]:
         result = []
         buffer = []
         for item in [*comment_nodes, None]:
@@ -189,19 +180,13 @@ class CodeCleaner(BaseTransformer):
                 result.append(item)
         return result
 
-    def on_leave(
-        self, original_node: cst.CSTNode, updated_node: cst.CSTNode
-    ) -> cst.CSTNode:
+    def on_leave(self, original_node: cst.CSTNode, updated_node: cst.CSTNode) -> cst.CSTNode:
         res = super().on_leave(original_node, updated_node)
         if self.config.strip_comments and isinstance(res, cst.CSTNode):
             changes = {}
             for field_name in BLOCK_COMMENT_FIELDS:
                 val = getattr(res, field_name, None)
-                if (
-                    isinstance(val, Sequence)
-                    and val
-                    and isinstance(val[0], cst.EmptyLine)
-                ):
+                if isinstance(val, Sequence) and val and isinstance(val[0], cst.EmptyLine):
                     filtered = self._filter_comment_lines(val)
                     if len(filtered) != len(val):
                         changes[field_name] = filtered
@@ -238,24 +223,18 @@ class CodeCleaner(BaseTransformer):
         if remaining and bg:
             dest = remaining[0]
             if isinstance(dest, (cst.SimpleStatementLine, cst.BaseCompoundStatement)):
-                remaining[0] = dest.with_changes(
-                    leading_lines=[*bg, *dest.leading_lines]
-                )
+                remaining[0] = dest.with_changes(leading_lines=[*bg, *dest.leading_lines])
         elif not remaining and keep_if_empty:
             remaining = [cst.SimpleStatementLine(body=[cst.Pass()], leading_lines=bg)]
         return remaining
 
-    def leave_Module(
-        self, original_node: cst.Module, updated_node: cst.Module
-    ) -> cst.Module:
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
         if not self.config.strip_docstrings:
             return updated_node
         new_body = self._remove_first_docstring(updated_node.body, keep_if_empty=True)
         return updated_node.with_changes(body=new_body)
 
-    def leave_ClassDef(
-        self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-    ) -> cst.ClassDef:
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
         if not self.config.strip_docstrings:
             return updated_node
         body = updated_node.body
@@ -268,9 +247,7 @@ class CodeCleaner(BaseTransformer):
             return updated_node.with_changes(body=body.with_changes(body=new_body_list))
         return updated_node
 
-    def _strip_def_docstring(
-        self, node: cst.FunctionDef | cst.ClassDef
-    ) -> cst.FunctionDef | cst.ClassDef:
+    def _strip_def_docstring(self, node: cst.FunctionDef | cst.ClassDef) -> cst.FunctionDef | cst.ClassDef:
         body = (
             self._remove_first_docstring(node.body.body, keep_if_empty=True)
             if isinstance(node.body, cst.IndentedBlock)
@@ -282,9 +259,7 @@ class CodeCleaner(BaseTransformer):
             else node
         )
 
-    def leave_FunctionDef(
-        self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-    ) -> cst.FunctionDef:
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
         res = updated_node
         if self.config.strip_type_hints and res.returns is not None:
             self.hints_removed += 1
@@ -293,17 +268,13 @@ class CodeCleaner(BaseTransformer):
             res = self._strip_def_docstring(res)
         return res
 
-    def leave_Param(
-        self, original_node: cst.Param, updated_node: cst.Param
-    ) -> cst.Param:
+    def leave_Param(self, original_node: cst.Param, updated_node: cst.Param) -> cst.Param:
         if self.config.strip_type_hints and updated_node.annotation is not None:
             self.hints_removed += 1
             return updated_node.with_changes(annotation=None)
         return updated_node
 
-    def leave_AnnAssign(
-        self, original_node: cst.AnnAssign, updated_node: cst.AnnAssign
-    ) -> cst.CSTNode:
+    def leave_AnnAssign(self, original_node: cst.AnnAssign, updated_node: cst.AnnAssign) -> cst.CSTNode:
         if not self.config.strip_type_hints or updated_node.value is None:
             return updated_node
         self.hints_removed += 1
@@ -320,9 +291,7 @@ class CodeCleaner(BaseTransformer):
     ) -> cst.CSTNode:
         if self.config.strip_type_hints:
             filtered = [
-                stmt
-                for stmt in updated_node.body
-                if not (isinstance(stmt, cst.AnnAssign) and stmt.value is None)
+                stmt for stmt in updated_node.body if not (isinstance(stmt, cst.AnnAssign) and stmt.value is None)
             ]
             if len(filtered) != len(updated_node.body):
                 self.hints_removed += len(updated_node.body) - len(filtered)
@@ -384,9 +353,7 @@ class TypingImportCleaner(BaseTransformer):
             return cst.RemoveFromParent()
         return updated_node.with_changes(names=self._fix_last_comma(filtered))
 
-    def leave_Import(
-        self, original_node: cst.Import, updated_node: cst.Import
-    ) -> cst.CSTNode | cst.RemovalSentinel:
+    def leave_Import(self, original_node: cst.Import, updated_node: cst.Import) -> cst.CSTNode | cst.RemovalSentinel:
         filtered = []
         for alias in updated_node.names:
             full_name = get_full_name_for_node(alias.name)
@@ -518,9 +485,7 @@ def process_file(path_str: str) -> FileResult:
     try:
         decoded = decode_file(raw_bytes)
         if decoded.encoding != "utf-8":
-            warnings.append(
-                f"decoded as {decoded.encoding}; will be written back in that encoding"
-            )
+            warnings.append(f"decoded as {decoded.encoding}; will be written back in that encoding")
         cleaned = CleanedModule.run(decoded.text, ctx.config)
     except ValueError as exc:
         return FileResult(path_str, "error", message=str(exc))
@@ -533,9 +498,7 @@ def process_file(path_str: str) -> FileResult:
     try:
         cst.parse_module(cleaned.code)
     except (SyntaxError, ValueError, RecursionError) as exc:
-        return FileResult(
-            path_str, "error", message=f"output is invalid Python, skipped: {exc}"
-        )
+        return FileResult(path_str, "error", message=f"output is invalid Python, skipped: {exc}")
     try:
         new_bytes = decoded.encode(cleaned.code)
         diff_text = ""
@@ -608,9 +571,7 @@ def read_ignore_file(path: Path) -> list[str]:
         return []
 
 
-def find_files(
-    paths: Sequence[Path], extra_ignore: Sequence[str], ignore_file_path: Optional[Path]
-) -> list[str]:
+def find_files(paths: Sequence[Path], extra_ignore: Sequence[str], ignore_file_path: Optional[Path]) -> list[str]:
     seen: set[Path] = set()
     collected: list[str] = []
 
@@ -625,9 +586,7 @@ def find_files(
             if is_python_file(base_path):
                 add_path(base_path)
             else:
-                logger.warning(
-                    f"{base_path}: not a Python file (no .py suffix or python shebang), skipped"
-                )
+                logger.warning(f"{base_path}: not a Python file (no .py suffix or python shebang), skipped")
             continue
         if not base_path.is_dir():
             logger.error(f"{base_path}: no such file or directory")
@@ -642,9 +601,7 @@ def find_files(
         matcher = IgnoreMatcher(rules)
         for root, dirs, files in base_path.walk():
             rel_parts = root.relative_to(base_path).parts
-            dirs[:] = sorted(
-                d for d in dirs if not matcher.matches((*rel_parts, d), True)
-            )
+            dirs[:] = sorted(d for d in dirs if not matcher.matches((*rel_parts, d), True))
             for file_name in sorted(files):
                 if matcher.matches((*rel_parts, file_name), False):
                     continue
@@ -669,19 +626,13 @@ class PoolExecutor:
             initargs=(self.config, self.run),
         ) as pool:
             if self.method == "map":
-                for res in pool.map(
-                    process_file, paths, chunksize=max(1, len(paths) // (cpu_count * 4))
-                ):
+                for res in pool.map(process_file, paths, chunksize=max(1, len(paths) // (cpu_count * 4))):
                     callback(res)
             elif self.method == "imap":
-                for res in pool.imap(
-                    process_file, paths, chunksize=max(1, len(paths) // (cpu_count * 4))
-                ):
+                for res in pool.imap(process_file, paths, chunksize=max(1, len(paths) // (cpu_count * 4))):
                     callback(res)
             elif self.method == "imap_unordered":
-                for res in pool.imap_unordered(
-                    process_file, paths, chunksize=max(1, len(paths) // (cpu_count * 4))
-                ):
+                for res in pool.imap_unordered(process_file, paths, chunksize=max(1, len(paths) // (cpu_count * 4))):
                     callback(res)
             elif self.method == "apply":
                 for p in paths:
@@ -744,9 +695,7 @@ def colorize_diff(diff_text: str) -> str:
     mapping = {"+++": "1", "---": "1", "@@": "36", "+": "32", "-": "31"}
     lines = []
     for line in diff_text.splitlines():
-        code = next(
-            (c for prefix, c in mapping.items() if line.startswith(prefix)), None
-        )
+        code = next((c for prefix, c in mapping.items() if line.startswith(prefix)), None)
         lines.append(f"\033[{code}m{line}\033[0m" if code else line)
     return "\n".join(lines)
 
@@ -763,9 +712,7 @@ def print_stats(tracker: StatsTracker, dry_run: bool) -> None:
         )
     print("-" * len(header))
     total_saved = green(f"{tracker.bytes_saved}")
-    print(
-        f"{'TOTAL':<60} {tracker.comments:>9} {tracker.docstrings:>11} {tracker.hints:>6} {total_saved:>12}"
-    )
+    print(f"{'TOTAL':<60} {tracker.comments:>9} {tracker.docstrings:>11} {tracker.hints:>6} {total_saved:>12}")
     if dry_run:
         print("(dry run: nothing was written; numbers are what would change)")
 
@@ -776,18 +723,14 @@ def parse_args(args: Optional[Sequence[str]] = None) -> argparse.Namespace:
         description="Strip comments, docstrings and type hints from Python files using LibCST.",
         epilog="By default only inline comments are removed. Shebangs, '# type:' and '# fmt:' comments, and blocks that look like commented-out code are preserved unless --all is given.",
     )
-    parser.add_argument(
-        "paths", nargs="*", type=Path, help="files or directories (default: cwd)"
-    )
+    parser.add_argument("paths", nargs="*", type=Path, help="files or directories (default: cwd)")
     parser.add_argument(
         "-c",
         "--strip-comments",
         action="store_true",
         help="also remove full-line comment blocks",
     )
-    parser.add_argument(
-        "-d", "--strip-docstrings", action="store_true", help="remove docstrings"
-    )
+    parser.add_argument("-d", "--strip-docstrings", action="store_true", help="remove docstrings")
     parser.add_argument(
         "-t",
         "--strip-type-hints",
@@ -807,20 +750,14 @@ def parse_args(args: Optional[Sequence[str]] = None) -> argparse.Namespace:
         default="apply_async",
         help="multiprocessing dispatch method (default: apply_async)",
     )
-    parser.add_argument(
-        "--backup", action="store_true", help="write a .bak copy before modifying"
-    )
+    parser.add_argument("--backup", action="store_true", help="write a .bak copy before modifying")
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="show proposed changes (as a diff) without writing",
     )
-    parser.add_argument(
-        "--diff", action="store_true", help="print a colorized diff of each change"
-    )
-    parser.add_argument(
-        "-n", "--stats", action="store_true", help="print a per-file/total report"
-    )
+    parser.add_argument("--diff", action="store_true", help="print a colorized diff of each change")
+    parser.add_argument("-n", "--stats", action="store_true", help="print a per-file/total report")
     parser.add_argument(
         "--ignore",
         action="append",
@@ -867,16 +804,12 @@ def main(args: Optional[Sequence[str]] = None) -> int:
     )
     if parsed_args.backup and parsed_args.dry_run:
         logger.info("--backup ignored in --dry-run mode")
-    file_paths = find_files(
-        parsed_args.paths or [Path.cwd()], parsed_args.ignore, parsed_args.ignore_file
-    )
+    file_paths = find_files(parsed_args.paths or [Path.cwd()], parsed_args.ignore, parsed_args.ignore_file)
     if not file_paths:
         logger.warning("no Python files found")
         return 0
     cpu_count = max(1, min(64, len(file_paths) // 32 or 1))
-    logger.info(
-        f"processing {len(file_paths)} file(s) with {cpu_count} workers ({parsed_args.pool_method})"
-    )
+    logger.info(f"processing {len(file_paths)} file(s) with {cpu_count} workers ({parsed_args.pool_method})")
     stats = StatsTracker()
     use_color = supports_color()
     show_diff = parsed_args.diff or parsed_args.dry_run
@@ -893,18 +826,12 @@ def main(args: Optional[Sequence[str]] = None) -> int:
             action = "would reduce" if run_options.dry_run else "reduced"
             logger.info(f"{rel_path}: {action} {green(f'{res.bytes_saved}')} bytes")
             if show_diff and res.diff:
-                print(
-                    colorize_diff(res.diff) if use_color else res.diff, file=sys.stderr
-                )
+                print(colorize_diff(res.diff) if use_color else res.diff, file=sys.stderr)
 
     try:
-        PoolExecutor(parsed_args.pool_method, config, run_options).execute(
-            file_paths, on_result
-        )
+        PoolExecutor(parsed_args.pool_method, config, run_options).execute(file_paths, on_result)
     except KeyboardInterrupt:
-        logger.error(
-            "interrupted; workers terminated (completed files were already written)"
-        )
+        logger.error("interrupted; workers terminated (completed files were already written)")
         return 130
     action_word = "would be changed" if run_options.dry_run else "changed"
     logger.info(

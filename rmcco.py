@@ -80,12 +80,7 @@ class CommentRemover:
 
     @staticmethod
     def _is_type_comment(line: str) -> bool:
-        return (
-            "# type:" in line
-            or "# noqa" in line
-            or "# pragma" in line
-            or ("# pylint" in line)
-        )
+        return "# type:" in line or "# noqa" in line or "# pragma" in line or ("# pylint" in line)
 
     @staticmethod
     def _strip_inline_comment(line: str) -> str:
@@ -150,9 +145,7 @@ class DocstringRemover(ast.NodeTransformer):
         self.generic_visit(node)
         return node
 
-    def visit_AsyncFunctionDef(
-        self, node: ast.AsyncFunctionDef
-    ) -> ast.AsyncFunctionDef:
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> ast.AsyncFunctionDef:
         if (
             self._has_docstring(node)
             and isinstance(node.body[0], ast.Expr)
@@ -209,9 +202,7 @@ class DocstringRemover(ast.NodeTransformer):
         return False
 
 
-def _remove_docstrings_from_source(
-    source: str, remove_module_docstring: bool
-) -> tuple[str, int]:
+def _remove_docstrings_from_source(source: str, remove_module_docstring: bool) -> tuple[str, int]:
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -223,11 +214,7 @@ def _remove_docstrings_from_source(
         if not body:
             return
         first = body[0]
-        if (
-            isinstance(first, ast.Expr)
-            and isinstance(first.value, ast.Constant)
-            and isinstance(first.value.value, str)
-        ):
+        if isinstance(first, ast.Expr) and isinstance(first.value, ast.Constant) and isinstance(first.value.value, str):
             start = first.lineno
             end = getattr(first, "end_lineno", start)
             for line_no in range(start, end + 1):
@@ -259,10 +246,7 @@ def _remove_docstrings_from_source(
         return result, removed_count
     needs_pass = False
     for node in ast.walk(new_tree):
-        if (
-            isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
-            and not node.body
-        ):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and not node.body:
             needs_pass = True
             break
         if isinstance(node, ast.Module) and not node.body:
@@ -273,14 +257,9 @@ def _remove_docstrings_from_source(
     lines = result.split("\n")
     insertions: list[tuple[int, str]] = []
     for node in ast.walk(new_tree):
-        if (
-            isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
-            and not node.body
-        ):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and not node.body:
             insert_at = getattr(node, "lineno", 1)
-            indent = " " * (
-                len(lines[insert_at - 1]) - len(lines[insert_at - 1].lstrip())
-            )
+            indent = " " * (len(lines[insert_at - 1]) - len(lines[insert_at - 1].lstrip()))
             insertions.append((insert_at, f"{indent}    pass"))
         if isinstance(node, ast.Module) and not node.body:
             insertions.append((0, "pass"))
@@ -289,17 +268,13 @@ def _remove_docstrings_from_source(
     return "\n".join(lines), removed_count
 
 
-def process_single_file(
-    path: Path, remove_module_docstring: bool = False, dry_run: bool = False
-) -> FileResult:
+def process_single_file(path: Path, remove_module_docstring: bool = False, dry_run: bool = False) -> FileResult:
     try:
         with open(path, "r", encoding="utf-8", errors="ignore") as f:
             original_source = f.read()
         comment_remover = CommentRemover(original_source)
         no_comments = comment_remover.remove_comments()
-        processed_source, docstrings_removed = _remove_docstrings_from_source(
-            no_comments, remove_module_docstring
-        )
+        processed_source, docstrings_removed = _remove_docstrings_from_source(no_comments, remove_module_docstring)
         try:
             ast.parse(processed_source)
         except SyntaxError as e:
@@ -310,9 +285,7 @@ def process_single_file(
             )
         if processed_source != original_source and (not dry_run):
             try:
-                temp_fd, temp_path = tempfile.mkstemp(
-                    dir=path.parent, prefix=".tmp.", suffix=".py"
-                )
+                temp_fd, temp_path = tempfile.mkstemp(dir=path.parent, prefix=".tmp.", suffix=".py")
                 try:
                     with open(temp_fd, "w", encoding="utf-8") as f:
                         f.write(processed_source)
@@ -322,9 +295,7 @@ def process_single_file(
                         Path(temp_path).unlink()
                     raise
             except Exception as e:
-                return FileResult(
-                    path=str(path), is_error=True, error_message=f"Write error: {e}"
-                )
+                return FileResult(path=str(path), is_error=True, error_message=f"Write error: {e}")
         return FileResult(
             path=str(path),
             comments_removed=comment_remover.comments_removed,
@@ -346,13 +317,9 @@ def process_wheel_file(
                 whl.extractall(temp_path)
             any_changed = False
             for py_file in temp_path.rglob("*.py"):
-                result = process_single_file(
-                    py_file, remove_module_docstring, dry_run=True
-                )
+                result = process_single_file(py_file, remove_module_docstring, dry_run=True)
                 if result.comments_removed > 0 or result.docstrings_removed > 0:
-                    result = process_single_file(
-                        py_file, remove_module_docstring, dry_run=dry_run
-                    )
+                    result = process_single_file(py_file, remove_module_docstring, dry_run=dry_run)
                     any_changed = True
                 relative = py_file.relative_to(temp_path)
                 result.path = f"{wheel_name}::{relative}"
@@ -422,9 +389,7 @@ def print_results(stats: ProcessingStats, base_dir: Path) -> None:
         else:
             changes: list[str] = []
             if result.comments_removed > 0:
-                changes.append(
-                    f"{result.comments_removed} comment{('s' if result.comments_removed != 1 else '')}"
-                )
+                changes.append(f"{result.comments_removed} comment{('s' if result.comments_removed != 1 else '')}")
             if result.docstrings_removed > 0:
                 changes.append(
                     f"{result.docstrings_removed} docstring{('s' if result.docstrings_removed != 1 else '')}"
@@ -496,9 +461,7 @@ def main() -> int:
             (path, args.remove_module_docstring, args.dry_run) for path in python_files
         ]
         with Pool(processes=POOL_SIZE) as pool:
-            async_results = [
-                pool.apply_async(_worker_process_file, (t,)) for t in tasks
-            ]
+            async_results = [pool.apply_async(_worker_process_file, (t,)) for t in tasks]
             processed = 0
             for async_result in async_results:
                 result = async_result.get()

@@ -25,9 +25,7 @@ from dh import atomic_write
 
 def merge_requirements(root: Path, remove_originals: bool = False) -> Path:
     output = root / "requirements.txt"
-    sources = sorted(
-        p for p in root.iterdir() if p.is_dir() and (p / "requirements.txt").is_file()
-    )
+    sources = sorted(p for p in root.iterdir() if p.is_dir() and (p / "requirements.txt").is_file())
     if not sources:
         print("No requirements.txt found in top-level subdirectories.")
         return output
@@ -57,9 +55,7 @@ def merge_requirements(root: Path, remove_originals: bool = False) -> Path:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Merge requirements.txt from top-level subdirs."
-    )
+    parser = argparse.ArgumentParser(description="Merge requirements.txt from top-level subdirs.")
     parser.add_argument(
         "-r",
         "--remove",

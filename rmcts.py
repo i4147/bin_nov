@@ -301,9 +301,7 @@ def main() -> int:
                 except StopIteration:
                     exhausted = True
                     break
-                result: AsyncResult[tuple[str, int, str]] = pool.apply_async(
-                    process_file, (path, base)
-                )
+                result: AsyncResult[tuple[str, int, str]] = pool.apply_async(process_file, (path, base))
                 pending[result] = path
             return exhausted
 

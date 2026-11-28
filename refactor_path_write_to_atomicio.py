@@ -96,9 +96,7 @@ class ReplaceWriteMethods(cst.CSTTransformer):
             return updated_node
 
         self.changed = True
-        self.rewritten_counts[method_name] = (
-            self.rewritten_counts.get(method_name, 0) + 1
-        )
+        self.rewritten_counts[method_name] = self.rewritten_counts.get(method_name, 0) + 1
         return updated_node.with_changes(
             func=cst.Name("atomic_write"),
             args=[
@@ -147,17 +145,12 @@ def has_atomic_write_import(module: cst.Module, import_from: str) -> bool:
                 if isinstance(small.names, cst.ImportStar):
                     return True
                 for alias in small.names:
-                    if (
-                        isinstance(alias.name, cst.Name)
-                        and alias.name.value == "atomic_write"
-                    ):
+                    if isinstance(alias.name, cst.Name) and alias.name.value == "atomic_write":
                         return True
             elif isinstance(small, cst.Import):
                 for alias in small.names:
                     as_name: str | None = (
-                        alias.asname.name.value
-                        if alias.asname and isinstance(alias.asname.name, cst.Name)
-                        else None
+                        alias.asname.name.value if alias.asname and isinstance(alias.asname.name, cst.Name) else None
                     )
                     imported_name: str = _format_module_expr(alias.name)
                     if imported_name == "atomic_write" or as_name == "atomic_write":
@@ -238,9 +231,7 @@ def write_atomically(path: Path, data: bytes, backup: bool) -> None:
     if backup:
         shutil.copy2(path, path.with_name(path.name + ".bak"))
 
-    fd, tmp_name = tempfile.mkstemp(
-        dir=path.parent, prefix=f".{path.name}.", suffix=".tmp"
-    )
+    fd, tmp_name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
     tmp: Path = Path(tmp_name)
     try:
         with os.fdopen(fd, "wb") as fh:
@@ -371,9 +362,7 @@ def handle_outcome(
 ) -> int:
     """Run in the main process: log via loguru, update counters, and print Rich lines."""
     payload: RewritePayload = outcome.payload or RewritePayload(
-        status="error"
-        if outcome.error
-        else ("changed" if outcome.changed else "unchanged"),
+        status="error" if outcome.error else ("changed" if outcome.changed else "unchanged"),
         message=outcome.error or "",
     )
     status: Status = payload.status
@@ -385,9 +374,7 @@ def handle_outcome(
         err_text: str = outcome.error or payload.message or "unknown error"
         logger.error(f"{outcome.rel_path}: {err_text}")
         first_line: str = err_text.splitlines()[0] if err_text else ""
-        out.print(
-            f"{STATUS_LABEL['error']} {escape(outcome.rel_path)}: {escape(first_line)}"
-        )
+        out.print(f"{STATUS_LABEL['error']} {escape(outcome.rel_path)}: {escape(first_line)}")
         return 0
 
     if outcome.diff:
@@ -443,8 +430,7 @@ def run_with_progress(
         )
         with ProcessPoolExecutor(max_workers=worker_count) as pool:
             futures: dict[Future[TaskOutcome[RewritePayload]], Path] = {
-                pool.submit(handler, path): path
-                for path in get_files(root, file_filter)
+                pool.submit(handler, path): path for path in get_files(root, file_filter)
             }
             for future in as_completed(futures):
                 path: Path = futures[future]
@@ -458,9 +444,7 @@ def run_with_progress(
                         error=tb,
                         payload=RewritePayload(status="error", message=tb),
                     )
-                total_rewrites += handle_outcome(
-                    outcome, progress.console, status_counts, stats
-                )
+                total_rewrites += handle_outcome(outcome, progress.console, status_counts, stats)
                 progress.advance(task)
 
     exit_code: int = print_summary(console, stats, runner_cfg)
@@ -557,9 +541,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     extra_exts: frozenset[str] = normalize_extensions(args.ext)
     extensions: frozenset[str] = frozenset({".py"}) | extra_exts
-    extra_dirs: frozenset[str] = frozenset(
-        d.strip() for d in args.exclude_dir if d.strip()
-    )
+    extra_dirs: frozenset[str] = frozenset(d.strip() for d in args.exclude_dir if d.strip())
     excluded_dirs: frozenset[str] = SKIP_DIRS | extra_dirs
 
     file_filter: FileFilter = FileFilter(
@@ -586,8 +568,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         import_from=args.import_from,
         dry_run=runner_cfg.dry_run,
         check=runner_cfg.check,
-        diff=runner_cfg.show_diff is not False
-        and bool(args.dry_run or args.check or args.diff),
+        diff=runner_cfg.show_diff is not False and bool(args.dry_run or args.check or args.diff),
         backup=bool(args.backup),
         workers=runner_cfg.workers,
         excluded_dirs=excluded_dirs,

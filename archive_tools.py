@@ -448,9 +448,7 @@ def should_use_subdir(archive: Path) -> bool:
         if name.endswith(".zip"):
             with zipfile.ZipFile(archive) as zf:
                 names = zf.namelist()
-        elif name.endswith(
-            (".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".tar.xz", ".txz")
-        ):
+        elif name.endswith((".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".tar.xz", ".txz")):
             with tarfile.open(archive, "r:*") as tar:
                 names = tar.getnames()
         else:
@@ -475,9 +473,7 @@ def check_integrity(archive: Path) -> tuple[bool, str]:
                 if bad is not None:
                     return False, f"Corrupted: {archive.name} (bad member {bad})"
             return True, f"Valid: {archive.name}"
-        if name.endswith(
-            (".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".tar.xz", ".txz")
-        ):
+        if name.endswith((".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".tar.xz", ".txz")):
             if not tarfile.is_tarfile(archive):
                 return False, f"Invalid tar: {archive.name}"
             with tarfile.open(archive, "r:*") as tar:
@@ -517,9 +513,7 @@ def check_integrity(archive: Path) -> tuple[bool, str]:
     return True, f"Skipped check: {archive.name}"
 
 
-def find_archives(
-    roots: Iterable[Path], recursive: bool, formats: Optional[set[str]] = None
-) -> list[Path]:
+def find_archives(roots: Iterable[Path], recursive: bool, formats: Optional[set[str]] = None) -> list[Path]:
     exts = formats or set(ALL_EXT)
     ordered = sorted(exts, key=len, reverse=True)
     found: list[Path] = []
@@ -821,9 +815,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=["."],
         help="Files or directories to process (default: cwd).",
     )
-    pe.add_argument(
-        "-r", "--recursive", action="store_true", help="Recurse into directories."
-    )
+    pe.add_argument("-r", "--recursive", action="store_true", help="Recurse into directories.")
     pe.add_argument(
         "-e",
         "--engine",
@@ -837,9 +829,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Keep the original archive after extraction.",
     )
-    pe.add_argument(
-        "-n", "--dry-run", action="store_true", help="Only print what would be done."
-    )
+    pe.add_argument("-n", "--dry-run", action="store_true", help="Only print what would be done.")
     pe.add_argument(
         "--organize",
         choices=("flat", "stem", "versioned"),
@@ -886,17 +876,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     pe.set_defaults(func=cmd_extract)
     pf = sub.add_parser("fix", help="Fix mis-extracted dir/file name collisions.")
-    pf.add_argument(
-        "root", nargs="?", default=".", help="Root directory to scan (default: cwd)."
-    )
+    pf.add_argument("root", nargs="?", default=".", help="Root directory to scan (default: cwd).")
     pf.add_argument(
         "--fix",
         action="store_true",
         help="Actually apply fixes (default is a dry-run).",
     )
-    pf.add_argument(
-        "-v", "--verbose", action="store_true", help="Print every candidate."
-    )
+    pf.add_argument("-v", "--verbose", action="store_true", help="Print every candidate.")
     pf.set_defaults(func=cmd_fix)
     pw = sub.add_parser("whl", help="Extract .whl wheels into version-stripped dirs.")
     pw.add_argument(
@@ -911,9 +897,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Keep the .whl files after extraction.",
     )
-    pw.add_argument(
-        "-q", "--quiet", action="store_true", help="Suppress summary output."
-    )
+    pw.add_argument("-q", "--quiet", action="store_true", help="Suppress summary output.")
     pw.set_defaults(func=cmd_whl)
     pc = sub.add_parser("check", help="Integrity-check archives without extracting.")
     pc.add_argument(
@@ -922,15 +906,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=["."],
         help="Files or directories to scan (default: cwd).",
     )
-    pc.add_argument(
-        "-r", "--recursive", action="store_true", help="Recurse into directories."
-    )
-    pc.add_argument(
-        "--formats", type=str, default=None, help="Comma-separated extensions to check."
-    )
-    pc.add_argument(
-        "-q", "--quiet", action="store_true", help="Suppress summary output."
-    )
+    pc.add_argument("-r", "--recursive", action="store_true", help="Recurse into directories.")
+    pc.add_argument("--formats", type=str, default=None, help="Comma-separated extensions to check.")
+    pc.add_argument("-q", "--quiet", action="store_true", help="Suppress summary output.")
     pc.set_defaults(func=cmd_check)
     return parser
 

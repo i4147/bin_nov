@@ -153,17 +153,9 @@ def cmd_move_subdirs(args: argparse.Namespace) -> int:
 def cmd_flatten(args: argparse.Namespace) -> int:
     root: Path = args.root.resolve()
     if args.recursive:
-        files: list[Path] = [
-            p for p in root.rglob("*") if p.is_file() and p.parent != root
-        ]
+        files: list[Path] = [p for p in root.rglob("*") if p.is_file() and p.parent != root]
     else:
-        files = [
-            p
-            for sub in root.iterdir()
-            if sub.is_dir()
-            for p in sub.iterdir()
-            if p.is_file()
-        ]
+        files = [p for sub in root.iterdir() if sub.is_dir() for p in sub.iterdir() if p.is_file()]
     if not files:
         print("No files found in subdirectories.")
         return 0
@@ -207,11 +199,7 @@ def cmd_move_tests(args: argparse.Namespace) -> int:
     mapping: dict[str, str] = {}
     targets: list[Path] = []
     if args.kind in ("dirs", "both"):
-        targets += [
-            p
-            for p in source.rglob("tests")
-            if p.is_dir() and not any(name in str(p) for name in excluded)
-        ]
+        targets += [p for p in source.rglob("tests") if p.is_dir() and not any(name in str(p) for name in excluded)]
     if args.kind in ("files", "both"):
         base: Path = args.dir.resolve() if args.kind == "files" else source
         targets += [p for p in base.rglob("*.py") if is_test_file(p)]
@@ -244,9 +232,7 @@ def reverse_moves(log_path: Path, dry_run: bool) -> int:
         print(f"Log file not found: {log_path}", file=sys.stderr)
         return 1
     loaded: object = json.loads(log_path.read_text(encoding="utf-8"))
-    mapping: dict[str, str] = (
-        {str(k): str(v) for k, v in loaded.items()} if isinstance(loaded, dict) else {}
-    )
+    mapping: dict[str, str] = {str(k): str(v) for k, v in loaded.items()} if isinstance(loaded, dict) else {}
     restored: int = 0
     for original, moved in mapping.items():
         moved_path, original_path = Path(moved), Path(original)
@@ -309,18 +295,14 @@ def build_parser() -> argparse.ArgumentParser:
     ms.set_defaults(handler=cmd_move_subdirs)
     fl = sub.add_parser("flatten", help="Lift files out of subdirectories")
     fl.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    fl.add_argument(
-        "-r", "--recursive", action="store_true", help="All depths (original: 1 level)"
-    )
+    fl.add_argument("-r", "--recursive", action="store_true", help="All depths (original: 1 level)")
     fl.add_argument("--rename-on-clash", action="store_true")
     fl.add_argument("--remove-empty", action="store_true")
     fl.add_argument("-n", "--dry-run", action="store_true")
     fl.set_defaults(handler=cmd_flatten)
     mt = sub.add_parser("move-tests", help="Move tests/ dirs and test files out")
     mt.add_argument("--source", type=Path, default=None, help="Default: site-packages")
-    mt.add_argument(
-        "--dir", type=Path, default=Path.cwd(), help="Base for --kind files"
-    )
+    mt.add_argument("--dir", type=Path, default=Path.cwd(), help="Base for --kind files")
     mt.add_argument("--kind", choices=("dirs", "files", "both"), default="dirs")
     mt.add_argument("--out", type=Path, default=DEFAULT_TESTS_OUT)
     mt.add_argument("--log", type=Path, default=DEFAULT_MOVE_LOG)
@@ -344,12 +326,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="e.g. ~/sbin, ~/isaac/may/scripts, /sdcard/doc",
     )
     se.add_argument("--copy", action="store_true", help="Copy instead of move (pycp)")
-    se.add_argument(
-        "--dedup", action="store_true", help="Skip when SHA-256 identical (tobin)"
-    )
-    se.add_argument(
-        "--rename", action="store_true", help="Use name_N on clashes (tosc)"
-    )
+    se.add_argument("--dedup", action="store_true", help="Skip when SHA-256 identical (tobin)")
+    se.add_argument("--rename", action="store_true", help="Use name_N on clashes (tosc)")
     se.add_argument("-n", "--dry-run", action="store_true")
     se.set_defaults(handler=cmd_send)
     return parser

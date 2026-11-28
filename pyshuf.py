@@ -82,9 +82,7 @@ def shuffle_lines(lines: list[str], method: str) -> None:
         weighted_shuffle(lines)
 
 
-def process_small_file(
-    input_path: Path, output_path: Path, methods: list[str], repeats: int
-) -> bool:
+def process_small_file(input_path: Path, output_path: Path, methods: list[str], repeats: int) -> bool:
     try:
         with input_path.open(encoding="utf-8") as f:
             lines = f.readlines()
@@ -130,11 +128,7 @@ def process_large_file(input_path: Path, output_path: Path) -> bool:
         ):
             for offset in line_offsets:
                 actual_end_of_line = mm.find(b"\n", offset)
-                line_data = (
-                    mm[offset:file_size]
-                    if actual_end_of_line == -1
-                    else mm[offset : actual_end_of_line + 1]
-                )
+                line_data = mm[offset:file_size] if actual_end_of_line == -1 else mm[offset : actual_end_of_line + 1]
                 outfile.write(line_data)
         return True
     except Exception as e:
@@ -157,12 +151,8 @@ def test_randomness(input_file: Path) -> None:
     for i in range(5):
         current_lines = original_order.copy()
         crypto_shuffle(current_lines)
-        changes = sum(
-            1 for a, b in zip(original_order, current_lines, strict=False) if a != b
-        )
-        print(
-            f"Shuffle {i + 1}: {changes} out of {len(current_lines)} positions changed"
-        )
+        changes = sum(1 for a, b in zip(original_order, current_lines, strict=False) if a != b)
+        print(f"Shuffle {i + 1}: {changes} out of {len(current_lines)} positions changed")
 
 
 def main() -> int:
@@ -171,9 +161,7 @@ def main() -> int:
     parser.add_argument("-o", "--output")
     parser.add_argument("-r", "--repeats", type=int, default=3)
     parser.add_argument("-t", "--test", action="store_true")
-    parser.add_argument(
-        "-m", "--methods", nargs="+", default=["crypto", "shuffle3", "weighted"]
-    )
+    parser.add_argument("-m", "--methods", nargs="+", default=["crypto", "shuffle3", "weighted"])
     args = parser.parse_args()
     input_path = Path(args.input_file)
     if not input_path.exists():
@@ -187,9 +175,7 @@ def main() -> int:
     if file_size > MMAP_THRESHOLD_BYTES:
         success = process_large_file(input_path, output_path)
     else:
-        success = process_small_file(
-            input_path, output_path, args.methods, args.repeats
-        )
+        success = process_small_file(input_path, output_path, args.methods, args.repeats)
     return 0 if success else 1
 
 

@@ -34,9 +34,7 @@ def update_setup_files() -> None:
                     updated_files += 1
         except Exception as e:
             print(f"❌ Error processing {setup_file}: {e}")
-    print(
-        f"\nFinished! Updated {updated_files} file(s) to match Python version '{target_cp}'."
-    )
+    print(f"\nFinished! Updated {updated_files} file(s) to match Python version '{target_cp}'.")
 
 
 if __name__ == "__main__":

@@ -95,11 +95,7 @@ class CrawlerDb:
     def dequeue(self) -> bool:
         if not self.connected:
             return False
-        s = (
-            select(self.website_table)
-            .where(self.website_table.c.has_crawled.is_(False))
-            .limit(1)
-        )
+        s = select(self.website_table).where(self.website_table.c.has_crawled.is_(False)).limit(1)
         result = self.connection.execute(s).fetchall()
         return result[0] if result else False
 
@@ -107,7 +103,8 @@ class CrawlerDb:
         if not self.connected:
             return
         stmt = (
-            self.website_table.update()
+            self.website_table
+            .update()
             .where(self.website_table.c.id == website.id)
             .values(has_crawled=True, emails=new_emails)
         )

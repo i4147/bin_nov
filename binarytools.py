@@ -99,9 +99,7 @@ def unique_path(p: Path) -> Path:
         i += 1
 
 
-def iter_files(
-    root: Path, ext: Optional[Sequence[str]] = None, recursive: bool = False
-) -> Iterator[Path]:
+def iter_files(root: Path, ext: Optional[Sequence[str]] = None, recursive: bool = False) -> Iterator[Path]:
     if root.is_file():
         yield root
         return
@@ -182,9 +180,7 @@ def verify_so_load(path: Path) -> tuple[bool, str]:
 
 def count_symbols(path: Path, timeout: float = 10.0) -> tuple[bool, int, str]:
     try:
-        res = subprocess.run(
-            ["nm", str(path)], capture_output=True, text=True, timeout=timeout
-        )
+        res = subprocess.run(["nm", str(path)], capture_output=True, text=True, timeout=timeout)
     except FileNotFoundError:
         return False, 0, "'nm' not found — install binutils for symbol analysis"
     except subprocess.TimeoutExpired:
@@ -225,9 +221,7 @@ def cmd_sort(args: argparse.Namespace) -> int:
 def _test_executable(path: Path, timeout: float) -> tuple[Path, Optional[str]]:
     for probe in PROBE_ARGS:
         try:
-            res = subprocess.run(
-                [str(path), probe], capture_output=True, text=True, timeout=timeout
-            )
+            res = subprocess.run([str(path), probe], capture_output=True, text=True, timeout=timeout)
             if res.stderr:
                 low = res.stderr.lower()
                 if any(p in low for p in MISSING_LIB_PATTERNS):
@@ -497,17 +491,11 @@ class SoStripper:
     def strip_by_size(self, root: Path, min_mb: float) -> dict:
         print(f"\nStripping .so files larger than {min_mb} MB under {root} ...")
         threshold = int(min_mb * 1024 * 1024)
-        candidates = [
-            f
-            for f in iter_files(root, ext=[".so"], recursive=True)
-            if f.stat().st_size >= threshold
-        ]
+        candidates = [f for f in iter_files(root, ext=[".so"], recursive=True) if f.stat().st_size >= threshold]
         return self._run(candidates)
 
     def strip_by_extension(self, root: Path, extensions: Sequence[str]) -> dict:
-        print(
-            f"\nStripping .so files with extensions {list(extensions)} under {root} ..."
-        )
+        print(f"\nStripping .so files with extensions {list(extensions)} under {root} ...")
         seen: set[Path] = set()
         candidates: list[Path] = []
         for ext in extensions:
@@ -520,16 +508,12 @@ class SoStripper:
     def strip_by_exclude(self, root: Path, patterns: Sequence[str]) -> dict:
         print(f"\nStripping .so files under {root} (excluding {list(patterns)}) ...")
         candidates = [
-            f
-            for f in iter_files(root, ext=[".so"], recursive=True)
-            if not any(pat in f.name for pat in patterns)
+            f for f in iter_files(root, ext=[".so"], recursive=True) if not any(pat in f.name for pat in patterns)
         ]
         return self._run(candidates)
 
     def strip_with_retry(self, root: Path, max_retries: int) -> dict:
-        print(
-            f"\nStripping with retry logic (max {max_retries} attempts) under {root} ..."
-        )
+        print(f"\nStripping with retry logic (max {max_retries} attempts) under {root} ...")
         candidates = list(iter_files(root, ext=[".so"], recursive=True))
         for path in candidates:
             for attempt in range(max_retries):
@@ -573,9 +557,7 @@ def _strip_common_args(p: argparse.ArgumentParser) -> None:
         default="strip",
         help="Strip executable to invoke (default: strip)",
     )
-    p.add_argument(
-        "-v", "--verbose", action="store_true", help="Print per-file progress"
-    )
+    p.add_argument("-v", "--verbose", action="store_true", help="Print per-file progress")
     p.add_argument(
         "--no-verify",
         action="store_true",
@@ -611,26 +593,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command", required=False)
     p_sort = sub.add_parser("sort", help="Move binary files into a subfolder")
-    p_sort.add_argument(
-        "directory", nargs="?", default=".", help="Directory to scan (default: cwd)"
-    )
-    p_sort.add_argument(
-        "--dest", default="binary", help="Destination subfolder (default: binary)"
-    )
-    p_sort.add_argument(
-        "--recursive", action="store_true", help="Descend into subdirectories"
-    )
+    p_sort.add_argument("directory", nargs="?", default=".", help="Directory to scan (default: cwd)")
+    p_sort.add_argument("--dest", default="binary", help="Destination subfolder (default: binary)")
+    p_sort.add_argument("--recursive", action="store_true", help="Descend into subdirectories")
     p_sort.add_argument("-v", "--verbose", action="store_true")
     p_sort.set_defaults(func=cmd_sort)
-    p_sanity = sub.add_parser(
-        "sanity", help="Test executables and move broken ones aside"
-    )
-    p_sanity.add_argument(
-        "directory", nargs="?", default=".", help="Directory to scan (default: cwd)"
-    )
-    p_sanity.add_argument(
-        "--err-dir", default="err", help="Folder for failed binaries (default: err)"
-    )
+    p_sanity = sub.add_parser("sanity", help="Test executables and move broken ones aside")
+    p_sanity.add_argument("directory", nargs="?", default=".", help="Directory to scan (default: cwd)")
+    p_sanity.add_argument("--err-dir", default="err", help="Folder for failed binaries (default: err)")
     p_sanity.add_argument(
         "--report",
         default=str(Path.home() / "tmp" / "err"),
@@ -644,17 +614,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p_sanity.set_defaults(func=cmd_sanity)
     p_ver = sub.add_parser("verify-so", help="Verify .so files load via ctypes")
-    p_ver.add_argument(
-        "paths", nargs="*", help="Files or directories (default: cwd, *.so only)"
-    )
+    p_ver.add_argument("paths", nargs="*", help="Files or directories (default: cwd, *.so only)")
     p_ver.add_argument(
         "--log-file",
         default=str(Path.home() / "tmp" / "apps" / "soverify.log"),
         help="Log file path",
     )
-    p_ver.add_argument(
-        "--symbols", action="store_true", help="Also count symbols via nm"
-    )
+    p_ver.add_argument("--symbols", action="store_true", help="Also count symbols via nm")
     p_ver.add_argument(
         "--timeout",
         type=float,
@@ -666,9 +632,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_strip = sub.add_parser("strip", help="Batch-strip .so files")
     strip_sub = p_strip.add_subparsers(dest="strip_mode", required=True)
     p_size = strip_sub.add_parser("size", help="Strip by minimum size")
-    p_size.add_argument(
-        "--min-mb", type=float, default=1.0, help="Minimum size in MB (default: 1.0)"
-    )
+    p_size.add_argument("--min-mb", type=float, default=1.0, help="Minimum size in MB (default: 1.0)")
     _strip_common_args(p_size)
     p_ext = strip_sub.add_parser("ext", help="Strip by extension list")
     p_ext.add_argument(

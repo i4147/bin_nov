@@ -65,16 +65,10 @@ FAMILY_KWARGS: Final[dict[str, frozenset[str]]] = {
     "ellipsis": frozenset(),
 }
 ATTR_TO_VALUE: Final[dict[str, str]] = {"s": "value", "n": "value"}
-VISITOR_PREFIXES: Final[dict[str, str]] = {
-    f"visit_{name}": "visit_Constant" for name in DEPRECATED_FAMILY
-}
+VISITOR_PREFIXES: Final[dict[str, str]] = {f"visit_{name}": "visit_Constant" for name in DEPRECATED_FAMILY}
 DEFAULT_INCLUDES: Final[list[str]] = ["*.py"]
-DRY_RUN_HINT: Final[str] = (
-    "dry run: no files were modified - re-run with -a/--apply to write changes"
-)
-_DEF_NAME_RE: Final[re.Pattern[str]] = re.compile(
-    r"(?:async[ \t]+)?def[ \t]+([A-Za-z_][A-Za-z0-9_]*)"
-)
+DRY_RUN_HINT: Final[str] = "dry run: no files were modified - re-run with -a/--apply to write changes"
+_DEF_NAME_RE: Final[re.Pattern[str]] = re.compile(r"(?:async[ \t]+)?def[ \t]+([A-Za-z_][A-Za-z0-9_]*)")
 
 
 @dataclass(frozen=True, slots=True)
@@ -157,9 +151,7 @@ class DeprecatedFinder:
                 if node.module == "ast" and node.level == 0:
                     for alias in node.names:
                         if alias.name in DEPRECATED_FAMILY:
-                            dep_imports[alias.asname or alias.name] = DEPRECATED_FAMILY[
-                                alias.name
-                            ]
+                            dep_imports[alias.asname or alias.name] = DEPRECATED_FAMILY[alias.name]
                         elif alias.name == "*":
                             self._flag(
                                 node,
@@ -192,9 +184,7 @@ class DeprecatedFinder:
                 ),
             ):
                 for sub in ast.walk(node):
-                    if isinstance(sub, ast.Name) and isinstance(
-                        sub.ctx, (ast.Store, ast.Del)
-                    ):
+                    if isinstance(sub, ast.Name) and isinstance(sub.ctx, (ast.Store, ast.Del)):
                         bound.add(sub.id)
         self.local_deprecated = {k: v for k, v in dep_imports.items() if k not in bound}
         for node in ast.walk(tree):
@@ -202,10 +192,7 @@ class DeprecatedFinder:
                 seg = self._guard_name(node)
                 if seg:
                     self.dep_guard_segments.add(seg)
-        if (
-            len({n.name for n in visitor_nodes}) == 1
-            and "visit_Constant" not in func_names
-        ):
+        if len({n.name for n in visitor_nodes}) == 1 and "visit_Constant" not in func_names:
             self.visitor_renames = dict(VISITOR_PREFIXES)
         elif visitor_nodes:
             for node in visitor_nodes:
@@ -248,9 +235,7 @@ class DeprecatedFinder:
         line, col = self._line_col(start)
         self.edits.append(Edit(start, end, replacement, line, col, message))
 
-    def _add_token_rename(
-        self, node: ast.AST, token_len: int, replacement: str, message: str
-    ) -> None:
+    def _add_token_rename(self, node: ast.AST, token_len: int, replacement: str, message: str) -> None:
         start = self._abs(node.lineno, node.col_offset)
         end = self._abs(node.lineno, node.col_offset + token_len)
         line, col = self._line_col(start)
@@ -341,11 +326,7 @@ class DeprecatedFinder:
             return {stmt.name}
         if isinstance(stmt, (ast.For, ast.AsyncFor, ast.While)):
             return None
-        out = {
-            n.id
-            for n in ast.walk(stmt)
-            if isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del))
-        }
+        out = {n.id for n in ast.walk(stmt) if isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del))}
         for sub in ast.walk(stmt):
             if isinstance(sub, ast.ExceptHandler) and sub.name:
                 out.add(sub.name)
@@ -359,20 +340,14 @@ class DeprecatedFinder:
                 narrowed = frozenset()
             else:
                 narrowed = frozenset(
-                    seg
-                    for seg in narrowed
-                    if not any(
-                        re.search(rf"\b{re.escape(name)}\b", seg) for name in cleared
-                    )
+                    seg for seg in narrowed if not any(re.search(rf"\b{re.escape(name)}\b", seg) for name in cleared)
                 )
             if isinstance(stmt, ast.Assert):
                 seg = self._guard_name(stmt.test)
                 if seg:
                     narrowed = narrowed | {seg}
 
-    def _visit(
-        self, node: ast.AST, narrowed: frozenset[str], annotation: bool = False
-    ) -> None:
+    def _visit(self, node: ast.AST, narrowed: frozenset[str], annotation: bool = False) -> None:
         if isinstance(node, ast.Call):
             self._on_call(node, narrowed, annotation)
             return
@@ -382,11 +357,7 @@ class DeprecatedFinder:
         if isinstance(node, ast.Name):
             self._on_name(node, narrowed, annotation)
             return
-        if (
-            isinstance(node, ast.Compare)
-            and len(node.ops) == 1
-            and self._try_type_compare(node)
-        ):
+        if isinstance(node, ast.Compare) and len(node.ops) == 1 and self._try_type_compare(node):
             return
         if isinstance(node, ast.If):
             self._visit(node.test, narrowed)
@@ -430,9 +401,7 @@ class DeprecatedFinder:
                 self._visit(kw.value, narrowed)
             self._visit_body(node.body, frozenset())
             return
-        if isinstance(
-            node, (ast.ListComp, ast.SetComp, ast.GeneratorExp, ast.DictComp)
-        ):
+        if isinstance(node, (ast.ListComp, ast.SetComp, ast.GeneratorExp, ast.DictComp)):
             self._on_comprehension(node, narrowed)
             return
         if isinstance(node, ast.AnnAssign):
@@ -457,9 +426,7 @@ class DeprecatedFinder:
         for child in ast.iter_child_nodes(node):
             self._visit(child, narrowed, annotation and isinstance(child, ast.expr))
 
-    def _on_function(
-        self, node: ast.FunctionDef | ast.AsyncFunctionDef, narrowed: frozenset[str]
-    ) -> None:
+    def _on_function(self, node: ast.FunctionDef | ast.AsyncFunctionDef, narrowed: frozenset[str]) -> None:
         if node.name in self.visitor_renames:
             self._rename_def(node, self.visitor_renames[node.name])
         for dec in node.decorator_list:
@@ -471,15 +438,11 @@ class DeprecatedFinder:
             self._visit(node.returns, narrowed, True)
         self._visit_body(node.body, frozenset())
 
-    def _rename_def(
-        self, node: ast.FunctionDef | ast.AsyncFunctionDef, new_name: str
-    ) -> None:
+    def _rename_def(self, node: ast.FunctionDef | ast.AsyncFunctionDef, new_name: str) -> None:
         start = self._abs(node.lineno, node.col_offset)
         match = _DEF_NAME_RE.match(self.source, start)
         if match is None:
-            self._flag(
-                node, f"visitor method '{node.name}' could not be renamed safely"
-            )
+            self._flag(node, f"visitor method '{node.name}' could not be renamed safely")
             return
         line, col = self._line_col(match.start(1))
         self.edits.append(
@@ -511,9 +474,7 @@ class DeprecatedFinder:
         else:
             self._visit(node.elt, cur)
 
-    def _on_call(
-        self, node: ast.Call, narrowed: frozenset[str], annotation: bool
-    ) -> None:
+    def _on_call(self, node: ast.Call, narrowed: frozenset[str], annotation: bool) -> None:
         if (
             isinstance(node.func, ast.Name)
             and node.func.id == "isinstance"
@@ -530,12 +491,7 @@ class DeprecatedFinder:
             for kw in node.keywords:
                 self._visit(kw.value, narrowed, annotation)
             return
-        if (
-            isinstance(node.func, ast.Name)
-            and node.func.id == "getattr"
-            and len(node.args) == 2
-            and not node.keywords
-        ):
+        if isinstance(node.func, ast.Name) and node.func.id == "getattr" and len(node.args) == 2 and not node.keywords:
             if not annotation and narrowed and self._try_getattr(node, narrowed):
                 return
             if (
@@ -576,8 +532,7 @@ class DeprecatedFinder:
             if not any(fams):
                 return False
             if any(
-                f is None and (isinstance(e, ast.Starred) or self._seg(e) is None)
-                for f, e in zip(fams, second.elts)
+                f is None and (isinstance(e, ast.Starred) or self._seg(e) is None) for f, e in zip(fams, second.elts)
             ):
                 self._flag(
                     call,
@@ -585,11 +540,7 @@ class DeprecatedFinder:
                 )
                 return True
             dep_elems = [e for f, e in zip(fams, second.elts) if f]
-            base = (
-                "Constant"
-                if any(isinstance(e, ast.Name) for e in dep_elems)
-                else "ast.Constant"
-            )
+            base = "Constant" if any(isinstance(e, ast.Name) for e in dep_elems) else "ast.Constant"
             disjuncts: list[str] = []
             i = 0
             while i < len(second.elts):
@@ -600,13 +551,9 @@ class DeprecatedFinder:
                         i += 1
                     vt = ", ".join(dict.fromkeys(types))
                     vt = f"({vt})" if "," in vt else vt
-                    disjuncts.append(
-                        f"(isinstance({seg_t}, {base}) and isinstance({seg_t}.value, {vt}))"
-                    )
+                    disjuncts.append(f"(isinstance({seg_t}, {base}) and isinstance({seg_t}.value, {vt}))")
                 else:
-                    disjuncts.append(
-                        f"isinstance({seg_t}, {self._seg(second.elts[i])})"
-                    )
+                    disjuncts.append(f"isinstance({seg_t}, {self._seg(second.elts[i])})")
                     i += 1
             joined = " or ".join(disjuncts)
             repl = joined if len(disjuncts) == 1 else f"({joined})"
@@ -620,9 +567,7 @@ class DeprecatedFinder:
         if fam is None:
             return False
         if seg_t is None:
-            self._flag(
-                call, "isinstance(...) target segment unavailable - manual fix needed"
-            )
+            self._flag(call, "isinstance(...) target segment unavailable - manual fix needed")
             return True
         base = self._constant_ref(second)
         vt = VALUE_TYPES[fam]
@@ -676,16 +621,10 @@ class DeprecatedFinder:
         return False
 
     def _fix_constructor(self, call: ast.Call, fam: str) -> None:
-        old = (
-            f"ast.{FAMILY_NAMES[fam]}"
-            if isinstance(call.func, ast.Attribute)
-            else FAMILY_NAMES[fam]
-        )
+        old = f"ast.{FAMILY_NAMES[fam]}" if isinstance(call.func, ast.Attribute) else FAMILY_NAMES[fam]
         if fam == "ellipsis":
             if not call.args and not call.keywords:
-                self._add_edit(
-                    call, "ast.Constant(...)", "ast.Ellipsis() -> ast.Constant(...)"
-                )
+                self._add_edit(call, "ast.Constant(...)", "ast.Ellipsis() -> ast.Constant(...)")
             else:
                 self._flag(
                     call,
@@ -705,11 +644,7 @@ class DeprecatedFinder:
 
     def _try_getattr(self, call: ast.Call, narrowed: frozenset[str]) -> bool:
         target, name = call.args
-        if (
-            isinstance(name, ast.Constant)
-            and isinstance(name.value, str)
-            and name.value in ATTR_TO_VALUE
-        ):
+        if isinstance(name, ast.Constant) and isinstance(name.value, str) and name.value in ATTR_TO_VALUE:
             seg = self._seg(target)
             if seg is not None and seg in narrowed:
                 self._add_edit(
@@ -720,16 +655,12 @@ class DeprecatedFinder:
                 return True
         return False
 
-    def _on_attribute(
-        self, node: ast.Attribute, narrowed: frozenset[str], annotation: bool
-    ) -> None:
+    def _on_attribute(self, node: ast.Attribute, narrowed: frozenset[str], annotation: bool) -> None:
         fam = self._family_of(node)
         if fam is not None:
             if annotation:
                 repl = self._constant_ref(node)
-                self._add_edit(
-                    node, repl, f"annotation ast.{FAMILY_NAMES[fam]} -> {repl}"
-                )
+                self._add_edit(node, repl, f"annotation ast.{FAMILY_NAMES[fam]} -> {repl}")
             else:
                 self._flag(
                     node,
@@ -764,9 +695,7 @@ class DeprecatedFinder:
                     return
         self._visit(node.value, narrowed, annotation)
 
-    def _on_name(
-        self, node: ast.Name, narrowed: frozenset[str], annotation: bool
-    ) -> None:
+    def _on_name(self, node: ast.Name, narrowed: frozenset[str], annotation: bool) -> None:
         if node.id in self.visitor_renames:
             self._add_token_rename(
                 node,
@@ -803,10 +732,7 @@ class DeprecatedFinder:
             if text not in seen:
                 seen.add(text)
                 entries.append(text)
-        if (
-            any(a.name in DEPRECATED_FAMILY and a.asname for a in node.names)
-            and "Constant" not in seen
-        ):
+        if any(a.name in DEPRECATED_FAMILY and a.asname for a in node.names) and "Constant" not in seen:
             entries.append("Constant")
         first, last = node.names[0], node.names[-1]
         start = self._abs(first.lineno, first.col_offset)
@@ -875,14 +801,10 @@ def process_file(path: Path, args: argparse.Namespace) -> FileResult:
 
 
 def _matches(name: str, rel: str, patterns: Sequence[str]) -> bool:
-    return any(
-        fnmatch.fnmatch(name, pat) or fnmatch.fnmatch(rel, pat) for pat in patterns
-    )
+    return any(fnmatch.fnmatch(name, pat) or fnmatch.fnmatch(rel, pat) for pat in patterns)
 
 
-def discover_files(
-    root: Path, include: Sequence[str], exclude: Sequence[str], follow: bool
-) -> list[Path]:
+def discover_files(root: Path, include: Sequence[str], exclude: Sequence[str], follow: bool) -> list[Path]:
     if root.is_file():
         return [root]
     files: list[Path] = []
@@ -963,9 +885,7 @@ def print_report(results: Sequence[FileResult], args: argparse.Namespace) -> int
                 for r in results
                 for f in r.flags
             ],
-            "errors": [
-                {"file": str(r.path), "message": r.error} for r in results if r.error
-            ],
+            "errors": [{"file": str(r.path), "message": r.error} for r in results if r.error],
         }
         print(json.dumps(payload, indent=2))
     else:
@@ -989,9 +909,7 @@ def print_report(results: Sequence[FileResult], args: argparse.Namespace) -> int
                 if r.diff:
                     print(r.diff, end="")
         mode = "apply" if args.apply else "dry-run"
-        print(
-            f"scanned={len(results)} fixes={total_fixes} ambiguous={total_flags} errors={total_errors} mode={mode}"
-        )
+        print(f"scanned={len(results)} fixes={total_fixes} ambiguous={total_flags} errors={total_errors} mode={mode}")
         if not args.apply and (total_fixes or total_flags):
             print(DRY_RUN_HINT, file=sys.stderr)
         if total_flags:
@@ -1057,17 +975,13 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="print unified diffs of proposed/applied fixes",
     )
-    parser.add_argument(
-        "--backup", action="store_true", help="write <file>.bak before modifying"
-    )
+    parser.add_argument("--backup", action="store_true", help="write <file>.bak before modifying")
     parser.add_argument(
         "--stdin",
         action="store_true",
         help="transform stdin to stdout instead of scanning files",
     )
-    parser.add_argument(
-        "--json", action="store_true", help="emit machine-readable summary on stdout"
-    )
+    parser.add_argument("--json", action="store_true", help="emit machine-readable summary on stdout")
     parser.add_argument(
         "-v",
         "--verbose",

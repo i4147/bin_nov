@@ -26,9 +26,7 @@ def merge_translation_files(
         try:
             with open(base_path / output_file, "r", encoding="utf-8") as f:
                 existing_dictionary = json.load(f)
-            print(
-                f"📖 Loaded existing dictionary with {len(existing_dictionary)} entries"
-            )
+            print(f"📖 Loaded existing dictionary with {len(existing_dictionary)} entries")
         except json.JSONDecodeError:
             print(f"⚠️  Warning: Could not parse existing {output_file}, starting fresh")
         except Exception as e:

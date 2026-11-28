@@ -113,9 +113,7 @@ def collect_files(inputs: Sequence[Path]) -> list[Path]:
         if root.is_file():
             found.add(root)
         elif root.is_dir():
-            found.update(
-                p for p in root.rglob("*") if p.is_file() and ".git" not in p.parts
-            )
+            found.update(p for p in root.rglob("*") if p.is_file() and ".git" not in p.parts)
     return sorted(found)
 
 
@@ -125,9 +123,7 @@ def cmd_to_utf8(args: argparse.Namespace) -> int:
     if not files:
         print("No files found.")
         return 0
-    jobs: list[tuple[Path, str | None, bool]] = [
-        (p, args.from_encoding, args.dry_run) for p in files
-    ]
+    jobs: list[tuple[Path, str | None, bool]] = [(p, args.from_encoding, args.dry_run) for p in files]
     changed: int = 0
     with ProcessPoolExecutor(max_workers=max(1, args.workers)) as pool:
         for path, status in pool.map(convert_one, jobs):
@@ -147,9 +143,7 @@ def cmd_probe(args: argparse.Namespace) -> int:
         print("No common encoding decodes this file strictly.")
         return 1
     for encoding in candidates:
-        preview: str = data.decode(encoding, errors="replace")[: args.preview].replace(
-            "\n", " "
-        )
+        preview: str = data.decode(encoding, errors="replace")[: args.preview].replace("\n", " ")
         print(f"  {encoding:15} {preview!r}")
     if args.output is not None:
         chosen: str = args.encoding or candidates[0]
@@ -207,9 +201,7 @@ def cmd_unescape(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line parser."""
-    parser = argparse.ArgumentParser(
-        description="Encoding detection, UTF-8 conversion and unescaping."
-    )
+    parser = argparse.ArgumentParser(description="Encoding detection, UTF-8 conversion and unescaping.")
     sub = parser.add_subparsers(dest="command", required=True)
 
     tu = sub.add_parser("to-utf8", help="Convert text files to UTF-8 in place")
@@ -238,9 +230,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Encoding to use with -o (default: first match)",
     )
-    pr.add_argument(
-        "-o", "--output", type=Path, default=None, help="Write UTF-8 conversion here"
-    )
+    pr.add_argument("-o", "--output", type=Path, default=None, help="Write UTF-8 conversion here")
     pr.set_defaults(handler=cmd_probe)
 
     un = sub.add_parser("unescape", help="Decode escapes/entities in files")

@@ -72,27 +72,25 @@ from loguru import logger
 
 
 LOGGER = logger
-DEFAULT_MARKERS = frozenset(
-    {
-        "TODO",
-        "FIXME",
-        "HACK",
-        "XXX",
-        "NOTE",
-        "BUG",
-        "PYLINT",
-        "NOQA",
-        "TYPE:IGNORE",
-        "PRAGMA",
-        "CODING:",
-        "ENCODING:",
-        "CHARSET:",
-        "DRYRUN",
-        "DRY-RUN",
-        "RESCURSIVE MODE ENABLED",
-        ".GITIGNORE",
-    }
-)
+DEFAULT_MARKERS = frozenset({
+    "TODO",
+    "FIXME",
+    "HACK",
+    "XXX",
+    "NOTE",
+    "BUG",
+    "PYLINT",
+    "NOQA",
+    "TYPE:IGNORE",
+    "PRAGMA",
+    "CODING:",
+    "ENCODING:",
+    "CHARSET:",
+    "DRYRUN",
+    "DRY-RUN",
+    "RESCURSIVE MODE ENABLED",
+    ".GITIGNORE",
+})
 JAPANESE_RE = re.compile(r"[\u3040-\u30ff\u4e00-\u9fff]")
 NON_ASCII_RE = re.compile(r"[^\x00-\x7f]")
 PYCLD2_CODES_TO_SKIP: set[str] = {"en", "un"}
@@ -193,11 +191,7 @@ def is_ignored_text(
         return True
     if not any(character.isalpha() for character in stripped):
         return True
-    return bool(
-        conservative
-        and stripped.isascii()
-        and (len(stripped.split()) <= 2 and len(stripped) < 30)
-    )
+    return bool(conservative and stripped.isascii() and (len(stripped.split()) <= 2 and len(stripped) < 30))
 
 
 def should_translate_pycld2(
@@ -325,15 +319,9 @@ def ast_string_locations(
     print_locations: set[tuple[int, int]] = set()
     docstring_locations: set[tuple[int, int]] = set()
     for node in ast.walk(tree):
-        if (
-            isinstance(node, ast.Call)
-            and isinstance(node.func, ast.Name)
-            and node.func.id == "print"
-        ):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "print":
             for argument in node.args:
-                if isinstance(argument, ast.Constant) and isinstance(
-                    argument.value, str
-                ):
+                if isinstance(argument, ast.Constant) and isinstance(argument.value, str):
                     print_locations.add((argument.lineno, argument.col_offset))
         if isinstance(
             node,
@@ -401,9 +389,7 @@ def translate_python_tokens(
             location = (token.start[0], token.start[1])
             is_print = location in print_locations
             is_docstring = location in docstring_locations
-            if (is_print and include_print_strings) or (
-                is_docstring and include_docstrings
-            ):
+            if (is_print and include_print_strings) or (is_docstring and include_docstrings):
                 try:
                     value = ast.literal_eval(token.string)
                 except (SyntaxError, ValueError):
@@ -414,11 +400,7 @@ def translate_python_tokens(
     if not candidates:
         return source, 0
     texts = [candidate[2] for candidate in candidates]
-    translated = (
-        translator.translate_many(texts)
-        if batch
-        else [translator.translate(text) for text in texts]
-    )
+    translated = translator.translate_many(texts) if batch else [translator.translate(text) for text in texts]
     replacements: list[tuple[int, int, str]] = []
     changed = 0
     for candidate, translated_text in zip(
@@ -596,9 +578,7 @@ def run_python_mode(
         process,
         workers=MAX_WORKERS,
     )
-    print(
-        f"Done. Modified {stats.changed_files} files; translated {stats.translated_items} items."
-    )
+    print(f"Done. Modified {stats.changed_files} files; translated {stats.translated_items} items.")
     return 0
 
 
@@ -618,11 +598,7 @@ def translate_plain_text(
     if not candidates:
         return source, 0
     texts = [item[1] for item in candidates]
-    translated = (
-        translator.translate_many(texts)
-        if batch
-        else [translator.translate(text) for text in texts]
-    )
+    translated = translator.translate_many(texts) if batch else [translator.translate(text) for text in texts]
     changed = 0
     for (index, original, newline), replacement in zip(
         candidates,
@@ -701,9 +677,7 @@ def run_batch_mode(args: argparse.Namespace) -> int:
         process,
         workers=MAX_WORKERS,
     )
-    print(
-        f"Done. Modified {stats.changed_files} files; translated {stats.translated_items} items."
-    )
+    print(f"Done. Modified {stats.changed_files} files; translated {stats.translated_items} items.")
     return 0
 
 

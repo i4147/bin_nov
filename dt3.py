@@ -257,11 +257,7 @@ def _make_pygoogletranslation(source: str, target: str) -> Translator:
             )
         translated = getattr(result, "text", result)
         if isinstance(result, dict):
-            translated = (
-                result.get("translatedText")
-                or result.get("translation")
-                or result.get("text")
-            )
+            translated = result.get("translatedText") or result.get("translation") or result.get("text")
         if not isinstance(translated, str):
             msg = "pygoogletranslation returned an unsupported result"
             raise TypeError(msg)
@@ -310,13 +306,11 @@ def _make_azure(source: str, target: str) -> Translator:
     mapped_target = _map_language(target, LANGUAGE_CODES)
 
     def translate(text: str) -> str:
-        query = urllib.parse.urlencode(
-            {
-                "api-version": "3.0",
-                "from": mapped_source,
-                "to": mapped_target,
-            }
-        )
+        query = urllib.parse.urlencode({
+            "api-version": "3.0",
+            "from": mapped_source,
+            "to": mapped_target,
+        })
         body = json.dumps([{"Text": text}]).encode("utf-8")
         request = urllib.request.Request(
             f"{endpoint}/translate?{query}",
@@ -359,19 +353,15 @@ def _make_baidu(source: str, target: str) -> Translator:
 
     def translate(text: str) -> str:
         salt = str(random.randint(10000, 99999))
-        sign = hashlib.md5(
-            f"{app_id}{text}{salt}{secret_key}".encode("utf-8")
-        ).hexdigest()
-        payload = urllib.parse.urlencode(
-            {
-                "q": text,
-                "from": mapped_source,
-                "to": mapped_target,
-                "appid": app_id,
-                "salt": salt,
-                "sign": sign,
-            }
-        ).encode("utf-8")
+        sign = hashlib.md5(f"{app_id}{text}{salt}{secret_key}".encode("utf-8")).hexdigest()
+        payload = urllib.parse.urlencode({
+            "q": text,
+            "from": mapped_source,
+            "to": mapped_target,
+            "appid": app_id,
+            "salt": salt,
+            "sign": sign,
+        }).encode("utf-8")
         request = urllib.request.Request(
             "https://fanyi-api.baidu.com/api/trans/vip/translate",
             data=payload,
@@ -468,10 +458,7 @@ def _select_backend(
             )
             continue
         return backend, translator
-    raise RuntimeError(
-        "No usable translation backend was found. Install one of: "
-        + ", ".join(FALLBACK_ORDER)
-    )
+    raise RuntimeError("No usable translation backend was found. Install one of: " + ", ".join(FALLBACK_ORDER))
 
 
 def _split_chunks(text: str, chunk_size: int) -> list[str]:
@@ -655,9 +642,7 @@ def main() -> int:
     if not args.no_continue:
         translations = _load_output(args.output)
     pending: list[tuple[int, str]] = [
-        (index, chunk)
-        for index, chunk in enumerate(chunks)
-        if str(index) not in translations
+        (index, chunk) for index, chunk in enumerate(chunks) if str(index) not in translations
     ]
     if not pending:
         atomic_write(args.output, translations)

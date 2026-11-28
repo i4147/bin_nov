@@ -525,9 +525,7 @@ def _run_analysis(args: argparse.Namespace) -> tuple[Any, str]:
     if not per_file:
         print("✅ No imports found in any script.")
         output_path = Path(args.output).expanduser()
-        atomic_write(
-            output_path, f"No imports found in {directory}.\n", encoding="utf-8"
-        )
+        atomic_write(output_path, f"No imports found in {directory}.\n", encoding="utf-8")
         sys.exit(0)
     report = build_report(
         per_file,

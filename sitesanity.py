@@ -15,9 +15,7 @@ from loguru import logger
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(
-        description="Sanity check installed Termux Python packages."
-    )
+    parser = argparse.ArgumentParser(description="Sanity check installed Termux Python packages.")
     parser.add_argument(
         "-i",
         "--ignore",
@@ -48,9 +46,7 @@ def check_package_files(dist: Any, ignore_patterns: list[str]) -> list[str]:
     return missing_files
 
 
-def check_package_dependencies(
-    dist: Any, installed_map: dict[str, str]
-) -> tuple[list[str], list[str]]:
+def check_package_dependencies(dist: Any, installed_map: dict[str, str]) -> tuple[list[str], list[str]]:
     broken_deps = []
     clean_reqs_for_file = []
     if dist.requires is None:
@@ -95,9 +91,7 @@ def main() -> None:
                 for f in missing_files[:5]:
                     print(f"      - {f}")
                 if len(missing_files) > 5:
-                    print(
-                        f"      - ... and {len(missing_files) - 5} more files missing."
-                    )
+                    print(f"      - ... and {len(missing_files) - 5} more files missing.")
             if missing_deps:
                 broken_deps_count += 1
                 print("   ⚠️  Unresolved Core Dependencies:")
@@ -111,9 +105,7 @@ def main() -> None:
         with open(req_file, "w", encoding="utf-8") as f:
             for dep in sorted(unique_missing_deps):
                 f.write(f"{dep}\n")
-        logger.info(
-            f"📝 Saved {len(unique_missing_deps)} unique main dependencies to: {req_file.resolve()}"
-        )
+        logger.info(f"📝 Saved {len(unique_missing_deps)} unique main dependencies to: {req_file.resolve()}")
     logger.info("=== SCAN SUMMARY ===")
     logger.info(f"Total packages evaluated: {len(distributions)}")
     logger.info(f"Packages with missing files: {corrupted_packages_count}")

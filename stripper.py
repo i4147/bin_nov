@@ -97,21 +97,10 @@ def strip_line_comment(
 
     body, ending = split_line_ending(line)
 
-    if (
-        in_quote is None
-        and "#" not in body
-        and '"""' not in body
-        and "'''" not in body
-        and not body.endswith("\\")
-    ):
+    if in_quote is None and "#" not in body and '"""' not in body and "'''" not in body and not body.endswith("\\"):
         return line, None
 
-    if (
-        in_quote is not None
-        and len(in_quote) == 3
-        and in_quote not in body
-        and not body.endswith("\\")
-    ):
+    if in_quote is not None and len(in_quote) == 3 and in_quote not in body and not body.endswith("\\"):
         return line, in_quote
 
     i = 0
@@ -139,9 +128,7 @@ def strip_line_comment(
                 i += 1
                 continue
             if ch == "#":
-                if (i > 0 and body[i - 1] == "$") or (
-                    i >= 2 and body[i - 2 : i] == "${"
-                ):
+                if (i > 0 and body[i - 1] == "$") or (i >= 2 and body[i - 2 : i] == "${"):
                     i += 1
                     continue
                 comment_pos = i
@@ -222,9 +209,7 @@ def process_file(path: Path) -> tuple[Path, int]:
                     if "\x00" in line:
                         return path, 0
 
-                    cleaned, in_quote = strip_line_comment(
-                        line, in_quote, line_idx == 0
-                    )
+                    cleaned, in_quote = strip_line_comment(line, in_quote, line_idx == 0)
                     orig_encoded = line.encode("utf-8")
 
                     if tmp_file is None:
@@ -316,9 +301,7 @@ def deduplicate_inputs(paths: Sequence[Path]) -> tuple[Path, ...]:
 
 
 def parse_args(argv: Sequence[str] | None = None) -> CliConfig:
-    parser = argparse.ArgumentParser(
-        description="Remove #-style comments from files in-place."
-    )
+    parser = argparse.ArgumentParser(description="Remove #-style comments from files in-place.")
     parser.add_argument(
         "files",
         nargs="*",

@@ -45,9 +45,7 @@ def blank_page(title: str, style: str, lang: str) -> str:
     )
 
 
-def wrap_fragment(
-    fragment: str, title: str, charset: str, css_href: str, js_src: str
-) -> str:
+def wrap_fragment(fragment: str, title: str, charset: str, css_href: str, js_src: str) -> str:
     """Wrap a CodePen-style body fragment in a complete document."""
     return (
         '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
@@ -120,9 +118,7 @@ def cmd_new(args: argparse.Namespace) -> int:
     if args.output.exists() and not args.force:
         print(f"Error: {args.output} exists (use --force).", file=sys.stderr)
         return 1
-    atomic_write(
-        args.output, blank_page(args.title, args.style, args.lang), encoding="utf-8"
-    )
+    atomic_write(args.output, blank_page(args.title, args.style, args.lang), encoding="utf-8")
     print(f"Created {args.output} (style={args.style}, title={args.title!r})")
     return 0
 
@@ -150,9 +146,7 @@ def cmd_merge(args: argparse.Namespace) -> int:
     files: list[Path] = sorted(
         p
         for p in args.root.rglob("*")
-        if p.is_file()
-        and p.suffix.lower() in (".html", ".htm")
-        and p.resolve() != output
+        if p.is_file() and p.suffix.lower() in (".html", ".htm") and p.resolve() != output
     )
     if not files:
         print("No HTML files found.")
@@ -217,9 +211,7 @@ def build_parser() -> argparse.ArgumentParser:
     nw.set_defaults(handler=cmd_new)
     wr = sub.add_parser("wrap", help="Wrap a CodePen fragment in a full document")
     wr.add_argument("input", type=Path)
-    wr.add_argument(
-        "-o", "--output", type=Path, default=None, help="Default: rewrite input"
-    )
+    wr.add_argument("-o", "--output", type=Path, default=None, help="Default: rewrite input")
     wr.add_argument("--title", default=None, help="Default: derived from filename")
     wr.add_argument("--charset", default="UTF-8")
     wr.add_argument("--css", default="style.css")

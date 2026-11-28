@@ -49,25 +49,17 @@ from dh import atomic_write
 
 MAX_LEN: Final[int] = 120
 BREAK_PUNCTS: Final[list[str]] = [",", ";", ":", "?"]
-WS_PATTERN: Final[re.Pattern[str]] = re.compile(
-    r"[\u00A0\u2000-\u200F\u2028\u2029\u202F\u205F\u3000\uFEFF]"
-)
+WS_PATTERN: Final[re.Pattern[str]] = re.compile(r"[\u00A0\u2000-\u200F\u2028\u2029\u202F\u205F\u3000\uFEFF]")
 ZW_PATTERN: Final[re.Pattern[str]] = re.compile(r"[\u200B-\u200D\uFEFF]")
-SENT_PATTERN: Final[re.Pattern[str]] = re.compile(
-    r"[^.!]+[.!]", re.MULTILINE | re.DOTALL
-)
+SENT_PATTERN: Final[re.Pattern[str]] = re.compile(r"[^.!]+[.!]", re.MULTILINE | re.DOTALL)
 PARA_SPLIT: Final[re.Pattern[str]] = re.compile(r"\n\s*\n", re.MULTILINE)
-SENT_SPLIT: Final[re.Pattern[str]] = re.compile(
-    r"(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|!)\s+"
-)
+SENT_SPLIT: Final[re.Pattern[str]] = re.compile(r"(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|!)\s+")
 
 
 def _clean_file(filename: Path) -> None:
     try:
         text = filename.read_text(encoding="utf-8")
-        cleaned = "".join(
-            ch for ch in text if unicodedata.category(ch)[0] != "C" or ch in "\n\r\t"
-        )
+        cleaned = "".join(ch for ch in text if unicodedata.category(ch)[0] != "C" or ch in "\n\r\t")
         atomic_write(filename, cleaned, encoding="utf-8")
         print(f"Successfully cleaned: {filename}")
     except FileNotFoundError:
@@ -219,18 +211,14 @@ def _restructure_text_file(path: Path) -> None:
             current_line_words: list[str] = []
             words = sentence.split()
             for word in words:
-                potential_line_length = (
-                    current_line_length + len(word) + (1 if current_line_words else 0)
-                )
+                potential_line_length = current_line_length + len(word) + (1 if current_line_words else 0)
                 if potential_line_length > MAX_LEN and current_line_length > 0:
                     break_point = -1
                     for i, w in enumerate(current_line_words):
                         if w.endswith(","):
                             break_point = i
                     if break_point != -1:
-                        processed_sentence_parts.append(
-                            " ".join(current_line_words[: break_point + 1])
-                        )
+                        processed_sentence_parts.append(" ".join(current_line_words[: break_point + 1]))
                         current_line_words = current_line_words[break_point + 1 :]
                         current_line_length = len(" ".join(current_line_words))
                     else:

@@ -132,16 +132,10 @@ def cmd_aes(args: argparse.Namespace) -> int:
             continue
         try:
             if args.command == "aes-encrypt":
-                output: Path = (
-                    path if args.in_place else path.with_suffix(path.suffix + ".enc")
-                )
+                output: Path = path if args.in_place else path.with_suffix(path.suffix + ".enc")
                 atomic_write(output, aes_encrypt_blob(path.read_bytes(), key))
             else:
-                output = (
-                    path
-                    if args.in_place
-                    else Path(str(path).removesuffix(".enc") or str(path) + ".dec")
-                )
+                output = path if args.in_place else Path(str(path).removesuffix(".enc") or str(path) + ".dec")
                 atomic_write(output, aes_decrypt_blob(path.read_bytes(), key))
             print(f"{path} -> {output}")
         except Exception as exc:  # ValueError from bad padding, OSError, ...
@@ -158,9 +152,7 @@ def text_to_morse(text: str) -> str:
 
 def morse_to_text(morse: str) -> str:
     """Decode Morse (``/`` = space; unknown codes pass through)."""
-    return "".join(
-        MORSE_REVERSE.get(code, code) for code in morse.split(" ") if code
-    ).strip()
+    return "".join(MORSE_REVERSE.get(code, code) for code in morse.split(" ") if code).strip()
 
 
 def cmd_morse(args: argparse.Namespace) -> int:
@@ -168,9 +160,7 @@ def cmd_morse(args: argparse.Namespace) -> int:
     source: str = args.text
     if args.input is not None:
         source = args.input.read_text(encoding="utf-8")
-    result: str = (
-        text_to_morse(source) if args.mode == "encode" else morse_to_text(source)
-    )
+    result: str = text_to_morse(source) if args.mode == "encode" else morse_to_text(source)
     if args.output is not None:
         atomic_write(args.output, result, encoding="utf-8")
         print(f"Wrote {args.output}")
@@ -203,9 +193,7 @@ def try_batch(job: tuple[Path, list[str]]) -> tuple[str | None, int]:
 def wordlist_batches(path: Path, batch_size: int) -> Iterator[list[str]]:
     """Yield non-empty stripped passwords in batches."""
     with path.open(encoding="utf-8", errors="ignore") as handle:
-        while batch := [
-            line.strip() for line in islice(handle, batch_size) if line.strip()
-        ]:
+        while batch := [line.strip() for line in islice(handle, batch_size) if line.strip()]:
             yield batch
 
 
@@ -220,9 +208,7 @@ def cmd_zip_crack(args: argparse.Namespace) -> int:
     started: float = time.time()
     tested_total: int = 0
     found: str | None = None
-    jobs: list[tuple[Path, list[str]]] = [
-        (args.zip_file, b) for b in wordlist_batches(args.wordlist, args.batch_size)
-    ]
+    jobs: list[tuple[Path, list[str]]] = [(args.zip_file, b) for b in wordlist_batches(args.wordlist, args.batch_size)]
     with ProcessPoolExecutor(max_workers=args.workers) as pool:
         futures = [pool.submit(try_batch, job) for job in jobs]
         for future in as_completed(futures):
@@ -234,9 +220,7 @@ def cmd_zip_crack(args: argparse.Namespace) -> int:
                     other.cancel()
                 break
     elapsed: float = time.time() - started
-    print(
-        f"Tested {tested_total:,} passwords in {elapsed:.1f}s ({tested_total / max(elapsed, 0.001):.0f}/s)"
-    )
+    print(f"Tested {tested_total:,} passwords in {elapsed:.1f}s ({tested_total / max(elapsed, 0.001):.0f}/s)")
     if found is not None:
         print(f"SUCCESS: password is {found!r}")
         return 0
@@ -246,15 +230,11 @@ def cmd_zip_crack(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line parser."""
-    parser = argparse.ArgumentParser(
-        description="AES files, Morse code, ZIP password tester."
-    )
+    parser = argparse.ArgumentParser(description="AES files, Morse code, ZIP password tester.")
     sub = parser.add_subparsers(dest="command", required=True)
     for name in ("aes-encrypt", "aes-decrypt"):
         child = sub.add_parser(name, help=f"{name} files with AES-CBC")
-        child.add_argument(
-            "files", nargs="+", type=Path, help="Files to process (explicit list)"
-        )
+        child.add_argument("files", nargs="+", type=Path, help="Files to process (explicit list)")
         child.add_argument(
             "--key",
             default=None,
@@ -268,15 +248,9 @@ def build_parser() -> argparse.ArgumentParser:
         child.set_defaults(handler=cmd_aes)
     mo = sub.add_parser("morse", help="Encode/decode Morse code")
     mo.add_argument("mode", choices=("encode", "decode"))
-    mo.add_argument(
-        "text", nargs="?", default="", help="Text/Morse string (or use -i FILE)"
-    )
-    mo.add_argument(
-        "-i", "--input", type=Path, default=None, help="Read input from file"
-    )
-    mo.add_argument(
-        "-o", "--output", type=Path, default=None, help="Write result to file"
-    )
+    mo.add_argument("text", nargs="?", default="", help="Text/Morse string (or use -i FILE)")
+    mo.add_argument("-i", "--input", type=Path, default=None, help="Read input from file")
+    mo.add_argument("-o", "--output", type=Path, default=None, help="Write result to file")
     mo.set_defaults(handler=cmd_morse)
     zc = sub.add_parser("zip-crack", help="Test a wordlist against a zip password")
     zc.add_argument("zip_file", type=Path)

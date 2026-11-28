@@ -50,9 +50,7 @@ def _detect_gcld3(text: str) -> DetectionResult:
     if _gcld3_detector is None:
         import gcld3
 
-        _gcld3_detector = gcld3.NNetLanguageIdentifier(
-            min_num_bytes=0, max_num_bytes=1000
-        )
+        _gcld3_detector = gcld3.NNetLanguageIdentifier(min_num_bytes=0, max_num_bytes=1000)
     result = _gcld3_detector.FindLanguage(text=text)
     return result.language, float(result.probability)
 
@@ -98,9 +96,7 @@ def _detect_fast_langdetect(text: str) -> DetectionResult:
     if isinstance(result, dict):
         return result.get("lang", "unknown").lower(), float(result.get("score", 0.0))
     if isinstance(result, list) and result:
-        return result[0].get("lang", "unknown").lower(), float(
-            result[0].get("score", 0.0)
-        )
+        return result[0].get("lang", "unknown").lower(), float(result[0].get("score", 0.0))
     return "unknown", 0.0
 
 
@@ -174,13 +170,9 @@ def scan_and_detect(root_dir: str, backend: str, only_non_english: bool) -> None
             if only_non_english and lang == "en":
                 continue
 
-            snippet = content[:40].replace("\n", " ") + (
-                "..." if len(content) > 40 else ""
-            )
+            snippet = content[:40].replace("\n", " ") + ("..." if len(content) > 40 else "")
             conf_str = "  n/a" if math.isnan(prob) else f"{prob:>5.0%}"
-            print(
-                f"{file_path:<50} | {lang:<10} | {conf_str:<6} | {snippet}", flush=True
-            )
+            print(f"{file_path:<50} | {lang:<10} | {conf_str:<6} | {snippet}", flush=True)
 
 
 def main() -> None:
@@ -188,9 +180,7 @@ def main() -> None:
         description="Scan a directory and detect the language of each file.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument(
-        "root", nargs="?", default=".", help="Root directory to scan (default: .)"
-    )
+    parser.add_argument("root", nargs="?", default=".", help="Root directory to scan (default: .)")
     parser.add_argument(
         "-b",
         "--backend",

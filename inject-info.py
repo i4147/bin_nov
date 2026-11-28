@@ -38,16 +38,14 @@ DEFAULT_SETUPCFG: Path = Path("setup.cfg")
 DEFAULT_SETUPPY: Path = Path("setup.py")
 
 REQUIRED_KEYS: tuple[str, ...] = ("name", "email", "github_username")
-TARGET_FILENAMES: frozenset[str] = frozenset(
-    {
-        "setup.py",
-        "setup.cfg",
-        "pyproject.toml",
-        "MANIFEST.in",
-        "tox.ini",
-        "Pipfile",
-    }
-)
+TARGET_FILENAMES: frozenset[str] = frozenset({
+    "setup.py",
+    "setup.cfg",
+    "pyproject.toml",
+    "MANIFEST.in",
+    "tox.ini",
+    "Pipfile",
+})
 GITHUB_USER_RE = re.compile(r"[A-Za-z0-9_.-]+")
 _HEADER_RE = re.compile(r"^\s*\[([^\]]+)\]\s*$")
 _KEY_RE = re.compile(r"^([A-Za-z0-9_\-]+)\s*=")
@@ -224,9 +222,7 @@ def plan_setupcfg(info: Info, path: Path) -> Plan | None:
         "author_email": info["email"],
         "url": f"https://github.com/{info['github_username']}",
     }
-    return Plan(
-        original=original, new=_update_ini_section(original, "metadata", updates)
-    )
+    return Plan(original=original, new=_update_ini_section(original, "metadata", updates))
 
 
 def _offset(src: str, lineno: int, col: int) -> int:
@@ -291,11 +287,7 @@ def _guess_indent(src: str, call: ast.Call) -> str:
 
 def _setup_slug(src: str, call: ast.Call) -> str:
     for kw in call.keywords:
-        if (
-            kw.arg == "name"
-            and isinstance(kw.value, ast.Constant)
-            and isinstance(kw.value.value, str)
-        ):
+        if kw.arg == "name" and isinstance(kw.value, ast.Constant) and isinstance(kw.value.value, str):
             return kw.value.value
     return Path.cwd().name
 
@@ -373,18 +365,14 @@ def plan_setuppy(info: Info, path: Path) -> Plan | None:
                         pos -= 1
                 if pos >= 0 and original[pos] not in "(,":
                     edits.append((pos + 1, pos + 1, ","))
-                insert = "".join(
-                    f"{indent}{key}={value!r},\n" for key, value in missing
-                )
+                insert = "".join(f"{indent}{key}={value!r},\n" for key, value in missing)
                 edits.append((line_start, line_start, insert))
             else:
                 pos = close - 1
                 while pos >= 0 and original[pos] in " \t\n\r":
                     pos -= 1
                 prefix = "" if pos < 0 or original[pos] in "(," else ","
-                insert = prefix + "".join(
-                    f"\n{indent}{key}={value!r}," for key, value in missing
-                )
+                insert = prefix + "".join(f"\n{indent}{key}={value!r}," for key, value in missing)
                 edits.append((close, close, insert))
     return Plan(original=original, new=_apply_edits(original, edits))
 
@@ -472,9 +460,7 @@ def build_transformations(info: Info) -> dict[str, list[Transform]]:
 
     common: list[Transform] = [
         (
-            re.compile(
-                r"(?<!git\+)(https?://(?:www\.)?github\.com/)([A-Za-z0-9_.-]+)/"
-            ),
+            re.compile(r"(?<!git\+)(https?://(?:www\.)?github\.com/)([A-Za-z0-9_.-]+)/"),
             _gh_user,
         ),
         (re.compile(r"(?<!git\+)(\bgithub\.com/)([A-Za-z0-9_.-]+)/"), _gh_user),
@@ -486,21 +472,15 @@ def build_transformations(info: Info) -> dict[str, list[Transform]]:
             quote_literal(name),
         ),
         (
-            re.compile(
-                r'(?<![.\w])(author_email[ \t]*=[ \t]*)(["\'])(?:[^"\'\\]|\\.)*\2'
-            ),
+            re.compile(r'(?<![.\w])(author_email[ \t]*=[ \t]*)(["\'])(?:[^"\'\\]|\\.)*\2'),
             quote_literal(email),
         ),
         (
-            re.compile(
-                r'(?<![.\w])(maintainer[ \t]*=[ \t]*)(["\'])(?:[^"\'\\]|\\.)*\2'
-            ),
+            re.compile(r'(?<![.\w])(maintainer[ \t]*=[ \t]*)(["\'])(?:[^"\'\\]|\\.)*\2'),
             quote_literal(name),
         ),
         (
-            re.compile(
-                r'(?<![.\w])(maintainer_email[ \t]*=[ \t]*)(["\'])(?:[^"\'\\]|\\.)*\2'
-            ),
+            re.compile(r'(?<![.\w])(maintainer_email[ \t]*=[ \t]*)(["\'])(?:[^"\'\\]|\\.)*\2'),
             quote_literal(email),
         ),
     ]
@@ -528,21 +508,15 @@ def build_transformations(info: Info) -> dict[str, list[Transform]]:
             quote_literal(name),
         ),
         (
-            re.compile(
-                r'(?<![.\w])(author_email[ \t]*=[ \t]*)(["\'])(?:[^"\'\\]|\\.)*\2'
-            ),
+            re.compile(r'(?<![.\w])(author_email[ \t]*=[ \t]*)(["\'])(?:[^"\'\\]|\\.)*\2'),
             quote_literal(email),
         ),
         (
-            re.compile(
-                r'(\b(?:authors|maintainers)\s*=\s*\[\s*\{\s*name\s*=\s*)(["\'])(?:[^"\'\\]|\\.)*\2'
-            ),
+            re.compile(r'(\b(?:authors|maintainers)\s*=\s*\[\s*\{\s*name\s*=\s*)(["\'])(?:[^"\'\\]|\\.)*\2'),
             quote_literal(name),
         ),
         (
-            re.compile(
-                r'(\b(?:authors|maintainers)\s*=\s*\[\s*\{[^}]*?\bemail\s*=\s*)(["\'])(?:[^"\'\\]|\\.)*\2'
-            ),
+            re.compile(r'(\b(?:authors|maintainers)\s*=\s*\[\s*\{[^}]*?\bemail\s*=\s*)(["\'])(?:[^"\'\\]|\\.)*\2'),
             quote_literal(email),
         ),
         (
@@ -616,17 +590,13 @@ def run_scan(args: argparse.Namespace) -> int:
 # CLI
 # ---------------------------------------------------------------------------
 
-_DESCRIPTION: str = (
-    (__doc__ or "Inject personal metadata into project files.").strip().splitlines()[0]
-)
+_DESCRIPTION: str = (__doc__ or "Inject personal metadata into project files.").strip().splitlines()[0]
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Entry point for the ``myinfo`` CLI."""
     parser = argparse.ArgumentParser(prog="myinfo", description=_DESCRIPTION)
-    parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {__version__}"
-    )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     common = argparse.ArgumentParser(add_help=False)
@@ -636,36 +606,24 @@ def main(argv: Sequence[str] | None = None) -> int:
         default=INFO_PATH,
         help=f"Path to info file (default: {INFO_PATH})",
     )
-    common.add_argument(
-        "--dry-run", action="store_true", help="Do not write any files, just report"
-    )
-    common.add_argument(
-        "--diff", action="store_true", help="Print a unified diff of every change"
-    )
+    common.add_argument("--dry-run", action="store_true", help="Do not write any files, just report")
+    common.add_argument("--diff", action="store_true", help="Print a unified diff of every change")
     common.add_argument(
         "--check",
         action="store_true",
         help="Exit 1 if any file would change (implies --dry-run)",
     )
-    common.add_argument(
-        "--quiet", action="store_true", help="Suppress per-file status lines"
-    )
+    common.add_argument("--quiet", action="store_true", help="Suppress per-file status lines")
 
-    structured = sub.add_parser(
-        "structured", parents=[common], help="Format-aware edits in a single project"
-    )
+    structured = sub.add_parser("structured", parents=[common], help="Format-aware edits in a single project")
     structured.add_argument(
         "--pyproject",
         type=Path,
         default=DEFAULT_PYPROJECT,
         help="Path to pyproject.toml",
     )
-    structured.add_argument(
-        "--setupcfg", type=Path, default=DEFAULT_SETUPCFG, help="Path to setup.cfg"
-    )
-    structured.add_argument(
-        "--setuppy", type=Path, default=DEFAULT_SETUPPY, help="Path to setup.py"
-    )
+    structured.add_argument("--setupcfg", type=Path, default=DEFAULT_SETUPCFG, help="Path to setup.cfg")
+    structured.add_argument("--setuppy", type=Path, default=DEFAULT_SETUPPY, help="Path to setup.py")
     structured.add_argument(
         "--force-setuppy",
         action="store_true",
@@ -673,9 +631,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     structured.set_defaults(func=run_structured)
 
-    scan = sub.add_parser(
-        "scan", parents=[common], help="Regex-based rewrite of a project tree"
-    )
+    scan = sub.add_parser("scan", parents=[common], help="Regex-based rewrite of a project tree")
     scan.add_argument("project_dir", type=Path, help="Project directory to update")
     scan.add_argument(
         "--include",

@@ -26,9 +26,7 @@ def main() -> None:
         (
             path
             for path in root.rglob("*")
-            if path.is_file()
-            and path.suffix.lower() in FONT_FORMATS
-            and path.resolve() != OUTPUT.resolve()
+            if path.is_file() and path.suffix.lower() in FONT_FORMATS and path.resolve() != OUTPUT.resolve()
         ),
         key=lambda path: str(path).lower(),
     )

@@ -72,9 +72,7 @@ DEFAULT_REPORT_PATH: Path = Path.home() / "dh_usage.txt"
 SKIP_FILES: frozenset[str] = frozenset({"dh_reverse.py"})
 
 
-def _iter_py_files(
-    paths: Iterable[Path], skip: frozenset[str] = frozenset()
-) -> list[Path]:
+def _iter_py_files(paths: Iterable[Path], skip: frozenset[str] = frozenset()) -> list[Path]:
     out: list[Path] = []
     for p in paths:
         if p.is_file() and p.suffix == ".py":
@@ -100,9 +98,7 @@ def _strip_docstring_and_unparse(node: ast.FunctionDef) -> str:
         stmt
         for stmt in node.body
         if not (
-            isinstance(stmt, ast.Expr)
-            and isinstance(stmt.value, ast.Constant)
-            and isinstance(stmt.value.value, str)
+            isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant) and isinstance(stmt.value.value, str)
         )
     ]
     clone = ast.FunctionDef(
@@ -172,11 +168,7 @@ def _insert_dh_imports(
         for node in tree.body:
             if not isinstance(node, (ast.Import, ast.ImportFrom)):
                 break
-            if (
-                isinstance(node, ast.ImportFrom)
-                and node.module == "dh"
-                and node.level == 0
-            ):
+            if isinstance(node, ast.ImportFrom) and node.module == "dh" and node.level == 0:
                 existing = {a.name for a in node.names}
                 merged = sorted(existing | set(matched))
                 new_line = f"from dh import {', '.join(merged)}\n"
@@ -334,18 +326,12 @@ def _build_dh_export_map(dh_path: Path) -> dict[str, Path]:
 def _collect_local_refs(node: ast.AST, names: set[str]) -> set[str]:
     refs: set[str] = set()
     for child in ast.walk(node):
-        if (
-            isinstance(child, ast.Name)
-            and isinstance(child.ctx, ast.Load)
-            and child.id in names
-        ):
+        if isinstance(child, ast.Name) and isinstance(child.ctx, ast.Load) and child.id in names:
             refs.add(child.id)
     return refs
 
 
-def _collect_inline_source(
-    module_file: Path, func_name: str
-) -> tuple[list[str], list[str]]:
+def _collect_inline_source(module_file: Path, func_name: str) -> tuple[list[str], list[str]]:
     if not module_file.exists():
         return ([], [])
     try:
@@ -398,9 +384,7 @@ def _collect_inline_source(
     return (sorted(needed), blocks)
 
 
-def _inline_file(
-    path: Path, dh_map: dict[str, Path], apply: bool
-) -> tuple[Path, bool, str]:
+def _inline_file(path: Path, dh_map: dict[str, Path], apply: bool) -> tuple[Path, bool, str]:
     if path.resolve() == Path(__file__).resolve():
         return (path, False, "")
     source, tree = _read_and_parse(path)
@@ -542,11 +526,7 @@ def _count_dh_calls(py_file: Path, names: set[str]) -> dict[str, int]:
         return {}
     counts: dict[str, int] = dict.fromkeys(names, 0)
     for node in ast.walk(tree):
-        if (
-            isinstance(node, ast.Call)
-            and isinstance(node.func, ast.Name)
-            and node.func.id in counts
-        ):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in counts:
             counts[node.func.id] += 1
     return counts
 
@@ -559,9 +539,7 @@ def _format_usage_report(
 ) -> str:
     lines: list[str] = []
     lines.append("=" * 40)
-    lines.append(
-        f"  {dh_name} Usage Report — generated {datetime.now():%Y-%m-%d %H:%M}"
-    )
+    lines.append(f"  {dh_name} Usage Report — generated {datetime.now():%Y-%m-%d %H:%M}")
     lines.append("=" * 40)
     lines.append(f"  Scanned: {bin_dir}")
     lines.append(f"  Files with {dh_name} imports: {len(per_file)}")

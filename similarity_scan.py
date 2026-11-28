@@ -49,9 +49,7 @@ for f in sorted(ROOT.glob("*.py")):
         raw = f.read_bytes()
         contents[name] = hashlib.sha256(raw).hexdigest()
         toks: list[str] = []
-        for tok in tokenize.generate_tokens(
-            io.StringIO(raw.decode("utf-8", errors="replace")).readline
-        ):
+        for tok in tokenize.generate_tokens(io.StringIO(raw.decode("utf-8", errors="replace")).readline):
             ttype, tstr = tok.type, tok.string
             if ttype in (
                 tokenize.COMMENT,
@@ -95,9 +93,7 @@ for name, toks in tokenized.items():
     if len(toks) < SHINGLE:
         shingle_sets[name] = {hash(tuple(toks))} if toks else set()
     else:
-        shingle_sets[name] = {
-            hash(tuple(toks[i : i + SHINGLE])) for i in range(len(toks) - SHINGLE + 1)
-        }
+        shingle_sets[name] = {hash(tuple(toks[i : i + SHINGLE])) for i in range(len(toks) - SHINGLE + 1)}
 
 inv: dict[int, list[str]] = collections.defaultdict(list)
 for name, sh in shingle_sets.items():
@@ -106,9 +102,7 @@ for name, sh in shingle_sets.items():
 
 pair_hits: collections.Counter[tuple[str, str]] = collections.Counter()
 for s, names in inv.items():
-    if (
-        len(names) > 40
-    ):  # pathologically common shingle (e.g. tiny files); still fine to count, but skip to save memory
+    if len(names) > 40:  # pathologically common shingle (e.g. tiny files); still fine to count, but skip to save memory
         continue
     for i in range(len(names)):
         for j in range(i + 1, len(names)):

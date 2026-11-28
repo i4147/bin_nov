@@ -193,17 +193,11 @@ def run_diagnostic() -> None:
             conf = f"{c_val:.4f}" if isinstance(c_val, (int, float)) else "N/A"
         print(format_row(backend_key, enc, conf))
     print("╚" + "═" * 26 + "╩" + "═" * 20 + "╩" + "═" * 14 + "╝")
-    print(
-        f"║ CONSENSUS MAJORITY : {consensus_encoding.upper()} ({consensus_percentage:.1f}% agreement)"
-    )
+    print(f"║ CONSENSUS MAJORITY : {consensus_encoding.upper()} ({consensus_percentage:.1f}% agreement)")
     if has_mismatch:
-        print(
-            "║ WARNING            : ⚠️ Mismatch detected! Backends disagree on exact format configuration."
-        )
+        print("║ WARNING            : ⚠️ Mismatch detected! Backends disagree on exact format configuration.")
     else:
-        print(
-            "║ INTEGRITY STATUS   : ✅ Clean consensus match. All active backends agree."
-        )
+        print("║ INTEGRITY STATUS   : ✅ Clean consensus match. All active backends agree.")
     print("╚" + "═" * 64)
     print(f"[+] Complete structural report logged to: {output_report.resolve()}")
 

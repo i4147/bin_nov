@@ -34,11 +34,7 @@ def default_json_encoder(obj: Any) -> Any:
         return {
             "__class__": obj.classdesc.name if obj.classdesc else "Unknown",
             "fields": obj.__dict__.get("annotations", {}),
-            **{
-                k: v
-                for k, v in obj.__dict__.items()
-                if not k.startswith("_") and k != "classdesc"
-            },
+            **{k: v for k, v in obj.__dict__.items() if not k.startswith("_") and k != "classdesc"},
         }
     if isinstance(obj, javaobj.JavaString):
         return str(obj)
@@ -67,9 +63,7 @@ def save_as_json(parsed_data: list, output_path: str) -> None:
 
 def main() -> None:
     if len(sys.argv) < 3:
-        print(
-            "Usage: python java_serializer.py <input_java_serialized_bin> <output_data_json>"
-        )
+        print("Usage: python java_serializer.py <input_java_serialized_bin> <output_data_json>")
         sys.exit(1)
     input_bin = sys.argv[1]
     output_json = sys.argv[2]

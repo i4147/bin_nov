@@ -144,9 +144,7 @@ def unique_path(path: Path) -> Path:
 
 def discover_html(root: Path, recursive: bool = True) -> list[Path]:
     return [
-        p
-        for p in (root.rglob("*") if recursive else root.iterdir())
-        if p.is_file() and p.suffix.lower() in HTML_EXTS
+        p for p in (root.rglob("*") if recursive else root.iterdir()) if p.is_file() and p.suffix.lower() in HTML_EXTS
     ]
 
 
@@ -154,9 +152,7 @@ def fetch_remote(url: str, timeout: int) -> bytes | None:
     if url.startswith("//"):
         url = "https:" + url
     try:
-        r = requests.get(
-            url, timeout=timeout, headers={"User-Agent": "Mozilla/5.0 (htmltool/1.0)"}
-        )
+        r = requests.get(url, timeout=timeout, headers={"User-Agent": "Mozilla/5.0 (htmltool/1.0)"})
         r.raise_for_status()
         return r.content
     except Exception as exc:
@@ -218,17 +214,13 @@ def cmd_bundle(args: argparse.Namespace) -> int:
     soups: list[BeautifulSoup] = []
 
     def process_html(path: Path) -> None:
-        soup = BeautifulSoup(
-            path.read_text(encoding="utf-8", errors="ignore"), "html.parser"
-        )
+        soup = BeautifulSoup(path.read_text(encoding="utf-8", errors="ignore"), "html.parser")
         soups.append(soup)
         for style in soup.find_all("style"):
             if not style.string:
                 continue
             p = save_asset(style.string.encode("utf-8"), "text/css")
-            style.replace_with(
-                soup.new_tag("link", rel="stylesheet", href=str(p.relative_to(out_dir)))
-            )
+            style.replace_with(soup.new_tag("link", rel="stylesheet", href=str(p.relative_to(out_dir))))
         for script in soup.find_all("script"):
             if script.get("src"):
                 src = script["src"]
@@ -237,9 +229,7 @@ def cmd_bundle(args: argparse.Namespace) -> int:
                     if p:
                         script["src"] = str(p.relative_to(out_dir))
                 continue
-            p = save_asset(
-                (script.string or "").encode("utf-8"), "application/javascript"
-            )
+            p = save_asset((script.string or "").encode("utf-8"), "application/javascript")
             script.replace_with(soup.new_tag("script", src=str(p.relative_to(out_dir))))
         for img in soup.find_all("img"):
             src = img.get("src", "")
@@ -254,9 +244,7 @@ def cmd_bundle(args: argparse.Namespace) -> int:
                 dec = decode_data_uri(m.group(1))
                 if dec:
                     data, mime = dec
-                    tag["style"] = tag["style"].replace(
-                        m.group(1), str(save_asset(data, mime).relative_to(out_dir))
-                    )
+                    tag["style"] = tag["style"].replace(m.group(1), str(save_asset(data, mime).relative_to(out_dir)))
         for svg in soup.find_all("svg"):
             p = save_asset(str(svg).encode("utf-8"), "image/svg+xml")
             svg.replace_with(soup.new_tag("img", src=str(p.relative_to(out_dir))))
@@ -278,23 +266,17 @@ def cmd_bundle(args: argparse.Namespace) -> int:
                 merged.body.append(el)
     for asset in list(assets_dir.iterdir()):
         uri = to_data_uri(asset.read_bytes(), guess_mime(asset.name))
-        merged = BeautifulSoup(
-            str(merged).replace(str(asset.relative_to(out_dir)), uri), "html.parser"
-        )
+        merged = BeautifulSoup(str(merged).replace(str(asset.relative_to(out_dir)), uri), "html.parser")
     for link in merged.find_all("link", rel="stylesheet"):
         href = link.get("href", "")
         if href.startswith("data:"):
-            css = base64.b64decode(re.sub(r"^data:.*?;base64,", "", href)).decode(
-                "utf-8", errors="ignore"
-            )
+            css = base64.b64decode(re.sub(r"^data:.*?;base64,", "", href)).decode("utf-8", errors="ignore")
             s = merged.new_tag("style")
             s.string = css
             link.replace_with(s)
     for script in merged.find_all("script", src=True):
         if script["src"].startswith("data:"):
-            js = base64.b64decode(
-                re.sub(r"^data:.*?;base64,", "", script["src"])
-            ).decode("utf-8", errors="ignore")
+            js = base64.b64decode(re.sub(r"^data:.*?;base64,", "", script["src"])).decode("utf-8", errors="ignore")
             new = merged.new_tag("script")
             new.string = js
             script.replace_with(new)
@@ -487,9 +469,7 @@ def cmd_inline(args: argparse.Namespace) -> int:
         total_l += r["local"]
         total_r += r["remote"]
         if r["status"] == "success":
-            print(
-                f"[SUCCESS] {shown} ({r['time']:.2f}s) - Embedded: {r['local']} local, {r['remote']} remote"
-            )
+            print(f"[SUCCESS] {shown} ({r['time']:.2f}s) - Embedded: {r['local']} local, {r['remote']} remote")
         elif r["status"] != "skipped":
             logger.error(f"[ERROR] {shown} - {r['status']}")
     print(f"\nBuild Complete in {time.perf_counter() - t0:.2f}s!")
@@ -626,11 +606,7 @@ def cmd_isolate(args: argparse.Namespace) -> int:
     if not inp.exists():
         print(f"Error: input file not found: {inp}")
         return 1
-    out = (
-        Path(args.output)
-        if args.output
-        else inp.with_name(inp.stem + "_standalone.html")
-    )
+    out = Path(args.output) if args.output else inp.with_name(inp.stem + "_standalone.html")
     iso = _Isolator(verbose=args.verbose)
     return 0 if iso.save(inp, out) else 1
 
@@ -671,9 +647,7 @@ def _collect_remote_urls(html_path: Path) -> set[str]:
     urls: set[str] = set()
     css_queue: list[tuple[str, Path | str]] = []
     try:
-        soup = BeautifulSoup(
-            html_path.read_text(encoding="utf-8-sig", errors="replace"), "html.parser"
-        )
+        soup = BeautifulSoup(html_path.read_text(encoding="utf-8-sig", errors="replace"), "html.parser")
     except OSError:
         return urls
     for link in soup.find_all("link", href=True):
@@ -764,18 +738,14 @@ def _download_remote_batch(
             if ans not in {"y", "yes"}:
                 print(f"  ⊘ skipped by user: {url}")
                 continue
-        mime = (r.headers.get("Content-Type") or "").split(";")[
-            0
-        ].strip() or guess_mime(url)
+        mime = (r.headers.get("Content-Type") or "").split(";")[0].strip() or guess_mime(url)
         cache[url] = (body, mime)
         cache[str(r.url)] = (body, mime)
         print(f"  ↓ downloaded once: {url}")
     return cache
 
 
-def _asset_bytes(
-    ref: str, base: Path | str, cache: dict[str, tuple[bytes, str]]
-) -> tuple[bytes, str] | None:
+def _asset_bytes(ref: str, base: Path | str, cache: dict[str, tuple[bytes, str]]) -> tuple[bytes, str] | None:
     if not ref or ref.startswith(("data:", "#")):
         return None
     full = _resolve_url(ref, base)
@@ -791,9 +761,7 @@ def _asset_bytes(
     return p.read_bytes(), guess_mime(str(p))
 
 
-def _rewrite_css(
-    css: str, base: Path | str, cache: dict[str, tuple[bytes, str]]
-) -> str:
+def _rewrite_css(css: str, base: Path | str, cache: dict[str, tuple[bytes, str]]) -> str:
     def import_repl(m: re.Match) -> str:
         ref = m.group(1).strip()
         got = _asset_bytes(ref, base, cache)
@@ -827,9 +795,7 @@ def _process_standalone_html(html_str: str) -> bool:
     base = html_path.parent
     cache = _STANDALONE_ASSET_CACHE
     try:
-        soup = BeautifulSoup(
-            html_path.read_text(encoding="utf-8-sig", errors="replace"), "html.parser"
-        )
+        soup = BeautifulSoup(html_path.read_text(encoding="utf-8-sig", errors="replace"), "html.parser")
     except OSError as exc:
         print(f"ERROR: cannot read {html_path}: {exc}")
         return False
@@ -917,14 +883,10 @@ def cmd_standalone(args: argparse.Namespace) -> int:
     for f in files:
         all_urls.update(_collect_remote_urls(f))
     print(f"Found {len(all_urls)} unique remote asset URL(s).")
-    cache = _download_remote_batch(
-        all_urls, args.timeout, args.max_size, not args.no_prompt
-    )
+    cache = _download_remote_batch(all_urls, args.timeout, args.max_size, not args.no_prompt)
     print(f"Cached {len(cache)} remote asset reference(s).")
     print(f"Processing with {MAX_WORKERS} workers...")
-    with Pool(
-        processes=MAX_WORKERS, initializer=_init_standalone_worker, initargs=(cache,)
-    ) as pool:
+    with Pool(processes=MAX_WORKERS, initializer=_init_standalone_worker, initargs=(cache,)) as pool:
         results = pool.map(_process_standalone_html, [str(f) for f in files])
     ok = sum(bool(r) for r in results)
     print(f"\nProcessed {ok}/{len(files)} file(s).")
@@ -958,11 +920,7 @@ def cmd_mhtml(args: argparse.Namespace) -> int:
             print(f"Skipping non-file: {mhtml_path}")
             continue
         out_html = Path(args.output) if args.output else mhtml_path.with_suffix(".html")
-        out_files = (
-            Path(args.files_dir)
-            if args.files_dir
-            else mhtml_path.with_name(mhtml_path.stem + "_files")
-        )
+        out_files = Path(args.files_dir) if args.files_dir else mhtml_path.with_name(mhtml_path.stem + "_files")
         out_files.mkdir(parents=True, exist_ok=True)
         msg = BytesParser(policy=policy.default).parsebytes(mhtml_path.read_bytes())
         parts: list[Any] = []
@@ -1011,11 +969,7 @@ def cmd_mhtml(args: argparse.Namespace) -> int:
             if ext == "svg+xml":
                 ext = "svg"
             base_name = safe_filename(cid or "resource")
-            fname = (
-                base_name
-                if ext is None or Path(base_name).suffix
-                else f"{base_name}.{ext}"
-            )
+            fname = base_name if ext is None or Path(base_name).suffix else f"{base_name}.{ext}"
             target = out_files / fname
             if target.exists():
                 target = unique_path(target)
@@ -1082,9 +1036,7 @@ def _font_to_data_uri(path_or_url: str, static_root: Path, timeout: int) -> str 
         if p.is_file():
             body = p.read_bytes()
         else:
-            body = (
-                fetch_remote("file:///" + str(p.resolve()), timeout) if False else None
-            )
+            body = fetch_remote("file:///" + str(p.resolve()), timeout) if False else None
     if not body:
         return None
     return to_data_uri(body, mime)
@@ -1095,11 +1047,7 @@ def cmd_css(args: argparse.Namespace) -> int:
     if not inp.is_file():
         print(f"Error: input CSS not found: {inp}")
         return 1
-    out = (
-        Path(args.output)
-        if args.output
-        else inp.with_name(inp.stem + "_standalone.css")
-    )
+    out = Path(args.output) if args.output else inp.with_name(inp.stem + "_standalone.css")
     css = inp.read_text(encoding="utf-8")
     static_root = Path(args.static_root)
     imports = [m.group(1) for m in CSS_IMPORT_RE.finditer(css)]
@@ -1154,9 +1102,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     sub = p.add_subparsers(dest="command", required=True)
-    b = sub.add_parser(
-        "bundle", help="Extract all assets and build single_page_local.html"
-    )
+    b = sub.add_parser("bundle", help="Extract all assets and build single_page_local.html")
     b.add_argument("--output-dir", default="output")
     b.add_argument("--assets-dir", default="assets")
     b.add_argument("--timeout", type=int, default=10)
@@ -1176,22 +1122,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Do NOT download remote <script src>",
     )
     b.set_defaults(func=cmd_bundle)
-    i = sub.add_parser(
-        "inline", help="Inline local/remote assets into HTML/CSS files in place"
-    )
+    i = sub.add_parser("inline", help="Inline local/remote assets into HTML/CSS files in place")
     i.add_argument("paths", nargs="*", default=["."])
     i.add_argument("--timeout", type=int, default=15)
     i.set_defaults(func=cmd_inline)
-    s = sub.add_parser(
-        "isolate", help="Produce a <name>_standalone.html with local assets embedded"
-    )
+    s = sub.add_parser("isolate", help="Produce a <name>_standalone.html with local assets embedded")
     s.add_argument("input")
     s.add_argument("-o", "--output")
     s.add_argument("-v", "--verbose", action="store_true")
     s.set_defaults(func=cmd_isolate)
-    st = sub.add_parser(
-        "standalone", help="Multi-process standalone builder with remote cache"
-    )
+    st = sub.add_parser("standalone", help="Multi-process standalone builder with remote cache")
     st.add_argument("paths", nargs="*")
     st.add_argument("--timeout", type=int, default=30)
     st.add_argument("--max-size", type=int, default=5 * 1024 * 1024)
@@ -1201,12 +1141,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Skip interactive prompt for large downloads",
     )
     st.set_defaults(func=cmd_standalone)
-    m = sub.add_parser(
-        "mhtml", help="Convert .mhtml to .html + <stem>_files/ directory"
-    )
-    m.add_argument(
-        "inputs", nargs="*", help="One or more .mhtml files (default: *.mhtml in cwd)"
-    )
+    m = sub.add_parser("mhtml", help="Convert .mhtml to .html + <stem>_files/ directory")
+    m.add_argument("inputs", nargs="*", help="One or more .mhtml files (default: *.mhtml in cwd)")
     m.add_argument("-o", "--output", help="Output HTML path (single input only)")
     m.add_argument("--files-dir", help="Output directory for extracted resources")
     m.set_defaults(func=cmd_mhtml)

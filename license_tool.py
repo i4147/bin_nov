@@ -20,27 +20,25 @@ if TYPE_CHECKING:
 
 LICENSE_EXTS: frozenset[str] = frozenset({".md", ".txt", ".rst", ""})
 MIN_BLANK_LINES: int = 3
-BINARY_SUFFIXES: frozenset[str] = frozenset(
-    {
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".gif",
-        ".pdf",
-        ".zip",
-        ".tar",
-        ".gz",
-        ".pyc",
-        ".so",
-        ".o",
-        ".exe",
-        ".dll",
-        ".bin",
-        ".mp3",
-        ".mp4",
-        ".db",
-    }
-)
+BINARY_SUFFIXES: frozenset[str] = frozenset({
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".pdf",
+    ".zip",
+    ".tar",
+    ".gz",
+    ".pyc",
+    ".so",
+    ".o",
+    ".exe",
+    ".dll",
+    ".bin",
+    ".mp3",
+    ".mp4",
+    ".db",
+})
 UNITS: tuple[str, ...] = ("B", "KB", "MB", "GB")
 
 
@@ -93,9 +91,7 @@ def cmd_find(args: argparse.Namespace) -> int:
 def cmd_collect(args: argparse.Namespace) -> int:
     """Concatenate all license files into one bundle."""
     files: list[Path] = [
-        p
-        for p in find_license_files(args.root, "contains", LICENSE_EXTS)
-        if p.resolve() != args.output.resolve()
+        p for p in find_license_files(args.root, "contains", LICENSE_EXTS) if p.resolve() != args.output.resolve()
     ]
     print(f"Found {len(files)} file(s)")
     with args.output.open("w", encoding="utf-8") as sink:
@@ -121,9 +117,7 @@ def load_patterns(pattern_file: Path, blank_lines: int) -> list[str]:
 
 def pattern_regex(block: str) -> re.Pattern[str]:
     """Literal block as a regex, tolerant of whitespace around newlines."""
-    return re.compile(
-        re.escape(block).replace(r"\n", r"\s*\n\s*"), re.IGNORECASE | re.MULTILINE
-    )
+    return re.compile(re.escape(block).replace(r"\n", r"\s*\n\s*"), re.IGNORECASE | re.MULTILINE)
 
 
 def strip_one(job: tuple[Path, list[str], bool]) -> tuple[Path, int, int]:
@@ -202,9 +196,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="prefix",
         help="prefix: name starts with license (licr); contains: anywhere",
     )
-    fi.add_argument(
-        "--truncate", action="store_true", help="Empty each file (licr behaviour)"
-    )
+    fi.add_argument("--truncate", action="store_true", help="Empty each file (licr behaviour)")
     fi.add_argument("--yes", action="store_true", help="Confirm --truncate")
     fi.set_defaults(handler=cmd_find)
     co = sub.add_parser("collect", help="Concatenate licenses into one file")
@@ -231,9 +223,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=MIN_BLANK_LINES,
         help="Blank lines separating pattern blocks (default: 3)",
     )
-    st.add_argument(
-        "--apply", action="store_true", help="Rewrite files (default: report)"
-    )
+    st.add_argument("--apply", action="store_true", help="Rewrite files (default: report)")
     st.add_argument("-j", "--workers", type=int, default=8)
     st.set_defaults(handler=cmd_strip_text)
     return parser

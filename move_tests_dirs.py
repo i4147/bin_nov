@@ -50,9 +50,7 @@ def move_tests_folder(
         relative_path: Path = tests_path.relative_to(base_src)
         dst_path: Path = base_dst / relative_path.parent / tests_path.name
         if dry_run:
-            return MoveResult(
-                tests_path, True, f"will move: {tests_path} -> {dst_path}"
-            )
+            return MoveResult(tests_path, True, f"will move: {tests_path} -> {dst_path}")
         dst_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(str(tests_path), str(dst_path))
         return MoveResult(tests_path, True, f"moved: {tests_path} -> {dst_path}")
@@ -67,9 +65,7 @@ def move_tests_recursive(
 ) -> int:
     source: Path = source_dir.resolve()
     destination: Path = destination_dir
-    tests_folders: list[Path] = [
-        p for p in source.rglob("tests") if p.is_dir() and not _is_excluded(p)
-    ]
+    tests_folders: list[Path] = [p for p in source.rglob("tests") if p.is_dir() and not _is_excluded(p)]
     if not tests_folders:
         logger.info("No 'tests' folders found.")
         return 0

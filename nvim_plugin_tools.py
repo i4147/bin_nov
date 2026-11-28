@@ -434,9 +434,7 @@ def _unique_path(path: Path) -> Path:
         n += 1
 
 
-def find_plugin_refs(
-    path: Path, patterns: dict[str, list[str]] = PLUGIN_PATTERNS
-) -> set[str]:
+def find_plugin_refs(path: Path, patterns: dict[str, list[str]] = PLUGIN_PATTERNS) -> set[str]:
     found: set[str] = set()
     try:
         content = path.read_text(encoding="utf-8")
@@ -503,9 +501,7 @@ def cmd_folderize(args: argparse.Namespace) -> int:
         for p in unclassified:
             print(f"  → {p.relative_to(root)}")
     if args.dry_run:
-        print(
-            "\n[DRY RUN] No files were moved. Run without --dry-run to organize files."
-        )
+        print("\n[DRY RUN] No files were moved. Run without --dry-run to organize files.")
         return 0
     answer = input("\nProceed with moving files? (y/N): ").strip().lower()
     if answer not in ("y", "yes"):

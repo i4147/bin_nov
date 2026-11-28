@@ -27,9 +27,7 @@ _ANSI: dict[str, str] = {
 }
 
 
-def colored(
-    text: str, color: Optional[str] = None, attrs: Optional[Iterable[str]] = None
-) -> str:
+def colored(text: str, color: Optional[str] = None, attrs: Optional[Iterable[str]] = None) -> str:
     prefix = ""
     if color:
         prefix += _ANSI.get(color, "")
@@ -49,9 +47,7 @@ TAG_RE = re.compile(r"<[^>]+>|{\w+}")
 def iter_srt(directory: Path, recursive: bool = False) -> list[Path]:
     if recursive:
         return [p for p in directory.rglob("*") if p.suffix.lower() in SRT_EXT]
-    return [
-        p for p in directory.iterdir() if p.is_file() and p.suffix.lower() in SRT_EXT
-    ]
+    return [p for p in directory.iterdir() if p.is_file() and p.suffix.lower() in SRT_EXT]
 
 
 def read_srt_dialogue(path: Path) -> tuple[list[str], int]:
@@ -142,9 +138,7 @@ def _lingua_detect_batch(
     return out
 
 
-def _folderize_lingua(
-    path: Path, pool: Any, batch_size: int
-) -> Optional[tuple[str, str]]:
+def _folderize_lingua(path: Path, pool: Any, batch_size: int) -> Optional[tuple[str, str]]:
     try:
         lines, skipped = read_srt_dialogue(path)
         if not lines:
@@ -185,11 +179,7 @@ def _folderize_cld2(path: Path) -> Optional[tuple[str, str]]:
         with open(path, "r", encoding="utf-8") as f:
             text = f.read()
         lines = text.split("\n")
-        clean = "\n".join(
-            line
-            for line in lines
-            if line.strip() and not line.isdigit() and "-->" not in line
-        )
+        clean = "\n".join(line for line in lines if line.strip() and not line.isdigit() and "-->" not in line)
         if not clean.strip():
             return None
         _, _, details = cld2.detect(clean)
@@ -252,9 +242,7 @@ def cmd_folderize(args: argparse.Namespace) -> int:
             p.rename(new_path)
             print(f"   ➜ {p.name}")
             moved += 1
-    print(
-        f"\n✅ Complete! Moved {moved} file(s) into {len(buckets)} language folder(s)."
-    )
+    print(f"\n✅ Complete! Moved {moved} file(s) into {len(buckets)} language folder(s).")
     return 0
 
 
@@ -316,9 +304,7 @@ def cmd_vtt2srt(args: argparse.Namespace) -> int:
     return 0
 
 
-def _translate_srt(
-    input_path: Path, source: str, target: str, max_batch_chars: int, delay: float
-) -> None:
+def _translate_srt(input_path: Path, source: str, target: str, max_batch_chars: int, delay: float) -> None:
     from deep_translator import GoogleTranslator
     import pysrt
 
@@ -354,9 +340,7 @@ def _translate_srt(
 
 
 def cmd_translate(args: argparse.Namespace) -> int:
-    _translate_srt(
-        Path(args.input), args.source, args.target, args.max_batch_chars, args.delay
-    )
+    _translate_srt(Path(args.input), args.source, args.target, args.max_batch_chars, args.delay)
     return 0
 
 

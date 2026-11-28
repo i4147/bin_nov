@@ -59,11 +59,7 @@ def collect_sources(inputs: Sequence[Path], suffixes: frozenset[str]) -> list[Pa
                 found.add(root)
         elif root.is_dir():
             for path in root.rglob("*"):
-                if (
-                    path.is_file()
-                    and path.suffix.lower() in suffixes
-                    and not SKIP_DIRS.intersection(path.parts)
-                ):
+                if path.is_file() and path.suffix.lower() in suffixes and not SKIP_DIRS.intersection(path.parts):
                     found.add(path)
     return sorted(found)
 
@@ -130,9 +126,7 @@ def cmd_build(args: argparse.Namespace) -> int:
         print("No .c/.cpp files found.")
         return 0
     flags: tuple[str, ...] = tuple(shlex.split(args.cflags))
-    jobs: list[tuple[Path, str, tuple[str, ...], bool]] = [
-        (s, "", flags, args.strip) for s in sources
-    ]
+    jobs: list[tuple[Path, str, tuple[str, ...], bool]] = [(s, "", flags, args.strip) for s in sources]
     print(f"Compiling {len(sources)} file(s) with {MAX_WORKERS} worker(s)...")
     failed: int = run_parallel(jobs, "compile", MAX_WORKERS)
     print(f"Summary: {len(sources) - failed} ok, {failed} failed")
@@ -150,25 +144,17 @@ def cmd_cythonize(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Parallel C/C++/Cython builder (clang by default)."
-    )
+    parser = argparse.ArgumentParser(description="Parallel C/C++/Cython builder (clang by default).")
     sub = parser.add_subparsers(dest="command", required=True)
     for name, help_text in (
         ("build", "Compile .c/.cpp files"),
         ("cythonize", "Cythonize .pyx files"),
     ):
         child = sub.add_parser(name, help=help_text)
-        child.add_argument(
-            "paths", nargs="*", type=Path, help="Files or dirs (default: current dir)"
-        )
+        child.add_argument("paths", nargs="*", type=Path, help="Files or dirs (default: current dir)")
     build = sub.choices["build"]
-    build.add_argument(
-        "--strip", action="store_true", help="Strip each binary after compiling"
-    )
-    build.add_argument(
-        "--cflags", default="", help='Extra compiler flags, e.g. --cflags="-O2 -Wall"'
-    )
+    build.add_argument("--strip", action="store_true", help="Strip each binary after compiling")
+    build.add_argument("--cflags", default="", help='Extra compiler flags, e.g. --cflags="-O2 -Wall"')
     sub.choices["build"].set_defaults(handler=cmd_build)
     sub.choices["cythonize"].set_defaults(handler=cmd_cythonize)
     return parser

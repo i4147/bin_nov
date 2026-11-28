@@ -74,7 +74,8 @@ def process_file(fn: Path) -> int:
         cprint("no change", color="blue")
         return 0
     new_path = new_path.with_name(
-        new_path.name.replace("_1", "")
+        new_path.name
+        .replace("_1", "")
         .replace("_2", "")
         .replace("_3", "")
         .replace("_4", "")
@@ -97,9 +98,7 @@ def main() -> None:
     files = list(
         [Path(arg) for arg in args]
         if args
-        else get_files(
-            cwd, extensions=[".ttf", ".woff", ".woff2", ".bin", ".otf", ".eot"]
-        )
+        else get_files(cwd, extensions=[".ttf", ".woff", ".woff2", ".bin", ".otf", ".eot"])
     )
     if not files:
         print("no files found")

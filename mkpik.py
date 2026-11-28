@@ -97,10 +97,7 @@ def cmd_compile(args: argparse.Namespace) -> None:
         return
     with ProcessPoolExecutor() as executor:
         futures = [
-            executor.submit(
-                compile_single_file, f, args.optimize, args.legacy, args.delete_source
-            )
-            for f in py_files
+            executor.submit(compile_single_file, f, args.optimize, args.legacy, args.delete_source) for f in py_files
         ]
         for future in futures:
             future.result()
@@ -116,9 +113,7 @@ def cmd_measure(args: argparse.Namespace) -> None:
     else:
         py_files = get_py_files(cwd)
     with ProcessPoolExecutor(max_workers=args.pool_size) as executor:
-        futures = [
-            executor.submit(compile_single_file, f, 0, False, False) for f in py_files
-        ]
+        futures = [executor.submit(compile_single_file, f, 0, False, False) for f in py_files]
         for future in futures:
             future.result()
     final_size = get_dir_size(cwd)
@@ -133,17 +128,13 @@ def cmd_measure(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Unified Python Bytecode Compiler and Disk Space Tracker"
-    )
+    parser = argparse.ArgumentParser(description="Unified Python Bytecode Compiler and Disk Space Tracker")
     subparsers = parser.add_subparsers(dest="command", required=True)
     compile_parser = subparsers.add_parser(
         "compile",
         help="Compile Python files with custom optimization and output options",
     )
-    compile_parser.add_argument(
-        "targets", nargs="*", default=["."], help="Files or directories to compile"
-    )
+    compile_parser.add_argument("targets", nargs="*", default=["."], help="Files or directories to compile")
     compile_parser.add_argument(
         "-o",
         "--optimize",
@@ -179,9 +170,7 @@ def main() -> None:
         default=[],
         help="Specific files or directories to process",
     )
-    measure_parser.add_argument(
-        "--pool-size", type=int, default=8, help="Number of worker processes"
-    )
+    measure_parser.add_argument("--pool-size", type=int, default=8, help="Number of worker processes")
     measure_parser.set_defaults(func=cmd_measure)
     args = parser.parse_args()
     args.func(args)

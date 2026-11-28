@@ -65,9 +65,7 @@ def parse_existing_init(init_file: Path) -> tuple[set[str], set[str], list[str]]
                 if isinstance(target, ast.Name) and target.id == "__all__":
                     if isinstance(node.value, (ast.List, ast.Tuple)):
                         for elt in node.value.elts:
-                            if isinstance(elt, ast.Constant) and isinstance(
-                                elt.value, str
-                            ):
+                            if isinstance(elt, ast.Constant) and isinstance(elt.value, str):
                                 existing_all.add(elt.value)
     return existing_imports, existing_all, original_lines
 
@@ -86,9 +84,7 @@ def main() -> None:
     for module_name, public_names in results:
         module_public[module_name] = public_names
         print(f"  - {module_name}.py: {len(public_names)} public name(s)")
-    modules_with_public = [
-        (name, names) for name, names in module_public.items() if names
-    ]
+    modules_with_public = [(name, names) for name, names in module_public.items() if names]
     init_file = cwd / "__init__.py"
     if init_file.exists():
         backup_file = init_file.with_suffix(".py.bak")

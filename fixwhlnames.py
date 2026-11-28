@@ -69,9 +69,7 @@ def extract_metadata_from_wheel(wheel_path: Path) -> Metadata | None:
             version = msg.get("Version")
             if name and version:
                 return {"name": name, "version": version}
-            logger.warning(
-                "Could not find Name/Version in METADATA of {}", wheel_path.name
-            )
+            logger.warning("Could not find Name/Version in METADATA of {}", wheel_path.name)
             return None
     except zipfile.BadZipFile:
         logger.error("{} is not a valid zip file", wheel_path.name)
@@ -93,9 +91,7 @@ def extract_wheel_tags(filename: str) -> Tags | None:
     return None
 
 
-def reconstruct_wheel_name(
-    wheel_path: Path, metadata: Metadata, original_filename: str
-) -> str | None:
+def reconstruct_wheel_name(wheel_path: Path, metadata: Metadata, original_filename: str) -> str | None:
     name = metadata["name"]
     version = metadata["version"]
     tags = extract_wheel_tags(wheel_path.name)
@@ -104,9 +100,7 @@ def reconstruct_wheel_name(
         return f"{name}-{version}-{python_tag}-{abi_tag}-{platform_tag}.whl"
     try:
         with zipfile.ZipFile(wheel_path, "r") as zf:
-            wheel_files = [
-                f for f in zf.namelist() if f.endswith(WHEEL_METADATA_SUFFIX)
-            ]
+            wheel_files = [f for f in zf.namelist() if f.endswith(WHEEL_METADATA_SUFFIX)]
             if wheel_files:
                 with zf.open(wheel_files[0]) as f:
                     content = f.read().decode("utf-8", errors="ignore")
@@ -125,9 +119,7 @@ def reconstruct_wheel_name(
     return f"{name}-{version}-py3-none-any.whl"
 
 
-def _process_single_file(
-    path: Path, dry_run: bool, backup_dir: Path | None
-) -> tuple[bool, str | None]:
+def _process_single_file(path: Path, dry_run: bool, backup_dir: Path | None) -> tuple[bool, str | None]:
     print("[{}] Processing", path.name)
     metadata = extract_metadata_from_wheel(path)
     if not metadata:
@@ -155,9 +147,7 @@ def _process_single_file(
         return False, path.name
 
 
-def fix_whl_files_by_metadata(
-    directory: str = ".", dry_run: bool = True, backup: bool = True
-) -> tuple[int, list[str]]:
+def fix_whl_files_by_metadata(directory: str = ".", dry_run: bool = True, backup: bool = True) -> tuple[int, list[str]]:
     path = Path(directory)
     whl_files = sorted(path.glob(f"*{WHEEL_SUFFIX}"))
     if not whl_files:
@@ -211,9 +201,7 @@ def batch_fix_with_parallel(directory: str = ".") -> None:
     print("Processing {} files with {} workers...", len(whl_files), MAX_WORKERS)
     results: list[tuple[str, Metadata | None, str | None]] = []
     with Pool(processes=MAX_WORKERS) as pool:
-        async_results: list[Any] = [
-            pool.apply_async(_extract_info_worker, (f,)) for f in whl_files
-        ]
+        async_results: list[Any] = [pool.apply_async(_extract_info_worker, (f,)) for f in whl_files]
         for ar in async_results:
             try:
                 results.append(ar.get())
@@ -235,12 +223,8 @@ def batch_fix_with_parallel(directory: str = ".") -> None:
 
 def _build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description=(
-            "Fix batch-renamed .whl files by reading METADATA from inside each wheel"
-        ),
-        epilog=(
-            "This is the most accurate method as it extracts the real package name and version."
-        ),
+        description=("Fix batch-renamed .whl files by reading METADATA from inside each wheel"),
+        epilog=("This is the most accurate method as it extracts the real package name and version."),
     )
     parser.add_argument(
         "directory",

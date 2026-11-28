@@ -33,9 +33,7 @@ def remove_comments_and_docstrings(source_code: str) -> str:
         _end_lineno, end_col = tok[3]
         if start_lineno > last_lineno:
             last_col = 0
-        if toktype == tokenize.COMMENT or (
-            toktype == tokenize.STRING and prev_toktype == tokenize.INDENT
-        ):
+        if toktype == tokenize.COMMENT or (toktype == tokenize.STRING and prev_toktype == tokenize.INDENT):
             pass
         else:
             if start_col > last_col:
@@ -71,9 +69,7 @@ def process_file(path: Path) -> None:
             return name
         return shorten_variable_name(name)
 
-    content_no_multiline_strings = re.sub(
-        "'''.*?'''|\\\"\\\"\\\".*?\\\"\\\"\\\"", "", content, flags=re.DOTALL
-    )
+    content_no_multiline_strings = re.sub("'''.*?'''|\\\"\\\"\\\".*?\\\"\\\"\\\"", "", content, flags=re.DOTALL)
     content_no_comments_single = re.sub("#.*", "", content_no_multiline_strings)
     lines = content_no_comments_single.splitlines()
     non_empty_lines = [line.strip() for line in lines if line.strip()]

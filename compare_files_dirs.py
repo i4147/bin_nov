@@ -121,14 +121,10 @@ def cmd_compare_move(args: argparse.Namespace) -> int:
     print(f"Target directory (second):{B}")
     print("-" * 40)
     if not A.exists():
-        print(
-            f"Error:Source directory '{args.source}' (expanded to '{A}') does not exist."
-        )
+        print(f"Error:Source directory '{args.source}' (expanded to '{A}') does not exist.")
         return 1
     if not B.exists():
-        print(
-            f"Error:Target directory '{args.target}' (expanded to '{B}') does not exist."
-        )
+        print(f"Error:Target directory '{args.target}' (expanded to '{B}') does not exist.")
         return 1
     o = Path.cwd() / args.common_dir
     o.mkdir(exist_ok=True)
@@ -147,9 +143,7 @@ def cmd_compare_move(args: argparse.Namespace) -> int:
         print(f"  {p} {u} (source:{l} bytes,target:{n} bytes)")
     print("\n" + "=" * 40)
     if not args.yes:
-        x = input(
-            f"Move these {len(c)} common file(s) from source to '{o}'? (y/n):"
-        ).lower()
+        x = input(f"Move these {len(c)} common file(s) from source to '{o}'? (y/n):").lower()
         if x != "y":
             print("Operation cancelled.")
             return 0
@@ -220,9 +214,7 @@ def cmd_compare_dirs(args: argparse.Namespace) -> int:
         J = "y"
     if J == "y":
         for k, v in s.items():
-            if _sha256_file(Path(k), args.hash_chunk_size) == _sha256_file(
-                Path(v), args.hash_chunk_size
-            ):
+            if _sha256_file(Path(k), args.hash_chunk_size) == _sha256_file(Path(v), args.hash_chunk_size):
                 print(f"the files are identical \n{k}\n{v}")
                 Path(k).unlink()
             else:

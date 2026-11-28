@@ -43,9 +43,7 @@ class PersianDateConverter:
             msg = f"Month must be between 1 and 12, got {persian_month}"
             raise ValueError(msg)
         max_day = PersianDateConverter.PERSIAN_MONTH_LENGTHS[persian_month - 1]
-        if persian_month == 12 and PersianDateConverter.is_persian_leap_year(
-            persian_year
-        ):
+        if persian_month == 12 and PersianDateConverter.is_persian_leap_year(persian_year):
             max_day = 30
         if persian_day < 1 or persian_day > max_day:
             msg = f"Day must be between 1 and {max_day} for month {persian_month}, got {persian_day}"
@@ -135,20 +133,14 @@ def main() -> None:
             print("Error: Month must be between 1 and 12")
             sys.exit(1)
         converter = PersianDateConverter()
-        gregorian_year, gregorian_month, gregorian_day = converter.persian_to_gregorian(
-            year, month, day
-        )
-        days_since, input_date, today = converter.days_since(
-            gregorian_year, gregorian_month, gregorian_day
-        )
+        gregorian_year, gregorian_month, gregorian_day = converter.persian_to_gregorian(year, month, day)
+        days_since, input_date, today = converter.days_since(gregorian_year, gregorian_month, gregorian_day)
         print("-" * 40)
         print("📅 PERSIAN TO GREGORIAN DATE CONVERTER")
         print("-" * 40)
         persian_date_str = converter.format_persian_date(year, month, day)
         print(f"\n🇮🇷 Persian date:  {persian_date_str}")
-        gregorian_date_str = (
-            f"{gregorian_year}/{gregorian_month:02d}/{gregorian_day:02d}"
-        )
+        gregorian_date_str = f"{gregorian_year}/{gregorian_month:02d}/{gregorian_day:02d}"
         print(f"🌍 Gregorian date: {gregorian_date_str}")
         weekday_names = [
             "Monday",

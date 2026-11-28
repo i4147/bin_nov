@@ -67,9 +67,7 @@ from dh import SKIP_DIRS, atomic_write
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-DEFAULT_APPEND_TEXT: str = (
-    "\n#migrate from logging with print and standard logging module to loguru\n"
-)
+DEFAULT_APPEND_TEXT: str = "\n#migrate from logging with print and standard logging module to loguru\n"
 DEFAULT_TAB_WIDTH: int = 4
 DEFAULT_BLANKS: int = 4
 
@@ -106,9 +104,7 @@ def collect_text_files(inputs: Sequence[Path], glob: str = "*") -> list[Path]:
     return sorted(found)
 
 
-def transform_files(
-    inputs: Sequence[Path], fn: object, label: str, glob: str = "*"
-) -> int:
+def transform_files(inputs: Sequence[Path], fn: object, label: str, glob: str = "*") -> int:
     changed: int = 0
     for path in collect_text_files(inputs, glob):
         original: str = path.read_text(encoding="utf-8", errors="replace")
@@ -124,27 +120,19 @@ def transform_files(
 def cmd_prefix(args: argparse.Namespace) -> int:
     lines: list[str] = read_lines(args.file)
     joiner: str = "" if args.no_space else " "
-    out: str = "".join(
-        f"{args.text}{joiner}{line}" if line.strip() else line for line in lines
-    )
+    out: str = "".join(f"{args.text}{joiner}{line}" if line.strip() else line for line in lines)
     emit(out, args.file, args.output, args.stdout)
     return 0
 
 
 def cmd_append(args: argparse.Namespace) -> int:
-    addition: str = (
-        args.text_file.read_text(encoding="utf-8") if args.text_file else args.text
-    )
+    addition: str = args.text_file.read_text(encoding="utf-8") if args.text_file else args.text
     files: list[Path] = (
-        collect_text_files(args.paths, glob=args.glob)
-        if args.paths
-        else sorted(Path.cwd().glob("*.py"))
+        collect_text_files(args.paths, glob=args.glob) if args.paths else sorted(Path.cwd().glob("*.py"))
     )
     for path in files:
         try:
-            atomic_write(
-                path, path.read_text(encoding="utf-8") + addition, encoding="utf-8"
-            )
+            atomic_write(path, path.read_text(encoding="utf-8") + addition, encoding="utf-8")
             print(f"Updated: {path.name}")
         except OSError as exc:
             print(f"Error: {path.name} - {exc}", file=sys.stderr)
@@ -200,9 +188,7 @@ def cmd_get_range(args: argparse.Namespace) -> int:
     selected: str = "".join(lines[args.start - 1 : end])
     if args.auto_name:
         name: str = (
-            f"{args.start}{args.file.suffix}"
-            if args.end is None
-            else f"{args.start}_{args.end}{args.file.suffix}"
+            f"{args.start}{args.file.suffix}" if args.end is None else f"{args.start}_{args.end}{args.file.suffix}"
         )
         atomic_write(Path(name), selected, encoding="utf-8")
         print(f"Saved to {name}")
@@ -216,9 +202,7 @@ def cmd_get_range(args: argparse.Namespace) -> int:
 
 def cmd_join(args: argparse.Namespace) -> int:
     lines: list[str] = read_lines(args.file)
-    joined: str = (
-        args.sep.join(line.rstrip("\n") for line in lines if line.strip()) + "\n"
-    )
+    joined: str = args.sep.join(line.rstrip("\n") for line in lines if line.strip()) + "\n"
     emit(joined, args.file, args.output, args.stdout)
     return 0
 
@@ -241,9 +225,7 @@ def cmd_move_range(args: argparse.Namespace) -> int:
 
 def cmd_sort_length(args: argparse.Namespace) -> int:
     lines: list[str] = read_lines(args.file)
-    ordered: list[str] = sorted(
-        lines, key=lambda ln: len(ln.rstrip("\n")), reverse=args.reverse
-    )
+    ordered: list[str] = sorted(lines, key=lambda ln: len(ln.rstrip("\n")), reverse=args.reverse)
     emit("".join(ordered), args.file, args.output, args.stdout)
     return 0
 
@@ -257,9 +239,7 @@ def cmd_strip_ws(args: argparse.Namespace) -> int:
 
 def cmd_tabs(args: argparse.Namespace) -> int:
     spaces: str = " " * args.width
-    return transform_files(
-        args.paths, lambda t: t.replace("\t", spaces), "tabs expanded"
-    )
+    return transform_files(args.paths, lambda t: t.replace("\t", spaces), "tabs expanded")
 
 
 def cmd_space_out(args: argparse.Namespace) -> int:
@@ -270,16 +250,12 @@ def cmd_space_out(args: argparse.Namespace) -> int:
 
 
 def add_io(child: argparse.ArgumentParser) -> None:
-    child.add_argument(
-        "-o", "--output", type=Path, default=None, help="Write here instead of in place"
-    )
+    child.add_argument("-o", "--output", type=Path, default=None, help="Write here instead of in place")
     child.add_argument("--stdout", action="store_true", help="Print the result")
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Line-oriented file editing operations."
-    )
+    parser = argparse.ArgumentParser(description="Line-oriented file editing operations.")
     sub = parser.add_subparsers(dest="command", required=True)
 
     pr = sub.add_parser("prefix", help="Prefix non-empty lines")
@@ -292,12 +268,8 @@ def build_parser() -> argparse.ArgumentParser:
     ap = sub.add_parser("append", help="Append text to files (default: *.py in .)")
     ap.add_argument("paths", nargs="*", type=Path)
     ap.add_argument("--text", default=DEFAULT_APPEND_TEXT, help="Text to append")
-    ap.add_argument(
-        "--text-file", type=Path, default=None, help="Append this file's contents"
-    )
-    ap.add_argument(
-        "--glob", default="*.py", help="Glob when paths are dirs (default: *.py)"
-    )
+    ap.add_argument("--text-file", type=Path, default=None, help="Append this file's contents")
+    ap.add_argument("--glob", default="*.py", help="Glob when paths are dirs (default: *.py)")
     ap.set_defaults(handler=cmd_append)
 
     un = sub.add_parser("unescape-nl", help=r"Literal \n -> newlines (tree)")
@@ -311,9 +283,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     wr = sub.add_parser("wrap", help="Wrap text to a width")
     wr.add_argument("file", type=Path)
-    wr.add_argument(
-        "-w", "--width", type=int, default=None, help="Default: terminal width"
-    )
+    wr.add_argument("-w", "--width", type=int, default=None, help="Default: terminal width")
     wr.add_argument("-i", "--inplace", action="store_true")
     wr.add_argument("--stdout", action="store_true")
     wr.set_defaults(handler=cmd_wrap)
@@ -323,9 +293,7 @@ def build_parser() -> argparse.ArgumentParser:
     gr.add_argument("start", type=int)
     gr.add_argument("end", nargs="?", type=int, default=None)
     gr.add_argument("-o", "--output", type=Path, default=None)
-    gr.add_argument(
-        "--auto-name", action="store_true", help="Write to START[_END].ext (original)"
-    )
+    gr.add_argument("--auto-name", action="store_true", help="Write to START[_END].ext (original)")
     gr.set_defaults(handler=cmd_get_range)
 
     jo = sub.add_parser("join", help="Join non-empty lines into one line")
@@ -340,9 +308,7 @@ def build_parser() -> argparse.ArgumentParser:
     mv.add_argument("end", type=int)
     mv.add_argument("dest", type=Path)
     mv.add_argument("--copy", action="store_true", help="Keep lines in the source")
-    mv.add_argument(
-        "--append", action="store_true", help="Append to dest instead of overwriting"
-    )
+    mv.add_argument("--append", action="store_true", help="Append to dest instead of overwriting")
     mv.set_defaults(handler=cmd_move_range)
 
     so = sub.add_parser("sort-length", help="Sort lines by length")
@@ -363,9 +329,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     sp = sub.add_parser("space-out", help="Blank lines between every line")
     sp.add_argument("file", type=Path)
-    sp.add_argument(
-        "--blanks", type=int, default=DEFAULT_BLANKS, help="Blank lines (original: 4)"
-    )
+    sp.add_argument("--blanks", type=int, default=DEFAULT_BLANKS, help="Blank lines (original: 4)")
     add_io(sp)
     sp.set_defaults(handler=cmd_space_out)
     return parser

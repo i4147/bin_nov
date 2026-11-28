@@ -38,9 +38,7 @@ from typing import Any, Iterator, Sequence
 from dh import MAX_WORKERS, atomic_write
 
 
-def iter_py_files(
-    root: Path, *, exclude_names: set[str] | None = None
-) -> Iterator[Path]:
+def iter_py_files(root: Path, *, exclude_names: set[str] | None = None) -> Iterator[Path]:
     excl = exclude_names or set()
     for p in root.rglob("*.py"):
         if p.name in excl:
@@ -102,18 +100,14 @@ def assign_names(node: ast.Assign) -> list[str]:
     return [t.id for t in node.targets if isinstance(t, ast.Name)]
 
 
-def collect_ast_declarations(
-    tree: ast.Module, lines: Sequence[str]
-) -> list[Declaration]:
+def collect_ast_declarations(tree: ast.Module, lines: Sequence[str]) -> list[Declaration]:
     out: list[Declaration] = []
     for node in tree.body:
         if is_simple_assign(node):
             src = slice_lines(lines, node.lineno, node.end_lineno)
             h = ast_hash(node)
             for name in assign_names(node):
-                out.append(
-                    Declaration("assign", name, node.lineno, node.end_lineno, src, h)
-                )
+                out.append(Declaration("assign", name, node.lineno, node.end_lineno, src, h))
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             out.append(
                 Declaration(
@@ -364,11 +358,7 @@ def cmd_ts(args: argparse.Namespace) -> int:
         )
         return 2
     roots = args.paths or [Path.cwd()]
-    output_path = (
-        (Path.cwd() / args.output).resolve()
-        if not Path(args.output).is_absolute()
-        else Path(args.output)
-    )
+    output_path = (Path.cwd() / args.output).resolve() if not Path(args.output).is_absolute() else Path(args.output)
     exclude_names: set[str] = set(args.exclude or [])
     exclude_names.add(output_path.name)
     if args.exclude_self:
@@ -460,9 +450,7 @@ def build_parser() -> argparse.ArgumentParser:
         "ast",
         help="AST-based dedup across one or more paths (default: cwd).",
     )
-    p_ast.add_argument(
-        "paths", nargs="*", type=Path, help="Files or directories. Empty = walk cwd."
-    )
+    p_ast.add_argument("paths", nargs="*", type=Path, help="Files or directories. Empty = walk cwd.")
     p_ast.add_argument(
         "--suffix",
         default="_dups.py",
@@ -473,9 +461,7 @@ def build_parser() -> argparse.ArgumentParser:
         "ts",
         help="Tree-sitter content dedup (diduper/tsdeduper).",
     )
-    p_ts.add_argument(
-        "paths", nargs="*", type=Path, help="Roots to scan (default: cwd)."
-    )
+    p_ts.add_argument("paths", nargs="*", type=Path, help="Roots to scan (default: cwd).")
     p_ts.add_argument(
         "--output",
         default="utils.py",

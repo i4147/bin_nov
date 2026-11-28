@@ -55,9 +55,7 @@ def walk(root: Path, recursive: bool, follow_symlinks: bool) -> Iterator[Path]:
             return
 
 
-def name_matches(
-    path: Path, name: str | None, prefix: str | None, glob: str | None
-) -> bool:
+def name_matches(path: Path, name: str | None, prefix: str | None, glob: str | None) -> bool:
     """True when the filename satisfies all given criteria."""
     if name is not None and name not in path.name:
         return False
@@ -68,11 +66,7 @@ def name_matches(
 
 def display(path: Path, root: Path, show_size: bool) -> str:
     """Format one result line (symlink target / size included on request)."""
-    label: str = (
-        str(path.relative_to(root))
-        if root in path.parents or path.parent == root
-        else str(path)
-    )
+    label: str = str(path.relative_to(root)) if root in path.parents or path.parent == root else str(path)
     extras: list[str] = []
     if path.is_symlink():
         extras.append(f"-> {path.resolve()}")
@@ -148,9 +142,7 @@ def looks_like_python_script(path: Path) -> bool:
     first: str = head.splitlines()[0] if head else ""
     if first.startswith("#!"):
         return "python" in first.lower()
-    return any(
-        token in head for token in ("if __name__ ==", "def ", "import ", "from ")
-    )
+    return any(token in head for token in ("if __name__ ==", "def ", "import ", "from "))
 
 
 def cmd_scripts(args: argparse.Namespace) -> int:
@@ -172,36 +164,24 @@ def cmd_scripts(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line parser."""
-    parser = argparse.ArgumentParser(
-        description="Find files by name/prefix/extension/script."
-    )
+    parser = argparse.ArgumentParser(description="Find files by name/prefix/extension/script.")
     sub = parser.add_subparsers(dest="command", required=True)
     fi = sub.add_parser("find", help="List entries matching name criteria")
     fi.add_argument("root", nargs="?", type=Path, default=Path.cwd())
     fi.add_argument("--name", default=None, help="Substring required in the filename")
     fi.add_argument("--prefix", default=None, help="Filename must start with this")
     fi.add_argument("--glob", default=None, help="fnmatch pattern, e.g. '*.bak'")
-    fi.add_argument(
-        "-r", "--recursive", action="store_true", help="Recurse (default: top level)"
-    )
+    fi.add_argument("-r", "--recursive", action="store_true", help="Recurse (default: top level)")
     fi.add_argument("--files-only", action="store_true")
     fi.add_argument("--size", action="store_true", help="Show file sizes")
-    fi.add_argument(
-        "-s", "--follow-symlinks", action="store_true", help="Include symlinks (lkk -s)"
-    )
-    fi.add_argument(
-        "--skip-symlinks", action="store_true", default=True, help=argparse.SUPPRESS
-    )
-    fi.add_argument(
-        "--delete", action="store_true", help="Delete matching FILES (dangerous)"
-    )
+    fi.add_argument("-s", "--follow-symlinks", action="store_true", help="Include symlinks (lkk -s)")
+    fi.add_argument("--skip-symlinks", action="store_true", default=True, help=argparse.SUPPRESS)
+    fi.add_argument("--delete", action="store_true", help="Delete matching FILES (dangerous)")
     fi.add_argument("--dry-run", action="store_true", help="With --delete, only report")
     fi.set_defaults(handler=cmd_find)
     es = sub.add_parser("ext-stats", help="File counts/sizes per extension")
     es.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    es.add_argument(
-        "extension", nargs="?", default=None, help="Only this extension (e.g. py)"
-    )
+    es.add_argument("extension", nargs="?", default=None, help="Only this extension (e.g. py)")
     es.set_defaults(handler=cmd_ext_stats)
     sc = sub.add_parser("scripts", help="Find extension-less Python scripts")
     sc.add_argument("root", nargs="?", type=Path, default=Path.cwd())

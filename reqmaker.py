@@ -80,11 +80,7 @@ def _cached_installed_list(cache_file: Path, refresh: bool = False) -> list[str]
     if not refresh and cache_file.is_file():
         try:
             if _same_day(cache_file.stat().st_mtime, time.time()):
-                return [
-                    line.strip()
-                    for line in cache_file.read_text(encoding="utf-8").splitlines()
-                    if line.strip()
-                ]
+                return [line.strip() for line in cache_file.read_text(encoding="utf-8").splitlines() if line.strip()]
         except OSError:
             pass
     fresh = _list_installed_packages()

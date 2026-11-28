@@ -87,9 +87,7 @@ app.add_typer(crypt_app, name="crypt", help="git filter integration")
 
 @app.callback()
 def _main(
-    verbose: Annotated[
-        bool, typer.Option("--verbose", "-v", help="Enable debug logging")
-    ] = False,
+    verbose: Annotated[bool, typer.Option("--verbose", "-v", help="Enable debug logging")] = False,
 ) -> None:
     _init_logging(verbose)
 
@@ -177,9 +175,7 @@ class Commit:
 
 
 def _log_commits(repo: Path, ref: str = "HEAD") -> list[Commit]:
-    out = _git(
-        "log", "--format=%H%x00%s%x00%ct%x00%P", ref, cwd=repo, check=False
-    ).stdout
+    out = _git("log", "--format=%H%x00%s%x00%ct%x00%P", ref, cwd=repo, check=False).stdout
     commits: list[Commit] = []
     for line in out.splitlines():
         if not line.strip():
@@ -225,9 +221,7 @@ def _pending_historical_deletions(repo: Path) -> list[str]:
     if not historical:
         return []
     pending: list[str] = []
-    for line in _git(
-        "status", "--porcelain", cwd=repo, check=False
-    ).stdout.splitlines():
+    for line in _git("status", "--porcelain", cwd=repo, check=False).stdout.splitlines():
         if len(line) < 4:
             continue
         code, path = line[:2], line[3:].strip()
@@ -496,9 +490,7 @@ def _gh_available() -> bool:
     return shutil.which("gh") is not None
 
 
-def _gh_repo_create(
-    name: str, private: bool, description: str | None, branch: str
-) -> None:
+def _gh_repo_create(name: str, private: bool, description: str | None, branch: str) -> None:
     cwd = Path.cwd().resolve()
     if not (cwd / ".git").is_dir():
         _git("init", "-b", branch, cwd=cwd)
@@ -527,9 +519,7 @@ def _gh_repo_create(
     console.print(f"[green]✓[/green] {r.stdout.strip()}")
 
 
-def _github_api_request(
-    token: str, method: str, url: str, data: dict[str, Any] | None = None
-) -> dict[str, Any]:
+def _github_api_request(token: str, method: str, url: str, data: dict[str, Any] | None = None) -> dict[str, Any]:
     body = json.dumps(data).encode() if data is not None else None
     req = urllib.request.Request(url, data=body, method=method)
     req.add_header("Authorization", f"token {token}")
@@ -551,16 +541,12 @@ def _github_api_request(
         raise RuntimeError(msg_0) from exc
 
 
-def _api_repo_create(
-    token: str, name: str, private: bool, description: str | None
-) -> dict[str, Any]:
+def _api_repo_create(token: str, name: str, private: bool, description: str | None) -> dict[str, Any]:
     payload: dict[str, Any] = {"name": name, "private": private, "auto_init": False}
     if description:
         payload["description"] = description
     try:
-        return _github_api_request(
-            token, "POST", "https://api.github.com/user/repos", payload
-        )
+        return _github_api_request(token, "POST", "https://api.github.com/user/repos", payload)
     except RuntimeError as exc:
         if "422" not in str(exc):
             raise
@@ -576,9 +562,7 @@ def _api_repo_create(
 def repo_scan(
     path: Annotated[Path, typer.Argument(help="Root directory to scan")] = Path(),
     json_out: Annotated[bool, typer.Option("--json", help="Emit JSON")] = False,
-    check: Annotated[
-        bool, typer.Option("--check", help="Exit 1 if any repo is dirty")
-    ] = False,
+    check: Annotated[bool, typer.Option("--check", help="Exit 1 if any repo is dirty")] = False,
 ) -> None:
     root = path.resolve()
     repos = _find_repos(root)
@@ -601,13 +585,9 @@ def repo_scan(
         except Exception as exc:
             return repo, False, f"error: {exc}"
 
-    with Progress(
-        SpinnerColumn(), TextColumn("{task.description}"), console=console
-    ) as prog:
+    with Progress(SpinnerColumn(), TextColumn("{task.description}"), console=console) as prog:
         task = prog.add_task(f"Scanning {len(repos)} repo(s)...", total=len(repos))
-        with concurrent.futures.ThreadPoolExecutor(
-            max_workers=min(8, len(repos))
-        ) as pool:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(8, len(repos))) as pool:
             futures = [pool.submit(probe, r) for r in repos]
             results = []
             for fut in concurrent.futures.as_completed(futures):
@@ -618,16 +598,14 @@ def repo_scan(
 
     if json_out:
         console.print_json(
-            json.dumps(
-                [
-                    {
-                        "repo": str(p.relative_to(root)) if p != root else ".",
-                        "dirty": d,
-                        "detail": det,
-                    }
-                    for p, d, det in results
-                ]
-            )
+            json.dumps([
+                {
+                    "repo": str(p.relative_to(root)) if p != root else ".",
+                    "dirty": d,
+                    "detail": det,
+                }
+                for p, d, det in results
+            ])
         )
     else:
         for p, d, detail in results:
@@ -639,9 +617,7 @@ def repo_scan(
                 console.print(f"[green]✓[/green] {rel}")
 
     if dirty:
-        console.print(
-            f"\n[yellow]⚠[/yellow] {len(dirty)} dirty repo(s) / {len(results)} total"
-        )
+        console.print(f"\n[yellow]⚠[/yellow] {len(dirty)} dirty repo(s) / {len(results)} total")
         if check:
             raise typer.Exit(1)
     else:
@@ -651,9 +627,7 @@ def repo_scan(
 @repo_app.command("pull")
 def repo_pull(
     path: Annotated[Path, typer.Argument(help="Root directory")] = Path(),
-    timeout: Annotated[
-        int, typer.Option("--timeout", help="Per-repo timeout (s)")
-    ] = 120,
+    timeout: Annotated[int, typer.Option("--timeout", help="Per-repo timeout (s)")] = 120,
 ) -> None:
     root = path.resolve()
     repos = _find_repos(root)
@@ -676,13 +650,9 @@ def repo_pull(
         except Exception as exc:
             return repo, False, str(exc)
 
-    with Progress(
-        SpinnerColumn(), TextColumn("{task.description}"), console=console
-    ) as prog:
+    with Progress(SpinnerColumn(), TextColumn("{task.description}"), console=console) as prog:
         task = prog.add_task(f"Pulling {len(repos)} repo(s)...", total=len(repos))
-        with concurrent.futures.ThreadPoolExecutor(
-            max_workers=min(8, len(repos))
-        ) as pool:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(8, len(repos))) as pool:
             futures = [pool.submit(pull, r) for r in repos]
             results = []
             for fut in concurrent.futures.as_completed(futures):
@@ -696,24 +666,18 @@ def repo_pull(
             console.print(f"[green]✓[/green] {rel}")
         else:
             console.print(f"[red]✗[/red] {rel}: {msg}")
-    console.print(
-        f"\n[green]{ok} pulled[/green], [red]{len(results) - ok} failed[/red]"
-    )
+    console.print(f"\n[green]{ok} pulled[/green], [red]{len(results) - ok} failed[/red]")
 
 
 @repo_app.command("create")
 def repo_create(
-    name: Annotated[
-        str | None, typer.Option("--name", "-n", help="Repository name")
-    ] = None,
+    name: Annotated[str | None, typer.Option("--name", "-n", help="Repository name")] = None,
     private: Annotated[bool, typer.Option("--private/--public")] = False,
     description: Annotated[str | None, typer.Option("--description", "-d")] = None,
     branch: Annotated[str, typer.Option("--branch", "-b")] = "main",
     message: Annotated[str, typer.Option("-m", "--message")] = "Initial commit",
     ssh: Annotated[bool, typer.Option("--ssh", help="Use SSH remote URL")] = False,
-    backend: Annotated[
-        CreateBackend, typer.Option("--backend", help="auto|gh|api")
-    ] = CreateBackend.auto,
+    backend: Annotated[CreateBackend, typer.Option("--backend", help="auto|gh|api")] = CreateBackend.auto,
 ) -> None:
     cwd = Path.cwd().resolve()
     repo_name = name or cwd.name
@@ -765,9 +729,7 @@ def repo_create(
 @repo_app.command("ignore")
 def repo_ignore(
     line: Annotated[str, typer.Argument(help="Line to append to .gitignore")],
-    paths: Annotated[
-        list[Path] | None, typer.Argument(help="Files or directories to scan")
-    ] = None,
+    paths: Annotated[list[Path] | None, typer.Argument(help="Files or directories to scan")] = None,
 ) -> None:
     needle = line.strip()
     if not needle:
@@ -800,12 +762,8 @@ def repo_ignore(
 
 @history_app.command("checkout-previous")
 def history_checkout_previous(
-    root: Annotated[
-        Path, typer.Argument(help="Directory containing repositories")
-    ] = Path(),
-    prefix: Annotated[
-        str, typer.Option("--prefix", "-p", help="Latest commit subject prefix")
-    ] = "2026-08-29",
+    root: Annotated[Path, typer.Argument(help="Directory containing repositories")] = Path(),
+    prefix: Annotated[str, typer.Option("--prefix", "-p", help="Latest commit subject prefix")] = "2026-08-29",
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip confirmation")] = False,
 ) -> None:
     root = root.resolve()
@@ -826,9 +784,7 @@ def history_checkout_previous(
             continue
         head = commits[0]
         if not head.subject.startswith(prefix):
-            console.print(
-                f"[dim]skip[/dim] {candidate.name}: subject doesn't start with {prefix!r}"
-            )
+            console.print(f"[dim]skip[/dim] {candidate.name}: subject doesn't start with {prefix!r}")
             continue
         if not head.parents:
             console.print(f"[dim]skip[/dim] {candidate.name}: no parent commit")
@@ -856,9 +812,7 @@ def history_checkout_previous(
 @history_app.command("prune")
 def history_prune(
     repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
-    days: Annotated[
-        int, typer.Option("--days", help="Drop commits older than N days")
-    ] = 30,
+    days: Annotated[int, typer.Option("--days", help="Drop commits older than N days")] = 30,
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip confirmation")] = False,
     dry_run: Annotated[bool, typer.Option("--dry-run", help="Preview only")] = False,
 ) -> None:
@@ -913,13 +867,9 @@ def history_prune(
 @history_app.command("cut")
 def history_cut(
     repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
-    days: Annotated[
-        int, typer.Option("--days", help="Drop commits older than N days")
-    ] = 30,
+    days: Annotated[int, typer.Option("--days", help="Drop commits older than N days")] = 30,
     method: Annotated[CutMethod, typer.Option("--method")] = CutMethod.squash,
-    backup: Annotated[
-        bool, typer.Option("--backup", help="Create backup branch")
-    ] = False,
+    backup: Annotated[bool, typer.Option("--backup", help="Create backup branch")] = False,
     yes: Annotated[bool, typer.Option("--yes", "-y")] = False,
     dry_run: Annotated[bool, typer.Option("--dry-run")] = False,
 ) -> None:
@@ -942,9 +892,7 @@ def history_cut(
         return
 
     oldest_kept = keep[-1]
-    console.print(
-        f"Oldest kept: [bold]{oldest_kept.short}[/bold] {oldest_kept.subject}"
-    )
+    console.print(f"Oldest kept: [bold]{oldest_kept.short}[/bold] {oldest_kept.subject}")
     if dry_run:
         console.print("[cyan]dry-run: no changes made[/cyan]")
         return
@@ -994,9 +942,7 @@ def history_remote_prune(
     repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
     branch: Annotated[str, typer.Option("--branch", help="Branch to clean")] = "master",
     days: Annotated[int, typer.Option("--days", help="Keep commits within N days")] = 7,
-    no_push: Annotated[
-        bool, typer.Option("--no-push", help="Only reset locally")
-    ] = False,
+    no_push: Annotated[bool, typer.Option("--no-push", help="Only reset locally")] = False,
     yes: Annotated[bool, typer.Option("--yes", "-y")] = False,
     dry_run: Annotated[bool, typer.Option("--dry-run")] = False,
 ) -> None:
@@ -1065,9 +1011,7 @@ def history_restore(
         console.print("[green]ℹ️  All historically deleted files are present.[/green]")
         return
 
-    table = Table(
-        title=f"Found {len(missing)} missing file(s)", title_style="bold yellow"
-    )
+    table = Table(title=f"Found {len(missing)} missing file(s)", title_style="bold yellow")
     table.add_column("File")
     table.add_column("Deleted in")
     for p, sha in missing:
@@ -1140,9 +1084,7 @@ def stage_squash(
     for p in pending:
         _git("add", "--", p, cwd=repo)
     _git("commit", "--amend", "--no-edit", cwd=repo)
-    console.print(
-        f"[green]✓[/green] Amended last commit with {len(pending)} deletion(s)"
-    )
+    console.print(f"[green]✓[/green] Amended last commit with {len(pending)} deletion(s)")
 
 
 @log_app.command("added")
@@ -1182,26 +1124,18 @@ def log_added(
 @log_app.command("export")
 def log_export(
     repo: Annotated[Path, typer.Option("--repo", "-C")] = Path(),
-    output: Annotated[
-        Path | None, typer.Option("-o", "--output", help="Output file (- for stdout)")
-    ] = None,
+    output: Annotated[Path | None, typer.Option("-o", "--output", help="Output file (- for stdout)")] = None,
     fmt: Annotated[OutputFormat, typer.Option("--format", "-f")] = OutputFormat.json,
     ref: Annotated[str, typer.Option("--ref", help="Ref to walk")] = "HEAD",
-    since: Annotated[
-        str | None, typer.Option("--since", help="ISO 8601 or git-style")
-    ] = None,
+    since: Annotated[str | None, typer.Option("--since", help="ISO 8601 or git-style")] = None,
     until: Annotated[str | None, typer.Option("--until")] = None,
     author: Annotated[str | None, typer.Option("--author")] = None,
     max_count: Annotated[int | None, typer.Option("--max-count")] = None,
     first_parent: Annotated[bool, typer.Option("--first-parent")] = False,
     path_glob: Annotated[str | None, typer.Option("--path", help="Glob filter")] = None,
-    exclude: Annotated[
-        str | None, typer.Option("--exclude", help="Glob exclusion")
-    ] = None,
+    exclude: Annotated[str | None, typer.Option("--exclude", help="Glob exclusion")] = None,
     mode: Annotated[ChangeMode, typer.Option("--mode")] = ChangeMode.changed,
-    rename: Annotated[
-        bool, typer.Option("--rename", help="Enable rename detection")
-    ] = False,
+    rename: Annotated[bool, typer.Option("--rename", help="Enable rename detection")] = False,
 ) -> None:
     repo = _require_repo(repo)
     records = _iter_git_log(
@@ -1229,26 +1163,14 @@ def log_export(
 @crypt_app.command("age-filter")
 def crypt_age_filter(
     mode: Annotated[str, typer.Argument(help="clean (encrypt) or smudge (decrypt)")],
-    age_bin: Annotated[
-        str | None, typer.Option("--age-bin", help="Path to age binary")
-    ] = None,
-    public_key: Annotated[Path, typer.Option("--public-key")] = Path.home()
-    / ".config"
-    / "age"
-    / "public.key",
-    private_key: Annotated[Path, typer.Option("--private-key")] = Path.home()
-    / ".config"
-    / "age"
-    / "keys.txt",
+    age_bin: Annotated[str | None, typer.Option("--age-bin", help="Path to age binary")] = None,
+    public_key: Annotated[Path, typer.Option("--public-key")] = Path.home() / ".config" / "age" / "public.key",
+    private_key: Annotated[Path, typer.Option("--private-key")] = Path.home() / ".config" / "age" / "keys.txt",
 ) -> None:
     if mode not in ("clean", "smudge"):
         logger.error("mode must be 'clean' or 'smudge'")
         raise typer.Exit(1)
-    bin_path = age_bin or (
-        "age"
-        if shutil.which("age")
-        else str(Path.home() / ".." / "usr" / "bin" / "age")
-    )
+    bin_path = age_bin or ("age" if shutil.which("age") else str(Path.home() / ".." / "usr" / "bin" / "age"))
     data = sys.stdin.buffer.read()
 
     if mode == "clean":
@@ -1260,9 +1182,7 @@ def crypt_age_filter(
         if not recipient:
             logger.error("public key file is empty")
             raise typer.Exit(1)
-        r = subprocess.run(
-            [bin_path, "-r", recipient, "-a"], input=data, capture_output=True
-        )
+        r = subprocess.run([bin_path, "-r", recipient, "-a"], input=data, capture_output=True)
         if r.returncode != 0:
             logger.error("age encrypt failed: {}", r.stderr.decode(errors="replace"))
             raise typer.Exit(1)
@@ -1277,9 +1197,7 @@ def crypt_age_filter(
         logger.warning("no private key; leaving ciphertext")
         sys.stdout.buffer.write(data)
         return
-    r = subprocess.run(
-        [bin_path, "-d", "-i", str(priv)], input=data, capture_output=True
-    )
+    r = subprocess.run([bin_path, "-d", "-i", str(priv)], input=data, capture_output=True)
     if r.returncode != 0:
         logger.error("age decrypt failed: {}", r.stderr.decode(errors="replace"))
         raise typer.Exit(1)

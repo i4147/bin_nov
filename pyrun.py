@@ -162,9 +162,7 @@ def _log_result(result: FileResult, verbose: bool) -> None:
         if verbose:
             logger.success(f"OK   {result.path} ({result.duration:.2f}s)")
     else:
-        logger.error(
-            f"FAIL {result.path} -> {result.outcome.value} (rc={result.returncode}, {result.duration:.2f}s)"
-        )
+        logger.error(f"FAIL {result.path} -> {result.outcome.value} (rc={result.returncode}, {result.duration:.2f}s)")
         if verbose and result.stderr:
             msg = result.stderr
             if len(msg) > MAX_ERROR_MSG_LEN:
@@ -174,9 +172,7 @@ def _log_result(result: FileResult, verbose: bool) -> None:
 
 def report_summary(summary: Summary, elapsed: float) -> None:
     print("=" * 60)
-    print(
-        f"Summary: {summary.total} file(s), {summary.succeeded} succeeded, {summary.failed} failed in {elapsed:.2f}s"
-    )
+    print(f"Summary: {summary.total} file(s), {summary.succeeded} succeeded, {summary.failed} failed in {elapsed:.2f}s")
     counts = summary.counts_by_outcome()
     for outcome in Outcome:
         count = counts.get(outcome)
@@ -233,17 +229,13 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     mode = "recursively" if recursive else "non-recursively"
     print(f"Scanning {mode} in: {directory}")
-    print(
-        f"Found {len(files)} Python file(s) | Using {MAX_WORKERS} workers with {timeout}s timeout"
-    )
+    print(f"Found {len(files)} Python file(s) | Using {MAX_WORKERS} workers with {timeout}s timeout")
     print("-" * 60)
     summary = Summary()
     start_time = time.monotonic()
     try:
         with Pool(processes=MAX_WORKERS) as pool:
-            pending = [
-                (path, pool.apply_async(run_file, (path, timeout))) for path in files
-            ]
+            pending = [(path, pool.apply_async(run_file, (path, timeout))) for path in files]
             for path, async_result in pending:
                 try:
                     result = async_result.get(timeout=timeout + 5.0)

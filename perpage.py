@@ -96,13 +96,9 @@ def _run_pool(tasks: Sequence[SplitTask], method: str) -> list[SplitResult]:
         if method == "starmap":
             return pool.starmap(_process_pdf, [(task,) for task in tasks])
         if method == "imap_unordered":
-            return list(
-                pool.imap_unordered(_process_pdf_tuple, [(task,) for task in tasks])
-            )
+            return list(pool.imap_unordered(_process_pdf_tuple, [(task,) for task in tasks]))
         if method == "apply_async":
-            async_results: list[AsyncResult[SplitResult]] = [
-                pool.apply_async(_process_pdf, (task,)) for task in tasks
-            ]
+            async_results: list[AsyncResult[SplitResult]] = [pool.apply_async(_process_pdf, (task,)) for task in tasks]
             return [result.get() for result in async_results]
     msg = f"Unsupported pool method: {method}"
     raise ValueError(msg)
@@ -175,9 +171,7 @@ def main() -> int:
     args: argparse.Namespace = parse_args()
     pool_method: str = args.pool_method
     text_mode: bool = bool(args.text)
-    output_dir: Path | None = (
-        Path(args.output_dir) if args.output_dir is not None else None
-    )
+    output_dir: Path | None = Path(args.output_dir) if args.output_dir is not None else None
     paths: list[str] = list(args.paths)
     process_pdfs(
         input_paths=paths or None,

@@ -195,9 +195,7 @@ def decompress_file(path: Path, algo: str, keep: bool, dry_run: bool) -> dict:
         result["error"] = f"decompress failed: {type(e).__name__}: {e}"
         return result
     try:
-        recompressed = (
-            comp_fn(restored, level) if level is not None else comp_fn(restored, None)
-        )
+        recompressed = comp_fn(restored, level) if level is not None else comp_fn(restored, None)
         rechecked = decomp_fn(recompressed)
         if rechecked != restored:
             result["error"] = "round-trip mismatch (refusing to write)"
@@ -230,11 +228,7 @@ def collect_files_for_compress(root: Path, skip_suffixes: Any) -> list[Path]:
     if root.is_file():
         return [] if root.suffix.lower() in skip_suffixes else [root]
     if root.is_dir():
-        return [
-            p
-            for p in sorted(root.rglob("*"))
-            if p.is_file() and p.suffix.lower() not in skip_suffixes
-        ]
+        return [p for p in sorted(root.rglob("*")) if p.is_file() and p.suffix.lower() not in skip_suffixes]
     return []
 
 
@@ -291,9 +285,7 @@ def main() -> None:
         choices=sorted(CODECS.keys()),
         help=f"cramjam algorithm (compress default: {DEFAULT_ALGO}; decompress default: auto by extension)",
     )
-    parser.add_argument(
-        "-k", "--keep", action="store_true", help="Keep the original files"
-    )
+    parser.add_argument("-k", "--keep", action="store_true", help="Keep the original files")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -357,18 +349,14 @@ def main() -> None:
                 n_removed += 1
             ratio = f"{r['ratio']:.2f}x" if r["ratio"] else "?"
             flag = "  (kept original)" if not r["removed"] else ""
-            print(
-                f"  OK    {path}  ->  {r['output']}  [{r['in_bytes']:,} -> {r['out_bytes']:,} B, {ratio}]{flag}"
-            )
+            print(f"  OK    {path}  ->  {r['output']}  [{r['in_bytes']:,} -> {r['out_bytes']:,} B, {ratio}]{flag}")
         print()
         if args.dry_run:
             print(f"Dry run complete. {len(files)} file(s) would be compressed.")
             return
         print(f"Done. ok={n_ok}  failed={n_fail}  originals_removed={n_removed}")
         if total_in:
-            print(
-                f"Total: {total_in:,} B -> {total_out:,} B ({total_in / total_out:.2f}x)"
-            )
+            print(f"Total: {total_in:,} B -> {total_out:,} B ({total_in / total_out:.2f}x)")
     else:
         algo_filter = args.algo
         files = collect_files_for_decompress(args.path, algo_filter)
@@ -382,11 +370,7 @@ def main() -> None:
         print(
             f"Files    : {len(files)}"
             + ("  [dry-run]" if args.dry_run else "")
-            + (
-                "  [keep originals]"
-                if args.keep
-                else "  [compressed files will be deleted]"
-            )
+            + ("  [keep originals]" if args.keep else "  [compressed files will be deleted]")
         )
         print()
         total_in = total_out = 0
@@ -425,13 +409,9 @@ def main() -> None:
         if args.dry_run:
             print(f"Dry run complete. {len(files)} file(s) would be decompressed.")
             return
-        print(
-            f"Done. ok={n_ok}  failed={n_fail}  skipped={n_skipped}  originals_removed={n_removed}"
-        )
+        print(f"Done. ok={n_ok}  failed={n_fail}  skipped={n_skipped}  originals_removed={n_removed}")
         if total_in:
-            print(
-                f"Total: {total_in:,} B -> {total_out:,} B ({total_out / total_in:.2f}x)"
-            )
+            print(f"Total: {total_in:,} B -> {total_out:,} B ({total_out / total_in:.2f}x)")
 
 
 if __name__ == "__main__":

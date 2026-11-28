@@ -27,15 +27,8 @@ class PkgInfo:
 
 
 def detect_site_packages() -> Path:
-    if hasattr(sys, "real_prefix") or (
-        hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix
-    ):
-        return (
-            Path(sys.prefix)
-            / "lib"
-            / f"python{sys.version_info.major}.{sys.version_info.minor}"
-            / "site-packages"
-        )
+    if hasattr(sys, "real_prefix") or (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix):
+        return Path(sys.prefix) / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages"
     return SITE_PACKAGES
 
 
@@ -127,10 +120,7 @@ def process_all(site_packages: Path) -> None:
     pkg_names = [d.name.replace(".dist-info", "") for d in dist_infos]
 
     with ProcessPoolExecutor() as executor:
-        futures = {
-            executor.submit(process_pkg, name, site_packages): name
-            for name in pkg_names
-        }
+        futures = {executor.submit(process_pkg, name, site_packages): name for name in pkg_names}
         for future in as_completed(futures):
             name = futures[future]
             try:
@@ -162,13 +152,9 @@ def process_single(pkg_name: str, site_packages: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Update RECORD files for installed packages"
-    )
+    parser = argparse.ArgumentParser(description="Update RECORD files for installed packages")
     parser.add_argument("pkg", nargs="?", help="Package name to process")
-    parser.add_argument(
-        "-a", "--all", action="store_true", help="Process all installed packages"
-    )
+    parser.add_argument("-a", "--all", action="store_true", help="Process all installed packages")
     args = parser.parse_args()
 
     site_packages = detect_site_packages()

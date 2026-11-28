@@ -56,11 +56,7 @@ class Extractor(object):
         elif self.backend == "pypdf":
             from pypdf import PdfReader
 
-            reader = (
-                PdfReader(pdf_path, password=self.password)
-                if self.password
-                else PdfReader(pdf_path)
-            )
+            reader = PdfReader(pdf_path, password=self.password) if self.password else PdfReader(pdf_path)
             for page in reader.pages:
                 pages.append(page.extract_text() or "")
         elif self.backend == "pdfplumber":
@@ -77,17 +73,11 @@ class Extractor(object):
             from pdfminer.pdfpage import PDFPage
 
             rsrcmgr = PDFResourceManager(caching=True)
-            laparams = LAParams(
-                detect_vertical=True, char_margin=1.0, line_margin=0.3, word_margin=0.3
-            )
+            laparams = LAParams(detect_vertical=True, char_margin=1.0, line_margin=0.3, word_margin=0.3)
             with open(pdf_path, "rb") as fp:
-                for page in PDFPage.get_pages(
-                    fp, password=self.password, caching=True, check_extractable=True
-                ):
+                for page in PDFPage.get_pages(fp, password=self.password, caching=True, check_extractable=True):
                     outfp = StringIO()
-                    device = TextConverter(
-                        rsrcmgr, outfp, codec=self.encoding, laparams=laparams
-                    )
+                    device = TextConverter(rsrcmgr, outfp, codec=self.encoding, laparams=laparams)
                     interpreter = PDFPageInterpreter(rsrcmgr, device)
                     interpreter.process_page(page)
                     pages.append(outfp.getvalue())

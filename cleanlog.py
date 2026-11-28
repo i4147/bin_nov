@@ -86,11 +86,7 @@ def main() -> int:
         paths = [Path(a) for a in args]
     else:
         cwd = Path.cwd()
-        paths = [
-            p
-            for p in cwd.rglob("*")
-            if p.is_file() and p.suffix.lower() in (".txt", ".log")
-        ]
+        paths = [p for p in cwd.rglob("*") if p.is_file() and p.suffix.lower() in (".txt", ".log")]
     if not paths:
         print("no files to clean", file=sys.stderr)
         return 1

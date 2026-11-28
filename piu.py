@@ -18,11 +18,7 @@ from pip._internal.cli.main import main as pip_main
 
 
 def get_installed_packages() -> list[str]:
-    return [
-        dist.metadata["Name"]
-        for dist in distributions()
-        if dist.metadata["Name"] is not None
-    ]
+    return [dist.metadata["Name"] for dist in distributions() if dist.metadata["Name"] is not None]
 
 
 def uninstall(packages: list[str]) -> int:

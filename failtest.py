@@ -27,12 +27,8 @@ import time
 from typing import Optional, Sequence
 
 
-def run_command(
-    command: str, allowed_codes: tuple[int, ...], sleep: float, iteration: int
-) -> tuple[int, int]:
-    process = subprocess.Popen(
-        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
+def run_command(command: str, allowed_codes: tuple[int, ...], sleep: float, iteration: int) -> tuple[int, int]:
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     _stdout, _stderr = process.communicate()
     print(f"Iteration {iteration}")
     if process.returncode not in allowed_codes:
@@ -76,9 +72,7 @@ def main(args: Optional[Sequence[str]] = None) -> int:
         if options.parallel <= 1:
             while True:
                 ctr += 1
-                returncode, _ = run_command(
-                    options.command, allowed_codes, options.sleep, ctr
-                )
+                returncode, _ = run_command(options.command, allowed_codes, options.sleep, ctr)
                 if returncode != 0:
                     return returncode
         else:
@@ -86,9 +80,7 @@ def main(args: Optional[Sequence[str]] = None) -> int:
                 futures = {}
                 for i in range(options.parallel):
                     ctr += 1
-                    future = executor.submit(
-                        run_command, options.command, allowed_codes, options.sleep, ctr
-                    )
+                    future = executor.submit(run_command, options.command, allowed_codes, options.sleep, ctr)
                     futures[future] = ctr
                 while futures:
                     for future in as_completed(futures):

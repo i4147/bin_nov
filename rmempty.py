@@ -36,15 +36,11 @@ def main() -> int:
     zeroto100 = "-z" in sys.argv
     files = get_files(cwd)
 
-    empty_files: list[Path] = [
-        p for p in files if p.name != "__init__.py" and _size(p) == 0
-    ]
+    empty_files: list[Path] = [p for p in files if p.name != "__init__.py" and _size(p) == 0]
 
     small_files: list[Path] = []
     if zeroto100:
-        small_files = [
-            p for p in files if p.name != "__init__.py" and 0 < _size(p) < 100
-        ]
+        small_files = [p for p in files if p.name != "__init__.py" and 0 < _size(p) < 100]
 
     if not empty_files and not small_files:
         cprint("no empty or small files found", color="cyan")

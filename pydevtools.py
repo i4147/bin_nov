@@ -57,9 +57,7 @@ class SetupStyle(StrEnum):
 
 
 app = typer.Typer(no_args_is_help=True, rich_markup_mode="rich")
-setup_app = typer.Typer(
-    no_args_is_help=True, help="Generate setup.py from various sources"
-)
+setup_app = typer.Typer(no_args_is_help=True, help="Generate setup.py from various sources")
 cargo_app = typer.Typer(no_args_is_help=True, help="Cargo.lock utilities")
 app.add_typer(setup_app, name="setup")
 app.add_typer(cargo_app, name="cargo")
@@ -206,11 +204,7 @@ def _readme_content(readme: Any, root: Path) -> tuple[str, str]:
         return readme.get("text", ""), content_type
     if isinstance(readme, str):
         suffix = Path(readme).suffix.lower()
-        ctype = (
-            "text/markdown"
-            if suffix in README_SUFFIXES
-            else ("text/x-rst" if suffix == ".rst" else "text/plain")
-        )
+        ctype = "text/markdown" if suffix in README_SUFFIXES else ("text/x-rst" if suffix == ".rst" else "text/plain")
         return _read_text(root / readme), ctype
     return "", "text/plain"
 
@@ -262,9 +256,7 @@ def _extract_pep621_meta(pyproject: dict[str, Any], root: Path) -> ProjectMeta:
         gui_scripts=dict(v1.get("gui-scripts", {}) or {}),
         entry_points=entry_points,
         dependencies=list(v1.get("dependencies", []) or []),
-        optional_dependencies={
-            k: list(v) for k, v in (v1.get("optional-dependencies") or {}).items()
-        },
+        optional_dependencies={k: list(v) for k, v in (v1.get("optional-dependencies") or {}).items()},
         build_backend=str(bs.get("build-backend", "")),
         build_requires=list(bs.get("requires", []) or []),
         tool=tool,
@@ -293,9 +285,7 @@ def _extract_poetry_meta(pyproject: dict[str, Any], root: Path) -> ProjectMeta:
                 token += version
             deps.append(token)
     readme = poetry.get("readme", "")
-    readme_content, readme_ctype = (
-        _readme_content(readme, root) if readme else ("", "text/plain")
-    )
+    readme_content, readme_ctype = _readme_content(readme, root) if readme else ("", "text/plain")
     return ProjectMeta(
         name=str(poetry.get("name", "")),
         version=str(poetry.get("version", "0.0.0")),
@@ -485,13 +475,9 @@ def _setup_kwargs_simple(meta: ProjectMeta) -> str:
         lines.append(f"    extras_require={meta.optional_dependencies!r},")
     entry_points: dict[str, list[str]] = {}
     if meta.scripts:
-        entry_points["console_scripts"] = [
-            f"{k} = {v}" for k, v in meta.scripts.items()
-        ]
+        entry_points["console_scripts"] = [f"{k} = {v}" for k, v in meta.scripts.items()]
     if meta.gui_scripts:
-        entry_points["gui_scripts"] = [
-            f"{k} = {v}" for k, v in meta.gui_scripts.items()
-        ]
+        entry_points["gui_scripts"] = [f"{k} = {v}" for k, v in meta.gui_scripts.items()]
     for sec, items in meta.entry_points.items():
         entry_points[sec] = [f"{k} = {v}" for k, v in items.items()]
     if entry_points:
@@ -523,9 +509,7 @@ def _render_setup_py_simple(meta: ProjectMeta, root: Path) -> str:
 def _detect_ext_backend(meta: ProjectMeta) -> str:
     if meta.tool.get("setuptools", {}).get("ext-modules"):
         return "setuptools"
-    lowered = " ".join(
-        [meta.build_backend.lower(), *(str(r).lower() for r in meta.build_requires)]
-    )
+    lowered = " ".join([meta.build_backend.lower(), *(str(r).lower() for r in meta.build_requires)])
     if "scikit-build" in lowered:
         return "scikit-build"
     if "meson" in lowered:
@@ -561,13 +545,9 @@ def _render_setup_py_detailed(
         packages_lines.append("        packages=find_packages(),")
     entry_points: dict[str, list[str]] = {}
     if meta.scripts:
-        entry_points["console_scripts"] = [
-            f"{k} = {v}" for k, v in meta.scripts.items()
-        ]
+        entry_points["console_scripts"] = [f"{k} = {v}" for k, v in meta.scripts.items()]
     if meta.gui_scripts:
-        entry_points["gui_scripts"] = [
-            f"{k} = {v}" for k, v in meta.gui_scripts.items()
-        ]
+        entry_points["gui_scripts"] = [f"{k} = {v}" for k, v in meta.gui_scripts.items()]
     for sec, items in meta.entry_points.items():
         entry_points[sec] = [f"{k} = {v}" for k, v in items.items()]
     lines: list[str] = []
@@ -626,9 +606,7 @@ def _render_setup_py_detailed(
     if backend == "setuptools" and meta.tool.get("setuptools", {}).get("ext-modules"):
         exts = []
         for ext in meta.tool["setuptools"]["ext-modules"]:
-            exts.append(
-                f"Extension({ext['name']!r}, sources={ext.get('sources', [])!r})"
-            )
+            exts.append(f"Extension({ext['name']!r}, sources={ext.get('sources', [])!r})")
         ext_block = "ext_modules = [\n    " + ",\n    ".join(exts) + "\n]\n\n"
     return header + ext_block + "setup(\n" + "\n".join(lines) + "\n)\n"
 
@@ -698,35 +676,25 @@ def _detect_entry_points(project_dir: Path, package_name: str) -> list[dict[str,
         return "main"
 
     if pkg_main.exists():
-        entry.append(
-            {
-                "module": f"{package_name}.__main__",
-                "function": "main",
-                "script_name": package_name,
-            }
-        )
+        entry.append({
+            "module": f"{package_name}.__main__",
+            "function": "main",
+            "script_name": package_name,
+        })
     if pkg_cli.exists():
-        entry.append(
-            {
-                "module": f"{package_name}.cli",
-                "function": _guess_func(pkg_cli),
-                "script_name": package_name
-                if not pkg_main.exists()
-                else f"{package_name}-cli",
-            }
-        )
+        entry.append({
+            "module": f"{package_name}.cli",
+            "function": _guess_func(pkg_cli),
+            "script_name": package_name if not pkg_main.exists() else f"{package_name}-cli",
+        })
     if not entry and root_main.exists():
-        entry.append(
-            {"module": "__main__", "function": "main", "script_name": package_name}
-        )
+        entry.append({"module": "__main__", "function": "main", "script_name": package_name})
     if not entry and root_cli.exists():
-        entry.append(
-            {
-                "module": "cli",
-                "function": _guess_func(root_cli),
-                "script_name": package_name,
-            }
-        )
+        entry.append({
+            "module": "cli",
+            "function": _guess_func(root_cli),
+            "script_name": package_name,
+        })
     return entry
 
 
@@ -756,9 +724,7 @@ def _render_setup_py_for_dir(project_dir: Path, package_name: str) -> str:
     if entry_points:
         ep_block = "    entry_points={\n        'console_scripts': [\n"
         for ep in entry_points:
-            ep_block += (
-                f"            '{ep['script_name']}={ep['module']}:{ep['function']}',\n"
-            )
+            ep_block += f"            '{ep['script_name']}={ep['module']}:{ep['function']}',\n"
         ep_block += "        ],\n    },\n"
     req_block = "    install_requires=[],\n"
     if requirements:
@@ -768,7 +734,9 @@ def _render_setup_py_for_dir(project_dir: Path, package_name: str) -> str:
         req_block += "    ],\n"
     readme_block = ""
     if (project_dir / "README.md").exists():
-        readme_block = "    long_description=open('README.md').read(),\n    long_description_content_type='text/markdown',\n"
+        readme_block = (
+            "    long_description=open('README.md').read(),\n    long_description_content_type='text/markdown',\n"
+        )
     return (
         "from setuptools import setup, find_packages\n\n"
         "setup(\n"
@@ -839,10 +807,7 @@ def _render_setup_py_from_wheel(
     entry_points: dict[str, list[str]],
 ) -> str:
     if ext_modules:
-        lines = ",\n".join(
-            f"    Extension({m!r}, sources=[{m.replace('.', '/')!r} + '.*'])"
-            for m in ext_modules
-        )
+        lines = ",\n".join(f"    Extension({m!r}, sources=[{m.replace('.', '/')!r} + '.*'])" for m in ext_modules)
         ext_block = f"from setuptools import Extension\n\next_modules = [\n{lines}\n]\n"
     else:
         ext_block = "ext_modules = []\n"
@@ -1166,9 +1131,7 @@ def _scaffold_setuptools_src(cfg: InitConfig, target: Path) -> None:
     description_line = f'description = "{cfg.description}"\n' if cfg.description else ""
     email_part = f', email = "{email}"' if email else ""
     urls_block = f'\n[project.urls]\nHomepage = "{url}"\n' if url else ""
-    scripts_block = (
-        f'\n[project.scripts]\n{name} = "{module}:main"\n' if cfg.simple_cli else ""
-    )
+    scripts_block = f'\n[project.scripts]\n{name} = "{module}:main"\n' if cfg.simple_cli else ""
 
     atomic_write(
         target / "pyproject.toml",
@@ -1191,9 +1154,7 @@ def _scaffold_setuptools_src(cfg: InitConfig, target: Path) -> None:
 
     pkg_dir = target / "src" / module
     pkg_dir.mkdir(parents=True, exist_ok=True)
-    atomic_write(
-        pkg_dir / "__init__.py", f'__version__ = "{version}"\n', encoding="utf-8"
-    )
+    atomic_write(pkg_dir / "__init__.py", f'__version__ = "{version}"\n', encoding="utf-8")
     if cfg.simple_cli:
         atomic_write(
             pkg_dir / "__main__.py",
@@ -1225,9 +1186,7 @@ def _scaffold_hatchling_typer(cfg: InitConfig, target: Path) -> None:
     email = cfg.email or user.get("email", "author@example.com")
     atomic_write(
         target / "pyproject.toml",
-        PYPROJECT_HATCHLING_TYPER.format(
-            name=name, module=module, author=author, email=email
-        ),
+        PYPROJECT_HATCHLING_TYPER.format(name=name, module=module, author=author, email=email),
         encoding="utf-8",
     )
     atomic_write(
@@ -1243,9 +1202,7 @@ def _scaffold_hatchling_typer(cfg: InitConfig, target: Path) -> None:
     )
     pkg_dir = target / "src" / module
     pkg_dir.mkdir(parents=True, exist_ok=True)
-    atomic_write(
-        pkg_dir / "__init__.py", f'__version__ = "{version}"\n', encoding="utf-8"
-    )
+    atomic_write(pkg_dir / "__init__.py", f'__version__ = "{version}"\n', encoding="utf-8")
     atomic_write(
         pkg_dir / "cli.py",
         "import typer\n"
@@ -1304,14 +1261,10 @@ def _scaffold_setuptools_cfg(cfg: InitConfig, target: Path) -> None:
         author_lines += f"author_email = {email}\n"
     if url:
         author_lines += f"url = {url}\n"
-    atomic_write(
-        target / "setup.py", '__import__("setuptools").setup()\n', encoding="utf-8"
-    )
+    atomic_write(target / "setup.py", '__import__("setuptools").setup()\n', encoding="utf-8")
     atomic_write(
         target / "setup.cfg",
-        SETUP_CFG_TEMPLATE.format(
-            name=name, version=cfg.version, author_lines=author_lines
-        ),
+        SETUP_CFG_TEMPLATE.format(name=name, version=cfg.version, author_lines=author_lines),
         encoding="utf-8",
     )
     atomic_write(
@@ -1333,9 +1286,7 @@ def _scaffold_setuptools_cfg(cfg: InitConfig, target: Path) -> None:
 
 @app.callback()
 def _main_callback(
-    verbose: Annotated[
-        bool, typer.Option("--verbose", "-v", help="Enable debug logging")
-    ] = False,
+    verbose: Annotated[bool, typer.Option("--verbose", "-v", help="Enable debug logging")] = False,
 ) -> None:
     _init_logging(verbose)
 
@@ -1387,9 +1338,7 @@ def init_cmd(
 @app.command("dev")
 def dev_cmd(
     path: Annotated[Path, typer.Argument()] = Path(),
-    install_hooks: Annotated[
-        bool, typer.Option("--install-hooks", help="Install pre-commit hooks")
-    ] = False,
+    install_hooks: Annotated[bool, typer.Option("--install-hooks", help="Install pre-commit hooks")] = False,
 ) -> None:
     project = path.expanduser().resolve()
     if not project.exists():
@@ -1414,9 +1363,7 @@ def dev_cmd(
     if pyproject.exists():
         logger.info("pyproject.toml already exists")
     else:
-        atomic_write(
-            pyproject, DEV_PYPROJECT.format(name=project.name), encoding="utf-8"
-        )
+        atomic_write(pyproject, DEV_PYPROJECT.format(name=project.name), encoding="utf-8")
         logger.info("Created: pyproject.toml")
     (project / "requirements.txt").touch(exist_ok=True)
     atomic_write(
@@ -1430,9 +1377,7 @@ def dev_cmd(
         logger.info("Created: .gitignore")
     if install_hooks:
         try:
-            atomic_write(
-                project / ".pre-commit-config.yaml", PRE_COMMIT_CONFIG, encoding="utf-8"
-            )
+            atomic_write(project / ".pre-commit-config.yaml", PRE_COMMIT_CONFIG, encoding="utf-8")
             subprocess.run(["pre-commit", "install"], cwd=project, check=True)
             logger.info("Pre-commit hooks installed")
         except (FileNotFoundError, subprocess.CalledProcessError) as exc:
@@ -1464,17 +1409,11 @@ def new_script_cmd(
 
 @setup_app.command("pyproject")
 def setup_pyproject(
-    path: Annotated[
-        Path, typer.Argument(help="Path to pyproject.toml or its directory")
-    ] = Path(),
+    path: Annotated[Path, typer.Argument(help="Path to pyproject.toml or its directory")] = Path(),
     style: Annotated[SetupStyle, typer.Option("--style")] = SetupStyle.detailed,
-    with_cfg: Annotated[
-        bool, typer.Option("--with-cfg", help="Read setup.cfg (detailed only)")
-    ] = False,
+    with_cfg: Annotated[bool, typer.Option("--with-cfg", help="Read setup.cfg (detailed only)")] = False,
     force: Annotated[bool, typer.Option("--force", "-f")] = False,
-    preview: Annotated[
-        bool, typer.Option("--preview", help="Show generated content")
-    ] = False,
+    preview: Annotated[bool, typer.Option("--preview", help="Show generated content")] = False,
 ) -> None:
     target = path.expanduser().resolve()
     pyproject_path = target if target.is_file() else target / "pyproject.toml"
@@ -1496,9 +1435,7 @@ def setup_pyproject(
     else:
         content = _render_setup_py_simple(meta, root)
     if preview:
-        console.print(
-            Panel(content, title=f"setup.py ({style.value})", border_style="cyan")
-        )
+        console.print(Panel(content, title=f"setup.py ({style.value})", border_style="cyan"))
     out = root / "setup.py"
     if not _write_text(out, content, force=force):
         raise typer.Exit(1)
@@ -1508,9 +1445,7 @@ def setup_pyproject(
 @setup_app.command("directory")
 def setup_directory(
     path: Annotated[Path, typer.Argument(help="Project directory")] = Path(),
-    package: Annotated[
-        str | None, typer.Option("--package", help="Package name")
-    ] = None,
+    package: Annotated[str | None, typer.Option("--package", help="Package name")] = None,
     force: Annotated[bool, typer.Option("--force", "-f")] = False,
     preview: Annotated[bool, typer.Option("--preview")] = False,
 ) -> None:
@@ -1587,26 +1522,18 @@ def cargo_generate(
     data = _parse_cargo_lock(src.read_text(encoding="utf-8"))
     if not data["packages"]:
         _fail("no packages found in lock file")
-    logger.info(
-        "Found {} packages (lock file v{})", len(data["packages"]), data["version"]
-    )
+    logger.info("Found {} packages (lock file v{})", len(data["packages"]), data["version"])
     if preview:
         table = Table(title=f"Cargo packages from {src.name}")
         table.add_column("Name")
         table.add_column("Version")
         table.add_column("Deps")
         for pkg in data["packages"]:
-            table.add_row(
-                pkg["name"], pkg["version"], str(len(pkg.get("dependencies", [])))
-            )
+            table.add_row(pkg["name"], pkg["version"], str(len(pkg.get("dependencies", []))))
         console.print(table)
-    rendered = _render_cargo_toml(
-        data["packages"], root_name=root_name, root_version=root_version
-    )
+    rendered = _render_cargo_toml(data["packages"], root_name=root_name, root_version=root_version)
     if preview:
-        console.print(
-            Panel(rendered, title=f"Cargo.toml → {output}", border_style="cyan")
-        )
+        console.print(Panel(rendered, title=f"Cargo.toml → {output}", border_style="cyan"))
     atomic_write(output, rendered, encoding="utf-8")
     console.print(f"[green]✓[/green] Generated [cyan]{output}[/cyan]")
 

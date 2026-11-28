@@ -54,47 +54,43 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
 HTML_SUFFIXES: frozenset[str] = frozenset({".html", ".htm", ".xhtml", ".xhtm"})
-SKIP_TAGS: frozenset[str] = frozenset(
-    {"script", "style", "noscript", "template", "head"}
-)
-BLOCK_TAGS: frozenset[str] = frozenset(
-    {
-        "address",
-        "article",
-        "aside",
-        "blockquote",
-        "br",
-        "dd",
-        "div",
-        "dl",
-        "dt",
-        "fieldset",
-        "figcaption",
-        "figure",
-        "footer",
-        "form",
-        "h1",
-        "h2",
-        "h3",
-        "h4",
-        "h5",
-        "h6",
-        "header",
-        "hr",
-        "li",
-        "main",
-        "nav",
-        "ol",
-        "p",
-        "pre",
-        "section",
-        "table",
-        "td",
-        "th",
-        "tr",
-        "ul",
-    }
-)
+SKIP_TAGS: frozenset[str] = frozenset({"script", "style", "noscript", "template", "head"})
+BLOCK_TAGS: frozenset[str] = frozenset({
+    "address",
+    "article",
+    "aside",
+    "blockquote",
+    "br",
+    "dd",
+    "div",
+    "dl",
+    "dt",
+    "fieldset",
+    "figcaption",
+    "figure",
+    "footer",
+    "form",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "header",
+    "hr",
+    "li",
+    "main",
+    "nav",
+    "ol",
+    "p",
+    "pre",
+    "section",
+    "table",
+    "td",
+    "th",
+    "tr",
+    "ul",
+})
 BLANK_RUN: re.Pattern[str] = re.compile(r"\n{3,}")
 
 
@@ -200,9 +196,7 @@ def convert_engine(
             include_tables=True,
             no_fallback=False,
         )
-        return result or convert_engine(
-            body, "markdownify", keep_forms, False, command, source_path
-        )
+        return result or convert_engine(body, "markdownify", keep_forms, False, command, source_path)
     if engine == "html_to_markdown":
         from html_to_markdown import Options, convert
 
@@ -229,9 +223,7 @@ def convert_engine(
 
         return str(markdownify(body))
     if engine == "command":
-        proc = subprocess.run(
-            [command, str(source_path)], capture_output=True, text=True, check=True
-        )
+        proc = subprocess.run([command, str(source_path)], capture_output=True, text=True, check=True)
         return proc.stdout
     if engine == "text":
         return html_to_text(body, markdown=True)
@@ -274,9 +266,7 @@ def convert_one(job: tuple[Path, str, bool, bool, str, bool]) -> tuple[Path, boo
         return path, False, f"{type(exc).__name__}: {exc}"
     if not markdown.strip():
         return path, False, "no content extracted"
-    atomic_write(
-        dest, markdown if markdown.endswith("\n") else markdown + "\n", encoding="utf-8"
-    )
+    atomic_write(dest, markdown if markdown.endswith("\n") else markdown + "\n", encoding="utf-8")
     if remove_original:
         path.unlink()
     return path, True, f"-> {dest.name}"
@@ -290,11 +280,7 @@ def find_html(inputs: Sequence[Path], recursive: bool) -> list[Path]:
             found.add(root)
         elif root.is_dir():
             candidates = root.rglob("*") if recursive else root.iterdir()
-            found.update(
-                p
-                for p in candidates
-                if p.is_file() and p.suffix.lower() in HTML_SUFFIXES
-            )
+            found.update(p for p in candidates if p.is_file() and p.suffix.lower() in HTML_SUFFIXES)
     return sorted(found)
 
 
@@ -334,11 +320,7 @@ def cmd_to_text(args: argparse.Namespace) -> int:
         text: str = html_to_text(path.read_text(encoding="utf-8", errors="replace"))
         if not text:
             continue
-        dest: Path = (
-            (args.out_dir / f"{path.stem}.txt")
-            if args.out_dir
-            else path.with_suffix(".txt")
-        )
+        dest: Path = (args.out_dir / f"{path.stem}.txt") if args.out_dir else path.with_suffix(".txt")
         dest.parent.mkdir(parents=True, exist_ok=True)
         atomic_write(dest, text, encoding="utf-8")
         print(f"{path.name} -> {dest}")
@@ -350,9 +332,7 @@ def cmd_to_text(args: argparse.Namespace) -> int:
 
 
 def fetch_plain(url: str) -> str:
-    request = urllib.request.Request(
-        url, headers={"User-Agent": "html-to-markdown-tool"}
-    )
+    request = urllib.request.Request(url, headers={"User-Agent": "html-to-markdown-tool"})
     with urllib.request.urlopen(request, timeout=30) as response:
         source: str = response.read().decode("utf-8", errors="replace")
     return html_to_text(source)
@@ -377,9 +357,7 @@ def cmd_fetch(args: argparse.Namespace) -> int:
                 await page.goto(args.url)
                 if args.screenshot is not None:
                     await page.screenshot({"path": str(args.screenshot)})
-                text: str = str(
-                    await page.evaluate("document.body.textContent", force_expr=True)
-                )
+                text: str = str(await page.evaluate("document.body.textContent", force_expr=True))
                 await browser.close()
                 return text
 
@@ -415,9 +393,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         default="auto",
     )
-    md.add_argument(
-        "--command", default="rhtml2md", help="External converter (htm2md default)"
-    )
+    md.add_argument("--command", default="rhtml2md", help="External converter (htm2md default)")
     md.add_argument(
         "--main-content",
         action="store_true",
@@ -428,9 +404,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Keep <form> (html_to_markdown engine)",
     )
-    md.add_argument(
-        "-r", "--remove-original", action="store_true", help="Delete HTML after success"
-    )
+    md.add_argument("-r", "--remove-original", action="store_true", help="Delete HTML after success")
     md.add_argument("--no-recursive", dest="recursive", action="store_false")
     md.set_defaults(handler=cmd_to_md, recursive=True)
     tx = sub.add_parser("to-text", help="Strip HTML tags to plain text (stdlib)")
@@ -449,9 +423,7 @@ def build_parser() -> argparse.ArgumentParser:
     fe.add_argument("url")
     fe.add_argument("-o", "--output", type=Path, default=None)
     fe.add_argument("--render", action="store_true", help="Render JS with pyppeteer")
-    fe.add_argument(
-        "--screenshot", type=Path, default=None, help="With --render, save a PNG here"
-    )
+    fe.add_argument("--screenshot", type=Path, default=None, help="With --render, save a PNG here")
     fe.set_defaults(handler=cmd_fetch)
     return parser
 

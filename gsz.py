@@ -21,9 +21,7 @@ import typer
 load_dotenv()
 
 GITHUB_TOKEN: Optional[str] = os.getenv("GITHUB_TOKEN") or None
-DEFAULT_USER_AGENT: str = (
-    "Mozilla/5.0 (compatible; SizeChecker/1.0; +https://github.com)"
-)
+DEFAULT_USER_AGENT: str = "Mozilla/5.0 (compatible; SizeChecker/1.0; +https://github.com)"
 STREAM_CHUNK_SIZE: int = 1024 * 256  # 256 KiB
 
 app = typer.Typer(add_completion=False)
@@ -154,13 +152,9 @@ def get_remote_file_size(
             final_url = range_resp.url
             content_type = range_resp.headers.get("Content-Type") or content_type
             accept_ranges = range_resp.headers.get("Accept-Ranges") or accept_ranges
-            size_bytes = _parse_content_range_total(
-                range_resp.headers.get("Content-Range")
-            )
+            size_bytes = _parse_content_range_total(range_resp.headers.get("Content-Range"))
             if size_bytes is None and range_resp.status_code == 200:
-                size_bytes = _parse_content_length(
-                    range_resp.headers.get("Content-Length")
-                )
+                size_bytes = _parse_content_length(range_resp.headers.get("Content-Length"))
 
     if size_bytes is None and stream_size:
         streamed_bytes, streamed_url, streamed_ct, streamed_ar = _measure_by_streaming(
@@ -213,9 +207,7 @@ def main(
         "--stream-size",
         help="Download and count bytes if Content-Length/Content-Range headers are missing",
     ),
-    verbose: bool = typer.Option(
-        False, "--verbose", "-v", help="Re-raise unexpected exceptions"
-    ),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Re-raise unexpected exceptions"),
 ) -> None:
     try:
         path = Path(input_str)

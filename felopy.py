@@ -39,9 +39,7 @@ def extract_code_blocks(text: str) -> list[str]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Run felo superagent and save returned code as a Python file."
-    )
+    parser = argparse.ArgumentParser(description="Run felo superagent and save returned code as a Python file.")
     parser.add_argument(
         "--timeout",
         type=int,

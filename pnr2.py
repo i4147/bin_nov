@@ -37,11 +37,7 @@ from dh import unique_path
 class PathRenamer:
     def __init__(self, args: argparse.Namespace) -> None:
         self.args = args
-        self.paths = (
-            [Path(p) for p in args.paths]
-            if hasattr(args, "paths") and args.paths
-            else [Path.cwd()]
-        )
+        self.paths = [Path(p) for p in args.paths] if hasattr(args, "paths") and args.paths else [Path.cwd()]
         self.log_entries: list[dict] = []
 
     def should_skip(self, path: Path, root: Path) -> bool:
@@ -52,9 +48,7 @@ class PathRenamer:
         except ValueError:
             rel = path
         parts = rel.parts
-        if not self.args.hidden and any(
-            p.startswith(".") and p not in {".", ".."} for p in parts
-        ):
+        if not self.args.hidden and any(p.startswith(".") and p not in {".", ".."} for p in parts):
             return True
         if self.args.exclude_dir:
             for part in parts[:-1]:
@@ -67,9 +61,7 @@ class PathRenamer:
             matched_inc = any(Path(name).match(inc) for inc in self.args.include)
             if not matched_inc and path.is_file():
                 return True
-        if self.args.exclude and any(
-            Path(name).match(exc) for exc in self.args.exclude
-        ):
+        if self.args.exclude and any(Path(name).match(exc) for exc in self.args.exclude):
             return True
         if self.args.ext and path.is_file():
             exts = [e.lstrip(".").lower() for e in self.args.ext]
@@ -78,11 +70,7 @@ class PathRenamer:
         return False
 
     def walk_files(self) -> Generator[Path, None, None]:
-        max_depth = (
-            self.args.max_depth
-            if hasattr(self.args, "max_depth") and self.args.max_depth is not None
-            else None
-        )
+        max_depth = self.args.max_depth if hasattr(self.args, "max_depth") and self.args.max_depth is not None else None
         for root_path in self.paths:
             if not root_path.exists():
                 continue
@@ -90,9 +78,7 @@ class PathRenamer:
                 if not self.should_skip(root_path, root_path.parent):
                     yield root_path
                 continue
-            for base, dirs, files in os.walk(
-                root_path, followlinks=self.args.follow_symlinks
-            ):
+            for base, dirs, files in os.walk(root_path, followlinks=self.args.follow_symlinks):
                 base_p = Path(base)
                 try:
                     rel_depth = len(base_p.relative_to(root_path).parts)
@@ -102,11 +88,7 @@ class PathRenamer:
                     dirs.clear()
                     continue
                 if self.args.exclude_dir:
-                    dirs[:] = [
-                        d
-                        for d in dirs
-                        if not any(Path(d).match(ed) for ed in self.args.exclude_dir)
-                    ]
+                    dirs[:] = [d for d in dirs if not any(Path(d).match(ed) for ed in self.args.exclude_dir)]
                 if not self.args.hidden:
                     dirs[:] = [d for d in dirs if not d.startswith(".")]
                 if not self.args.dirs_only:
@@ -114,9 +96,7 @@ class PathRenamer:
                         f_path = base_p / f
                         if not self.should_skip(f_path, root_path):
                             yield f_path
-                if self.args.dirs_only or (
-                    hasattr(self.args, "template") and self.args.template
-                ):
+                if self.args.dirs_only or (hasattr(self.args, "template") and self.args.template):
                     for d in dirs:
                         d_path = base_p / d
                         if not self.should_skip(d_path, root_path):
@@ -157,11 +137,7 @@ class PathRenamer:
             start = self.args.start if hasattr(self.args, "start") else 1
             step = self.args.step if hasattr(self.args, "step") else 1
             num = start + (index * step)
-            padding = (
-                self.args.padding
-                if hasattr(self.args, "padding") and self.args.padding
-                else 3
-            )
+            padding = self.args.padding if hasattr(self.args, "padding") and self.args.padding else 3
             num_str = str(num).zfill(padding)
             if hasattr(self.args, "format") and self.args.format:
                 fmt = self.args.format
@@ -195,19 +171,12 @@ class PathRenamer:
             stem = stem.strip()
         if hasattr(self.args, "collapse_spaces") and self.args.collapse_spaces:
             stem = re.sub(r"\s+", " ", stem)
-        if (
-            hasattr(self.args, "spaces_to_underscores")
-            and self.args.spaces_to_underscores
-        ):
+        if hasattr(self.args, "spaces_to_underscores") and self.args.spaces_to_underscores:
             stem = stem.replace(" ", "_")
         if hasattr(self.args, "normalize_unicode") and self.args.normalize_unicode:
             stem = unicodedata.normalize("NFC", stem)
         if hasattr(self.args, "remove_diacritics") and self.args.remove_diacritics:
-            stem = "".join(
-                c
-                for c in unicodedata.normalize("NFD", stem)
-                if unicodedata.category(c) != "Mn"
-            )
+            stem = "".join(c for c in unicodedata.normalize("NFD", stem) if unicodedata.category(c) != "Mn")
         if hasattr(self.args, "ascii") and self.args.ascii:
             stem = self.transliterate_text(stem)
         if hasattr(self.args, "transliterate") and self.args.transliterate:
@@ -218,11 +187,7 @@ class PathRenamer:
             stem = "".join(random.choices("abcdefghijklmnopqrstuvwxyz0123456789", k=8))
         if hasattr(self.args, "uuid") and self.args.uuid:
             stem = str(uuid.uuid4())
-        if (
-            hasattr(self.args, "rename_by_mtime")
-            and self.args.rename_by_mtime
-            and original_path.exists()
-        ):
+        if hasattr(self.args, "rename_by_mtime") and self.args.rename_by_mtime and original_path.exists():
             mtime = original_path.stat().st_mtime
             dt = datetime.fromtimestamp(mtime)
             fmt = (
@@ -231,11 +196,7 @@ class PathRenamer:
                 else "%Y-%m-%d_%H-%M-%S"
             )
             stem = dt.strftime(fmt)
-        if (
-            hasattr(self.args, "max_length")
-            and self.args.max_length
-            and len(stem) > self.args.max_length
-        ):
+        if hasattr(self.args, "max_length") and self.args.max_length and len(stem) > self.args.max_length:
             stem = stem[: self.args.max_length]
         if not stem.strip():
             stem = "file"
@@ -254,18 +215,13 @@ class PathRenamer:
         if sort_by == "mtime":
             files.sort(key=lambda p: p.stat().st_mtime, reverse=reverse)
         elif sort_by == "size":
-            files.sort(
-                key=lambda p: p.stat().st_size if p.is_file() else 0, reverse=reverse
-            )
+            files.sort(key=lambda p: p.stat().st_size if p.is_file() else 0, reverse=reverse)
         elif sort_by == "random":
             random.shuffle(files)
         elif sort_by == "natural":
 
             def natural_key(path: Path) -> list[Any]:
-                return [
-                    int(text) if text.isdigit() else text.lower()
-                    for text in re.split(r"(\d+)", path.name)
-                ]
+                return [int(text) if text.isdigit() else text.lower() for text in re.split(r"(\d+)", path.name)]
 
             files.sort(key=natural_key, reverse=reverse)
         else:
@@ -287,11 +243,7 @@ class PathRenamer:
                     if not self.args.dry_run:
                         new_path.rename(backup_path)
                 elif getattr(self.args, "interactive", False):
-                    resp = (
-                        input(f"Target {new_path} exists. Overwrite? [y/N]: ")
-                        .strip()
-                        .lower()
-                    )
+                    resp = input(f"Target {new_path} exists. Overwrite? [y/N]: ").strip().lower()
                     if resp != "y":
                         continue
                 else:
@@ -359,42 +311,22 @@ def main() -> int:
         metavar=("STR1", "STR2"),
         help="Replace STR1 with STR2",
     )
-    parser.add_argument(
-        "-t", "--template", metavar="NAME", help="Rename using template"
-    )
-    parser.add_argument(
-        "-E", "--regex", action="store_true", help="Treat patterns as regex"
-    )
-    parser.add_argument(
-        "-i", "--ignore-case", action="store_true", help="Case-insensitive matching"
-    )
+    parser.add_argument("-t", "--template", metavar="NAME", help="Rename using template")
+    parser.add_argument("-E", "--regex", action="store_true", help="Treat patterns as regex")
+    parser.add_argument("-i", "--ignore-case", action="store_true", help="Case-insensitive matching")
     parser.add_argument("--include", action="append", help="Include glob pattern")
     parser.add_argument("--exclude", action="append", help="Exclude glob pattern")
-    parser.add_argument(
-        "--exclude-dir", action="append", help="Exclude directory pattern"
-    )
+    parser.add_argument("--exclude-dir", action="append", help="Exclude directory pattern")
     parser.add_argument("--ext", nargs="+", help="File extension filters")
     parser.add_argument("--files-only", action="store_true", help="Process files only")
-    parser.add_argument(
-        "--dirs-only", action="store_true", help="Process directories only"
-    )
-    parser.add_argument(
-        "--hidden", action="store_true", default=True, help="Include hidden files"
-    )
-    parser.add_argument(
-        "--no-hidden", dest="hidden", action="store_false", help="Exclude hidden files"
-    )
+    parser.add_argument("--dirs-only", action="store_true", help="Process directories only")
+    parser.add_argument("--hidden", action="store_true", default=True, help="Include hidden files")
+    parser.add_argument("--no-hidden", dest="hidden", action="store_false", help="Exclude hidden files")
     parser.add_argument("--max-depth", type=int, help="Maximum recursion depth")
-    parser.add_argument(
-        "--follow-symlinks", action="store_true", help="Follow symlinks"
-    )
-    parser.add_argument(
-        "--overwrite", action="store_true", help="Overwrite existing files"
-    )
+    parser.add_argument("--follow-symlinks", action="store_true", help="Follow symlinks")
+    parser.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
     parser.add_argument("--backup", action="store_true", help="Backup existing files")
-    parser.add_argument(
-        "--interactive", action="store_true", help="Interactive overwrite confirmation"
-    )
+    parser.add_argument("--interactive", action="store_true", help="Interactive overwrite confirmation")
     parser.add_argument("--log", help="Log renames to JSON file")
     parser.add_argument("--undo", help="Undo renames from JSON log")
     parser.add_argument("--prefix", help="Add prefix")
@@ -406,37 +338,23 @@ def main() -> int:
     parser.add_argument("--kebab", action="store_true", help="Convert to kebab case")
     parser.add_argument("--camel", action="store_true", help="Convert to camel case")
     parser.add_argument("--trim", action="store_true", help="Trim whitespace")
-    parser.add_argument(
-        "--collapse-spaces", action="store_true", help="Collapse multiple spaces"
-    )
+    parser.add_argument("--collapse-spaces", action="store_true", help="Collapse multiple spaces")
     parser.add_argument(
         "--spaces-to-underscores",
         action="store_true",
         help="Convert spaces to underscores",
     )
-    parser.add_argument(
-        "--normalize-unicode", action="store_true", help="Normalize unicode"
-    )
-    parser.add_argument(
-        "--remove-diacritics", action="store_true", help="Remove diacritics"
-    )
+    parser.add_argument("--normalize-unicode", action="store_true", help="Normalize unicode")
+    parser.add_argument("--remove-diacritics", action="store_true", help="Remove diacritics")
     parser.add_argument("--ascii", action="store_true", help="Convert to ASCII")
-    parser.add_argument(
-        "--transliterate", action="store_true", help="Transliterate non-English names"
-    )
-    parser.add_argument(
-        "--sanitize", action="store_true", help="Sanitize illegal characters"
-    )
+    parser.add_argument("--transliterate", action="store_true", help="Transliterate non-English names")
+    parser.add_argument("--sanitize", action="store_true", help="Sanitize illegal characters")
     parser.add_argument("--max-length", type=int, help="Truncate long names")
     parser.add_argument("--random", action="store_true", help="Rename to random string")
     parser.add_argument("--uuid", action="store_true", help="Rename to UUID")
     parser.add_argument("--date-format", help="Date format string")
-    parser.add_argument(
-        "--rename-by-mtime", action="store_true", help="Rename by modification time"
-    )
-    parser.add_argument(
-        "--start", type=int, default=1, help="Start number for template"
-    )
+    parser.add_argument("--rename-by-mtime", action="store_true", help="Rename by modification time")
+    parser.add_argument("--start", type=int, default=1, help="Start number for template")
     parser.add_argument("--step", type=int, default=1, help="Step for template")
     parser.add_argument("--padding", type=int, default=3, help="Number padding")
     parser.add_argument("--format", help="Custom format string")

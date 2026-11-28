@@ -105,9 +105,7 @@ def fetch_default_branch_subprocess(owner: str, repo: str, token: Optional[str])
     raise RuntimeError(msg)
 
 
-def fetch_repo_size_subprocess(
-    owner: str, repo: str, token: Optional[str]
-) -> Optional[int]:
+def fetch_repo_size_subprocess(owner: str, repo: str, token: Optional[str]) -> Optional[int]:
     api = f"https://api.github.com/repos/{owner}/{repo}"
     try:
         if shutil.which("gh"):
@@ -141,9 +139,7 @@ def maybe_confirm(size_bytes: Optional[int]) -> bool:
     return True
 
 
-def download_zip_subprocess(
-    owner: str, repo: str, branch: str, out_path: Path, token: Optional[str]
-) -> None:
+def download_zip_subprocess(owner: str, repo: str, branch: str, out_path: Path, token: Optional[str]) -> None:
     url = f"https://github.com/{owner}/{repo}/archive/refs/heads/{branch}.zip"
     if shutil.which("gh"):
         cmd = [
@@ -180,9 +176,7 @@ def download_zip_subprocess(
     raise RuntimeError(msg)
 
 
-def download_zip_pygithub(
-    owner: str, repo: str, branch: str, out_path: Path, token: Optional[str]
-) -> bool:
+def download_zip_pygithub(owner: str, repo: str, branch: str, out_path: Path, token: Optional[str]) -> bool:
     try:
         from github import Github
     except Exception:
@@ -200,9 +194,7 @@ def download_zip_pygithub(
     return True
 
 
-def download_zip_gitpython(
-    owner: str, repo: str, branch: str, out_path: Path, token: Optional[str]
-) -> bool:
+def download_zip_gitpython(owner: str, repo: str, branch: str, out_path: Path, token: Optional[str]) -> bool:
     try:
         from git import Repo
     except Exception:
@@ -217,9 +209,7 @@ def download_zip_gitpython(
     return True
 
 
-def download_zip_dulwich(
-    owner: str, repo: str, branch: str, out_path: Path, token: Optional[str]
-) -> bool:
+def download_zip_dulwich(owner: str, repo: str, branch: str, out_path: Path, token: Optional[str]) -> bool:
     try:
         from dulwich import porcelain
     except Exception:
@@ -243,9 +233,7 @@ def resolve_backend(name: str) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(
-        description="Download a GitHub repository as a ZIP archive"
-    )
+    p = argparse.ArgumentParser(description="Download a GitHub repository as a ZIP archive")
     p.add_argument("repo", help="Repository in owner/repo or full GitHub URL form")
     p.add_argument(
         "-b",

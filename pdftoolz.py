@@ -338,9 +338,7 @@ def _convert_one_pdf(
             pix.save(str(out))
             count += 1
         doc.close()
-        print(
-            f"Successfully converted '{pdf_path.name}' to {count} JPG files in '{target}'."
-        )
+        print(f"Successfully converted '{pdf_path.name}' to {count} JPG files in '{target}'.")
         return True
     except Exception as e:
         print(f"Error converting '{pdf_path.name}': {e}")
@@ -507,9 +505,7 @@ def _shrink_gs_screen(pdf: Path) -> None:
 def _shrink_gs_mobile(pdf: Path) -> None:
     gs = find_ghostscript()
     if not gs:
-        print(
-            "[ERROR] Ghostscript ('gs' or 'gswin64c') is not installed or not in your PATH."
-        )
+        print("[ERROR] Ghostscript ('gs' or 'gswin64c') is not installed or not in your PATH.")
         return
     before = pdf.stat().st_size
     print(f"Original size: {human_size(before)}")
@@ -575,9 +571,7 @@ def _shrink_dispatch(path_str: str, engine: str) -> None:
 
 
 def cmd_shrink(args: argparse.Namespace) -> int:
-    files = (
-        collect_pdfs(args.inputs) if args.inputs else collect_pdfs([str(Path.cwd())])
-    )
+    files = collect_pdfs(args.inputs) if args.inputs else collect_pdfs([str(Path.cwd())])
     if not files:
         print("No PDF files found.")
         return 1
@@ -634,9 +628,7 @@ def _split_by_size(input_path: Path, output_dir: Path, max_mb: int) -> None:
 def cmd_split_size(args: argparse.Namespace) -> int:
     out_dir = Path(args.output).resolve()
     out_dir.mkdir(exist_ok=True)
-    files = (
-        collect_pdfs(args.inputs) if args.inputs else list(Path.cwd().rglob("*.pdf"))
-    )
+    files = collect_pdfs(args.inputs) if args.inputs else list(Path.cwd().rglob("*.pdf"))
     if not files:
         print("No PDF files found.")
         return 1
@@ -665,9 +657,7 @@ def _split_by_page(input_path: Path, output_dir: Path) -> None:
 def cmd_split_page(args: argparse.Namespace) -> int:
     out_dir = Path(args.output).resolve()
     out_dir.mkdir(exist_ok=True)
-    files = (
-        collect_pdfs(args.inputs) if args.inputs else list(Path.cwd().rglob("*.pdf"))
-    )
+    files = collect_pdfs(args.inputs) if args.inputs else list(Path.cwd().rglob("*.pdf"))
     if not files:
         print("No PDF files found.")
         return 1
@@ -680,13 +670,9 @@ def cmd_split_page(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="merged.py", description="Unified PDF toolkit."
-    )
+    parser = argparse.ArgumentParser(prog="merged.py", description="Unified PDF toolkit.")
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser(
-        "outline", help="Add outline to a PDF using a mdBook SUMMARY.md."
-    )
+    p = sub.add_parser("outline", help="Add outline to a PDF using a mdBook SUMMARY.md.")
     p.add_argument("--html_path", default="print.html")
     p.add_argument("--pdf_path", default="output.pdf")
     p.add_argument("--summary_path", default="src/SUMMARY.md")
@@ -722,9 +708,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--engine", choices=sorted(_SHRINK_ENGINES.keys()), required=True)
     p.add_argument("inputs", nargs="*")
     p.set_defaults(func=cmd_shrink)
-    p = sub.add_parser(
-        "split-size", help="Split PDFs into chunks no larger than --max-mb."
-    )
+    p = sub.add_parser("split-size", help="Split PDFs into chunks no larger than --max-mb.")
     p.add_argument("--max-mb", type=int, default=5)
     p.add_argument("--output", default="output")
     p.add_argument("inputs", nargs="*")

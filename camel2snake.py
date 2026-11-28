@@ -40,9 +40,7 @@ import libcst as cst
 from loguru import logger
 
 
-CAMEL_RE = re.compile(
-    r"^(?P<pre>_*)(?P<body>[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)+)(?P<post>_*)$"
-)
+CAMEL_RE = re.compile(r"^(?P<pre>_*)(?P<body>[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)+)(?P<post>_*)$")
 PARTIAL_RE = re.compile(r"[a-z][A-Z]")
 SNAKE_BOUNDARY_RE = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
 CACHE_FILE: str = ".camel_cache.json"
@@ -144,9 +142,7 @@ def load_undo(path: Path) -> dict[str, dict]:
     return load_json(path)
 
 
-def snapshot_undo(
-    store: dict[str, dict], path: Path, data: bytes, encoding: str
-) -> None:
+def snapshot_undo(store: dict[str, dict], path: Path, data: bytes, encoding: str) -> None:
     key = str(path.resolve())
     if key in store:
         return
@@ -271,10 +267,7 @@ class RenameTransformer(cst.CSTTransformer):
         self._in_import = 0
 
     def _in_all_assign(self, node: cst.Assign) -> bool:
-        return any(
-            isinstance(tgt.target, cst.Name) and tgt.target.value == "__all__"
-            for tgt in node.targets
-        )
+        return any(isinstance(tgt.target, cst.Name) and tgt.target.value == "__all__" for tgt in node.targets)
 
     def visit_Assign(self, node: cst.Assign) -> bool:
         if self._in_all_assign(node):
@@ -291,9 +284,7 @@ class RenameTransformer(cst.CSTTransformer):
             self._str_ctx += 1
         return True
 
-    def leave_AugAssign(
-        self, orig: cst.AugAssign, updated: cst.AugAssign
-    ) -> cst.AugAssign:
+    def leave_AugAssign(self, orig: cst.AugAssign, updated: cst.AugAssign) -> cst.AugAssign:
         if isinstance(orig.target, cst.Name) and orig.target.value == "__all__":
             self._str_ctx -= 1
         return updated
@@ -331,9 +322,7 @@ class RenameTransformer(cst.CSTTransformer):
         self._in_import += 1
         return True
 
-    def leave_ImportFrom(
-        self, orig: cst.ImportFrom, updated: cst.ImportFrom
-    ) -> cst.ImportFrom:
+    def leave_ImportFrom(self, orig: cst.ImportFrom, updated: cst.ImportFrom) -> cst.ImportFrom:
         self._in_import -= 1
         if updated.module is not None:
             new_module = self._rename_module_ref(updated.module)
@@ -345,9 +334,7 @@ class RenameTransformer(cst.CSTTransformer):
         changed = False
         for alias in updated.names:
             if isinstance(alias.name, cst.Name) and alias.name.value in self.renames:
-                new_alias = alias.with_changes(
-                    name=alias.name.with_changes(value=self.renames[alias.name.value])
-                )
+                new_alias = alias.with_changes(name=alias.name.with_changes(value=self.renames[alias.name.value]))
                 new_names.append(new_alias)
                 changed = True
                 self.count += 1
@@ -367,9 +354,7 @@ class RenameTransformer(cst.CSTTransformer):
             new_value = self._rename_module_ref(node.value)
             new_attr = node.attr
             if node.attr.value in self.module_renames:
-                new_attr = node.attr.with_changes(
-                    value=self.module_renames[node.attr.value]
-                )
+                new_attr = node.attr.with_changes(value=self.module_renames[node.attr.value])
             if new_value is not node.value or new_attr is not node.attr:
                 self.count += 1
                 return node.with_changes(value=new_value, attr=new_attr)
@@ -384,9 +369,7 @@ class RenameTransformer(cst.CSTTransformer):
             return updated.with_changes(value=self.renames[updated.value])
         return updated
 
-    def leave_SimpleString(
-        self, orig: cst.SimpleString, updated: cst.SimpleString
-    ) -> cst.SimpleString:
+    def leave_SimpleString(self, orig: cst.SimpleString, updated: cst.SimpleString) -> cst.SimpleString:
         if self._str_ctx <= 0:
             return updated
         try:
@@ -493,9 +476,7 @@ def detect_module_renames(files: list[Path]) -> dict[str, str]:
         if not new:
             continue
         if stem in renames and renames[stem] != new:
-            logger.warning(
-                "module rename conflict for {}: {} vs {}", stem, renames[stem], new
-            )
+            logger.warning("module rename conflict for {}: {} vs {}", stem, renames[stem], new)
             continue
         renames[stem] = new
     return renames
@@ -555,31 +536,21 @@ def parse_targets(value: str) -> set[str]:
 def main() -> int:
     logger.remove()
     logger.add(sys.stderr, level="INFO", format="<level>{level}</level>: {message}")
-    parser = argparse.ArgumentParser(
-        description="Refactor camelCase identifiers to snake_case."
-    )
+    parser = argparse.ArgumentParser(description="Refactor camelCase identifiers to snake_case.")
     parser.add_argument("paths", nargs="*", type=Path, default=[Path.cwd()])
     parser.add_argument("--targets", type=parse_targets, default=set(ALLOWED_TARGETS))
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--diff", action="store_true")
     parser.add_argument("--no-cache", action="store_true")
     parser.add_argument("--no-undo", action="store_true")
-    parser.add_argument(
-        "--undo", action="store_true", help="restore from undo file and exit"
-    )
-    parser.add_argument(
-        "--rename-modules", action="store_true", help="rename camelCase .py filenames"
-    )
+    parser.add_argument("--undo", action="store_true", help="restore from undo file and exit")
+    parser.add_argument("--rename-modules", action="store_true", help="rename camelCase .py filenames")
     parser.add_argument("--cache-file", type=Path, default=None)
     parser.add_argument("--undo-file", type=Path, default=None)
-    parser.add_argument(
-        "--exclude", action="append", default=[], help="regex to exclude paths"
-    )
+    parser.add_argument("--exclude", action="append", default=[], help="regex to exclude paths")
     args = parser.parse_args()
     root = args.paths[0].resolve() if args.paths else Path.cwd().resolve()
-    cache_path = (
-        args.cache_file or (root if root.is_dir() else root.parent) / CACHE_FILE
-    )
+    cache_path = args.cache_file or (root if root.is_dir() else root.parent) / CACHE_FILE
     undo_path = args.undo_file or (root if root.is_dir() else root.parent) / UNDO_FILE
     if args.undo:
         store = load_undo(undo_path)
@@ -607,14 +578,10 @@ def main() -> int:
     payloads = [(f, args.targets) for f in files]
     if len(files) >= 64 and MAX_WORKERS > 1:
         with Pool(processes=MAX_WORKERS) as pool:
-            for path, mapping in pool.imap_unordered(
-                collect_worker, payloads, chunksize=16
-            ):
+            for path, mapping in pool.imap_unordered(collect_worker, payloads, chunksize=16):
                 for k, v in mapping.items():
                     if k in combined and combined[k] != v and k not in conflicts:
-                        logger.warning(
-                            "rename conflict for {}: {} vs {}", k, combined[k], v
-                        )
+                        logger.warning("rename conflict for {}: {} vs {}", k, combined[k], v)
                         conflicts.add(k)
                         continue
                     combined.setdefault(k, v)
@@ -622,9 +589,7 @@ def main() -> int:
         for path, mapping in (collect_worker(p) for p in payloads):
             for k, v in mapping.items():
                 if k in combined and combined[k] != v and k not in conflicts:
-                    logger.warning(
-                        "rename conflict for {}: {} vs {}", k, combined[k], v
-                    )
+                    logger.warning("rename conflict for {}: {} vs {}", k, combined[k], v)
                     conflicts.add(k)
                     continue
                 combined.setdefault(k, v)
@@ -640,10 +605,7 @@ def main() -> int:
         len(module_renames),
     )
     apply = not args.dry_run
-    payloads = [
-        (f, combined, module_renames, cache.get(str(f)), apply, args.dry_run, args.diff)
-        for f in files
-    ]
+    payloads = [(f, combined, module_renames, cache.get(str(f)), apply, args.dry_run, args.diff) for f in files]
     total_files = 0
     total_edits = 0
     errors = 0
@@ -651,17 +613,13 @@ def main() -> int:
         with Pool(processes=MAX_WORKERS) as pool:
             results = pool.imap_unordered(process_file, payloads, chunksize=8)
             for res in results:
-                errors += _handle_result(
-                    res, apply, args.no_undo, cache, undo_store, args.diff
-                )
+                errors += _handle_result(res, apply, args.no_undo, cache, undo_store, args.diff)
                 if res.count:
                     total_files += 1
                     total_edits += res.count
     else:
         for res in map(process_file, payloads):
-            errors += _handle_result(
-                res, apply, args.no_undo, cache, undo_store, args.diff
-            )
+            errors += _handle_result(res, apply, args.no_undo, cache, undo_store, args.diff)
             if res.count:
                 total_files += 1
                 total_edits += res.count

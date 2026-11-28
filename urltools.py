@@ -70,62 +70,60 @@ GITHUB_REPO_RE = re.compile(
 )
 DEFAULT_GIT_HOSTS: str = "github.com,gitlab.com,gitea.io,bitbucket.org,git.sr.ht,codeberg.org,gitbucket.org,gogs.io"
 DEFAULT_FILE_EXTS = ",".join(
-    sorted(
-        {
-            ".txt",
-            ".md",
-            ".rst",
-            ".log",
-            ".csv",
-            ".tsv",
-            ".json",
-            ".xml",
-            ".yaml",
-            ".yml",
-            ".toml",
-            ".ini",
-            ".cfg",
-            ".conf",
-            ".html",
-            ".htm",
-            ".css",
-            ".js",
-            ".ts",
-            ".py",
-            ".rb",
-            ".go",
-            ".rs",
-            ".java",
-            ".c",
-            ".h",
-            ".cpp",
-            ".hpp",
-            ".sh",
-            ".bash",
-            ".zsh",
-            ".pdf",
-            ".zip",
-            ".tar",
-            ".gz",
-            ".xz",
-            ".7z",
-            ".whl",
-            ".png",
-            ".jpg",
-            ".jpeg",
-            ".gif",
-            ".svg",
-            ".webp",
-            ".ico",
-            ".bmp",
-            ".ttf",
-            ".woff",
-            ".woff2",
-            ".eot",
-            ".otf",
-            ".ttc",
-        }
-    )
+    sorted({
+        ".txt",
+        ".md",
+        ".rst",
+        ".log",
+        ".csv",
+        ".tsv",
+        ".json",
+        ".xml",
+        ".yaml",
+        ".yml",
+        ".toml",
+        ".ini",
+        ".cfg",
+        ".conf",
+        ".html",
+        ".htm",
+        ".css",
+        ".js",
+        ".ts",
+        ".py",
+        ".rb",
+        ".go",
+        ".rs",
+        ".java",
+        ".c",
+        ".h",
+        ".cpp",
+        ".hpp",
+        ".sh",
+        ".bash",
+        ".zsh",
+        ".pdf",
+        ".zip",
+        ".tar",
+        ".gz",
+        ".xz",
+        ".7z",
+        ".whl",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".svg",
+        ".webp",
+        ".ico",
+        ".bmp",
+        ".ttf",
+        ".woff",
+        ".woff2",
+        ".eot",
+        ".otf",
+        ".ttc",
+    })
 )
 ZIP_SUFFIXES: tuple[str, str] = (".zip", ".whl")
 TAR_SUFFIXES: tuple[str, ...] = (
@@ -385,9 +383,7 @@ def cmd_scan(args: argparse.Namespace) -> int:
         log_info("No files to scan.")
         return 0
     log_info(f"Scanning {len(files)} files…")
-    tasks = [
-        (str(f), args.max_size, args.archives_only, args.files_only) for f in files
-    ]
+    tasks = [(str(f), args.max_size, args.archives_only, args.files_only) for f in files]
     all_urls: set[str] = set()
     if MAX_WORKERS > 1 and len(tasks) > 1:
         with Pool(processes=MAX_WORKERS) as pool:
@@ -487,9 +483,7 @@ def _split_by_ext(args: argparse.Namespace) -> int:
 
 
 def cmd_split(args: argparse.Namespace) -> int:
-    args.file_exts = tuple(
-        e if e.startswith(".") else "." + e for e in args.file_exts.split(",") if e
-    )
+    args.file_exts = tuple(e if e.startswith(".") else "." + e for e in args.file_exts.split(",") if e)
     if args.mode == "grouped":
         return _split_grouped(args)
     return _split_by_ext(args)
@@ -592,11 +586,7 @@ def _prune_aggressive(urls: list[str]) -> list[str]:
         netloc = p.netloc.lower()
         parts = [s for s in (p.path or "/").split("/") if s]
         if "github.com" in netloc:
-            root = (
-                f"https://github.com/{parts[0]}/{parts[1]}"
-                if len(parts) >= 2
-                else "https://github.com/"
-            )
+            root = f"https://github.com/{parts[0]}/{parts[1]}" if len(parts) >= 2 else "https://github.com/"
         else:
             root = f"https://{netloc}/"
         if root not in seen:
@@ -741,11 +731,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="urlkit",
         description="Unified URL extraction / cleaning toolkit.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=(
-            __doc__.split("Original → merged mapping")[1]
-            if "Original → merged mapping" in __doc__
-            else None
-        ),
+        epilog=(__doc__.split("Original → merged mapping")[1] if "Original → merged mapping" in __doc__ else None),
     )
     sub = p.add_subparsers(dest="command", required=True)
     pc = sub.add_parser("clean", help="Dedupe domains; split github URLs.")
@@ -770,9 +756,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Only read archives (exlinks.py behavior).",
     )
-    ps.add_argument(
-        "--files-only", action="store_true", help="Skip archives, only read text files."
-    )
+    ps.add_argument("--files-only", action="store_true", help="Skip archives, only read text files.")
     ps.add_argument(
         "--max-size",
         type=int,
@@ -792,9 +776,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Split URLs by group or by file extension (file_urls + split_urls).",
     )
     psp.add_argument("-i", "--input", default="urls.txt")
-    psp.add_argument(
-        "-o", "--output", default="file_urls.txt", help="'Other' bucket (grouped mode)."
-    )
+    psp.add_argument("-o", "--output", default="file_urls.txt", help="'Other' bucket (grouped mode).")
     psp.add_argument("--output-dir", default=".")
     psp.add_argument(
         "--mode",
@@ -808,9 +790,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Comma-separated extensions considered when deciding which URLs to keep in grouped mode.",
     )
     psp.set_defaults(func=cmd_split)
-    pj = sub.add_parser(
-        "filter-jscss", help="Keep only .js/.css URLs (filter_jscss_links.py)."
-    )
+    pj = sub.add_parser("filter-jscss", help="Keep only .js/.css URLs (filter_jscss_links.py).")
     pj.add_argument("-i", "--input", default="urls.txt")
     pj.add_argument("-o", "--output", default="filtered_urls.txt")
     pj.set_defaults(func=cmd_filter_jscss)
@@ -832,9 +812,7 @@ def build_parser() -> argparse.ArgumentParser:
     pm.add_argument("input")
     pm.add_argument("-g", "--git-output", default="gitlinks.txt")
     pm.set_defaults(func=cmd_move_gitlinks)
-    psv = sub.add_parser(
-        "save-page", help="Save a webpage with pywebcopy (saveurl.py)."
-    )
+    psv = sub.add_parser("save-page", help="Save a webpage with pywebcopy (saveurl.py).")
     psv.add_argument("url")
     psv.add_argument("--project-folder", default="./saved_pages/")
     psv.add_argument(
@@ -847,9 +825,7 @@ def build_parser() -> argparse.ArgumentParser:
     psv.add_argument("--debug", action="store_true", default=True)
     psv.add_argument("--no-debug", dest="debug", action="store_false")
     psv.add_argument("--open-in-browser", action="store_true", default=True)
-    psv.add_argument(
-        "--no-open-in-browser", dest="open_in_browser", action="store_false"
-    )
+    psv.add_argument("--no-open-in-browser", dest="open_in_browser", action="store_false")
     psv.set_defaults(func=cmd_save_page)
     pf = sub.add_parser(
         "fetch-files",

@@ -15,9 +15,7 @@ from typing import Optional, Sequence
 from dh import MAX_WORKERS, atomic_write
 
 
-SHIFT_RE = re.compile(
-    r"(\d{2,3}:\d{2}:\d{2},\d{3})\s*-->\s*(\d{2,3}:\d{2}:\d{2},\d{3})"
-)
+SHIFT_RE = re.compile(r"(\d{2,3}:\d{2}:\d{2},\d{3})\s*-->\s*(\d{2,3}:\d{2}:\d{2},\d{3})")
 FALLBACK_ENCODINGS: tuple[str, ...] = ("utf-8", "cp1252", "latin1")
 
 
@@ -132,9 +130,7 @@ def collect_srt_files(
                 result.append(p)
             else:
                 if not assume_yes:
-                    answer = input(
-                        f"Warning: '{p}' doesn't have .srt extension. Continue? (y/n): "
-                    )
+                    answer = input(f"Warning: '{p}' doesn't have .srt extension. Continue? (y/n): ")
                     if answer.strip().lower() != "y":
                         continue
                 result.append(p)
@@ -206,9 +202,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not files:
         print("No .srt files found.")
         return 0
-    print(
-        f"Found {len(files)} file(s). Shifting by {args.shift:+.3f} seconds ({args.time_math} math)."
-    )
+    print(f"Found {len(files)} file(s). Shifting by {args.shift:+.3f} seconds ({args.time_math} math).")
     payloads = [(str(f), args.shift, args.time_math, args.encoding) for f in files]
     failures = 0
     if MAX_WORKERS > 1:

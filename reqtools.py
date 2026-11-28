@@ -138,7 +138,8 @@ def cmd_strip_versions(args: list[Any]) -> None:
         if not line or line.startswith("#"):
             continue
         g = (
-            line.split("==")[0]
+            line
+            .split("==")[0]
             .split(">=")[0]
             .split("<=")[0]
             .split("~=")[0]
@@ -167,9 +168,7 @@ def cmd_keep_pure(args: list[Any]) -> Any | None:
         dirs = []
         for q in [
             site.getsitepackages(),
-            [site.getusersitepackages()]
-            if hasattr(site, "getusersitepackages")
-            else [],
+            [site.getusersitepackages()] if hasattr(site, "getusersitepackages") else [],
         ]:
             if isinstance(q, str):
                 dirs.append(q)
@@ -182,9 +181,7 @@ def cmd_keep_pure(args: list[Any]) -> Any | None:
         for q in get_site_packages():
             q_path = Path(q)
             if q_path.exists():
-                h.extend(
-                    [str(z) for z in q_path.iterdir() if z.name.endswith(".dist-info")]
-                )
+                h.extend([str(z) for z in q_path.iterdir() if z.name.endswith(".dist-info")])
         return h
 
     def check_binary(i: Path) -> str | None:
@@ -223,14 +220,7 @@ def cmd_keep_pure(args: list[Any]) -> Any | None:
     kept = []
     removed = []
     for G in reqs:
-        o = (
-            G.split("==")[0]
-            .split(">=")[0]
-            .split("<=")[0]
-            .split("~=")[0]
-            .strip()
-            .lower()
-        )
+        o = G.split("==")[0].split(">=")[0].split("<=")[0].split("~=")[0].strip().lower()
         if o in binaries:
             removed.append(G)
         else:
@@ -284,18 +274,16 @@ def cmd_extract_reqs(args: list[Any]) -> bool | None:
             if low.endswith((".zip", ".whl")):
                 with zipfile.ZipFile(af, "r") as zf:
                     return zf.testzip() is None
-            if low.endswith(
-                (
-                    ".tar",
-                    ".tar.gz",
-                    ".tgz",
-                    ".tar.xz",
-                    ".txz",
-                    ".tar.bz2",
-                    ".tbz2",
-                    ".tbz",
-                )
-            ):
+            if low.endswith((
+                ".tar",
+                ".tar.gz",
+                ".tgz",
+                ".tar.xz",
+                ".txz",
+                ".tar.bz2",
+                ".tbz2",
+                ".tbz",
+            )):
                 with tarfile.open(af) as tf:
                     return tf.badfile() is None
             return False
@@ -348,9 +336,7 @@ def cmd_extract_reqs(args: list[Any]) -> bool | None:
             continue
         name = path.name
         low = name.lower()
-        if name in meta_names or low.endswith(
-            (".metadata", ".zip", ".whl", ".tar.gz", ".tgz", ".tar")
-        ):
+        if name in meta_names or low.endswith((".metadata", ".zip", ".whl", ".tar.gz", ".tgz", ".tar")):
             targets.append(path)
     for path in targets:
         name = path.name
@@ -391,16 +377,8 @@ def cmd_remove_req(args: list[Any]) -> None:
             break
     if not target_dir:
         g, h = sys.version_info[:2]
-        termux_path = Path(
-            f"/data/data/com.termux/files/usr/lib/python{g}{h}/site-packages"
-        )
-        target_dir = (
-            termux_path
-            if termux_path.exists()
-            else Path(site_pkgs[0])
-            if site_pkgs
-            else Path.cwd()
-        )
+        termux_path = Path(f"/data/data/com.termux/files/usr/lib/python{g}{h}/site-packages")
+        target_dir = termux_path if termux_path.exists() else Path(site_pkgs[0]) if site_pkgs else Path.cwd()
 
     def process_metadata(meta_path: Path, req_str: str) -> None:
         meta_path = Path(meta_path)
@@ -426,11 +404,7 @@ def cmd_strip_installed(args: list[Any]) -> list[str] | None:
 
     def get_reqs() -> list[str]:
         with req_path.open(encoding="utf-8") as f:
-            return [
-                l.strip().replace("-", "_").lower()
-                for l in f
-                if l.strip() and not l.startswith("#")
-            ]
+            return [l.strip().replace("-", "_").lower() for l in f if l.strip() and not l.startswith("#")]
 
     installed = get_installed_pkgs()
     installed = [p.lower().replace("-", "_") for p in installed if p]
@@ -452,11 +426,7 @@ def cmd_strip_stdlib(args: list[Any]) -> list[str] | None:
 
     def get_reqs() -> list[str]:
         with req_path.open(encoding="utf-8") as f:
-            return [
-                k.strip().replace("-", "_").lower()
-                for k in f
-                if k.strip() and not k.startswith("#")
-            ]
+            return [k.strip().replace("-", "_").lower() for k in f if k.strip() and not k.startswith("#")]
 
     requested = get_reqs()
     filtered = [k for k in requested if k not in STDLIB]
@@ -525,73 +495,41 @@ def cmd_uv_req(args: list[Any]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Unified Python Package and Requirements Management Tool"
-    )
+    parser = argparse.ArgumentParser(description="Unified Python Package and Requirements Management Tool")
     subparsers = parser.add_subparsers(dest="command", required=True)
-    p_clean_req = subparsers.add_parser(
-        "clean-req", help="Clean requirements file (comments, markers, versions, sort)"
-    )
-    p_clean_req.add_argument(
-        "file", nargs="?", default="requirements.txt", help="Path to requirements.txt"
-    )
-    p_clean_freeze = subparsers.add_parser(
-        "clean-freeze", help="Clean pip freeze output (keep package names)"
-    )
+    p_clean_req = subparsers.add_parser("clean-req", help="Clean requirements file (comments, markers, versions, sort)")
+    p_clean_req.add_argument("file", nargs="?", default="requirements.txt", help="Path to requirements.txt")
+    p_clean_freeze = subparsers.add_parser("clean-freeze", help="Clean pip freeze output (keep package names)")
     p_clean_freeze.add_argument("file", help="Path to pip freeze file")
-    p_strip_versions = subparsers.add_parser(
-        "strip-versions", help="Strip version specifiers from requirements file"
-    )
+    p_strip_versions = subparsers.add_parser("strip-versions", help="Strip version specifiers from requirements file")
     p_strip_versions.add_argument("file", help="Path to requirements file")
-    p_keep_pure = subparsers.add_parser(
-        "keep-pure", help="Identify binary packages and remove from requirements"
-    )
-    p_keep_pure.add_argument(
-        "file", nargs="?", default="requirements.txt", help="Path to requirements.txt"
-    )
+    p_keep_pure = subparsers.add_parser("keep-pure", help="Identify binary packages and remove from requirements")
+    p_keep_pure.add_argument("file", nargs="?", default="requirements.txt", help="Path to requirements.txt")
     p_keep_pure.add_argument(
         "--binary-output",
         default="/sdcard/data/binary",
         help="Path to output binary package list",
     )
-    p_extract_reqs = subparsers.add_parser(
-        "extract-reqs", help="Extract Requires-Dist from metadata in archives"
-    )
+    p_extract_reqs = subparsers.add_parser("extract-reqs", help="Extract Requires-Dist from metadata in archives")
     p_extract_reqs.add_argument(
         "--output",
         default="/sdcard/reqz.txt",
         help="Path to output extracted requirements",
     )
-    p_remove_req = subparsers.add_parser(
-        "remove-req", help="Remove specific Requires-Dist from site-packages METADATA"
-    )
+    p_remove_req = subparsers.add_parser("remove-req", help="Remove specific Requires-Dist from site-packages METADATA")
     p_remove_req.add_argument("requirement", help="Requirement specifier to remove")
     p_strip_installed = subparsers.add_parser(
         "strip-installed", help="Remove installed and stdlib packages from requirements"
     )
-    p_strip_installed.add_argument(
-        "file", nargs="?", default="requirements.txt", help="Path to requirements.txt"
-    )
-    p_strip_stdlib = subparsers.add_parser(
-        "strip-stdlib", help="Remove stdlib packages from requirements"
-    )
+    p_strip_installed.add_argument("file", nargs="?", default="requirements.txt", help="Path to requirements.txt")
+    p_strip_stdlib = subparsers.add_parser("strip-stdlib", help="Remove stdlib packages from requirements")
     p_strip_stdlib.add_argument("file", help="Path to requirements file")
-    p_trim_imports = subparsers.add_parser(
-        "trim-imports", help="Test importing packages and log failures"
-    )
-    p_trim_imports.add_argument(
-        "packages", nargs="*", help="Optional list of package names to test"
-    )
-    p_trim_imports.add_argument(
-        "--log-file", default="/sdcard/allimport.log", help="Path to log file"
-    )
-    p_uv_req = subparsers.add_parser(
-        "uv-req", help="Parse uv.lock and append package names to requirements"
-    )
+    p_trim_imports = subparsers.add_parser("trim-imports", help="Test importing packages and log failures")
+    p_trim_imports.add_argument("packages", nargs="*", help="Optional list of package names to test")
+    p_trim_imports.add_argument("--log-file", default="/sdcard/allimport.log", help="Path to log file")
+    p_uv_req = subparsers.add_parser("uv-req", help="Parse uv.lock and append package names to requirements")
     p_uv_req.add_argument("--lock-file", default="uv.lock", help="Path to uv.lock")
-    p_uv_req.add_argument(
-        "--req-file", default="requirements.txt", help="Path to requirements.txt"
-    )
+    p_uv_req.add_argument("--req-file", default="requirements.txt", help="Path to requirements.txt")
     args = parser.parse_args()
     if args.command == "clean-req":
         cmd_clean_req(args)

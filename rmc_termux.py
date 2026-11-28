@@ -102,11 +102,7 @@ def remove_blank_lines(source: str) -> str:
             protected.add(row + 1)
         if row <= 2 and _COOKIE_RE.search(line.encode("utf-8")):
             protected.update(range(1, row + 1))
-    result = "".join(
-        line
-        for row, line in enumerate(lines, 1)
-        if row in protected or line.strip(" \t\f\r\n")
-    )
+    result = "".join(line for row, line in enumerate(lines, 1) if row in protected or line.strip(" \t\f\r\n"))
     before = ast.dump(ast.parse(source), include_attributes=False)
     after = ast.dump(ast.parse(result), include_attributes=False)
     if before != after:
@@ -156,10 +152,7 @@ def _process_file(
                 result.diff = make_diff(source, stripped, path.name)
             if not dryrun:
                 if backup:
-                    if (
-                        path.is_symlink()
-                        or read_bounded(path, len(original)) != original
-                    ):
+                    if path.is_symlink() or read_bounded(path, len(original)) != original:
                         msg = "File changed while processing; not replaced"
                         raise RuntimeError(msg)
                     result.backup = create_backup(path, original)
@@ -263,9 +256,7 @@ def check_budget(source: str, limits: Limits) -> None:
     if source.count("\n") + 1 > limits.max_lines:
         msg = f"file exceeds {limits.max_lines:,} lines"
         raise BudgetExceeded(msg)
-    for count, _ in enumerate(
-        tokenize.generate_tokens(io.StringIO(source).readline), 1
-    ):
+    for count, _ in enumerate(tokenize.generate_tokens(io.StringIO(source).readline), 1):
         if count > limits.max_tokens:
             msg = f"file exceeds {limits.max_tokens:,} tokens"
             raise BudgetExceeded(msg)
@@ -288,17 +279,10 @@ def is_python_file(path: Path) -> bool:
         if program == "env":
             expanded = [part for word in words[1:] for part in shlex.split(word)]
             program = next(
-                (
-                    word
-                    for word in expanded
-                    if not word.startswith("-") and "=" not in word
-                ),
+                (word for word in expanded if not word.startswith("-") and "=" not in word),
                 "",
             )
-        return (
-            re.fullmatch(r"(?:python|pypy)(?:[23](?:\.\d+)*)?", Path(program).name)
-            is not None
-        )
+        return re.fullmatch(r"(?:python|pypy)(?:[23](?:\.\d+)*)?", Path(program).name) is not None
     except ValueError:
         return False
 
@@ -310,9 +294,7 @@ def has_symlink_component(path: Path) -> bool:
 def excluded(path: Path, root: Path, patterns: tuple[str, ...]) -> bool:
     relative = path.relative_to(root).as_posix()
     return any(
-        fnmatch.fnmatchcase(path.name, pattern)
-        or fnmatch.fnmatchcase(relative, pattern)
-        for pattern in patterns
+        fnmatch.fnmatchcase(path.name, pattern) or fnmatch.fnmatchcase(relative, pattern) for pattern in patterns
     )
 
 
@@ -373,13 +355,9 @@ def walk_python_files(
                         if entry.is_symlink():
                             continue
                         if entry.is_dir(follow_symlinks=False):
-                            if path.name not in skip_dirs and not path.name.endswith(
-                                ".egg-info"
-                            ):
+                            if path.name not in skip_dirs and not path.name.endswith(".egg-info"):
                                 yield from visit(path, root, depth + 1)
-                        elif entry.is_file(follow_symlinks=False) and is_python_file(
-                            path
-                        ):
+                        elif entry.is_file(follow_symlinks=False) and is_python_file(path):
                             yield path
                     except OSError:
                         stats.errors += 1
@@ -404,9 +382,7 @@ def walk_python_files(
 class StreamingReport:
     def __init__(self, path: Path) -> None:
         self.path = path
-        fd, name = tempfile.mkstemp(
-            dir=path.parent, prefix=f".{path.name}.", suffix=".tmp"
-        )
+        fd, name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
         self.temporary = Path(name)
         self.stream = os.fdopen(fd, "w", encoding="utf-8", newline="\n")
         self.first = True
@@ -425,9 +401,7 @@ class StreamingReport:
 
     def finish(self, stats: Stats, dryrun: bool, elapsed: float) -> None:
         self.stream.write('],"summary":')
-        json.dump(
-            {**asdict(stats), "dryrun": dryrun, "elapsed_seconds": elapsed}, self.stream
-        )
+        json.dump({**asdict(stats), "dryrun": dryrun, "elapsed_seconds": elapsed}, self.stream)
         self.stream.write("}\n")
         self.stream.flush()
         os.fsync(self.stream.fileno())
@@ -444,20 +418,14 @@ def configure_logging(error_log: Path, log_file: Path | None, level: str) -> Non
     logger.add(sys.stderr, level=level, format="{level} | {message}")
     logger.add(error_log, level="ERROR", rotation="1 MB", retention=2, encoding="utf-8")
     if log_file is not None:
-        logger.add(
-            log_file, level=level, rotation="2 MB", retention=2, encoding="utf-8"
-        )
+        logger.add(log_file, level=level, rotation="2 MB", retention=2, encoding="utf-8")
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("inputs", nargs="*", type=Path, metavar="PATH")
     parser.add_argument("-c", action="store_true", help="Remove ordinary comments")
-    parser.add_argument(
-        "-d", action="store_true", help="Remove function/class docstrings"
-    )
+    parser.add_argument("-d", action="store_true", help="Remove function/class docstrings")
     parser.add_argument(
         "-a",
         "--all",
@@ -486,16 +454,10 @@ def main() -> int:
         default=64,
         help="Maximum traversal depth (default: 64)",
     )
-    parser.add_argument(
-        "--report-json", type=Path, help="Stream a JSON report to disk atomically"
-    )
-    parser.add_argument(
-        "--error-log", type=Path, default=Path("striper_termux.errors.log")
-    )
+    parser.add_argument("--report-json", type=Path, help="Stream a JSON report to disk atomically")
+    parser.add_argument("--error-log", type=Path, default=Path("striper_termux.errors.log"))
     parser.add_argument("--log-file", type=Path)
-    parser.add_argument(
-        "--log-level", choices=("DEBUG", "INFO", "WARNING", "ERROR"), default="WARNING"
-    )
+    parser.add_argument("--log-level", choices=("DEBUG", "INFO", "WARNING", "ERROR"), default="WARNING")
     parser.add_argument(
         "--stripper",
         choices=("ast", "ts", "cst"),
@@ -503,12 +465,8 @@ def main() -> int:
         help="Stripper backend (default: cst)",
     )
     group = parser.add_mutually_exclusive_group()
-    group.add_argument(
-        "--mp", action="store_true", help="Use multiprocessing.Pool.imap_unordered"
-    )
-    group.add_argument(
-        "--cf", action="store_true", help="Use concurrent.futures.ProcessPoolExecutor"
-    )
+    group.add_argument("--mp", action="store_true", help="Use multiprocessing.Pool.imap_unordered")
+    group.add_argument("--cf", action="store_true", help="Use concurrent.futures.ProcessPoolExecutor")
     args = parser.parse_intermixed_args()
     if any(
         value < 1
@@ -520,9 +478,7 @@ def main() -> int:
             MAX_WORKERS,
         )
     ):
-        parser.error(
-            "All resource limits and workers must be positive; zero/unlimited is not supported"
-        )
+        parser.error("All resource limits and workers must be positive; zero/unlimited is not supported")
     if any(not name or "/" in name or "\\" in name for name in args.exclude_dir):
         parser.error("--exclude-dir requires a directory basename")
     if not (args.c or args.d or args.all or args.remove_blank_lines):
@@ -549,14 +505,10 @@ def main() -> int:
         }
         skip_dirs = SKIP_DIRS | frozenset(args.exclude_dir)
         color = args.color == "always" or (
-            args.color == "auto"
-            and sys.stdout.isatty()
-            and "NO_COLOR" not in os.environ
+            args.color == "auto" and sys.stdout.isatty() and "NO_COLOR" not in os.environ
         )
         if args.all:
-            LOGGER.warning(
-                "--all removes shebangs, encoding comments, tool directives and module docstrings"
-            )
+            LOGGER.warning("--all removes shebangs, encoding comments, tool directives and module docstrings")
         if args.stripper == "ast":
             cls_name = "ASTStripper"
         elif args.stripper == "ts":
@@ -691,9 +643,7 @@ def main() -> int:
     except KeyboardInterrupt:
         interrupted = True
         stats.errors += 1
-        LOGGER.error(
-            "Interrupted; previously committed source changes are not rolled back"
-        )
+        LOGGER.error("Interrupted; previously committed source changes are not rolled back")
     except Exception:
         stats.errors += 1
         LOGGER.exception("Termux run failed")
@@ -714,13 +664,9 @@ def main() -> int:
         else "Total space freed"
     )
     print(f"\n{label}: {stats.bytes_reduced:,} bytes")
-    print(
-        f"Files: {stats.files}; changed: {stats.changed}; skipped: {stats.skipped}; errors: {stats.errors}"
-    )
+    print(f"Files: {stats.files}; changed: {stats.changed}; skipped: {stats.skipped}; errors: {stats.errors}")
     if args.dryrun:
-        print(
-            "Dry run: no source files or backups written; logs/reports may be written."
-        )
+        print("Dry run: no source files or backups written; logs/reports may be written.")
     if args.backup and not args.dryrun:
         print("Backups consume extra space; totals count source files only.")
     if args.time:

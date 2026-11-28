@@ -74,9 +74,7 @@ def sanitize_filename(name: str) -> str:
     return sanitized
 
 
-def rename_font_file(
-    font_path: Path, apply: bool = False
-) -> tuple[str | None, str | None]:
+def rename_font_file(font_path: Path, apply: bool = False) -> tuple[str | None, str | None]:
     family_name, style = get_font_name_and_style(font_path)
     if not family_name:
         print(f"  Skipping {font_path.name}: Could not extract font family name")
@@ -103,9 +101,7 @@ def rename_font_file(
         return (font_path.name, new_name)
 
 
-def process_directory(
-    directory: Path, recursive: bool = True, apply: bool = False
-) -> int:
+def process_directory(directory: Path, recursive: bool = True, apply: bool = False) -> int:
     directory = Path(directory)
     renamed_count = 0
     for item in directory.iterdir():
@@ -139,18 +135,14 @@ Examples:
         action="store_true",
         help="Apply the renames (default is dry-run)",
     )
-    parser.add_argument(
-        "--no-recursive", action="store_true", help="Don't process subdirectories"
-    )
+    parser.add_argument("--no-recursive", action="store_true", help="Don't process subdirectories")
     args = parser.parse_args()
     cwd = Path.cwd()
     if args.apply:
         print("Applying renames...")
     else:
         print("Dry-run mode (no changes will be made). Use -a to apply.\n")
-    renamed_count = process_directory(
-        cwd, recursive=not args.no_recursive, apply=args.apply
-    )
+    renamed_count = process_directory(cwd, recursive=not args.no_recursive, apply=args.apply)
     if args.apply:
         print(f"\n{renamed_count} font file(s) renamed.")
     else:

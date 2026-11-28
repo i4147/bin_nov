@@ -84,9 +84,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Report dependencies of installed Python packages by parsing local METADATA files."
     )
-    parser.add_argument(
-        "package", nargs="?", help="Name of the specific target package to analyze."
-    )
+    parser.add_argument("package", nargs="?", help="Name of the specific target package to analyze.")
     parser.add_argument(
         "-a",
         "--all",
@@ -109,9 +107,7 @@ def main() -> None:
     args = parser.parse_args()
     root_path = Path(args.directory).resolve()
     if not args.all and not args.package:
-        parser.error(
-            "You must either specify a target package name or pass the -a/--all flag."
-        )
+        parser.error("You must either specify a target package name or pass the -a/--all flag.")
     pkgs_to_report = []
     if args.all:
         print(

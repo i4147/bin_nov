@@ -56,9 +56,7 @@ if TYPE_CHECKING:
 
 MAGIC_PREFIXES: tuple[str, ...] = ("%", "!", "%%")
 CELL_MARKER: re.Pattern[str] = re.compile(r"^#\s*%%.*$")
-CODE_FENCE: re.Pattern[str] = re.compile(
-    r"```(?:python|py|shell|bash|sh)\s*\n(.*?)```", re.DOTALL
-)
+CODE_FENCE: re.Pattern[str] = re.compile(r"```(?:python|py|shell|bash|sh)\s*\n(.*?)```", re.DOTALL)
 Cell = dict[str, object]
 
 
@@ -148,9 +146,7 @@ def strip_magics(source: str, mode: str) -> str:
     return "\n".join(out)
 
 
-def notebook_to_py(
-    notebook: dict[str, object], hoist: bool, wrap_main: bool, magic_mode: str
-) -> str:
+def notebook_to_py(notebook: dict[str, object], hoist: bool, wrap_main: bool, magic_mode: str) -> str:
     imports: list[str] = []
     body: list[str] = []
     cells: object = notebook["cells"]
@@ -160,9 +156,7 @@ def notebook_to_py(
         cell: Cell = raw_cell
         source: str = cell_source(cell)
         if cell.get("cell_type") == "markdown":
-            body.append(
-                "\n".join(f"# {ln}".rstrip() for ln in source.splitlines()) + "\n"
-            )
+            body.append("\n".join(f"# {ln}".rstrip() for ln in source.splitlines()) + "\n")
         elif cell.get("cell_type") == "code":
             cleaned: str = strip_magics(source, magic_mode)
             if hoist:
@@ -181,9 +175,7 @@ def notebook_to_py(
     header: str = "\n".join(dict.fromkeys(imports)) + "\n\n" if imports else ""
     main_text: str = "\n".join(body).rstrip() + "\n"
     if wrap_main:
-        indented: str = "\n".join(
-            ("    " + ln) if ln.strip() else ln for ln in main_text.splitlines()
-        )
+        indented: str = "\n".join(("    " + ln) if ln.strip() else ln for ln in main_text.splitlines())
         main_text = f"if __name__ == '__main__':\n{indented}\n"
     return header + main_text
 
@@ -192,9 +184,7 @@ def cmd_to_py(args: argparse.Namespace) -> int:
     return run_each(
         find_files(args.paths, ".ipynb"),
         lambda p: p.with_suffix(".py"),
-        lambda p: notebook_to_py(
-            load_notebook(p), args.hoist_imports, args.wrap_main, args.magics
-        ),
+        lambda p: notebook_to_py(load_notebook(p), args.hoist_imports, args.wrap_main, args.magics),
     )
 
 
@@ -250,9 +240,7 @@ def split_py(code: str, mode: str) -> list[str]:
     for index, line in enumerate(lines):
         starts_def: bool = line.startswith(("def ", "class ", "async def "))
         import_break: bool = (
-            line.startswith(("import ", "from "))
-            and bool(current)
-            and not current[-1].startswith(("import ", "from "))
+            line.startswith(("import ", "from ")) and bool(current) and not current[-1].startswith(("import ", "from "))
         )
         blank_gap: bool = (
             not line.strip()
@@ -273,11 +261,7 @@ def split_py(code: str, mode: str) -> list[str]:
 def cmd_to_ipynb(args: argparse.Namespace) -> int:
     failed: int = 0
     for path in find_files(args.paths, ".py"):
-        dest: Path = (
-            args.output
-            if args.output and len(args.paths) == 1
-            else path.with_suffix(".ipynb")
-        )
+        dest: Path = args.output if args.output and len(args.paths) == 1 else path.with_suffix(".ipynb")
         chunks: list[str] = split_py(path.read_text(encoding="utf-8"), args.split)
         save_notebook(new_notebook([code_cell(c) for c in chunks]), dest)
         print(f"{path.name} -> {dest.name} ({len(chunks)} cell(s))")
@@ -302,9 +286,7 @@ def strip_one(job: tuple[Path, bool]) -> tuple[Path, bool, str]:
                 changed = True
     if changed and not dry_run:
         save_notebook(notebook, path)
-    note: str = (
-        ("would strip" if dry_run else "stripped") if changed else "already clean"
-    )
+    note: str = ("would strip" if dry_run else "stripped") if changed else "already clean"
     return path, changed, note
 
 
@@ -316,9 +298,7 @@ def cmd_strip(args: argparse.Namespace) -> int:
         for path, changed, note in pool.map(strip_one, jobs):
             stripped += 1 if changed else 0
             print(f"{path}: {note}")
-    print(
-        f"{'Would strip' if args.dry_run else 'Stripped'}: {stripped}/{len(files)} notebook(s)."
-    )
+    print(f"{'Would strip' if args.dry_run else 'Stripped'}: {stripped}/{len(files)} notebook(s).")
     return 0
 
 
@@ -349,9 +329,7 @@ def cmd_meta_to_ipynb(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Notebook <-> script/markdown conversion."
-    )
+    parser = argparse.ArgumentParser(description="Notebook <-> script/markdown conversion.")
     sub = parser.add_subparsers(dest="command", required=True)
     tp = sub.add_parser("to-py", help=".ipynb -> .py")
     tp.add_argument("paths", nargs="*", type=Path)
@@ -360,9 +338,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Move imports/env lines to top (nb2py)",
     )
-    tp.add_argument(
-        "--wrap-main", action="store_true", help="Indent body under __main__ (nb2py)"
-    )
+    tp.add_argument("--wrap-main", action="store_true", help="Indent body under __main__ (nb2py)")
     tp.add_argument("--magics", choices=("comment", "drop", "keep"), default="comment")
     tp.set_defaults(handler=cmd_to_py)
     tm = sub.add_parser("to-md", help=".ipynb -> .md")
@@ -370,9 +346,7 @@ def build_parser() -> argparse.ArgumentParser:
     tm.set_defaults(handler=cmd_to_md)
     ti = sub.add_parser("to-ipynb", help=".py -> .ipynb")
     ti.add_argument("paths", nargs="+", type=Path)
-    ti.add_argument(
-        "-o", "--output", type=Path, default=None, help="Single-file output name"
-    )
+    ti.add_argument("-o", "--output", type=Path, default=None, help="Single-file output name")
     ti.add_argument(
         "--split",
         choices=("auto", "single", "blank"),

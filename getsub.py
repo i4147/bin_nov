@@ -78,9 +78,7 @@ def run_file_mode(args: argparse.Namespace) -> int:
         return 1
     if args.warn_non_mkv and video_path.suffix.lower() != ".mkv":
         LOGGER.warning("File is not an MKV: {}", video_path)
-    output_dir: Path = (
-        args.output_dir if args.output_dir is not None else video_path.parent
-    )
+    output_dir: Path = args.output_dir if args.output_dir is not None else video_path.parent
     try:
         output_dir.mkdir(parents=True, exist_ok=True)
     except OSError as exc:
@@ -103,16 +101,12 @@ def run_file_mode(args: argparse.Namespace) -> int:
     try:
         language = babelfish.Language(args.language)
         print(f"Searching for {args.language} subtitles...")
-        subtitles_by_video = download_best_subtitles(
-            [video], {language}, providers=args.providers
-        )
+        subtitles_by_video = download_best_subtitles([video], {language}, providers=args.providers)
         subtitles = subtitles_by_video.get(video, set())
         if not subtitles:
             LOGGER.warning("No subtitles found for {}", video_path.name)
             return 1
-        output_path = (
-            output_dir / f"{video_path.stem}{args.filename_suffix}{args.extension}"
-        )
+        output_path = output_dir / f"{video_path.stem}{args.filename_suffix}{args.extension}"
         save_subtitles(video, subtitles, single=True, path=output_path)
         print(f"Subtitles saved to: {output_path}")
         print("✓ Subtitles downloaded successfully!")
@@ -151,11 +145,7 @@ class TitleSubtitleClient:
         return {} if self.timeout is None else {"timeout": self.timeout}
 
     def api_headers(self) -> dict[str, str]:
-        return (
-            {"Api-Key": self.opensubtitles_api_key}
-            if self.opensubtitles_api_key
-            else {}
-        )
+        return {"Api-Key": self.opensubtitles_api_key} if self.opensubtitles_api_key else {}
 
     def search_opensubtitles(self, title: str) -> dict[str, Any] | None:
         try:
@@ -203,9 +193,7 @@ class TitleSubtitleClient:
             LOGGER.error("Error downloading subtitle: {}", exc)
             return None
 
-    def download_from_opensubtitles(
-        self, subtitle: dict[str, Any] | None
-    ) -> str | None:
+    def download_from_opensubtitles(self, subtitle: dict[str, Any] | None) -> str | None:
         if not subtitle:
             return None
         for file_info in subtitle.get("files", []):
@@ -236,9 +224,7 @@ class TitleSubtitleClient:
                             if content:
                                 return content
                 except Exception as exc:
-                    LOGGER.error(
-                        "Error requesting OpenSubtitles download link: {}", exc
-                    )
+                    LOGGER.error("Error requesting OpenSubtitles download link: {}", exc)
         return None
 
     def search_yts(self, title: str) -> str | None:
@@ -252,9 +238,7 @@ class TitleSubtitleClient:
                 return None
             payload = response.json()
             movie_data = payload.get("data", {}) if isinstance(payload, dict) else {}
-            movies = (
-                movie_data.get("movies", []) if isinstance(movie_data, dict) else []
-            )
+            movies = movie_data.get("movies", []) if isinstance(movie_data, dict) else []
             for movie in movies:
                 movie_id = movie.get("id")
                 if movie_id is None:
@@ -272,10 +256,7 @@ class TitleSubtitleClient:
                 details_payload = details.json()
                 movie_info = details_payload.get("data", {}).get("movie", {})
                 for subtitle in movie_info.get("subtitles", []):
-                    if (
-                        str(subtitle.get("lang", "")).lower()
-                        == self.yts_language.lower()
-                    ):
+                    if str(subtitle.get("lang", "")).lower() == self.yts_language.lower():
                         subtitle_url = subtitle.get("url")
                         if subtitle_url:
                             return str(subtitle_url)
@@ -335,9 +316,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Download English subtitles for a local video or search by movie/series title."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
-    file_parser = subparsers.add_parser(
-        "file", help="scan a local video with subliminal"
-    )
+    file_parser = subparsers.add_parser("file", help="scan a local video with subliminal")
     file_parser.add_argument("video", type=Path, help="path to the video file")
     file_parser.add_argument(
         "output_dir",
@@ -345,9 +324,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="output directory (defaults to the video directory)",
     )
-    file_parser.add_argument(
-        "--language", default="eng", help="Babelfish language code (default: eng)"
-    )
+    file_parser.add_argument("--language", default="eng", help="Babelfish language code (default: eng)")
     file_parser.add_argument(
         "--providers",
         nargs="+",
@@ -372,13 +349,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=True,
         help="warn when the input does not have an .mkv extension (default: enabled)",
     )
-    search_parser = subparsers.add_parser(
-        "search", help="search subtitle services by title"
-    )
+    search_parser = subparsers.add_parser("search", help="search subtitle services by title")
     search_parser.add_argument("query", nargs="+", help="movie or series title")
-    search_parser.add_argument(
-        "--output", type=Path, help="output filename (defaults to a sanitized title)"
-    )
+    search_parser.add_argument("--output", type=Path, help="output filename (defaults to a sanitized title)")
     search_parser.add_argument("--extension", type=normalize_extension, default=".srt")
     search_parser.add_argument(
         "--sources",
@@ -394,9 +367,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="HTTP timeout in seconds (default: none)",
     )
-    search_parser.add_argument(
-        "--opensubtitles-url", default="https://rest.opensubtitles.com/api/v1/subtitles"
-    )
+    search_parser.add_argument("--opensubtitles-url", default="https://rest.opensubtitles.com/api/v1/subtitles")
     search_parser.add_argument(
         "--opensubtitles-download-url",
         default="https://api.opensubtitles.com/api/v1/download",
@@ -404,12 +375,8 @@ def build_parser() -> argparse.ArgumentParser:
     search_parser.add_argument("--opensubtitles-api-key", default=None)
     search_parser.add_argument("--opensubtitles-language", default="en")
     search_parser.add_argument("--opensubtitles-type", default="all")
-    search_parser.add_argument(
-        "--yts-movies-url", default="https://yts.mx/api/v2/list_movies.json"
-    )
-    search_parser.add_argument(
-        "--yts-details-url", default="https://yts.mx/api/v2/movie_details.json"
-    )
+    search_parser.add_argument("--yts-movies-url", default="https://yts.mx/api/v2/list_movies.json")
+    search_parser.add_argument("--yts-details-url", default="https://yts.mx/api/v2/movie_details.json")
     search_parser.add_argument("--yts-limit", type=int, default=1)
     search_parser.add_argument(
         "--yts-with-images",

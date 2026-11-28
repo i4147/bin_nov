@@ -303,9 +303,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         name_color = "\x1b[5;94m" if p.is_dir() else "\x1b[5;92m"
         size_color = "\x1b[5;96m" if sz > 1_048_576 else ""
         reset = "\x1b[0m"
-        print(
-            f"{name_color}{p.name:25}{reset}  {size_color}{human_size(sz):>10}{reset}"
-        )
+        print(f"{name_color}{p.name:25}{reset}  {size_color}{human_size(sz):>10}{reset}")
     print(f"total size : \x1b[5;94m{human_size(total)}\x1b[0m")
     return 0
 
@@ -664,34 +662,24 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser(
-        "info", help="Directory report + optional bar chart by extension"
-    )
-    p.add_argument(
-        "-d", "--directory", default=".", help="Directory to scan (default: .)"
-    )
+    p = sub.add_parser("info", help="Directory report + optional bar chart by extension")
+    p.add_argument("-d", "--directory", default=".", help="Directory to scan (default: .)")
     p.add_argument(
         "--save-report",
         metavar="PATH",
         help="Save the text report to PATH (skipped if it exists)",
     )
-    p.add_argument(
-        "--chart", metavar="PATH", help="Save a bar chart of extension sizes to PATH"
-    )
+    p.add_argument("--chart", metavar="PATH", help="Save a bar chart of extension sizes to PATH")
     p.set_defaults(func=cmd_info)
     p = sub.add_parser("subdirs", help="Chart top-level directory size distribution")
-    p.add_argument(
-        "-d", "--directory", default=".", help="Directory to scan (default: .)"
-    )
+    p.add_argument("-d", "--directory", default=".", help="Directory to scan (default: .)")
     p.add_argument(
         "--chart",
         choices=("bar", "pie", "circle"),
         default="bar",
         help="Chart type (default: bar)",
     )
-    p.add_argument(
-        "--out", default="dirinfo.png", help="Output image path (default: dirinfo.png)"
-    )
+    p.add_argument("--out", default="dirinfo.png", help="Output image path (default: dirinfo.png)")
     p.add_argument(
         "--top-n",
         type=int,
@@ -705,9 +693,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Ignore entries smaller than this many KB (default: 100)",
     )
     p.add_argument("--dpi", type=int, default=300, help="Image DPI (default: 300)")
-    p.add_argument(
-        "--include-hidden", action="store_true", help="Include dotfiles/dot-directories"
-    )
+    p.add_argument("--include-hidden", action="store_true", help="Include dotfiles/dot-directories")
     p.set_defaults(func=cmd_subdirs)
     p = sub.add_parser("list", help="du-style listing of current directory entries")
     p.add_argument("-d", "--directory", default=".", help="Directory (default: .)")
@@ -722,32 +708,24 @@ def build_parser() -> argparse.ArgumentParser:
         help="Human-readable sizes (used with --sizes)",
     )
     p.add_argument("--dirs-only", action="store_true", help="List directories only")
-    p.add_argument(
-        "--include-hidden", action="store_true", help="Include dotfiles/dot-directories"
-    )
+    p.add_argument("--include-hidden", action="store_true", help="Include dotfiles/dot-directories")
     p.set_defaults(func=cmd_tree)
     p = sub.add_parser("split-range", help="Folderize by size ranges (foldesiz.py)")
-    p.add_argument(
-        "-d", "--directory", default=".", help="Source directory (default: .)"
-    )
+    p.add_argument("-d", "--directory", default=".", help="Source directory (default: .)")
     p.add_argument(
         "--dirs",
         type=int,
         default=None,
         help="Number of folders; omit for auto heuristic",
     )
-    p.add_argument(
-        "--include-hidden", action="store_true", help="Include dotfiles/dot-directories"
-    )
+    p.add_argument("--include-hidden", action="store_true", help="Include dotfiles/dot-directories")
     p.add_argument("--dry-run", action="store_true", help="Preview only")
     p.set_defaults(func=cmd_split_range)
     p = sub.add_parser(
         "split-count",
         help="Folderize by fixed count or max-MB per folder (foldesize.py)",
     )
-    p.add_argument(
-        "-d", "--directory", default=".", help="Source directory (default: .)"
-    )
+    p.add_argument("-d", "--directory", default=".", help="Source directory (default: .)")
     p.add_argument(
         "--dirs",
         type=int,
@@ -760,37 +738,23 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Maximum MB per folder; overrides --dirs if set",
     )
-    p.add_argument(
-        "--include-hidden", action="store_true", help="Include dotfiles/dot-directories"
-    )
+    p.add_argument("--include-hidden", action="store_true", help="Include dotfiles/dot-directories")
     p.add_argument("--dry-run", action="store_true", help="Preview only")
     p.set_defaults(func=cmd_split_count)
-    p = sub.add_parser(
-        "split-greedy", help="Greedy bin-pack into ~N folders (foldsize.py)"
-    )
-    p.add_argument(
-        "-d", "--directory", default=".", help="Source directory (default: .)"
-    )
-    p.add_argument(
-        "--include-hidden", action="store_true", help="Include dotfiles/dot-directories"
-    )
+    p = sub.add_parser("split-greedy", help="Greedy bin-pack into ~N folders (foldsize.py)")
+    p.add_argument("-d", "--directory", default=".", help="Source directory (default: .)")
+    p.add_argument("--include-hidden", action="store_true", help="Include dotfiles/dot-directories")
     p.add_argument("--dry-run", action="store_true", help="Preview only")
     p.set_defaults(func=cmd_split_greedy)
-    p = sub.add_parser(
-        "split-even", help="Even count split into N folders (foldsize2.py)"
-    )
-    p.add_argument(
-        "-d", "--directory", default=".", help="Source directory (default: .)"
-    )
+    p = sub.add_parser("split-even", help="Even count split into N folders (foldsize2.py)")
+    p.add_argument("-d", "--directory", default=".", help="Source directory (default: .)")
     p.add_argument(
         "--dirs",
         type=int,
         default=None,
         help="Number of folders; omit for auto heuristic",
     )
-    p.add_argument(
-        "--include-hidden", action="store_true", help="Include dotfiles/dot-directories"
-    )
+    p.add_argument("--include-hidden", action="store_true", help="Include dotfiles/dot-directories")
     p.add_argument("--dry-run", action="store_true", help="Preview only")
     p.set_defaults(func=cmd_split_even)
     return parser

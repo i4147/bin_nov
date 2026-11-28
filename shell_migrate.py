@@ -28,9 +28,7 @@ LOG = logging.getLogger("migration")
 
 def scripts(ext: str, only: set[str] | None) -> list[Path]:
     return sorted(
-        p
-        for p in ROOT.glob(f"*.{ext}")
-        if not p.is_symlink() and p.is_file() and (only is None or p.stem in only)
+        p for p in ROOT.glob(f"*.{ext}") if not p.is_symlink() and p.is_file() and (only is None or p.stem in only)
     )
 
 
@@ -126,9 +124,7 @@ def syntax_check(path: Path, shell: str, problems: list[str]) -> None:
         errors="replace",
     )
     if result.returncode:
-        problems.append(
-            f"{path.name}: {shell} -n failed: {result.stderr.strip() or result.stdout.strip()}"
-        )
+        problems.append(f"{path.name}: {shell} -n failed: {result.stderr.strip() or result.stdout.strip()}")
 
 
 def check(only: set[str] | None, reverse: bool) -> list[str]:
@@ -136,9 +132,7 @@ def check(only: set[str] | None, reverse: bool) -> list[str]:
     problems = []
     remaining = scripts(src, only)
     if remaining:
-        problems.append(
-            f"source scripts remain: {', '.join(p.name for p in remaining)}"
-        )
+        problems.append(f"source scripts remain: {', '.join(p.name for p in remaining)}")
     targets = scripts(dst, only)
     if only:
         found = {p.stem for p in targets} | {p.stem for p in remaining}
@@ -162,9 +156,7 @@ def check(only: set[str] | None, reverse: bool) -> list[str]:
                 continue
             text = read_utf8(path)
             if text is not None and pattern.search(text):
-                problems.append(
-                    f"{path.relative_to(ROOT)}: possible stale .{src} reference"
-                )
+                problems.append(f"{path.relative_to(ROOT)}: possible stale .{src} reference")
         for path, target in selected_links(set(names), src):
             problems.append(f"{path.name}: stale symlink target {target}")
     if not shutil.which(shell):
@@ -178,9 +170,7 @@ def migrate(only: set[str] | None, reverse: bool) -> None:
     if only:
         missing = only - {p.stem for p in sources}
         if missing:
-            raise RuntimeError(
-                "selected source scripts not found: " + ", ".join(sorted(missing))
-            )
+            raise RuntimeError("selected source scripts not found: " + ", ".join(sorted(missing)))
     destinations = [p.with_suffix(f".{dst}") for p in sources]
     conflicts = [p.name for p in destinations if os.path.lexists(p)]
     if conflicts:
@@ -209,17 +199,13 @@ def migrate(only: set[str] | None, reverse: bool) -> None:
             msg = f"cannot read {source.name} as UTF-8 text"
             raise RuntimeError(msg)
         text = pattern.sub(lambda m: f"{m.group(1)}.{dst}", text)
-        converted.append(
-            (source, destination, transform(text, reverse), source.stat().st_mode)
-        )
+        converted.append((source, destination, transform(text, reverse), source.stat().st_mode))
         changes.pop(source, None)
     # Each file replacement is atomic, but the whole migration is not a
     # transaction. Use version control or a backup before applying.
     for source, destination, text, mode in converted:
         # Exclusive creation avoids silently overwriting a newly created file.
-        fd = os.open(
-            destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, stat.S_IMODE(mode)
-        )
+        fd = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, stat.S_IMODE(mode))
         try:
             with os.fdopen(fd, "wb") as out:
                 out.write(text.encode("utf-8"))
@@ -253,13 +239,9 @@ def migrate(only: set[str] | None, reverse: bool) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
-    mode.add_argument(
-        "--apply", action="store_true", help="perform migration and then check"
-    )
+    mode.add_argument("--apply", action="store_true", help="perform migration and then check")
     mode.add_argument("--check", action="store_true", help="check only (default)")
-    parser.add_argument(
-        "--reverse", action="store_true", help="migrate Bash to Zsh instead"
-    )
+    parser.add_argument("--reverse", action="store_true", help="migrate Bash to Zsh instead")
     parser.add_argument("--only", help="comma-separated script stems")
     args = parser.parse_args()
     only = None

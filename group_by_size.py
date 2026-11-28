@@ -38,11 +38,7 @@ def get_directory_size(path: Path) -> int:
 
 def folderize_directories(n_parts: int) -> None:
     current_dir = Path()
-    subdirs = [
-        p
-        for p in current_dir.iterdir()
-        if p.is_dir() and not p.name.startswith("group_")
-    ]
+    subdirs = [p for p in current_dir.iterdir() if p.is_dir() and not p.name.startswith("group_")]
     if not subdirs:
         print("No subdirectories found in the current directory.")
         return
@@ -62,9 +58,7 @@ def folderize_directories(n_parts: int) -> None:
         group_name = f"group_{i}"
         group_path = current_dir / group_name
         group_path.mkdir(exist_ok=True)
-        print(
-            f"\n--- {group_name} (Total Size: {b['size'] / (1024 * 1024):.2f} MB) ---"
-        )
+        print(f"\n--- {group_name} (Total Size: {b['size'] / (1024 * 1024):.2f} MB) ---")
         for subdir in b["items"]:
             dest_path = group_path / subdir.name
             print(f"Moving '{subdir.name}' -> '{group_name}/'")
@@ -73,9 +67,7 @@ def folderize_directories(n_parts: int) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Group top-level subdirectories into N parts by similar size."
-    )
+    parser = argparse.ArgumentParser(description="Group top-level subdirectories into N parts by similar size.")
     parser.add_argument(
         "-n",
         "--parts",

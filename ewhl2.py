@@ -112,8 +112,7 @@ def check_package_location(
                 if line.startswith("Location:"):
                     location = line.split(":", 1)[1].strip()
                 elif line.startswith("Files:") and any(
-                    file_line.strip() and ".dist-info" not in file_line
-                    for file_line in lines[i + 1 : i + 10]
+                    file_line.strip() and ".dist-info" not in file_line for file_line in lines[i + 1 : i + 10]
                 ):
                     has_files = True
             return location, has_files
@@ -122,9 +121,7 @@ def check_package_location(
     return None, False
 
 
-def analyze_wheels(
-    source_dir: Path, dest_dir_name: str = "empty_wheels", check_installed: bool = True
-) -> None:
+def analyze_wheels(source_dir: Path, dest_dir_name: str = "empty_wheels", check_installed: bool = True) -> None:
     source_path = Path(source_dir)
     dest_path = source_path / dest_dir_name
     installed_packages = get_installed_packages() if check_installed else {}
@@ -134,9 +131,7 @@ def analyze_wheels(
         return
     print(f"Found {len(wheel_files)} wheel files to check")
     if check_installed:
-        print(
-            f"Found {len(installed_packages)} installed packages in current environment\n"
-        )
+        print(f"Found {len(installed_packages)} installed packages in current environment\n")
     empty_wheels = []
     installed_empty_wheels = []
     valid_wheels = []
@@ -148,21 +143,17 @@ def analyze_wheels(
             if check_installed and pkg_name:
                 installed_version = installed_packages.get(pkg_name.lower())
                 if installed_version:
-                    print(
-                        f"  ⚠ WARNING: Package '{pkg_name}' is INSTALLED (version {installed_version})"
-                    )
+                    print(f"  ⚠ WARNING: Package '{pkg_name}' is INSTALLED (version {installed_version})")
                     location, has_files = check_package_location(pkg_name)
                     if location:
                         print(f"  📍 Installed at: {location}")
                         if not has_files:
                             print("  ⚠ Installation appears incomplete!")
-                    installed_empty_wheels.append(
-                        {
-                            "wheel": wheel_file,
-                            "package": pkg_name,
-                            "version": installed_version,
-                        }
-                    )
+                    installed_empty_wheels.append({
+                        "wheel": wheel_file,
+                        "package": pkg_name,
+                        "version": installed_version,
+                    })
                 else:
                     print(f"  ℹ Package '{pkg_name}' not found in installed packages")
             empty_wheels.append(wheel_file)
@@ -193,11 +184,7 @@ def analyze_wheels(
         if installed_empty_wheels:
             response = input("""
 Some empty wheels are INSTALLED. Move ONLY the uninstalled empty wheels? (y/n): """)
-            wheels_to_move = [
-                w
-                for w in empty_wheels
-                if w not in [item["wheel"] for item in installed_empty_wheels]
-            ]
+            wheels_to_move = [w for w in empty_wheels if w not in [item["wheel"] for item in installed_empty_wheels]]
         else:
             response = input(f"""
 Move all {len(empty_wheels)} empty wheels to '{dest_dir_name}/'? (y/n): """)
@@ -210,10 +197,7 @@ Move all {len(empty_wheels)} empty wheels to '{dest_dir_name}/'? (y/n): """)
                 if dest_file.exists():
                     counter = 1
                     while dest_file.exists():
-                        dest_file = (
-                            dest_path
-                            / f"{wheel_file.stem}_{counter}{wheel_file.suffix}"
-                        )
+                        dest_file = dest_path / f"{wheel_file.stem}_{counter}{wheel_file.suffix}"
                         counter += 1
                 shutil.move(str(wheel_file), str(dest_file))
                 print(f"Moved: {wheel_file.name} -> {dest_dir_name}/{dest_file.name}")
@@ -278,8 +262,6 @@ if __name__ == "__main__":
     try:
         pass
     except ImportError:
-        print(
-            "Note: 'packaging' module not found. Install it with: pip install packaging"
-        )
+        print("Note: 'packaging' module not found. Install it with: pip install packaging")
         print("Continuing with limited version parsing...\n")
     raise SystemExit(main())

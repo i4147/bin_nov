@@ -199,9 +199,7 @@ def process_chunk(
         else:
             out.append(f"{comment_char}{line}")
             commented += 1
-    return ChunkResult(
-        out, commented, uncommented, skipped, blanks, commented + uncommented
-    )
+    return ChunkResult(out, commented, uncommented, skipped, blanks, commented + uncommented)
 
 
 def _worker(
@@ -376,9 +374,7 @@ def _parse_args(
     if file_path is not None and ns.output is not None:
         try:
             if Path(ns.output).resolve() == file_path.resolve():
-                parser.error(
-                    "-o cannot be the same path as input; omit -o for in-place edits"
-                )
+                parser.error("-o cannot be the same path as input; omit -o for in-place edits")
         except OSError:
             pass
     return ns, file_path, _normalize_ranges(raw_ranges)
@@ -422,15 +418,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             if is_stdin:
                 infile = sys.stdin
             else:
-                infile = stack.enter_context(
-                    file_path.open(
-                        "r", encoding=read_encoding, errors=errors, newline=""
-                    )
-                )
+                infile = stack.enter_context(file_path.open("r", encoding=read_encoding, errors=errors, newline=""))
             chunks = _chunk_iter(infile, CHUNK_SIZE)
-            arg_iter = _arg_iter(
-                chunks, ranges, comment_char, ns.remove, ns.preserve_shebang
-            )
+            arg_iter = _arg_iter(chunks, ranges, comment_char, ns.remove, ns.preserve_shebang)
             results = _dispatch(arg_iter, use_pool)
             if mode == "dry-run":
                 for res in results:
@@ -442,11 +432,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 sys.stdout.flush()
             elif mode == "output":
                 out_path = Path(str(ns.output))
-                outfile = stack.enter_context(
-                    out_path.open(
-                        "w", encoding=write_encoding, errors=errors, newline=""
-                    )
-                )
+                outfile = stack.enter_context(out_path.open("w", encoding=write_encoding, errors=errors, newline=""))
                 for res in results:
                     _accumulate(total, res)
                     outfile.writelines(res.lines)
@@ -476,14 +462,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                     current_stat.st_mtime_ns,
                     current_stat.st_size,
                 ) != (initial_stat.st_mtime_ns, initial_stat.st_size):
-                    logger.error(
-                        "Input {} changed during processing; aborting.", file_path
-                    )
+                    logger.error("Input {} changed during processing; aborting.", file_path)
                     raise SystemExit(3)
                 if ns.backup:
-                    shutil.copy2(
-                        file_path, file_path.with_name(file_path.name + ".bak")
-                    )
+                    shutil.copy2(file_path, file_path.with_name(file_path.name + ".bak"))
                 temp_path.replace(file_path)
                 temp_path = None
         success = True

@@ -178,9 +178,7 @@ def print_input_paths(paths: list[str]) -> None:
 
 def print_mode(remove_spaces: bool) -> None:
     if remove_spaces:
-        print(
-            f"Mode: {ANSI.BOLD}Remove blank lines and whitespace-only lines{ANSI.RESET}"
-        )
+        print(f"Mode: {ANSI.BOLD}Remove blank lines and whitespace-only lines{ANSI.RESET}")
     else:
         print(f"Mode: {ANSI.BOLD}Remove blank lines only{ANSI.RESET}")
 
@@ -199,38 +197,26 @@ def _rel(path: Path) -> Path:
 def print_results(stats: ProcessingStats, show_binary: bool = False) -> None:
     processed: list[FileResult] = [r for r in stats.results if r.status == "processed"]
     unchanged: list[FileResult] = [r for r in stats.results if r.status == "unchanged"]
-    skipped_binary: list[FileResult] = [
-        r for r in stats.results if r.status == "skipped_binary"
-    ]
+    skipped_binary: list[FileResult] = [r for r in stats.results if r.status == "skipped_binary"]
     errors: list[FileResult] = [r for r in stats.results if r.status == "error"]
     if processed:
         print(f"{ANSI.GREEN}✓ Modified files:{ANSI.RESET}")
         for result in sorted(processed, key=lambda r: r.path):
             print(f"  {ANSI.GREEN}●{ANSI.RESET} {_rel(result.path)}")
-            print(
-                f"    {ANSI.DIM}Lines: {result.total_lines}  →  Removed: {result.removed_lines}{ANSI.RESET}"
-            )
+            print(f"    {ANSI.DIM}Lines: {result.total_lines}  →  Removed: {result.removed_lines}{ANSI.RESET}")
     if unchanged:
         print(f"{ANSI.DIM}○ Unchanged files (no blank lines):{ANSI.RESET}")
         for result in sorted(unchanged, key=lambda r: r.path)[:MAX_PREVIEW_FILES]:
             print(f"  {ANSI.DIM}○ {_rel(result.path)}{ANSI.RESET}")
         if len(unchanged) > MAX_PREVIEW_FILES:
-            print(
-                f"  {ANSI.DIM}... and {len(unchanged) - MAX_PREVIEW_FILES} more{ANSI.RESET}"
-            )
+            print(f"  {ANSI.DIM}... and {len(unchanged) - MAX_PREVIEW_FILES} more{ANSI.RESET}")
     if skipped_binary:
         print(f"{ANSI.YELLOW}⊘ Skipped binary files: {len(skipped_binary)}{ANSI.RESET}")
-        preview = (
-            skipped_binary
-            if show_binary
-            else sorted(skipped_binary, key=lambda r: r.path)[:MAX_PREVIEW_FILES]
-        )
+        preview = skipped_binary if show_binary else sorted(skipped_binary, key=lambda r: r.path)[:MAX_PREVIEW_FILES]
         for result in sorted(preview, key=lambda r: r.path):
             print(f"  {ANSI.YELLOW}⊘ {_rel(result.path)}{ANSI.RESET}")
         if not show_binary and len(skipped_binary) > MAX_PREVIEW_FILES:
-            print(
-                f"  {ANSI.YELLOW}... and {len(skipped_binary) - MAX_PREVIEW_FILES} more binary files{ANSI.RESET}"
-            )
+            print(f"  {ANSI.YELLOW}... and {len(skipped_binary) - MAX_PREVIEW_FILES} more binary files{ANSI.RESET}")
     if errors:
         print(f"{ANSI.RED}✗ Errors:{ANSI.RESET}")
         for result in sorted(errors, key=lambda r: r.path):
@@ -244,16 +230,10 @@ def print_summary(stats: ProcessingStats) -> None:
     print(f"  Total files found:     {ANSI.BOLD}{stats.total_files:,}{ANSI.RESET}")
     print(f"  Text files processed:  {ANSI.BOLD}{stats.text_files:,}{ANSI.RESET}")
     print(f"  Binary files skipped:  {ANSI.BOLD}{stats.binary_files:,}{ANSI.RESET}")
-    print(
-        f"  Files modified:        {ANSI.BOLD}{ANSI.GREEN}{stats.files_modified:,}{ANSI.RESET}"
-    )
-    print(
-        f"  Lines removed:         {ANSI.BOLD}{ANSI.GREEN}{stats.lines_removed:,}{ANSI.RESET}"
-    )
+    print(f"  Files modified:        {ANSI.BOLD}{ANSI.GREEN}{stats.files_modified:,}{ANSI.RESET}")
+    print(f"  Lines removed:         {ANSI.BOLD}{ANSI.GREEN}{stats.lines_removed:,}{ANSI.RESET}")
     if stats.errors_count > 0:
-        print(
-            f"  Errors:                {ANSI.BOLD}{ANSI.RED}{stats.errors_count:,}{ANSI.RESET}"
-        )
+        print(f"  Errors:                {ANSI.BOLD}{ANSI.RED}{stats.errors_count:,}{ANSI.RESET}")
     print_separator()
 
 
@@ -280,9 +260,7 @@ def main() -> int:
         action="store_true",
         help="Show all skipped binary files instead of just first 5",
     )
-    parser.add_argument(
-        "--no-color", action="store_true", help="Disable ANSI color codes"
-    )
+    parser.add_argument("--no-color", action="store_true", help="Disable ANSI color codes")
     args = parser.parse_args()
     if args.no_color or not sys.stdout.isatty():
         ANSI.disable()
@@ -295,9 +273,7 @@ def main() -> int:
     if not files:
         logger.warning(f"{ANSI.YELLOW}No files found to process.{ANSI.RESET}")
         return 0
-    print(
-        f"Processing files...\n(Using {ANSI.BOLD}{MAX_WORKERS}{ANSI.RESET} worker processes)"
-    )
+    print(f"Processing files...\n(Using {ANSI.BOLD}{MAX_WORKERS}{ANSI.RESET} worker processes)")
     stats: ProcessingStats = ProcessingStats(total_files=len(files))
     start_time: float = time.time()
     with Pool(processes=MAX_WORKERS) as pool:

@@ -103,9 +103,7 @@ def scan(root: Path, checker: Any, autofix: bool) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Detect misspelled words in filenames recursively."
-    )
+    parser = argparse.ArgumentParser(description="Detect misspelled words in filenames recursively.")
     parser.add_argument(
         "path",
         nargs="?",

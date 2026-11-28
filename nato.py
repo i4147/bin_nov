@@ -61,9 +61,7 @@ def to_nato(text: str) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Replace letters with NATO phonetic alphabet words."
-    )
+    parser = argparse.ArgumentParser(description="Replace letters with NATO phonetic alphabet words.")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("text", nargs="?", help="text to convert")
     group.add_argument("-f", "--file", type=Path, help="file to read text from")

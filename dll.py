@@ -14,7 +14,7 @@ from __future__ import annotations
 from pathlib import Path
 import sys
 
-from dh import atomic_write
+from dh import write_text_file
 
 
 def delete_lines_from_file() -> None:
@@ -34,7 +34,7 @@ def delete_lines_from_file() -> None:
         msg = "Line range must start at 1 or greater and end on or after the start"
         raise SystemExit(msg)
     new_lines = lines[: fromline - 1] + lines[toline:]
-    atomic_write(path, "\n".join(new_lines), encoding="utf-8")
+    write_text_file(path, "\n".join(new_lines), overwrite=True)
     print(f"remained: {len(new_lines)} lines")
 
 

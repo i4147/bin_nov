@@ -43,9 +43,7 @@ BACKUP_SUFFIX: str = ".bak"
 
 
 def has_no_strippable_content(source: str) -> bool:
-    return (
-        "#" not in source and '"""' not in source and "'''" not in source
-    )  # editor: """ '''
+    return "#" not in source and '"""' not in source and "'''" not in source  # editor: """ '''
 
 
 def is_docstring_literal(expr: cst.BaseExpression) -> bool:
@@ -236,13 +234,9 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node
         if not self._should_remove_comment(updated_node.comment):
             return updated_node
-        return updated_node.with_changes(
-            whitespace=cst.SimpleWhitespace(""), comment=None
-        )
+        return updated_node.with_changes(whitespace=cst.SimpleWhitespace(""), comment=None)
 
-    def leave_EmptyLine(
-        self, original_node: cst.EmptyLine, updated_node: cst.EmptyLine
-    ) -> cst.CSTNode:
+    def leave_EmptyLine(self, original_node: cst.EmptyLine, updated_node: cst.EmptyLine) -> cst.CSTNode:
         del original_node
         if not self.remove_all_comments:
             return updated_node
@@ -252,9 +246,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(comment=None)
 
-    def leave_FunctionDef(
-        self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-    ) -> cst.CSTNode:
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.CSTNode:
         del original_node
         if self.remove_docstrings:
             new_body, changed = strip_suite_docstring(updated_node.body)
@@ -264,9 +256,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             updated_node = updated_node.with_changes(returns=None, type_comment=None)
         return updated_node
 
-    def leave_ClassDef(
-        self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-    ) -> cst.CSTNode:
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.CSTNode:
         del original_node
         if not self.remove_docstrings:
             return updated_node
@@ -275,9 +265,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node.with_changes(body=new_body)
         return updated_node
 
-    def leave_Param(
-        self, original_node: cst.Param, updated_node: cst.Param
-    ) -> cst.CSTNode:
+    def leave_Param(self, original_node: cst.Param, updated_node: cst.Param) -> cst.CSTNode:
         del original_node
         if not self.remove_type_annotations:
             return updated_node
@@ -285,9 +273,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(annotation=None, type_comment=None)
 
-    def leave_AnnAssign(
-        self, original_node: cst.AnnAssign, updated_node: cst.AnnAssign
-    ) -> cst.CSTNode:
+    def leave_AnnAssign(self, original_node: cst.AnnAssign, updated_node: cst.AnnAssign) -> cst.CSTNode:
         del original_node
         if not self.remove_type_annotations:
             return updated_node
@@ -298,9 +284,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             value=updated_node.value,
         )
 
-    def leave_Assign(
-        self, original_node: cst.Assign, updated_node: cst.Assign
-    ) -> cst.CSTNode:
+    def leave_Assign(self, original_node: cst.Assign, updated_node: cst.Assign) -> cst.CSTNode:
         del original_node
         if not self.remove_type_annotations:
             return updated_node
@@ -318,9 +302,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
             return updated_node
         return updated_node.with_changes(type_comment=None)
 
-    def leave_With(
-        self, original_node: cst.With, updated_node: cst.With
-    ) -> cst.CSTNode:
+    def leave_With(self, original_node: cst.With, updated_node: cst.With) -> cst.CSTNode:
         del original_node
         if not self.remove_type_annotations:
             return updated_node
@@ -330,9 +312,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
         return updated_node.with_changes(type_comment=None)
 
 
-def run_transform(
-    module: cst.Module, transformer: CommentDocstringStripper
-) -> cst.Module:
+def run_transform(module: cst.Module, transformer: CommentDocstringStripper) -> cst.Module:
     wrapper = cst.metadata.MetadataWrapper(module)
     return wrapper.visit(transformer)
 
@@ -478,9 +458,7 @@ def iter_python_files(paths: list[Path]) -> Iterator[Path]:
                         seen.add(resolved)
                         yield given_path
             elif given_path.is_dir():
-                for dirpath, dirnames, filenames in given_path.walk(
-                    on_error=on_walk_error
-                ):
+                for dirpath, dirnames, filenames in given_path.walk(on_error=on_walk_error):
                     dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
                     for filename in filenames:
                         if not filename.endswith(PY_SUFFIXES):
@@ -513,17 +491,13 @@ def iter_backup_files(paths: list[Path]) -> Iterator[Path]:
         try:
             if given_path.is_file():
                 if given_path.name.endswith(BACKUP_SUFFIX):
-                    original = given_path.with_name(
-                        given_path.name[: -len(BACKUP_SUFFIX)]
-                    )
+                    original = given_path.with_name(given_path.name[: -len(BACKUP_SUFFIX)])
                     resolved = original.resolve()
                     if resolved not in seen:
                         seen.add(resolved)
                         yield original
             elif given_path.is_dir():
-                for dirpath, dirnames, filenames in given_path.walk(
-                    on_error=on_walk_error
-                ):
+                for dirpath, dirnames, filenames in given_path.walk(on_error=on_walk_error):
                     dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
                     for filename in filenames:
                         if not filename.endswith(BACKUP_SUFFIX):
@@ -659,9 +633,7 @@ def main(argv: list[str] | None = None):
     bytes_reduced_total = 0
     error_count = 0
     with mp.Pool(processes=POOL_PROCESSES) as pool:
-        results = pool.imap_unordered(
-            process_fn, iter_python_files(paths), chunksize=CHUNK_SIZE
-        )
+        results = pool.imap_unordered(process_fn, iter_python_files(paths), chunksize=CHUNK_SIZE)
         for path, bytes_reduced, changed, error in results:
             total_count += 1
             if error is not None:

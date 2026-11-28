@@ -18,16 +18,14 @@ if TYPE_CHECKING:
 
 DEFAULT_WORKERS: int = 8
 SNIFF_BYTES: int = 8192
-SKIP_DIRS: frozenset[str] = frozenset(
-    {
-        ".git",
-        "__pycache__",
-        ".pytest_cache",
-        ".mypy_cache",
-        "venv",
-        ".venv",
-    }
-)
+SKIP_DIRS: frozenset[str] = frozenset({
+    ".git",
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    "venv",
+    ".venv",
+})
 
 
 def is_binary(path: Path) -> bool:
@@ -67,11 +65,7 @@ def collect_files(inputs: Sequence[Path]) -> list[Path]:
     for root in roots:
         candidates = root.rglob("*") if root.is_dir() else iter((root,))
         for path in candidates:
-            if (
-                path.is_file()
-                and not SKIP_DIRS.intersection(path.parts)
-                and not is_binary(path)
-            ):
+            if path.is_file() and not SKIP_DIRS.intersection(path.parts) and not is_binary(path):
                 found.add(path)
     return sorted(found)
 
@@ -93,9 +87,7 @@ def cmd_convert(args: argparse.Namespace) -> int:
                 prefix: str = "Would convert" if args.dry_run and did_change else detail
                 print(f"{prefix}: {path}")
     verb: str = "Would convert" if args.dry_run else "Converted"
-    print(
-        f"{verb} {changed}/{len(files)} file(s) to {args.to} endings; {errors} error(s)."
-    )
+    print(f"{verb} {changed}/{len(files)} file(s) to {args.to} endings; {errors} error(s).")
     return 1 if errors else 0
 
 
@@ -104,9 +96,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Normalize text file line endings.")
     sub = parser.add_subparsers(dest="command", required=True)
     conv = sub.add_parser("convert", help="Convert CRLF <-> LF in text files")
-    conv.add_argument(
-        "paths", nargs="*", type=Path, help="Files or dirs (default: current dir)"
-    )
+    conv.add_argument("paths", nargs="*", type=Path, help="Files or dirs (default: current dir)")
     conv.add_argument(
         "--to",
         choices=("unix", "dos"),
@@ -114,12 +104,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Target endings (default: unix)",
     )
     conv.add_argument("-n", "--dry-run", action="store_true", help="Report only")
-    conv.add_argument(
-        "-q", "--quiet", action="store_true", help="Only print the summary"
-    )
-    conv.add_argument(
-        "-v", "--verbose", action="store_true", help="Also list unchanged files"
-    )
+    conv.add_argument("-q", "--quiet", action="store_true", help="Only print the summary")
+    conv.add_argument("-v", "--verbose", action="store_true", help="Also list unchanged files")
     conv.add_argument(
         "-j",
         "--workers",

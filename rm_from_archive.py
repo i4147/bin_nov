@@ -48,9 +48,7 @@ def delete_from_tar_zst(archive_path: Path, file_to_delete: str) -> None:
                     found = True
                     break
             if not found:
-                print(
-                    f"Warning: '{file_to_delete}' not found in archive", file=sys.stderr
-                )
+                print(f"Warning: '{file_to_delete}' not found in archive", file=sys.stderr)
                 shutil.copy2(archive_path, output_path)
                 print(f"Original archive copied to: {output_path}")
                 return

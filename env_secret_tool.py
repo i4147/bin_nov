@@ -25,31 +25,27 @@ ENV_CODE: re.Pattern[str] = re.compile(
     r"""os\.(?:environ(?:\.get)?\[?\(?|getenv\()\s*["']([A-Z_][A-Z0-9_]*)"""
     r"""|\$\{?([A-Z_][A-Z0-9_]*)\}?"""
 )
-SKIP_DIRS: frozenset[str] = frozenset(
-    {".git", ".venv", "venv", "__pycache__", "node_modules"}
-)
-SKIP_SUFFIXES: frozenset[str] = frozenset(
-    {
-        ".pyc",
-        ".so",
-        ".o",
-        ".a",
-        ".exe",
-        ".dll",
-        ".dylib",
-        ".jpg",
-        ".png",
-        ".gif",
-        ".pdf",
-        ".zip",
-        ".tar",
-        ".gz",
-        ".svg",
-        ".lock",
-        ".bin",
-        ".class",
-    }
-)
+SKIP_DIRS: frozenset[str] = frozenset({".git", ".venv", "venv", "__pycache__", "node_modules"})
+SKIP_SUFFIXES: frozenset[str] = frozenset({
+    ".pyc",
+    ".so",
+    ".o",
+    ".a",
+    ".exe",
+    ".dll",
+    ".dylib",
+    ".jpg",
+    ".png",
+    ".gif",
+    ".pdf",
+    ".zip",
+    ".tar",
+    ".gz",
+    ".svg",
+    ".lock",
+    ".bin",
+    ".class",
+})
 SECRET_PATTERNS: dict[str, str] = {
     "AWS Key": r"AKIA[0-9A-Z]{16}",
     "Private Key": r"-----BEGIN (?:RSA|DSA|EC|OPENSSH) PRIVATE KEY-----",
@@ -127,9 +123,7 @@ def cmd_collect_vars(args: argparse.Namespace) -> int:
                     found.add(next(g for g in code_match.groups() if g))
     names: list[str] = sorted(found)
     if args.output is not None:
-        atomic_write(
-            args.output, "".join(name + "\n" for name in names), encoding="utf-8"
-        )
+        atomic_write(args.output, "".join(name + "\n" for name in names), encoding="utf-8")
         print(f"Found {len(names)} variable name(s); saved to {args.output}")
     else:
         print("\n".join(names))
@@ -155,9 +149,7 @@ def scan_one(
             if any(token in line_text for token in allow):
                 continue
             raw: str = match.group(0)
-            findings.append(
-                (kind, line_no, raw[:12] + ("..." if len(raw) > 12 else ""))
-            )
+            findings.append((kind, line_no, raw[:12] + ("..." if len(raw) > 12 else "")))
     return path, findings
 
 
@@ -182,17 +174,11 @@ def cmd_scan_secrets(args: argparse.Namespace) -> int:
                 print(f"  line {line_no}: {kind}: {snippet}")
                 entries.append({"kind": kind, "line": line_no, "match": snippet})
             report[str(path)] = entries
-    print(
-        f"\nFiles scanned: {len(files)} | leaks: {total} | files with leaks: {dirty_files}"
-    )
+    print(f"\nFiles scanned: {len(files)} | leaks: {total} | files with leaks: {dirty_files}")
     if args.json_out is not None:
-        atomic_write(
-            args.json_out, json.dumps(report, indent=2) + "\n", encoding="utf-8"
-        )
+        atomic_write(args.json_out, json.dumps(report, indent=2) + "\n", encoding="utf-8")
     if total:
-        print(
-            "SECRETS DETECTED - remove them before committing/pushing.", file=sys.stderr
-        )
+        print("SECRETS DETECTED - remove them before committing/pushing.", file=sys.stderr)
         return 1
     print("No secrets detected.")
     return 0
@@ -223,12 +209,7 @@ def extract_model_tokens(text: str) -> list[tuple[str, str]]:
         lines: list[str] = section.strip().splitlines()
         if not lines:
             continue
-        heading: str = (
-            re.sub(r"`\d{2}-\d{2} \d{2}:\d{2}`", "", lines[0])
-            .strip()
-            .split("|")[0]
-            .strip()
-        )
+        heading: str = re.sub(r"`\d{2}-\d{2} \d{2}:\d{2}`", "", lines[0]).strip().split("|")[0].strip()
         for token in re.findall(r"sk-[A-Za-z0-9]+", section):
             pairs.append((heading or "unknown", token))
     return pairs
@@ -265,9 +246,7 @@ def cmd_extract_tokens(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line parser."""
-    parser = argparse.ArgumentParser(
-        description="Env-var inventory, secret scan, token harvest."
-    )
+    parser = argparse.ArgumentParser(description="Env-var inventory, secret scan, token harvest.")
     parser.add_argument(
         "--max-kb",
         type=int,
@@ -278,9 +257,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     cv = sub.add_parser("collect-vars", help="List env var names found in a tree")
     cv.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    cv.add_argument(
-        "--also-code", action="store_true", help="Also match os.environ / ${VAR} uses"
-    )
+    cv.add_argument("--also-code", action="store_true", help="Also match os.environ / ${VAR} uses")
     cv.add_argument(
         "-o",
         "--output",
@@ -299,9 +276,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="TEXT",
         help="Ignore lines containing any of these strings",
     )
-    ss.add_argument(
-        "--json-out", type=Path, default=None, help="Write findings as JSON"
-    )
+    ss.add_argument("--json-out", type=Path, default=None, help="Write findings as JSON")
     ss.add_argument("-j", "--workers", type=int, default=8)
     ss.set_defaults(handler=cmd_scan_secrets)
 

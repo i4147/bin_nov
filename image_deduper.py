@@ -58,9 +58,7 @@ def main() -> None:
     print(f"\n--- Found {len(duplicates_to_remove)} duplicate images ---")
     if DRY_RUN:
         print("[DRY-RUN] No files were deleted.")
-        print(
-            "👉 Set 'DRY_RUN = False' inside the script to permanently delete duplicate copies."
-        )
+        print("👉 Set 'DRY_RUN = False' inside the script to permanently delete duplicate copies.")
     else:
         print("Deleting duplicate images, preserving highest resolutions...")
         for dup in duplicates_to_remove:

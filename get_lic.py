@@ -31,9 +31,7 @@ class LicenseError(Exception):
 
 
 CACHE_PATH: Final[str] = Path(os.environ["HOME"]).joinpath(".license")
-HIT_MESSAGE: Final[str] = ecstasy.beautify(
-    "Cache-<Hit> for {0}: '{1}'.", ecstasy.Color.Green
-)
+HIT_MESSAGE: Final[str] = ecstasy.beautify("Cache-<Hit> for {0}: '{1}'.", ecstasy.Color.Green)
 MISS_MESSAGE: Final[str] = ecstasy.beautify("Cache-<Miss> for {0}.", ecstasy.Color.Red)
 
 
@@ -64,10 +62,7 @@ def read_cache() -> str:
 def read_author(cache: str) -> str:
     match = re.search(r"\s*author\s*=\s*([a-zA-Z -]+)", cache)
     if match is None:
-        raise LicenseError(
-            MISS_MESSAGE.format("author")
-            + "You must supply an author with the -a switch. "
-        )
+        raise LicenseError(MISS_MESSAGE.format("author") + "You must supply an author with the -a switch. ")
     author = match.group(1)
     click.echo(HIT_MESSAGE.format("author", author), file=sys.stderr)
     return author
@@ -76,9 +71,7 @@ def read_author(cache: str) -> str:
 def read_kind(cache: str) -> str:
     match = re.search(r"\s*kind\s*=\s*(\w+)", cache)
     if match is None:
-        raise LicenseError(
-            MISS_MESSAGE.format("kind") + "You must supply a kind with the -k switch."
-        )
+        raise LicenseError(MISS_MESSAGE.format("kind") + "You must supply a kind with the -k switch.")
     kind = match.group(1)
     click.echo(HIT_MESSAGE.format("kind", kind), file=sys.stderr)
     return kind
@@ -104,9 +97,7 @@ def write(author: str, kind: str) -> None:
 
 
 def fetch(kind: str) -> str:
-    path = Path(Path(Path(__file__).absolute()).parent).joinpath(
-        os.pardir, f"files/{kind}.txt"
-    )
+    path = Path(Path(Path(__file__).absolute()).parent).joinpath(os.pardir, f"files/{kind}.txt")
     with open(path, "rt") as source:
         return source.read()
 
@@ -127,9 +118,7 @@ def validate(author: str, year: str, kind: str) -> None:
         msg = f"Invalid year: {year}. Must match '{year_pattern}'."
         raise LicenseError(msg)
     if kind not in LICENSE_KINDS:
-        raise LicenseError(
-            f"Invalid license kind: {kind}. Must be one of: " + ", ".join(LICENSE_KINDS)
-        )
+        raise LicenseError(f"Invalid license kind: {kind}. Must be one of: " + ", ".join(LICENSE_KINDS))
 
 
 def get(author: str | None, year: str, kind: str | None) -> str:

@@ -94,9 +94,7 @@ def cut_video(
         end_frame = start_frame + duration_frames
         if end_frame > frame_count:
             end_frame = frame_count
-            print(
-                "Warning: Duration exceeds video length. Cutting until the end of the video."
-            )
+            print("Warning: Duration exceeds video length. Cutting until the end of the video.")
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         if output is None:
             output = f"cut_{input_path_obj.name}"
@@ -115,9 +113,7 @@ def cut_video(
         cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
         processed = 0
         frames_to_process = end_frame - start_frame
-        print(
-            f"start_frame:{start_frame}/end_frame: {end_frame} -> {frames_to_process} frames to process"
-        )
+        print(f"start_frame:{start_frame}/end_frame: {end_frame} -> {frames_to_process} frames to process")
         for _i in range(start_frame, end_frame):
             ret, frame = cap.read()
             if not ret:
@@ -238,9 +234,7 @@ def build_parser() -> argparse.ArgumentParser:
     rev.add_argument(
         "--keep-audio",
         action="store_true",
-        help=(
-            "Reverse audio too (matches s() in reverse_video.py). Default: false, drops audio."
-        ),
+        help=("Reverse audio too (matches s() in reverse_video.py). Default: false, drops audio."),
     )
     rev.add_argument(
         "--preset",

@@ -135,9 +135,7 @@ class CommentDocstringStripper(cst.CSTTransformer):
         self._is_module_level: bool = True
         self._module_docstring_seen: bool = False
 
-    def leave_EmptyLine(
-        self, original_node: EmptyLine, updated_node: EmptyLine
-    ) -> EmptyLine:
+    def leave_EmptyLine(self, original_node: EmptyLine, updated_node: EmptyLine) -> EmptyLine:
         comment = updated_node.comment
         if comment is None:
             return updated_node
@@ -164,19 +162,11 @@ class CommentDocstringStripper(cst.CSTTransformer):
     def leave_Module(self, original_node: Module, updated_node: Module) -> Module:
         return updated_node
 
-    def leave_FunctionDef(
-        self, original_node: FunctionDef, updated_node: FunctionDef
-    ) -> FunctionDef:
-        return updated_node.with_changes(
-            body=self._strip_docstring_body(updated_node.body)
-        )
+    def leave_FunctionDef(self, original_node: FunctionDef, updated_node: FunctionDef) -> FunctionDef:
+        return updated_node.with_changes(body=self._strip_docstring_body(updated_node.body))
 
-    def leave_ClassDef(
-        self, original_node: ClassDef, updated_node: ClassDef
-    ) -> ClassDef:
-        return updated_node.with_changes(
-            body=self._strip_docstring_body(updated_node.body)
-        )
+    def leave_ClassDef(self, original_node: ClassDef, updated_node: ClassDef) -> ClassDef:
+        return updated_node.with_changes(body=self._strip_docstring_body(updated_node.body))
 
     @staticmethod
     def _is_docstring_statement(stmt: BaseStatement) -> bool:
@@ -226,19 +216,13 @@ def process_file(path_str: str, dry_run: bool) -> ProcessResult:
     try:
         original_source = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as exc:
-        return ProcessResult(
-            path=path, success=False, changed=False, message=f"read error: {exc}"
-        )
+        return ProcessResult(path=path, success=False, changed=False, message=f"read error: {exc}")
     try:
         new_source = strip_comments_and_docstrings(original_source)
     except cst.ParserSyntaxError as exc:
-        return ProcessResult(
-            path=path, success=False, changed=False, message=f"parse error: {exc}"
-        )
+        return ProcessResult(path=path, success=False, changed=False, message=f"parse error: {exc}")
     except Exception as exc:
-        return ProcessResult(
-            path=path, success=False, changed=False, message=f"transform error: {exc}"
-        )
+        return ProcessResult(path=path, success=False, changed=False, message=f"transform error: {exc}")
     try:
         validate_python_source(new_source, filename=str(path))
     except SyntaxError as exc:
@@ -249,19 +233,13 @@ def process_file(path_str: str, dry_run: bool) -> ProcessResult:
             message=f"validation failed, aborting write: {exc}",
         )
     if new_source == original_source:
-        return ProcessResult(
-            path=path, success=True, changed=False, message="no changes"
-        )
+        return ProcessResult(path=path, success=True, changed=False, message="no changes")
     if dry_run:
-        return ProcessResult(
-            path=path, success=True, changed=True, message="dry-run: would change"
-        )
+        return ProcessResult(path=path, success=True, changed=True, message="dry-run: would change")
     try:
         atomic_write(path, new_source, encoding="utf-8")
     except OSError as exc:
-        return ProcessResult(
-            path=path, success=False, changed=False, message=f"write error: {exc}"
-        )
+        return ProcessResult(path=path, success=False, changed=False, message=f"write error: {exc}")
     return ProcessResult(path=path, success=True, changed=True, message="stripped")
 
 
@@ -271,17 +249,12 @@ def run(paths: list[Path], workers: int, dry_run: bool) -> int:
     if not targets:
         logger.warning("No Python files found to process.")
         return 0
-    logger.info(
-        f"Discovered {len(targets)} Python file(s). Processing with {workers} workers..."
-    )
+    logger.info(f"Discovered {len(targets)} Python file(s). Processing with {workers} workers...")
     failures: list[ProcessResult] = []
     changed_count = 0
     processed_count = 0
     with mp.Pool(processes=workers) as pool:
-        async_results = [
-            pool.apply_async(process_file, args=(str(target), dry_run))
-            for target in targets
-        ]
+        async_results = [pool.apply_async(process_file, args=(str(target), dry_run)) for target in targets]
         for async_result in async_results:
             try:
                 result: ProcessResult = async_result.get()
@@ -297,9 +270,7 @@ def run(paths: list[Path], workers: int, dry_run: bool) -> int:
                 logger.info(f"{result.path}: {result.message}")
             else:
                 logger.debug(f"{result.path}: {result.message}")
-    logger.info(
-        f"Done. processed={processed_count} changed={changed_count} failed={len(failures)} dry_run={dry_run}"
-    )
+    logger.info(f"Done. processed={processed_count} changed={changed_count} failed={len(failures)} dry_run={dry_run}")
     if failures:
         logger.error(f"{len(failures)} file(s) failed to process.")
         return 1
@@ -307,9 +278,7 @@ def run(paths: list[Path], workers: int, dry_run: bool) -> int:
 
 
 def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Strip comments and docstrings from Python files using LibCST."
-    )
+    parser = argparse.ArgumentParser(description="Strip comments and docstrings from Python files using LibCST.")
     parser.add_argument(
         "paths",
         nargs="*",
@@ -334,9 +303,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     configure_logging(verbose=args.verbose)
     workers = max(1, MAX_WORKERS)
     if workers != MAX_WORKERS:
-        logger.debug(
-            f"Using {workers} workers (overridden from default {MAX_WORKERS})."
-        )
+        logger.debug(f"Using {workers} workers (overridden from default {MAX_WORKERS}).")
     try:
         return run(paths=args.paths, workers=workers, dry_run=args.dry_run)
     except KeyboardInterrupt:

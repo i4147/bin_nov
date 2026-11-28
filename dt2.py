@@ -38,18 +38,14 @@ RETRY_ATTEMPTS: Final[int] = 4
 RETRY_DELAY: Final[float] = 0.6
 MAX_CHUNK_SIZE: Final[int] = 2000
 SAVE_INTERVAL: Final[int] = 10
-CYRILLIC_RE: Final[re.Pattern[str]] = re.compile(
-    r"[\u0400-\u04FF\u0500-\u052F\u2DE0-\u2DFF\uA640-\uA69F\u1C80-\u1C8F]"
-)
+CYRILLIC_RE: Final[re.Pattern[str]] = re.compile(r"[\u0400-\u04FF\u0500-\u052F\u2DE0-\u2DFF\uA640-\uA69F\u1C80-\u1C8F]")
 interrupted: bool = False
 
 
 def signal_handler(signum: int, frame: Any) -> None:
     global interrupted
     interrupted = True
-    logger.warning(
-        "Received interrupt signal (Ctrl+C). Saving progress and exiting gracefully..."
-    )
+    logger.warning("Received interrupt signal (Ctrl+C). Saving progress and exiting gracefully...")
 
 
 def contains_cyrillic(text: str) -> bool:
@@ -127,15 +123,9 @@ def save_progress(
 ) -> None:
     try:
         successful = {
-            line: results[line]
-            for line in all_lines
-            if line in results and results[line] and results[line] != line
+            line: results[line] for line in all_lines if line in results and results[line] and results[line] != line
         }
-        failed = [
-            line
-            for line in all_lines
-            if line in results and (not results[line] or results[line] == line)
-        ]
+        failed = [line for line in all_lines if line in results and (not results[line] or results[line] == line)]
         if output_type == "text":
             with output_path.open("w", encoding="utf-8") as f:
                 for line in all_lines:
@@ -153,9 +143,7 @@ def save_progress(
                     "total_lines": len(all_lines),
                     "translated_lines": len(successful),
                     "failed_lines": len(failed),
-                    "untranslated_lines": len(all_lines)
-                    - len(successful)
-                    - len(failed),
+                    "untranslated_lines": len(all_lines) - len(successful) - len(failed),
                     "interrupted": interrupted,
                     "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
                 },
@@ -198,16 +186,10 @@ def main() -> None:
     global interrupted
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    parser = argparse.ArgumentParser(
-        description="Translate lines in a text file with progress saving."
-    )
+    parser = argparse.ArgumentParser(description="Translate lines in a text file with progress saving.")
     parser.add_argument("-i", "--input", help="Input text file (one phrase per line)")
-    parser.add_argument(
-        "-s", "--source", default="ru", help="Source language code (default: ru)"
-    )
-    parser.add_argument(
-        "-t", "--target", default="en", help="Target language code (default: en)"
-    )
+    parser.add_argument("-s", "--source", default="ru", help="Source language code (default: ru)")
+    parser.add_argument("-t", "--target", default="en", help="Target language code (default: en)")
     parser.add_argument(
         "-o",
         "--output-type",
@@ -275,9 +257,7 @@ def main() -> None:
     )
     results: dict[str, str] = {}
     remaining_to_translate = list(to_translate_unique)
-    output_path = input_path.with_name(
-        f"{input_path.stem}_{target_lang}{input_path.suffix}"
-    )
+    output_path = input_path.with_name(f"{input_path.stem}_{target_lang}{input_path.suffix}")
     json_path = input_path.with_name(f"{input_path.stem}_{target_lang}.json")
     failed_path = input_path.with_name(f"{input_path.stem}_{target_lang}_failed.txt")
     save_progress(
@@ -359,9 +339,7 @@ def main() -> None:
                                     if interrupted:
                                         break
                                     try:
-                                        per_line_translator = GoogleTranslator(
-                                            source=source_lang, target=target_lang
-                                        )
+                                        per_line_translator = GoogleTranslator(source=source_lang, target=target_lang)
                                         t = per_line_translator.translate(line)
                                         if t is None:
                                             t = line
@@ -374,17 +352,12 @@ def main() -> None:
                                         )
                                         results[line] = line
                             sample_src = (
-                                original_lines[0][:40]
-                                + ("..." if len(original_lines[0]) > 40 else "")
+                                original_lines[0][:40] + ("..." if len(original_lines[0]) > 40 else "")
                                 if original_lines
                                 else ""
                             )
-                            sample_tgt = results.get(
-                                original_lines[0] if original_lines else "", ""
-                            )[:60]
-                            print(
-                                f"Translated chunk {completed}/{total} (sample: '{sample_src}' → '{sample_tgt}')"
-                            )
+                            sample_tgt = results.get(original_lines[0] if original_lines else "", "")[:60]
+                            print(f"Translated chunk {completed}/{total} (sample: '{sample_src}' → '{sample_tgt}')")
                         elif not interrupted:
                             logger.error(
                                 "Failed to translate chunk starting with: {}",
@@ -392,9 +365,7 @@ def main() -> None:
                             )
                             for line in chunk:
                                 try:
-                                    t = GoogleTranslator(
-                                        source=source_lang, target=target_lang
-                                    ).translate(line)
+                                    t = GoogleTranslator(source=source_lang, target=target_lang).translate(line)
                                     if t is None:
                                         t = line
                                     results[line] = t
@@ -444,12 +415,8 @@ def main() -> None:
         logger.warning("Process was interrupted. Progress has been saved.")
         print("You can resume by running the command again.")
     else:
-        translated_count = sum(
-            1 for line in all_lines if line in results and results[line] != line
-        )
-        print(
-            f"Translation complete: {translated_count}/{len(all_lines)} lines translated successfully"
-        )
+        translated_count = sum(1 for line in all_lines if line in results and results[line] != line)
+        print(f"Translation complete: {translated_count}/{len(all_lines)} lines translated successfully")
 
 
 if __name__ == "__main__":

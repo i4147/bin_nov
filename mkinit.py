@@ -46,10 +46,7 @@ class Options:
 
 
 def is_excluded(path: Path, patterns: Sequence[str]) -> bool:
-    return any(
-        fnmatch.fnmatch(path.name, pattern) or fnmatch.fnmatch(path.stem, pattern)
-        for pattern in patterns
-    )
+    return any(fnmatch.fnmatch(path.name, pattern) or fnmatch.fnmatch(path.stem, pattern) for pattern in patterns)
 
 
 def is_valid_module_file(path: Path, options: Options) -> bool:
@@ -102,11 +99,7 @@ def extract_declared_all(tree: ast.Module) -> list[str] | None:
         elif isinstance(node, ast.AnnAssign) and "__all__" in target_names(node.target):
             value = node.value
         if isinstance(value, (ast.List, ast.Tuple)):
-            items = [
-                el.value
-                for el in value.elts
-                if isinstance(el, ast.Constant) and isinstance(el.value, str)
-            ]
+            items = [el.value for el in value.elts if isinstance(el, ast.Constant) and isinstance(el.value, str)]
             if len(items) == len(value.elts):
                 return items
     return None
@@ -132,15 +125,11 @@ def get_public_names(tree: ast.Module, options: Options) -> list[str]:
         elif isinstance(node, ast.Assign):
             for target in node.targets:
                 names.extend(
-                    n
-                    for n in target_names(target)
-                    if not n.startswith("_") and is_constant_allowed(n, options)
+                    n for n in target_names(target) if not n.startswith("_") and is_constant_allowed(n, options)
                 )
         elif isinstance(node, ast.AnnAssign) and node.value is not None:
             names.extend(
-                n
-                for n in target_names(node.target)
-                if not n.startswith("_") and is_constant_allowed(n, options)
+                n for n in target_names(node.target) if not n.startswith("_") and is_constant_allowed(n, options)
             )
         elif type_alias is not None and isinstance(node, type_alias):
             alias_name: str = node.name.id

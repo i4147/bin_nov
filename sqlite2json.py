@@ -110,9 +110,7 @@ def export_table(args: tuple) -> tuple[str, str | None]:
         blob_fn = make_blob_encoder(blob_encoding)
         with (
             closing(open_readonly(db_path, text_errors)) as conn,
-            open(
-                frag_path, "w", encoding="utf-8", errors="replace", newline="\n"
-            ) as fp,
+            open(frag_path, "w", encoding="utf-8", errors="replace", newline="\n") as fp,
         ):
             write_table_array(conn, table, fp, blob_fn, indent, ensure_ascii)
         return table, None
@@ -183,9 +181,7 @@ def convert_sqlite_to_json(
         pad1 = " " * indent
         colon = ": " if indent else ":"
         final_tmp = tmp_dir / "final.json"
-        with open(
-            final_tmp, "w", encoding="utf-8", errors="replace", newline="\n"
-        ) as out:
+        with open(final_tmp, "w", encoding="utf-8", errors="replace", newline="\n") as out:
             if not tables:
                 out.write("{}")
             else:
@@ -193,12 +189,8 @@ def convert_sqlite_to_json(
                 for i, table in enumerate(tables):
                     if i:
                         out.write("," + nl)
-                    out.write(
-                        pad1 + json.dumps(table, ensure_ascii=ensure_ascii) + colon
-                    )
-                    with open(
-                        frags[table], "r", encoding="utf-8", newline="\n"
-                    ) as frag:
+                    out.write(pad1 + json.dumps(table, ensure_ascii=ensure_ascii) + colon)
+                    with open(frags[table], "r", encoding="utf-8", newline="\n") as frag:
                         shutil.copyfileobj(frag, out, 1 << 20)
                 out.write(nl + "}")
             out.write("\n")

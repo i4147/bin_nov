@@ -52,9 +52,7 @@ class InlineParser(html.parser.HTMLParser):
     def __init__(self, source: str) -> None:
         super().__init__(convert_charrefs=False)
         self._source: str = source
-        self._line_starts: list[int] = [0] + [
-            i + 1 for i, ch in enumerate(source) if ch == "\n"
-        ]
+        self._line_starts: list[int] = [0] + [i + 1 for i, ch in enumerate(source) if ch == "\n"]
         self.blocks: list[InlineBlock] = []
         self._open_kind: str | None = None
         self._open_attrs: dict[str, str | None] = {}
@@ -98,11 +96,7 @@ class InlineParser(html.parser.HTMLParser):
         close_end: int = self._source.find(">", close_start) + 1
         content: str = "".join(self._chunks).strip()
         if content:
-            self.blocks.append(
-                InlineBlock(
-                    expected, content, self._open_attrs, self._open_start, close_end
-                )
-            )
+            self.blocks.append(InlineBlock(expected, content, self._open_attrs, self._open_start, close_end))
         self._open_kind = None
         self._chunks = []
 
@@ -138,9 +132,7 @@ def unique_file(directory: Path, stem: str, suffix: str) -> Path:
     return candidate
 
 
-def process_rewrite(
-    path: Path, assets_name: str, min_size: int, dry_run: bool
-) -> FileResult:
+def process_rewrite(path: Path, assets_name: str, min_size: int, dry_run: bool) -> FileResult:
     """Extract blocks to hash-named files and link them from the HTML."""
     source: str = path.read_text(encoding="utf-8", errors="replace")
     blocks: list[InlineBlock] = parse_blocks(source, min_size)
@@ -177,9 +169,7 @@ def process_rewrite(
     return result
 
 
-def process_dump(
-    path: Path, out_root: Path, min_size: int, dry_run: bool
-) -> FileResult:
+def process_dump(path: Path, out_root: Path, min_size: int, dry_run: bool) -> FileResult:
     """Dump block bodies into css/ / js/ without touching the HTML."""
     source: str = path.read_text(encoding="utf-8", errors="replace")
     result = FileResult(path)
@@ -217,11 +207,7 @@ def find_html_files(inputs: Sequence[Path]) -> list[Path]:
     for root in roots:
         candidates = root.rglob("*") if root.is_dir() else iter((root,))
         for path in candidates:
-            if (
-                path.is_file()
-                and path.suffix.lower() in HTML_SUFFIXES
-                and path.stat().st_size > 0
-            ):
+            if path.is_file() and path.suffix.lower() in HTML_SUFFIXES and path.stat().st_size > 0:
                 found.add(path.resolve())
     return sorted(found)
 
@@ -248,9 +234,7 @@ def cmd_extract(args: argparse.Namespace) -> int:
             if not args.quiet and (result.css or result.js):
                 verb: str = "would extract" if args.dry_run else "extracted"
                 print(f"{result.path}: {verb} {result.css} CSS, {result.js} JS")
-    print(
-        f"Summary: {len(files)} file(s), {totals.css} CSS, {totals.js} JS, {errors} error(s)."
-    )
+    print(f"Summary: {len(files)} file(s), {totals.css} CSS, {totals.js} JS, {errors} error(s).")
     return 1 if errors else 0
 
 
@@ -266,12 +250,8 @@ def build_parser() -> argparse.ArgumentParser:
         default="rewrite",
         help="rewrite: assets/ + link tags; dump: css//js/ only",
     )
-    ex.add_argument(
-        "--assets-dir", default="assets", help="Assets dir name (rewrite mode)"
-    )
-    ex.add_argument(
-        "--min-size", type=int, default=0, help="Skip blocks shorter than N chars"
-    )
+    ex.add_argument("--assets-dir", default="assets", help="Assets dir name (rewrite mode)")
+    ex.add_argument("--min-size", type=int, default=0, help="Skip blocks shorter than N chars")
     ex.add_argument("-w", "--workers", type=int, default=8)
     ex.add_argument("-q", "--quiet", action="store_true")
     ex.add_argument("-n", "--dry-run", action="store_true")

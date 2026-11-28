@@ -176,12 +176,8 @@ py-modules = ["{module_name}"]
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Create a minimal single-module Python CLI project."
-    )
-    parser.add_argument(
-        "project_name", help="Distribution/project name, e.g. my-project"
-    )
+    parser = argparse.ArgumentParser(description="Create a minimal single-module Python CLI project.")
+    parser.add_argument("project_name", help="Distribution/project name, e.g. my-project")
     parser.add_argument(
         "--entry",
         default=None,

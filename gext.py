@@ -94,11 +94,7 @@ class EntityExtractor(cst.CSTVisitor):
         return False
 
     def visit_AnnAssign(self, node: cst.AnnAssign) -> bool:
-        if (
-            self._class_depth == 0
-            and self._func_depth == 0
-            and m.matches(node.target, m.Name())
-        ):
+        if self._class_depth == 0 and self._func_depth == 0 and m.matches(node.target, m.Name()):
             assert isinstance(node.target, cst.Name)
             name = node.target.value
             if is_constant_name(name):
@@ -147,9 +143,7 @@ def main() -> None:
     all_consts: dict[str, str] = {}
 
     with mp.Pool(MAX_WORKERS) as pool:
-        for _path, classes, funcs, consts in pool.imap_unordered(
-            extract_from_file, files
-        ):
+        for _path, classes, funcs, consts in pool.imap_unordered(extract_from_file, files):
             all_classes.update(classes)
             all_funcs.update(funcs)
             all_consts.update(consts)

@@ -106,9 +106,7 @@ def write_merged_file(
 
                 file_count += 1
 
-        print(
-            f"✅ Merged {file_count} files ({total_size:,} bytes) into: {output_file}"
-        )
+        print(f"✅ Merged {file_count} files ({total_size:,} bytes) into: {output_file}")
 
     except OSError as error:
         print(f"❌ Error writing output file {output_file}: {error}")
@@ -120,11 +118,7 @@ def write_merged_file(
 def collect_files(inputs: list[Path], cwd: Path) -> list[Path]:
     """Collect text files from explicit inputs, or recursively from cwd."""
     if not inputs:
-        return sorted(
-            path
-            for path in get_nobinary(cwd)
-            if path.is_file() and not should_skip(path)
-        )
+        return sorted(path for path in get_nobinary(cwd) if path.is_file() and not should_skip(path))
 
     collected: set[Path] = set()
 
@@ -132,11 +126,7 @@ def collect_files(inputs: list[Path], cwd: Path) -> list[Path]:
         resolved_item: Path = item.expanduser().resolve()
 
         if resolved_item.is_dir():
-            collected.update(
-                path
-                for path in get_nobinary(resolved_item)
-                if path.is_file() and not should_skip(path)
-            )
+            collected.update(path for path in get_nobinary(resolved_item) if path.is_file() and not should_skip(path))
         elif resolved_item.is_file():
             if not should_skip(resolved_item):
                 collected.add(resolved_item)
@@ -155,12 +145,8 @@ def merge_files_by_type(
     output_dir: Path | None = None,
 ) -> list[Path]:
     if ext_filter:
-        normalized_extensions: list[str] = [
-            extension.lower().lstrip(".") for extension in ext_filter
-        ]
-        files = [
-            path for path in files if get_file_extension(path) in normalized_extensions
-        ]
+        normalized_extensions: list[str] = [extension.lower().lstrip(".") for extension in ext_filter]
+        files = [path for path in files if get_file_extension(path) in normalized_extensions]
 
     valid_files: list[tuple[Path, str]] = []
 
@@ -200,9 +186,7 @@ def merge_files_by_type(
         if total_size <= MAX_CLIPBOARD_BYTES:
             copy_to_clipboard(build_merged_content(valid_files, cwd))
         else:
-            print(
-                f"ℹ️  Merged content is {total_size:,} bytes (> 1 MB), skipping clipboard."
-            )
+            print(f"ℹ️  Merged content is {total_size:,} bytes (> 1 MB), skipping clipboard.")
 
         return output_files
 
@@ -282,9 +266,7 @@ def merge_files(args: argparse.Namespace) -> None:
     )
 
     if args.group and output_files:
-        effective_output_dir: Path = (
-            output_dir if output_dir is not None else cwd / "merged"
-        )
+        effective_output_dir: Path = output_dir if output_dir is not None else cwd / "merged"
         print(f"📁 All merged files saved in: {effective_output_dir}")
 
 
@@ -379,9 +361,7 @@ Examples:
         "-c",
         "--group",
         action="store_true",
-        help=(
-            'Group files by extension and output multiple files in the "merged" directory'
-        ),
+        help=('Group files by extension and output multiple files in the "merged" directory'),
     )
     parser.add_argument(
         "-w",

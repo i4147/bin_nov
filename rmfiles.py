@@ -85,11 +85,7 @@ def remove_file(path_str: str, dry_run: bool = False) -> Result:
 def read_paths(list_file: Path) -> list[str]:
     """Read paths from a file, skipping blanks and comments, removing duplicates."""
     with list_file.open(encoding="utf-8") as fh:
-        raw = (
-            line.rstrip("\r\n")
-            for line in fh
-            if line.strip() and not line.startswith("#")
-        )
+        raw = (line.rstrip("\r\n") for line in fh if line.strip() and not line.startswith("#"))
         # dict.fromkeys keeps first-seen order while dropping duplicates
         return list(dict.fromkeys(raw))
 
@@ -100,9 +96,7 @@ def confirm(count: int) -> bool:
     return answer in {"y", "yes"}
 
 
-def run(
-    paths: list[str], workers: int, chunksize: int, dry_run: bool
-) -> Iterator[Result]:
+def run(paths: list[str], workers: int, chunksize: int, dry_run: bool) -> Iterator[Result]:
     """Process paths in a process pool, yielding results in input order."""
     worker = partial(remove_file, dry_run=dry_run)
     with Pool(processes=workers) as pool:
@@ -111,9 +105,7 @@ def run(
 
 def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
     """Parse command-line arguments."""
-    parser = argparse.ArgumentParser(
-        description="Remove files listed in a text file and report space freed."
-    )
+    parser = argparse.ArgumentParser(description="Remove files listed in a text file and report space freed.")
     parser.add_argument(
         "list_file",
         nargs="?",
@@ -149,12 +141,8 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
     )
 
     verbosity = parser.add_mutually_exclusive_group()
-    verbosity.add_argument(
-        "-v", "--verbose", action="store_true", help="print each file's result"
-    )
-    verbosity.add_argument(
-        "-q", "--quiet", action="store_true", help="suppress the summary"
-    )
+    verbosity.add_argument("-v", "--verbose", action="store_true", help="print each file's result")
+    verbosity.add_argument("-q", "--quiet", action="store_true", help="suppress the summary")
 
     args = parser.parse_args(argv)
     if args.workers < 1:
@@ -191,12 +179,7 @@ def main(argv: Iterable[str] | None = None) -> int:
             print(f"Nothing to do: {list_file} contains no paths.")
         return 0
 
-    if (
-        not args.dry_run
-        and not args.yes
-        and sys.stdin.isatty()
-        and not confirm(len(paths))
-    ):
+    if not args.dry_run and not args.yes and sys.stdin.isatty() and not confirm(len(paths)):
         print("Aborted.")
         return 1
 
@@ -220,9 +203,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         removed_count = counts["would_remove"] if args.dry_run else counts["removed"]
         verb = "Would remove" if args.dry_run else "Removed"
         freed_label = "Space that would be freed" if args.dry_run else "Space freed"
-        print(
-            f"{verb}: {removed_count}, missing (skipped): {counts['missing']}, errors: {counts['error']}"
-        )
+        print(f"{verb}: {removed_count}, missing (skipped): {counts['missing']}, errors: {counts['error']}")
         print(f"{freed_label}: {format_bytes(total_freed)} ({total_freed:,} bytes)")
 
     return 1 if counts["error"] else 0

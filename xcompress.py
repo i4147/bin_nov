@@ -82,9 +82,7 @@ def _sevenz_c(d: bytes, l: int, name: str = "data") -> bytes:
         src = Path(td) / name
         atomic_write(src, d)
         out = Path(td) / "a.7z"
-        with py7zr.SevenZipFile(
-            out, "w", filters=[{"id": py7zr.FILTER_LZMA2, "preset": l}]
-        ) as z:
+        with py7zr.SevenZipFile(out, "w", filters=[{"id": py7zr.FILTER_LZMA2, "preset": l}]) as z:
             z.write(src, name)
         return out.read_bytes()
 
@@ -93,9 +91,7 @@ def _zip_c(d: bytes, l: int, name: str = "data") -> bytes:
     import io
 
     buf = io.BytesIO()
-    with zipfile.ZipFile(
-        buf, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=l
-    ) as zf:
+    with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=l) as zf:
         zf.writestr(name, d)
     return buf.getvalue()
 
@@ -300,9 +296,7 @@ def cmd_bench(args: argparse.Namespace) -> int:
             t0 = time.perf_counter()
             if args.mp_chunks and name in CODECS:
                 chunk_size = args.chunk_size * 1024 * 1024
-                chunks = [
-                    payload[i : i + chunk_size] for i in range(0, total, chunk_size)
-                ]
+                chunks = [payload[i : i + chunk_size] for i in range(0, total, chunk_size)]
                 with mp.Pool(processes=MAX_WORKERS or mp.cpu_count()) as pool:
                     parts = pool.map(_mp_chunk_worker, [(name, c) for c in chunks])
                 out = b"".join(parts)
@@ -311,12 +305,8 @@ def cmd_bench(args: argparse.Namespace) -> int:
             dt = time.perf_counter() - t0
             out_path = out_dir / f"{base}{codec.ext}"
             atomic_write(out_path, out)
-            results.append(
-                (name, len(out), len(out) / total if total else 0.0, dt, out_path)
-            )
-            print(
-                f"✓ {name:<8} | {len(out):>12,} | {len(out) / total if total else 0:.4f} | {dt:>7.3f}"
-            )
+            results.append((name, len(out), len(out) / total if total else 0.0, dt, out_path))
+            print(f"✓ {name:<8} | {len(out):>12,} | {len(out) / total if total else 0:.4f} | {dt:>7.3f}")
         except Exception as e:
             print(f"✗ {name:<8} | Error: {e}")
     if not results:
@@ -366,9 +356,7 @@ def _archive_one_file(job: tuple[str, str, list[str], bool]) -> Optional[str]:
     name, ext, level, blob = best
     dst = Path(out_dir) / f"{p.name}{ext}"
     atomic_write(dst, blob)
-    log.info(
-        "  {} → {} ({}, level={}, {})", p.name, dst.name, name, level, human(len(blob))
-    )
+    log.info("  {} → {} ({}, level={}, {})", p.name, dst.name, name, level, human(len(blob)))
     return str(dst)
 
 
@@ -392,9 +380,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
         out_dir = Path(args.output).expanduser() if args.output else target
         out_dir.mkdir(parents=True, exist_ok=True)
         jobs = [(str(f), str(out_dir), codecs, args.keep_all) for f in files]
-        log.info(
-            "Found {} file(s); using {} worker(s)", len(files), min(workers, len(files))
-        )
+        log.info("Found {} file(s); using {} worker(s)", len(files), min(workers, len(files)))
         with mp.Pool(processes=min(workers, len(files))) as pool:
             outcomes = pool.map(_archive_one_file, jobs)
         ok = sum(1 for o in outcomes if o)
@@ -439,9 +425,7 @@ def _compress_one_file(
         tmp.unlink(missing_ok=True)
         log.error("write {}: {}", dst, e)
         return None
-    log.info(
-        "✓ {} -> {}  [{} -> {}]", src, dst.name, human(len(data)), human(len(blob))
-    )
+    log.info("✓ {} -> {}  [{} -> {}]", src, dst.name, human(len(data)), human(len(blob)))
     if not keep:
         with contextlib.suppress(OSError):
             src.unlink()
@@ -464,9 +448,7 @@ def _compress_dir_as_tar(
         return None
     dst = (out_dir or src.parent) / f"{src.name}{codec.ext}"
     atomic_write(dst, blob)
-    log.info(
-        "✓ {} -> {}  [{} -> {}]", src, dst.name, human(len(data)), human(len(blob))
-    )
+    log.info("✓ {} -> {}  [{} -> {}]", src, dst.name, human(len(data)), human(len(blob)))
     if not keep:
         shutil.rmtree(src, ignore_errors=True)
     return dst
@@ -488,15 +470,9 @@ def cmd_compress(args: argparse.Namespace) -> int:
         return 1
     out_dir = Path(args.output).expanduser() if args.output else None
     if src.is_file():
-        return (
-            0
-            if _compress_one_file(src, codec, level, args.keep, args.verify, out_dir)
-            else 1
-        )
+        return 0 if _compress_one_file(src, codec, level, args.keep, args.verify, out_dir) else 1
     if args.recursive:
-        targets = [
-            p for p in sorted(src.rglob("*")) if p.is_file() and not is_archive(p)
-        ]
+        targets = [p for p in sorted(src.rglob("*")) if p.is_file() and not is_archive(p)]
         if not targets:
             log.info("No compressible files in {}", src)
             return 0
@@ -515,18 +491,12 @@ def cmd_compress(args: argparse.Namespace) -> int:
         with mp.Pool(processes=min(workers, len(targets))) as pool:
             pool.map(_compress_worker, jobs)
         return 0
-    return (
-        0
-        if _compress_dir_as_tar(src, codec, level, args.keep, args.verify, out_dir)
-        else 1
-    )
+    return 0 if _compress_dir_as_tar(src, codec, level, args.keep, args.verify, out_dir) else 1
 
 
 def _compress_worker(job: tuple[str, str, int, bool, bool, Optional[str]]):
     p, cname, lvl, keep, verify, out = job
-    return _compress_one_file(
-        Path(p), CODECS[cname], lvl, keep, verify, Path(out) if out else None
-    )
+    return _compress_one_file(Path(p), CODECS[cname], lvl, keep, verify, Path(out) if out else None)
 
 
 def _guess_codec_from_name(name: str) -> Optional[Codec]:
@@ -537,9 +507,7 @@ def _guess_codec_from_name(name: str) -> Optional[Codec]:
     return None
 
 
-def _decompress_one_file(
-    src: Path, codec: Codec, keep: bool, out_dir: Optional[Path] = None
-) -> Optional[Path]:
+def _decompress_one_file(src: Path, codec: Codec, keep: bool, out_dir: Optional[Path] = None) -> Optional[Path]:
     if codec.decompress is None:
         log.error("No decompressor implemented for codec {}", codec.name)
         return None
@@ -591,9 +559,7 @@ def _decompress_one_file(
 
 def _decompress_worker(job: tuple[str, str, bool, Optional[str]]):
     p, cname, keep, out = job
-    return _decompress_one_file(
-        Path(p), CODECS[cname], keep, Path(out) if out else None
-    )
+    return _decompress_one_file(Path(p), CODECS[cname], keep, Path(out) if out else None)
 
 
 def cmd_decompress(args: argparse.Namespace) -> int:
@@ -628,9 +594,7 @@ def cmd_decompress(args: argparse.Namespace) -> int:
             return 1
         return 0 if _decompress_one_file(src, codec, args.keep, out_dir) else 1
     if args.recursive:
-        candidates = [
-            p for p in sorted(src.rglob("*")) if p.is_file() and is_archive(p)
-        ]
+        candidates = [p for p in sorted(src.rglob("*")) if p.is_file() and is_archive(p)]
     else:
         candidates = [p for p in sorted(src.iterdir()) if p.is_file() and is_archive(p)]
     if not candidates:
@@ -663,9 +627,7 @@ def _subdir_compress(job: tuple[str, str, int]) -> bool:
         return False
     dst = src.parent / f"{src.name}.tar{codec.ext}"
     atomic_write(dst, blob)
-    log.info(
-        "✓ {} -> {}  [{} -> {}]", src, dst.name, human(len(data)), human(len(blob))
-    )
+    log.info("✓ {} -> {}  [{} -> {}]", src, dst.name, human(len(data)), human(len(blob)))
     shutil.rmtree(src, ignore_errors=True)
     return True
 
@@ -712,13 +674,7 @@ def cmd_subdirs(args: argparse.Namespace) -> int:
     paths = [Path(p).expanduser() for p in (args.paths or ["."])]
     workers = MAX_WORKERS or 8
     if args.compress:
-        dirs = [
-            d
-            for p in paths
-            if p.is_dir()
-            for d in p.iterdir()
-            if d.is_dir() and not d.name.startswith(".")
-        ]
+        dirs = [d for p in paths if p.is_dir() for d in p.iterdir() if d.is_dir() and not d.name.startswith(".")]
         if not dirs:
             print("No subdirectories found to compress.")
             return 0
@@ -729,11 +685,7 @@ def cmd_subdirs(args: argparse.Namespace) -> int:
         print(f"Compressed {sum(results)}/{len(dirs)}")
         return 0
     archives = [
-        a
-        for p in paths
-        if p.is_dir()
-        for a in p.iterdir()
-        if a.is_file() and a.name.endswith(f".tar{codec.ext}")
+        a for p in paths if p.is_dir() for a in p.iterdir() if a.is_file() and a.name.endswith(f".tar{codec.ext}")
     ]
     if not archives:
         print("No matching archives found.")
@@ -772,15 +724,9 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("bench", help="try every codec at its best level; keep best")
     p.add_argument("path")
     _common_output(p)
-    p.add_argument(
-        "--algos", nargs="+", default=None, help="restrict to these codec names"
-    )
-    p.add_argument(
-        "--level", type=int, default=None, help="override the codec's default level"
-    )
-    p.add_argument(
-        "--keep-all", action="store_true", help="do not delete losing outputs"
-    )
+    p.add_argument("--algos", nargs="+", default=None, help="restrict to these codec names")
+    p.add_argument("--level", type=int, default=None, help="override the codec's default level")
+    p.add_argument("--keep-all", action="store_true", help="do not delete losing outputs")
     p.add_argument(
         "--mp-chunks",
         action="store_true",
@@ -797,17 +743,13 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("archive", help="recursively best-codec every non-archive file")
     p.add_argument("path")
     _common_output(p)
-    p.add_argument(
-        "--algos", nargs="+", default=None, help="restrict to these codec names"
-    )
+    p.add_argument("--algos", nargs="+", default=None, help="restrict to these codec names")
     p.add_argument("--keep-all", action="store_true", help="(reserved for parity)")
     _common_workers(p)
     p.set_defaults(func=cmd_archive)
     p = sub.add_parser("compress", help="compress a file or directory with ONE codec")
     p.add_argument("path")
-    p.add_argument(
-        "--algo", "-a", required=True, choices=sorted(CODECS), help="codec to use"
-    )
+    p.add_argument("--algo", "-a", required=True, choices=sorted(CODECS), help="codec to use")
     p.add_argument(
         "--level",
         "-l",
@@ -815,9 +757,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="compression level (codec-specific; default = codec's best)",
     )
-    p.add_argument(
-        "--keep", action="store_true", help="keep the original after compressing"
-    )
+    p.add_argument("--keep", action="store_true", help="keep the original after compressing")
     p.add_argument(
         "--recursive",
         action="store_true",
@@ -834,9 +774,7 @@ def build_parser() -> argparse.ArgumentParser:
     _common_output(p)
     _common_workers(p)
     p.set_defaults(func=cmd_compress)
-    p = sub.add_parser(
-        "decompress", help="decompress a file or all archives under a directory"
-    )
+    p = sub.add_parser("decompress", help="decompress a file or all archives under a directory")
     p.add_argument("path")
     p.add_argument(
         "--algo",
@@ -845,23 +783,15 @@ def build_parser() -> argparse.ArgumentParser:
         choices=sorted(CODECS) + ["zlib"],
         help="codec (default: inferred from filename)",
     )
-    p.add_argument(
-        "--keep", action="store_true", help="keep the archive after decompressing"
-    )
-    p.add_argument(
-        "--recursive", action="store_true", help="recurse into subdirectories"
-    )
+    p.add_argument("--keep", action="store_true", help="keep the archive after decompressing")
+    p.add_argument("--recursive", action="store_true", help="recurse into subdirectories")
     _common_output(p)
     _common_workers(p)
     p.set_defaults(func=cmd_decompress)
     p = sub.add_parser("subdirs", help="compress/decompress each direct subdirectory")
     mode = p.add_mutually_exclusive_group(required=True)
-    mode.add_argument(
-        "-c", "--compress", action="store_true", help="compress subdirectories"
-    )
-    mode.add_argument(
-        "-d", "--decompress", action="store_true", help="decompress .tar.<ext> archives"
-    )
+    mode.add_argument("-c", "--compress", action="store_true", help="compress subdirectories")
+    mode.add_argument("-d", "--decompress", action="store_true", help="decompress .tar.<ext> archives")
     p.add_argument(
         "paths",
         nargs="*",

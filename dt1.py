@@ -133,14 +133,10 @@ def _make_deepl(source: str, target: str) -> Translator:
     client = deepl.DeepLClient(api_key)
     target_code = _deepl_language(target)
     source_base = normalize_language(source).replace("_", "-").upper().split("-", 1)[0]
-    source_code = (
-        None if source_base == "AUTO" else {"IW": "HE"}.get(source_base, source_base)
-    )
+    source_code = None if source_base == "AUTO" else {"IW": "HE"}.get(source_base, source_base)
 
     def translate(text: str) -> str:
-        result = client.translate_text(
-            text, source_lang=source_code, target_lang=target_code
-        )
+        result = client.translate_text(text, source_lang=source_code, target_lang=target_code)
         return str(result.text if hasattr(result, "text") else result)
 
     return translate
@@ -281,11 +277,7 @@ def load_existing_output(path: Path, continue_run: bool) -> dict[str, str]:
     if not isinstance(data, dict):
         msg = f"existing output {path} must contain a JSON object"
         raise RuntimeError(msg)
-    return {
-        str(index): str(value)
-        for index, value in data.items()
-        if isinstance(value, str)
-    }
+    return {str(index): str(value) for index, value in data.items() if isinstance(value, str)}
 
 
 def append_failed(path: Path, chunk_index: int) -> None:
@@ -376,9 +368,7 @@ def translate_one(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Translate a text file in resumable chunks."
-    )
+    parser = argparse.ArgumentParser(description="Translate a text file in resumable chunks.")
     parser.add_argument(
         "-i",
         "--input",
@@ -477,15 +467,9 @@ def run(args: argparse.Namespace) -> int:
         continue_run=not args.no_continue,
     )
     translations = {
-        index: value
-        for index, value in translations.items()
-        if index.isdigit() and int(index) < len(chunks)
+        index: value for index, value in translations.items() if index.isdigit() and int(index) < len(chunks)
     }
-    pending = [
-        (index, chunk)
-        for index, chunk in enumerate(chunks)
-        if str(index) not in translations
-    ]
+    pending = [(index, chunk) for index, chunk in enumerate(chunks) if str(index) not in translations]
     logger.debug(
         "Input produced {} chunks; {} already translated; {} pending",
         len(chunks),

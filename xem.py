@@ -22,9 +22,7 @@ from dh import MIME2EXT, atomic_write, get_nobinary
 
 
 OUTPUT_DIR: Path = Path("extracted_base64")
-DATA_URL_RE = re.compile(
-    r"data:(?P<mime>[-\w.+/]+);base64,(?P<data>[A-Za-z0-9+/=\s]+)", re.IGNORECASE
-)
+DATA_URL_RE = re.compile(r"data:(?P<mime>[-\w.+/]+);base64,(?P<data>[A-Za-z0-9+/=\s]+)", re.IGNORECASE)
 
 
 def infer_extension(mime: str) -> str:

@@ -31,9 +31,7 @@ CARRY_SIZE: Final[int] = MAX_HEX_DIGITS + 1
 COLOR_RE: Final[re.Pattern[str]] = re.compile(
     r"#(?:[0-9A-Fa-f]{8}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{3})(?![0-9A-Fa-f])"
 )
-FORMATS: Final[frozenset[str]] = frozenset(
-    {"text", "json", "jsonl", "csv", "tsv", "md", "html"}
-)
+FORMATS: Final[frozenset[str]] = frozenset({"text", "json", "jsonl", "csv", "tsv", "md", "html"})
 SORT_KEYS: Final[frozenset[str]] = frozenset({"name", "count", "files"})
 CASES: Final[frozenset[str]] = frozenset({"lower", "upper"})
 HTML_HEAD: Final[str] = (
@@ -176,9 +174,7 @@ def _is_excluded(path: Path, patterns: tuple[str, ...]) -> bool:
     parts = path.parts
     for pattern in patterns:
         if any(ch in pattern for ch in "*?["):
-            if fnmatch.fnmatch(path.name, pattern) or fnmatch.fnmatch(
-                str(path), pattern
-            ):
+            if fnmatch.fnmatch(path.name, pattern) or fnmatch.fnmatch(str(path), pattern):
                 return True
         elif pattern in parts:
             return True
@@ -224,16 +220,10 @@ def collect_files(sources: list[Path], opts: Options) -> list[Path]:
                 continue
             if not _matches_extensions(candidate, opts.extensions):
                 continue
-            if (
-                opts.exclude_exts
-                and candidate.suffix.lower().lstrip(".") in opts.exclude_exts
-            ):
+            if opts.exclude_exts and candidate.suffix.lower().lstrip(".") in opts.exclude_exts:
                 continue
             try:
-                if (
-                    opts.max_size is not None
-                    and candidate.stat().st_size > opts.max_size
-                ):
+                if opts.max_size is not None and candidate.stat().st_size > opts.max_size:
                     continue
                 if opts.skip_binary and _is_binary(candidate):
                     continue
@@ -263,11 +253,7 @@ def _sort_unique(
 
 
 def _apply_filters(counts: dict[str, int], opts: Options) -> dict[str, int]:
-    filtered = {
-        c: n
-        for c, n in counts.items()
-        if n >= opts.min_count and c not in opts.exclude_colors
-    }
+    filtered = {c: n for c, n in counts.items() if n >= opts.min_count and c not in opts.exclude_colors}
     if opts.top is not None and len(filtered) > opts.top:
         top = sorted(filtered.items(), key=lambda kv: (-kv[1], kv[0]))[: opts.top]
         filtered = dict(top)
@@ -336,11 +322,7 @@ def _aggregate_unique(
         for color, count in kept.items():
             totals[color] = totals.get(color, 0) + count
             file_counts[color] = file_counts.get(color, 0) + 1
-    filtered = {
-        c: n
-        for c, n in totals.items()
-        if n >= opts.min_count and file_counts[c] >= opts.min_files
-    }
+    filtered = {c: n for c, n in totals.items() if n >= opts.min_count and file_counts[c] >= opts.min_files}
     if opts.top is not None and len(filtered) > opts.top:
         top = sorted(filtered.items(), key=lambda kv: (-kv[1], kv[0]))[: opts.top]
         filtered = dict(top)
@@ -357,9 +339,7 @@ def _emit_stream(
 
     if opts.colors_only:
         for _path, items in records:
-            out.writelines(
-                f"{_display(color, opts)}{line_end}" for color, _count in items
-            )
+            out.writelines(f"{_display(color, opts)}{line_end}" for color, _count in items)
         return
 
     if opts.fmt == "text":
@@ -381,10 +361,7 @@ def _emit_stream(
             }
             out.write(json.dumps(payload, ensure_ascii=False) + line_end)
     elif opts.fmt == "json":
-        payloads = [
-            {"path": str(path), "colors": {_display(c, opts): n for c, n in items}}
-            for path, items in records
-        ]
+        payloads = [{"path": str(path), "colors": {_display(c, opts): n for c, n in items}} for path, items in records]
         if opts.pretty:
             out.write(json.dumps(payloads, ensure_ascii=False, indent=2) + "\n")
         else:
@@ -419,9 +396,7 @@ def _emit_stream(
             for color, count in items:
                 suffix = f" ({count})" if opts.show_counts else ""
                 shown = _display(color, opts)
-                out.write(
-                    f"<li><span class='sw' style='background:{shown}'></span>{shown}{suffix}</li>"
-                )
+                out.write(f"<li><span class='sw' style='background:{shown}'></span>{shown}{suffix}</li>")
             out.write("</ul></section>")
         out.write(HTML_FOOT)
 
@@ -434,9 +409,7 @@ def _emit_unique(
     line_end = _line_end(opts)
 
     if opts.colors_only:
-        out.writelines(
-            f"{_display(color, opts)}{line_end}" for color, _count, _files in records
-        )
+        out.writelines(f"{_display(color, opts)}{line_end}" for color, _count, _files in records)
         return
 
     if opts.fmt == "text":
@@ -452,10 +425,7 @@ def _emit_unique(
             payload = {"color": _display(color, opts), "count": count, "files": files}
             out.write(json.dumps(payload, ensure_ascii=False) + line_end)
     elif opts.fmt == "json":
-        payloads = [
-            {"color": _display(color, opts), "count": count, "files": files}
-            for color, count, files in records
-        ]
+        payloads = [{"color": _display(color, opts), "count": count, "files": files} for color, count, files in records]
         if opts.pretty:
             out.write(json.dumps(payloads, ensure_ascii=False, indent=2) + "\n")
         else:
@@ -479,9 +449,7 @@ def _emit_unique(
         for color, count, files in records:
             suffix = f" ({count} in {files} files)" if opts.show_counts else ""
             shown = _display(color, opts)
-            out.write(
-                f"<li><span class='sw' style='background:{shown}'></span>{shown}{suffix}</li>"
-            )
+            out.write(f"<li><span class='sw' style='background:{shown}'></span>{shown}{suffix}</li>")
         out.write("</ul></section>")
         out.write(HTML_FOOT)
 
@@ -634,9 +602,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--no-file-ref",
         dest="colors_only",
         action="store_true",
-        help=(
-            "Write one normalized #rrggbb color per line without file references (alpha is dropped)"
-        ),
+        help=("Write one normalized #rrggbb color per line without file references (alpha is dropped)"),
     )
     out.add_argument(
         "--case",
@@ -738,11 +704,7 @@ def _read_exclude_file(path: Path) -> list[str]:
 
 
 def _split_exts(value: str | None) -> frozenset[str]:
-    return frozenset(
-        part.strip().lower().lstrip(".")
-        for part in (value or "").split(",")
-        if part.strip()
-    )
+    return frozenset(part.strip().lower().lstrip(".") for part in (value or "").split(",") if part.strip())
 
 
 def _parse_exclude_color(raw: str, config: ScanConfig) -> str | None:
@@ -834,9 +796,7 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     if opts.colors_only and opts.fmt != "text":
-        logger.warning(
-            "--colors-only writes plain text; --format '{}' is ignored", opts.fmt
-        )
+        logger.warning("--colors-only writes plain text; --format '{}' is ignored", opts.fmt)
     if opts.colors_only and opts.swatches:
         logger.warning("--swatches has no effect with --colors-only")
     if opts.swatches and not opts.colors_only and opts.fmt not in ("text", "html"):

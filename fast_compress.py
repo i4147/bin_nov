@@ -63,180 +63,170 @@ DEFAULT_ZSTD_CHUNK_SIZE: int = 131_072
 DEFAULT_XZ_PRESET: int = 9
 DEFAULT_XZ_THREADS: int = 4
 ZSTD_EXT = frozenset({".zst"})
-ZSTD_SKIP_EXT = frozenset(
-    {
-        ".xz",
-        ".gz",
-        ".7z",
-        ".zip",
-        ".whl",
-        ".lz4",
-        ".zst",
-        ".br",
-        ".bz2",
-        ".lzma",
-        ".z",
-        ".rar",
-        ".tar",
-        ".tgz",
-        ".tbz2",
-        ".bz3",
-        ".jpg",
-        ".jpeg",
-        ".png",
-        ".gif",
-        ".bmp",
-        ".tiff",
-        ".tif",
-        ".webp",
-        ".svg",
-        ".ico",
-        ".heic",
-        ".heif",
-        ".avif",
-        ".mp4",
-        ".mkv",
-        ".avi",
-        ".mov",
-        ".wmv",
-        ".flv",
-        ".webm",
-        ".m4v",
-        ".mpg",
-        ".mpeg",
-        ".3gp",
-        ".ogv",
-        ".ts",
-        ".m2ts",
-        ".mp3",
-        ".wav",
-        ".flac",
-        ".aac",
-        ".ogg",
-        ".wma",
-        ".m4a",
-        ".opus",
-        ".mid",
-        ".midi",
-        ".aiff",
-        ".pdf",
-        ".docx",
-        ".pptx",
-        ".xlsx",
-        ".odt",
-        ".ods",
-        ".odp",
-        ".epub",
-        ".mobi",
-        ".azw",
-        ".azw3",
-        ".exe",
-        ".dll",
-        ".so",
-        ".dylib",
-        ".bin",
-        ".iso",
-        ".img",
-        ".deb",
-        ".rpm",
-        ".pkg",
-        ".msi",
-    }
-)
-ZSTD_MEDIA_EXT = frozenset(
-    {
-        ".jpg",
-        ".jpeg",
-        ".png",
-        ".gif",
-        ".bmp",
-        ".tiff",
-        ".tif",
-        ".webp",
-        ".svg",
-        ".ico",
-        ".heic",
-        ".heif",
-        ".avif",
-        ".mp4",
-        ".mkv",
-        ".avi",
-        ".mov",
-        ".wmv",
-        ".flv",
-        ".webm",
-        ".m4v",
-        ".mpg",
-        ".mpeg",
-        ".3gp",
-        ".ogv",
-        ".ts",
-        ".m2ts",
-        ".mp3",
-        ".wav",
-        ".flac",
-        ".aac",
-        ".ogg",
-        ".wma",
-        ".m4a",
-        ".opus",
-        ".mid",
-        ".midi",
-        ".aiff",
-        ".pdf",
-        ".docx",
-        ".pptx",
-        ".xlsx",
-        ".odt",
-        ".ods",
-        ".odp",
-        ".epub",
-        ".mobi",
-        ".azw",
-        ".azw3",
-    }
-)
-ZSTD_EXCLUDED_DIR_NAMES = frozenset(
-    {
-        ".git",
-        "__pycache__",
-        ".pytest_cache",
-        ".mypy_cache",
-        ".bin",
-        "bin",
-        "dh",
-        "print_persian",
-        ".dist-info",
-        ".egg-info",
-        "zstandard",
-    }
-)
+ZSTD_SKIP_EXT = frozenset({
+    ".xz",
+    ".gz",
+    ".7z",
+    ".zip",
+    ".whl",
+    ".lz4",
+    ".zst",
+    ".br",
+    ".bz2",
+    ".lzma",
+    ".z",
+    ".rar",
+    ".tar",
+    ".tgz",
+    ".tbz2",
+    ".bz3",
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".bmp",
+    ".tiff",
+    ".tif",
+    ".webp",
+    ".svg",
+    ".ico",
+    ".heic",
+    ".heif",
+    ".avif",
+    ".mp4",
+    ".mkv",
+    ".avi",
+    ".mov",
+    ".wmv",
+    ".flv",
+    ".webm",
+    ".m4v",
+    ".mpg",
+    ".mpeg",
+    ".3gp",
+    ".ogv",
+    ".ts",
+    ".m2ts",
+    ".mp3",
+    ".wav",
+    ".flac",
+    ".aac",
+    ".ogg",
+    ".wma",
+    ".m4a",
+    ".opus",
+    ".mid",
+    ".midi",
+    ".aiff",
+    ".pdf",
+    ".docx",
+    ".pptx",
+    ".xlsx",
+    ".odt",
+    ".ods",
+    ".odp",
+    ".epub",
+    ".mobi",
+    ".azw",
+    ".azw3",
+    ".exe",
+    ".dll",
+    ".so",
+    ".dylib",
+    ".bin",
+    ".iso",
+    ".img",
+    ".deb",
+    ".rpm",
+    ".pkg",
+    ".msi",
+})
+ZSTD_MEDIA_EXT = frozenset({
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".bmp",
+    ".tiff",
+    ".tif",
+    ".webp",
+    ".svg",
+    ".ico",
+    ".heic",
+    ".heif",
+    ".avif",
+    ".mp4",
+    ".mkv",
+    ".avi",
+    ".mov",
+    ".wmv",
+    ".flv",
+    ".webm",
+    ".m4v",
+    ".mpg",
+    ".mpeg",
+    ".3gp",
+    ".ogv",
+    ".ts",
+    ".m2ts",
+    ".mp3",
+    ".wav",
+    ".flac",
+    ".aac",
+    ".ogg",
+    ".wma",
+    ".m4a",
+    ".opus",
+    ".mid",
+    ".midi",
+    ".aiff",
+    ".pdf",
+    ".docx",
+    ".pptx",
+    ".xlsx",
+    ".odt",
+    ".ods",
+    ".odp",
+    ".epub",
+    ".mobi",
+    ".azw",
+    ".azw3",
+})
+ZSTD_EXCLUDED_DIR_NAMES = frozenset({
+    ".git",
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".bin",
+    "bin",
+    "dh",
+    "print_persian",
+    ".dist-info",
+    ".egg-info",
+    "zstandard",
+})
 ZSTD_EXCLUDED_DIR_PATTERNS: list[str] = ["*.egg-info", "*.dist-info"]
-XZ_SKIP_EXT = frozenset(
-    {
-        ".zip",
-        ".br",
-        ".xz",
-        ".gz",
-        ".bz2",
-        ".bz3",
-        ".zst",
-        ".7z",
-        ".lz4",
-        ".rar",
-        ".tar",
-        ".tgz",
-        ".tbz",
-        ".tbz2",
-        ".z",
-        ".lz",
-        ".lzma",
-        ".xza",
-    }
-)
-XZ_EXCLUDED_DIR_NAMES = frozenset(
-    {".git", "__pycache__", ".venv", "venv", ".env", "node_modules"}
-)
+XZ_SKIP_EXT = frozenset({
+    ".zip",
+    ".br",
+    ".xz",
+    ".gz",
+    ".bz2",
+    ".bz3",
+    ".zst",
+    ".7z",
+    ".lz4",
+    ".rar",
+    ".tar",
+    ".tgz",
+    ".tbz",
+    ".tbz2",
+    ".z",
+    ".lz",
+    ".lzma",
+    ".xza",
+})
+XZ_EXCLUDED_DIR_NAMES = frozenset({".git", "__pycache__", ".venv", "venv", ".env", "node_modules"})
 
 
 @dataclass(slots=True)
@@ -270,9 +260,7 @@ class ScanStats:
 
 def resolve_directory(positional: str | None, flag: str | None) -> Path | None:
     if positional is not None and flag is not None and positional != flag:
-        logger.error(
-            "Specify directory either positionally or with --dir, not both differently"
-        )
+        logger.error("Specify directory either positionally or with --dir, not both differently")
         return None
     raw = flag if flag is not None else positional
     if raw is None:
@@ -308,9 +296,7 @@ def is_editable_package_dir(path: Path) -> bool:
                     try:
                         data = json.loads(direct_url.read_text())
                         dir_info = data.get("dir_info", {})
-                        if isinstance(dir_info, dict) and dir_info.get(
-                            "editable", False
-                        ):
+                        if isinstance(dir_info, dict) and dir_info.get("editable", False):
                             return True
                     except (OSError, json.JSONDecodeError):
                         pass
@@ -331,15 +317,9 @@ def collect_zstd_tasks(
         skip_exts.discard(".so")
     if args.legacy_extra_skips:
         skip_exts.update({".dat", ".npz", ".onnx"})
-    excluded_names = (
-        set(args.exclude_dir_names)
-        if args.exclude_dir_names is not None
-        else set(ZSTD_EXCLUDED_DIR_NAMES)
-    )
+    excluded_names = set(args.exclude_dir_names) if args.exclude_dir_names is not None else set(ZSTD_EXCLUDED_DIR_NAMES)
     excluded_patterns = (
-        list(args.exclude_dir_patterns)
-        if args.exclude_dir_patterns is not None
-        else list(ZSTD_EXCLUDED_DIR_PATTERNS)
+        list(args.exclude_dir_patterns) if args.exclude_dir_patterns is not None else list(ZSTD_EXCLUDED_DIR_PATTERNS)
     )
     if args.simple:
         pattern = args.pattern
@@ -406,11 +386,7 @@ def collect_zstd_tasks(
                     if path.suffix not in ZSTD_EXT:
                         stats.skipped_extensions += 1
                         continue
-                out = (
-                    path.with_suffix(path.suffix + ".zst")
-                    if compress
-                    else path.with_suffix("")
-                )
+                out = path.with_suffix(path.suffix + ".zst") if compress else path.with_suffix("")
                 if out.exists():
                     stats.skipped_existing += 1
                     continue
@@ -511,16 +487,10 @@ def _handle_zstd_result(
         stats.add(original_size, compressed_size)
         if args.progress == "verbose":
             if compress:
-                ratio = (
-                    compressed_size / original_size * args.stats_scale
-                    if original_size
-                    else 0.0
-                )
+                ratio = compressed_size / original_size * args.stats_scale if original_size else 0.0
                 action = "Compressed & removed" if not args.keep else "Compressed"
                 print(f"✓ {action}: {path} -> {out}")
-                print(
-                    f"  Size: {original_size:,} -> {compressed_size:,} bytes ({ratio:.1f}%)"
-                )
+                print(f"  Size: {original_size:,} -> {compressed_size:,} bytes ({ratio:.1f}%)")
             else:
                 action = "Decompressed & removed" if not args.keep else "Decompressed"
                 print(f"✓ {action}: {path} -> {out}")
@@ -710,16 +680,8 @@ def run_xz(args: argparse.Namespace) -> int:
     root = resolve_directory(args.directory, args.dir_flag)
     if root is None:
         return 1
-    skip_extensions = (
-        set(args.skip_extensions)
-        if args.skip_extensions is not None
-        else set(XZ_SKIP_EXT)
-    )
-    excluded_dirs = (
-        set(args.exclude_dirs)
-        if args.exclude_dirs is not None
-        else set(XZ_EXCLUDED_DIR_NAMES)
-    )
+    skip_extensions = set(args.skip_extensions) if args.skip_extensions is not None else set(XZ_SKIP_EXT)
+    excluded_dirs = set(args.exclude_dirs) if args.exclude_dirs is not None else set(XZ_EXCLUDED_DIR_NAMES)
     tasks = collect_xz_tasks(root, compress, skip_extensions, excluded_dirs)
     print(f"Working directory: {root}")
     print(f"Mode: {'Compression' if compress else 'Decompression'}")
@@ -743,9 +705,7 @@ def run_xz(args: argparse.Namespace) -> int:
     if args.pool_workers <= 1:
         for index, path in enumerate(tasks, 1):
             if compress:
-                result = xz_compress_file(
-                    path, args.preset, args.threads, remove_original
-                )
+                result = xz_compress_file(path, args.preset, args.threads, remove_original)
             else:
                 result = xz_decompress_file(path, remove_original)
             ok, in_path, out_path, _orig, _comp, error = result
@@ -804,19 +764,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Compress/decompress using zstandard",
         description="Recursively compress/decompress using zstandard.",
     )
-    zstd_parser.add_argument(
-        "directory", nargs="?", default=None, help="Directory to process"
-    )
-    zstd_parser.add_argument(
-        "--dir", dest="dir_flag", default=None, help="Directory to process"
-    )
+    zstd_parser.add_argument("directory", nargs="?", default=None, help="Directory to process")
+    zstd_parser.add_argument("--dir", dest="dir_flag", default=None, help="Directory to process")
     zstd_group = zstd_parser.add_mutually_exclusive_group()
-    zstd_group.add_argument(
-        "-c", "--compress", action="store_true", help="Compress files (default)"
-    )
-    zstd_group.add_argument(
-        "-d", "--decompress", action="store_true", help="Decompress .zst files"
-    )
+    zstd_group.add_argument("-c", "--compress", action="store_true", help="Compress files (default)")
+    zstd_group.add_argument("-d", "--decompress", action="store_true", help="Decompress .zst files")
     zstd_parser.add_argument(
         "--level",
         type=int,
@@ -865,12 +817,8 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Use simple rglob(pattern) mode and disable exclusions",
     )
-    zstd_parser.add_argument(
-        "--pattern", default="*", help="Glob pattern for --simple mode"
-    )
-    zstd_parser.add_argument(
-        "--dry-run", action="store_true", help="Show actions without executing"
-    )
+    zstd_parser.add_argument("--pattern", default="*", help="Glob pattern for --simple mode")
+    zstd_parser.add_argument("--dry-run", action="store_true", help="Show actions without executing")
     zstd_parser.add_argument(
         "--progress",
         choices=("simple", "bar", "verbose", "none"),
@@ -925,19 +873,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Compress/decompress using lzma_mt",
         description="Recursively compress/decompress using lzma_mt.",
     )
-    xz_parser.add_argument(
-        "directory", nargs="?", default=None, help="Directory to process"
-    )
-    xz_parser.add_argument(
-        "--dir", dest="dir_flag", default=None, help="Directory to process"
-    )
+    xz_parser.add_argument("directory", nargs="?", default=None, help="Directory to process")
+    xz_parser.add_argument("--dir", dest="dir_flag", default=None, help="Directory to process")
     xz_group = xz_parser.add_mutually_exclusive_group()
-    xz_group.add_argument(
-        "-c", "--compress", action="store_true", help="Compress files (default)"
-    )
-    xz_group.add_argument(
-        "-d", "--decompress", action="store_true", help="Decompress .xz files"
-    )
+    xz_group.add_argument("-c", "--compress", action="store_true", help="Compress files (default)")
+    xz_group.add_argument("-d", "--decompress", action="store_true", help="Decompress .xz files")
     xz_parser.add_argument(
         "--preset",
         type=int,
@@ -976,9 +916,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Override skipped extensions during compression",
     )
-    xz_parser.add_argument(
-        "--dry-run", action="store_true", help="Show actions without executing"
-    )
+    xz_parser.add_argument("--dry-run", action="store_true", help="Show actions without executing")
     return parser
 
 

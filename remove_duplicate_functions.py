@@ -54,9 +54,7 @@ def compute_function_hash(path: Path, func_node: ast.FunctionDef) -> str | None:
     except Exception:
         return None
     start_line: int = func_node.lineno - 1
-    end_line: int = (
-        func_node.end_lineno if func_node.end_lineno is not None else start_line + 1
-    )
+    end_line: int = func_node.end_lineno if func_node.end_lineno is not None else start_line + 1
     func_lines: list[str] = lines[start_line:end_line]
     body_start: int = 0
     for i, line in enumerate(func_lines):
@@ -105,14 +103,12 @@ def process_target_file(
     duplicates: list[dict[str, Any]] = []
     for func_name, func_info in funcs.items():
         if func_info["hash"] in ref_hashes:
-            duplicates.append(
-                {
-                    "name": func_name,
-                    "lineno": func_info["lineno"],
-                    "end_lineno": func_info["end_lineno"],
-                    "ref_name": ref_hashes[func_info["hash"]],
-                }
-            )
+            duplicates.append({
+                "name": func_name,
+                "lineno": func_info["lineno"],
+                "end_lineno": func_info["end_lineno"],
+                "ref_name": ref_hashes[func_info["hash"]],
+            })
     if not duplicates:
         return {"file": target_path, "status": "ok", "duplicates": []}
     if apply:
@@ -123,10 +119,7 @@ def process_target_file(
             for dup in duplicates:
                 start: int = dup["lineno"] - 1
                 end: int = dup["end_lineno"]
-                while start > 0 and (
-                    lines[start - 1].strip().startswith("@")
-                    or lines[start - 1].strip() == ""
-                ):
+                while start > 0 and (lines[start - 1].strip().startswith("@") or lines[start - 1].strip() == ""):
                     start -= 1
                 del lines[start:end]
                 removed.append(dup["name"])
@@ -173,9 +166,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument("reference", help="Reference file (functions to keep)")
-    parser.add_argument(
-        "inputs", nargs="*", help="Target files/directories (default: .)"
-    )
+    parser.add_argument("inputs", nargs="*", help="Target files/directories (default: .)")
     parser.add_argument(
         "-a",
         "--apply",
@@ -202,9 +193,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not ref_funcs:
         logger.warning("⚠️  No functions found in reference")
         return 1
-    ref_hashes: dict[str, str] = {
-        info["hash"]: info["name"] for info in ref_funcs.values()
-    }
+    ref_hashes: dict[str, str] = {info["hash"]: info["name"] for info in ref_funcs.values()}
     print(f"  Found {len(ref_hashes)} functions")
     target_files: list[Path] = expand_input_paths(args.inputs)
     target_files = [f for f in target_files if f != ref_path]
@@ -218,8 +207,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     total_updated: int = 0
     with Pool(processes=POOL_SIZE) as pool:
         async_results: list[Any] = [
-            pool.apply_async(process_target_file, (f, ref_hashes, args.apply))
-            for f in target_files
+            pool.apply_async(process_target_file, (f, ref_hashes, args.apply)) for f in target_files
         ]
         for async_result in async_results:
             result: dict[str, Any] = async_result.get()

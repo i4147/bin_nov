@@ -136,16 +136,11 @@ def is_plain(src: bytes, pos: int) -> bool:
 
 def code_block_rows(lines: list[bytes]) -> set[int]:
     rows: set[int] = set()
-    groups = itertools.groupby(
-        range(len(lines)), key=lambda i: bool(COMMENT_LINE.match(lines[i]))
-    )
+    groups = itertools.groupby(range(len(lines)), key=lambda i: bool(COMMENT_LINE.match(lines[i])))
     for is_comment, group in groups:
         idx = list(group)
         if is_comment and len(idx) > 1:
-            text = "\n".join(
-                HASH_PREFIX.sub("", lines[i].decode("utf-8", "replace").rstrip("\r"))
-                for i in idx
-            )
+            text = "\n".join(HASH_PREFIX.sub("", lines[i].decode("utf-8", "replace").rstrip("\r")) for i in idx)
             if is_code(textwrap.dedent(text).strip("\n")):
                 rows.update(idx)
     return rows
@@ -234,9 +229,7 @@ class Stripper:
             return True
         return bool(DIRECTIVE.search(text)) or is_code(text.lstrip("#").strip())
 
-    def comment_edit(
-        self, src: bytes, node: Node, blocks: set[int], edits: list[Edit]
-    ) -> None:
+    def comment_edit(self, src: bytes, node: Node, blocks: set[int], edits: list[Edit]) -> None:
         start = node.start_byte
         line_start = start - node.start_point[1]
         prefix = src[line_start:start]
@@ -253,9 +246,7 @@ class Stripper:
             newline = NEWLINE.match(src, end)
             edits.append((line_start, newline.end() if newline else end, b""))
 
-    def docstring_edit(
-        self, block: Node, src: bytes, edits: list[Edit], is_module: bool
-    ) -> None:
+    def docstring_edit(self, block: Node, src: bytes, edits: list[Edit], is_module: bool) -> None:
         stmts = [n for n in block.named_children if n.type != "comment"]
         if not stmts:
             return
@@ -263,9 +254,7 @@ class Stripper:
         if first.type != "expression_statement" or first.named_child_count != 1:
             return
         literal = first.named_children[0]
-        if literal.type not in ("string", "concatenated_string") or not is_plain(
-            src, literal.start_byte
-        ):
+        if literal.type not in ("string", "concatenated_string") or not is_plain(src, literal.start_byte):
             return
         start, end = first.start_byte, first.end_byte
         if len(stmts) == 1 and not is_module:
@@ -292,26 +281,16 @@ class Walker:
         for root in self.roots:
             if Path(root).is_dir():
                 for folder, dirs, names in os.walk(root):
-                    dirs[:] = sorted(
-                        d
-                        for d in dirs
-                        if d not in SKIP_DIRS and not d.endswith(".dist-info")
-                    )
+                    dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS and not d.endswith(".dist-info"))
                     for name in sorted(names):
                         path = Path(folder).joinpath(name)
-                        if (
-                            name.endswith(".py")
-                            and not Path(path).is_symlink()
-                            and self.fresh(path)
-                        ):
+                        if name.endswith(".py") and not Path(path).is_symlink() and self.fresh(path):
                             yield path
             elif Path(root).is_file():
                 if self.fresh(root):
                     yield root
             else:
-                self.err.print(
-                    Text.assemble(("warning", "yellow"), f": {root}: not found")
-                )
+                self.err.print(Text.assemble(("warning", "yellow"), f": {root}: not found"))
 
     def fresh(self, path: str) -> bool:
         real = Path(path).resolve()
@@ -326,23 +305,15 @@ class App:
         args = self.build_parser().parse_args(argv)
         self.paths: list[str] = args.paths
         self.workers: int = MAX_WORKERS
-        self.stripper = Stripper(
-            Options(full=args.c or args.a, docs=args.d or args.a, all=args.a)
-        )
+        self.stripper = Stripper(Options(full=args.c or args.a, docs=args.d or args.a, all=args.a))
         self.out = Console()
         self.err = Console(stderr=True)
 
     @staticmethod
     def build_parser() -> argparse.ArgumentParser:
-        ap = argparse.ArgumentParser(
-            description="Strip comments/docstrings from Python files in place."
-        )
-        ap.add_argument(
-            "paths", nargs="*", default=[os.getcwd()], help="files or directories"
-        )
-        ap.add_argument(
-            "-c", action="store_true", help="strip all comments, not just inline ones"
-        )
+        ap = argparse.ArgumentParser(description="Strip comments/docstrings from Python files in place.")
+        ap.add_argument("paths", nargs="*", default=[os.getcwd()], help="files or directories")
+        ap.add_argument("-c", action="store_true", help="strip all comments, not just inline ones")
         ap.add_argument(
             "-d",
             action="store_true",
@@ -391,21 +362,13 @@ class App:
                     tail = Text(f"{res.delta:,}", style="green" if res.delta else "dim")
                 self.out.print(Text(f"[{count}]   {res.path.split('/')[-1]}   ") + tail)
         except KeyboardInterrupt:
-            self.err.print(
-                Text.assemble(
-                    ("warning", "yellow"), ": interrupted by user, exiting gracefully"
-                )
-            )
+            self.err.print(Text.assemble(("warning", "yellow"), ": interrupted by user, exiting gracefully"))
         if not count:
             self.err.print(Text.assemble(("warning", "yellow"), ": no files"))
             return 1
-        self.out.print(
-            f"\n{changed}/{count} files changed, [green]{total:,}[/] bytes reduced"
-        )
+        self.out.print(f"\n{changed}/{count} files changed, [green]{total:,}[/] bytes reduced")
         for res in errors:
-            self.err.print(
-                Text.assemble(("error", "cyan"), f": {res.path}: {res.error}")
-            )
+            self.err.print(Text.assemble(("error", "cyan"), f": {res.path}: {res.error}"))
         return 1 if errors else 0
 
 

@@ -155,9 +155,7 @@ def _import_aliases(node: ast.Import | ast.ImportFrom) -> list[tuple[str, str]]:
     return pairs
 
 
-def analyze_source(
-    source: str, path: str, *, is_init: bool = False, ignore_init: bool = False
-) -> FileReport:
+def analyze_source(source: str, path: str, *, is_init: bool = False, ignore_init: bool = False) -> FileReport:
     report = FileReport(path=path)
     try:
         tree = ast.parse(source, filename=path)
@@ -219,11 +217,7 @@ def _remove_names_from_import_line(line: str, names_to_remove: set[str]) -> str 
     m = re.match(r"^(\s*import\s+)(.+)$", line)
     if m:
         prefix, rest = (m.group(1), m.group(2))
-        kept = [
-            seg.strip()
-            for seg in rest.split(",")
-            if _alias_local_name(seg.strip()) not in names_to_remove
-        ]
+        kept = [seg.strip() for seg in rest.split(",") if _alias_local_name(seg.strip()) not in names_to_remove]
         if not kept:
             return None
         return prefix + ", ".join(kept)
@@ -375,9 +369,7 @@ def _task_analyze_file(path_str: str) -> FileReport:
     except OSError as exc:
         return FileReport(path=path_str, error=f"OSError: {exc}")
     is_init = p.name == "__init__.py"
-    return analyze_source(
-        source, path_str, is_init=is_init, ignore_init=_WORKER_IGNORE_INIT
-    )
+    return analyze_source(source, path_str, is_init=is_init, ignore_init=_WORKER_IGNORE_INIT)
 
 
 def _task_analyze_source_str(args: tuple[str, str]) -> FileReport:
@@ -385,9 +377,7 @@ def _task_analyze_source_str(args: tuple[str, str]) -> FileReport:
     if source.startswith("__ERROR__:"):
         return FileReport(path=virtual_path, error=source[len("__ERROR__:") :])
     is_init = virtual_path.endswith(("/__init__.py", "\\__init__.py"))
-    return analyze_source(
-        source, virtual_path, is_init=is_init, ignore_init=_WORKER_IGNORE_INIT
-    )
+    return analyze_source(source, virtual_path, is_init=is_init, ignore_init=_WORKER_IGNORE_INIT)
 
 
 def _should_exclude(path: Path, exclude_patterns: list[re.Pattern[str]]) -> bool:
@@ -423,9 +413,7 @@ def collect_tasks(
             elif p.suffix == ".whl" or p.name.endswith(".tar.zst"):
                 _add_archive(p)
             else:
-                print(
-                    yellow(f"warning: skipping unrecognised file: {p}"), file=sys.stderr
-                )
+                print(yellow(f"warning: skipping unrecognised file: {p}"), file=sys.stderr)
         elif p.is_dir():
             for child in sorted(p.rglob("*")):
                 if _should_exclude(child, exclude_patterns):
@@ -471,14 +459,10 @@ def print_report(
     return len(report.unused)
 
 
-def print_fix_result(
-    path_str: str, *, fixed: bool, dry_run: bool, error: str | None = None
-) -> None:
+def print_fix_result(path_str: str, *, fixed: bool, dry_run: bool, error: str | None = None) -> None:
     display = _relative_path(path_str)
     if error:
-        print(
-            f"  {red('SKIP autofix')} {bold(display)} — result failed to parse: {error}"
-        )
+        print(f"  {red('SKIP autofix')} {bold(display)} — result failed to parse: {error}")
     elif dry_run:
         print(f"  {cyan('would fix')} {bold(display)}")
     else:
@@ -501,16 +485,12 @@ def run(
     file_tasks, source_tasks = collect_tasks(paths, exclude_patterns)
     total_py = len(file_tasks)
     total_arc = len(source_tasks)
-    print(
-        f"  {cyan(str(total_py))} .py file(s), {cyan(str(total_arc))} archive member(s) queued.\n"
-    )
+    print(f"  {cyan(str(total_py))} .py file(s), {cyan(str(total_arc))} archive member(s) queued.\n")
     if total_py + total_arc == 0:
         print(yellow("No files to analyse."))
         return 0
     reports: list[FileReport] = []
-    with Pool(
-        processes=workers, initializer=_worker_init, initargs=(ignore_init,)
-    ) as pool:
+    with Pool(processes=workers, initializer=_worker_init, initargs=(ignore_init,)) as pool:
         file_results = pool.imap_unordered(_task_analyze_file, file_tasks)
         arc_results = pool.imap_unordered(_task_analyze_source_str, source_tasks)
         for i, rep in enumerate(file_results, 1):
@@ -542,17 +522,13 @@ def run(
             try:
                 original_source = p.read_text(encoding="utf-8", errors="replace")
             except OSError as exc:
-                print_fix_result(
-                    report.path, fixed=False, dry_run=dry_run, error=str(exc)
-                )
+                print_fix_result(report.path, fixed=False, dry_run=dry_run, error=str(exc))
                 continue
             new_source = apply_fix(original_source, report.unused)
             try:
                 ast.parse(new_source, filename=report.path)
             except SyntaxError as exc:
-                print_fix_result(
-                    report.path, fixed=False, dry_run=dry_run, error=str(exc)
-                )
+                print_fix_result(report.path, fixed=False, dry_run=dry_run, error=str(exc))
                 continue
             if dry_run:
                 print_fix_result(report.path, fixed=True, dry_run=True)
@@ -567,9 +543,7 @@ def run(
         print(green("✓ No unused imports found."))
     else:
         print(
-            bold(
-                f"Found {red(str(total_unused))} unused import(s) across {red(str(len(files_with_issues)))} file(s)."
-            )
+            bold(f"Found {red(str(total_unused))} unused import(s) across {red(str(len(files_with_issues)))} file(s).")
         )
         if autofix and (not dry_run):
             print(green(f"Fixed {files_fixed} file(s)."))
@@ -592,9 +566,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="PATH",
         help="Files or directories to scan (default: current directory).",
     )
-    parser.add_argument(
-        "-a", "--autofix", action="store_true", help="Remove unused imports in-place."
-    )
+    parser.add_argument("-a", "--autofix", action="store_true", help="Remove unused imports in-place.")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -618,9 +590,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Treat all imports in __init__.py as used.",
     )
-    parser.add_argument(
-        "--no-color", action="store_true", help="Disable ANSI color codes in output."
-    )
+    parser.add_argument("--no-color", action="store_true", help="Disable ANSI color codes in output.")
     return parser
 
 
@@ -635,9 +605,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             exclude_patterns.append(re.compile(pat))
         except re.error as exc:
-            print(
-                red(f"error: invalid --exclude pattern {pat!r}: {exc}"), file=sys.stderr
-            )
+            print(red(f"error: invalid --exclude pattern {pat!r}: {exc}"), file=sys.stderr)
             return 2
     paths = [Path(p) for p in args.paths]
     return run(

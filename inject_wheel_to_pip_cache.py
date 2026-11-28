@@ -31,9 +31,7 @@ def wheel_cache_hash(link_url: str) -> str:
         "interpreter_name": interpreter_name(),
         "interpreter_version": interpreter_version(),
     }
-    return hashlib.sha224(
-        json.dumps(key_parts, sort_keys=True).encode("utf-8")
-    ).hexdigest()
+    return hashlib.sha224(json.dumps(key_parts, sort_keys=True).encode("utf-8")).hexdigest()
 
 
 def wheel_cache_dir(cache_dir: Path, link_url: str) -> Path:
@@ -43,9 +41,7 @@ def wheel_cache_dir(cache_dir: Path, link_url: str) -> Path:
 
 def extract_wheel_metadata(wheel_path: Path) -> dict:
     with zipfile.ZipFile(wheel_path, "r") as wheel_zip:
-        metadata_files = [
-            f for f in wheel_zip.namelist() if f.endswith(".dist-info/METADATA")
-        ]
+        metadata_files = [f for f in wheel_zip.namelist() if f.endswith(".dist-info/METADATA")]
         if not metadata_files:
             msg = f"No METADATA found in wheel {wheel_path}"
             raise ValueError(msg)
@@ -83,9 +79,7 @@ def add_wheel_to_pip_cache(wheel_path: Path) -> None:
     target_file = target_dir / wheel_path.name
     shutil.copy2(wheel_path, target_file)
     metadata = extract_wheel_metadata(wheel_path)
-    atomic_write(
-        (target_dir / f"{wheel_path.name}.json"), json.dumps(metadata, indent=2)
-    )
+    atomic_write((target_dir / f"{wheel_path.name}.json"), json.dumps(metadata, indent=2))
     print(f"Cache key (sha224): {wheel_cache_hash(link_url)}")
     print(f"Wheel cached at:    {target_file}")
     print(f"Metadata cached at: {target_dir / (wheel_path.name + '.json')}")

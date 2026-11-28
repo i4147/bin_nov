@@ -28,9 +28,7 @@ UA: str = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko
 
 def is_url(s: str) -> bool:
     p = urlparse(s)
-    return p.scheme in {"http", "https", "file", "data"} and bool(
-        p.netloc or p.scheme == "file"
-    )
+    return p.scheme in {"http", "https", "file", "data"} and bool(p.netloc or p.scheme == "file")
 
 
 def to_target(raw: str) -> str:
@@ -143,21 +141,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("-o", "--output", type=Path, help="Output PDF path")
     p.add_argument("-p", "--paper", choices=sorted(PAPER), default="A4")
     p.add_argument("-L", "--landscape", action="store_true")
-    p.add_argument(
-        "-m", "--margin", type=float, default=12.0, help="Margin in mm (default 12)"
-    )
+    p.add_argument("-m", "--margin", type=float, default=12.0, help="Margin in mm (default 12)")
     p.add_argument("--no-background", action="store_true", help="Drop CSS backgrounds")
     p.add_argument("--header", help="Header text. Supports {page} and {pages}.")
     p.add_argument("--footer", help="Footer text. Supports {page} and {pages}.")
     p.add_argument("--header-size", type=float, default=9.0)
     p.add_argument("--footer-size", type=float, default=9.0)
     p.add_argument("--user-agent", default=UA)
-    p.add_argument(
-        "--timeout", type=float, default=30.0, help="Fetch timeout in seconds"
-    )
-    p.add_argument(
-        "--css", type=Path, action="append", default=[], help="Extra CSS file(s)"
-    )
+    p.add_argument("--timeout", type=float, default=30.0, help="Fetch timeout in seconds")
+    p.add_argument("--css", type=Path, action="append", default=[], help="Extra CSS file(s)")
     return p
 
 
@@ -188,11 +180,7 @@ def main(argv: list[str] | None = None) -> int:
             html = fetch(target, args.timeout, args.user_agent)
             doc = HTML(string=html, base_url=target)
         else:
-            doc = HTML(
-                filename=(
-                    urlparse(target).path if target.startswith("file://") else target
-                )
-            )
+            doc = HTML(filename=(urlparse(target).path if target.startswith("file://") else target))
         console.print(f"[cyan]→[/cyan] rendering with WeasyPrint")
         doc.write_pdf(target=str(output), stylesheets=stylesheets)
     except KeyboardInterrupt:

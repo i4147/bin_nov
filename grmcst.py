@@ -32,9 +32,7 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
     from multiprocessing.pool import AsyncResult
 PRESERVE_PREFIXES: Final[tuple[str, ...]] = ("#!", "# type:", "# fmt:")
-PRESERVE_EXACT: Final[frozenset[str]] = frozenset(
-    {"# fmt: skip", "# fmt: on", "# fmt: off"}
-)
+PRESERVE_EXACT: Final[frozenset[str]] = frozenset({"# fmt: skip", "# fmt: on", "# fmt: off"})
 
 
 def should_preserve_comment(comment_text: str) -> bool:
@@ -68,37 +66,25 @@ class StripTransformer(cst.CSTTransformer):
 
     def _strip_suite(self, suite: cst.BaseSuite) -> cst.BaseSuite:
         if isinstance(suite, cst.IndentedBlock):
-            new_body: tuple[cst.BaseStatement, ...] = self._strip_leading_string(
-                suite.body
-            )
+            new_body: tuple[cst.BaseStatement, ...] = self._strip_leading_string(suite.body)
             if not new_body:
                 new_body = (cst.SimpleStatementLine(body=[cst.Pass()]),)
             return suite.with_changes(body=new_body)
         if isinstance(suite, cst.SimpleStatementSuite):
-            new_body: tuple[cst.BaseStatement, ...] = self._strip_leading_string(
-                suite.body
-            )
+            new_body: tuple[cst.BaseStatement, ...] = self._strip_leading_string(suite.body)
             if not new_body:
                 new_body = (cst.Pass(),)
             return suite.with_changes(body=new_body)
         return suite
 
-    def leave_Module(
-        self, original_node: cst.Module, updated_node: cst.Module
-    ) -> cst.Module:
-        new_body: tuple[cst.BaseStatement, ...] = self._strip_leading_string(
-            updated_node.body
-        )
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
+        new_body: tuple[cst.BaseStatement, ...] = self._strip_leading_string(updated_node.body)
         return updated_node.with_changes(body=new_body)
 
-    def leave_FunctionDef(
-        self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-    ) -> cst.FunctionDef:
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
         return updated_node.with_changes(body=self._strip_suite(updated_node.body))
 
-    def leave_ClassDef(
-        self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-    ) -> cst.ClassDef:
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
         return updated_node.with_changes(body=self._strip_suite(updated_node.body))
 
 
@@ -145,9 +131,7 @@ def gather_files(inputs: list[str]) -> list[Path]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Strip comments and docstrings using libcst safely."
-    )
+    parser = argparse.ArgumentParser(description="Strip comments and docstrings using libcst safely.")
     parser.add_argument(
         "paths",
         nargs="*",
@@ -158,13 +142,9 @@ def main() -> None:
     if not targets:
         print("No target Python source files detected.")
         sys.exit(0)
-    print(
-        f"Queue loaded. Processing {len(targets)} target files via Parallel Pipeline..."
-    )
+    print(f"Queue loaded. Processing {len(targets)} target files via Parallel Pipeline...")
     with Pool(processes=MAX_WORKERS) as pool:
-        async_results: list[AsyncResult[str]] = [
-            pool.apply_async(process_file, (target,)) for target in targets
-        ]
+        async_results: list[AsyncResult[str]] = [pool.apply_async(process_file, (target,)) for target in targets]
         for async_res in async_results:
             result_string: str = async_res.get()
             print(result_string)

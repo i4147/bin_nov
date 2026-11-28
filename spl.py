@@ -49,9 +49,7 @@ def collect_files(
         elif p.is_dir():
             iterator = p.rglob("*") if recursive else p.glob("*")
             for f in iterator:
-                if f.is_file() and (
-                    extensions is None or f.suffix.lower().lstrip(".") in extensions
-                ):
+                if f.is_file() and (extensions is None or f.suffix.lower().lstrip(".") in extensions):
                     result.append(f)
     return list(dict.fromkeys(result))
 
@@ -252,9 +250,7 @@ def process_split_chars_file(path: Path, config: SplitCharsConfig) -> tuple[Path
             config.strip_mode,
         )
     elif config.algorithm == "sentences":
-        parts = split_text_sentences(
-            text, config.max_chars, config.tokenizer, config.strip_mode
-        )
+        parts = split_text_sentences(text, config.max_chars, config.tokenizer, config.strip_mode)
     else:
         msg = f"Unknown algorithm: {config.algorithm}"
         raise ValueError(msg)
@@ -277,12 +273,8 @@ def process_split_chars_file(path: Path, config: SplitCharsConfig) -> tuple[Path
 
 def cmd_split_chars(args: argparse.Namespace) -> int:
     inputs = [Path(p) for p in args.inputs] if args.inputs else [Path.cwd()]
-    extensions = (
-        {e.lower().lstrip(".") for e in args.extensions} if args.extensions else None
-    )
-    files = collect_files(
-        inputs, recursive=not args.no_recursive, extensions=extensions
-    )
+    extensions = {e.lower().lstrip(".") for e in args.extensions} if args.extensions else None
+    files = collect_files(inputs, recursive=not args.no_recursive, extensions=extensions)
     if not files:
         logger.error("No text files found to process")
         return 1
@@ -305,12 +297,8 @@ def cmd_split_chars(args: argparse.Namespace) -> int:
     total_parts = 0
     processed = 0
     if MAX_WORKERS > 1:
-        with concurrent.futures.ProcessPoolExecutor(
-            max_workers=MAX_WORKERS
-        ) as executor:
-            futures = [
-                executor.submit(process_split_chars_file, f, config) for f in files
-            ]
+        with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            futures = [executor.submit(process_split_chars_file, f, config) for f in files]
             for fut in concurrent.futures.as_completed(futures):
                 try:
                     _path, n = fut.result()
@@ -393,12 +381,7 @@ def cmd_split_delimiter(args: argparse.Namespace) -> int:
         for i, part in enumerate(parts):
             part = _apply_strip(part, args.strip)
             out_path = out_dir / f"{stem}{i}{suffix}"
-            content = (
-                (delim if args.prefix_delimiter else "")
-                + part
-                + (delim if args.suffix_delimiter else "")
-                + "\n"
-            )
+            content = (delim if args.prefix_delimiter else "") + part + (delim if args.suffix_delimiter else "") + "\n"
             atomic_write(out_path, content, encoding="utf-8")
             print(f"{out_path} created")
     return 0
@@ -411,10 +394,7 @@ def cmd_split_by_letter(args: argparse.Namespace) -> int:
         return 1
     out_dir = Path(args.output_dir)
     ensure_dir(out_dir)
-    handles = {
-        letter: (out_dir / f"{letter}.txt").open("w", encoding="utf-8")
-        for letter in string.ascii_lowercase
-    }
+    handles = {letter: (out_dir / f"{letter}.txt").open("w", encoding="utf-8") for letter in string.ascii_lowercase}
     try:
         with path.open(encoding="utf-8") as f:
             for line in f:
@@ -436,9 +416,7 @@ def collect_part_files(paths: Sequence[Path]) -> list[Path]:
     result: list[Path] = []
     for p in paths:
         if p.is_dir():
-            result.extend(
-                x for x in p.rglob("*") if x.is_file() and PART_RE.match(x.name)
-            )
+            result.extend(x for x in p.rglob("*") if x.is_file() and PART_RE.match(x.name))
         elif p.is_file() and PART_RE.match(p.name):
             result.append(p)
     return result
@@ -520,9 +498,7 @@ def cmd_merge_text(args: argparse.Namespace) -> int:
             ext = f.suffix.lower().lstrip(".")
             groups.setdefault(ext, []).append((f, text))
         for ext, items in groups.items():
-            out_path = out_dir / (
-                random_filename(ext) if ext else random_filename("txt")
-            )
+            out_path = out_dir / (random_filename(ext) if ext else random_filename("txt"))
             total_bytes = 0
             with out_path.open("w", encoding="utf-8") as out:
                 for f, text in items:
@@ -532,9 +508,7 @@ def cmd_merge_text(args: argparse.Namespace) -> int:
                     if not text.endswith("\n"):
                         out.write("\n")
                     total_bytes += len(text)
-            print(
-                f"Merged {len(items)} .{ext} files ({total_bytes:,} bytes) into: {out_path}"
-            )
+            print(f"Merged {len(items)} .{ext} files ({total_bytes:,} bytes) into: {out_path}")
     return 0
 
 
@@ -544,9 +518,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Unified text splitting and merging toolkit.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser(
-        "split-chars", help="Split text files into character-based chunks."
-    )
+    p = sub.add_parser("split-chars", help="Split text files into character-based chunks.")
     p.add_argument(
         "inputs",
         nargs="*",
@@ -633,9 +605,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("split-delimiter", help="Split a text file by a delimiter.")
     p.add_argument("path", help="Input file.")
     p.add_argument("delimiter", help="Delimiter string.")
-    p.add_argument(
-        "-o", "--output-dir", help="Output directory. If omitted, modify file in-place."
-    )
+    p.add_argument("-o", "--output-dir", help="Output directory. If omitted, modify file in-place.")
     p.add_argument(
         "--prefix-delimiter",
         action="store_true",
@@ -653,17 +623,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Strip whitespace from parts. Default: both",
     )
     p.set_defaults(func=cmd_split_delimiter)
-    p = sub.add_parser(
-        "split-by-letter", help="Split lines into files named by first letter."
-    )
+    p = sub.add_parser("split-by-letter", help="Split lines into files named by first letter.")
     p.add_argument("path", help="Input file.")
-    p.add_argument(
-        "-o", "--output-dir", default="output", help="Output directory. Default: output"
-    )
+    p.add_argument("-o", "--output-dir", default="output", help="Output directory. Default: output")
     p.set_defaults(func=cmd_split_by_letter)
-    p = sub.add_parser(
-        "merge-parts", help="Merge .partNNN files back into original files."
-    )
+    p = sub.add_parser("merge-parts", help="Merge .partNNN files back into original files.")
     p.add_argument(
         "paths",
         nargs="*",

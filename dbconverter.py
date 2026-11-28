@@ -262,15 +262,11 @@ def main(argv: list[str] | None = None) -> int:
         dst_fmt = parse_target(args.dest)
     except ValueError as e:
         parser.error(str(e))
-    output_path = (
-        Path(args.output) if args.output else input_path.with_suffix(EXT_FOR[dst_fmt])
-    )
+    output_path = Path(args.output) if args.output else input_path.with_suffix(EXT_FOR[dst_fmt])
     tables = READERS[src_fmt](input_path)
     WRITERS[dst_fmt](tables, output_path)
     n = len(tables)
-    print(
-        f"{input_path}  [{src_fmt}]  ->  {output_path}  [{dst_fmt}]   ({n} table{'s' if n != 1 else ''})"
-    )
+    print(f"{input_path}  [{src_fmt}]  ->  {output_path}  [{dst_fmt}]   ({n} table{'s' if n != 1 else ''})")
     return 0
 
 

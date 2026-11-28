@@ -32,15 +32,8 @@ class ProcessResult(NamedTuple):
 def process_symlink(symlink_path: Path) -> ProcessResult | None:
     try:
         raw_target: Path = symlink_path.readlink()
-        target_path: Path = (
-            raw_target
-            if raw_target.is_absolute()
-            else (symlink_path.parent / raw_target).resolve()
-        )
-        if (
-            symlink_path.parent.name == "bin"
-            and target_path.parent == symlink_path.parent
-        ):
+        target_path: Path = raw_target if raw_target.is_absolute() else (symlink_path.parent / raw_target).resolve()
+        if symlink_path.parent.name == "bin" and target_path.parent == symlink_path.parent:
             return None
         if target_path.suffix == ".so":
             return None

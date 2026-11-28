@@ -90,19 +90,11 @@ def find_commands(tree: ast.Module, app_name: str):
                 continue
             name = node.name
             if call:
-                if (
-                    call.args
-                    and isinstance(call.args[0], ast.Constant)
-                    and isinstance(call.args[0].value, str)
-                ):
+                if call.args and isinstance(call.args[0], ast.Constant) and isinstance(call.args[0].value, str):
                     name = call.args[0].value
                 else:
                     for kw in call.keywords:
-                        if (
-                            kw.arg == "name"
-                            and isinstance(kw.value, ast.Constant)
-                            and isinstance(kw.value.value, str)
-                        ):
+                        if kw.arg == "name" and isinstance(kw.value, ast.Constant) and isinstance(kw.value.value, str):
                             name = kw.value.value
             cmds.append((name, node))
     return cmds
@@ -158,9 +150,7 @@ def _extract_option_meta(call_node: ast.Call) -> tuple[list[Any],]:
     option_names = [
         a.value
         for a in call_node.args
-        if isinstance(a, ast.Constant)
-        and isinstance(a.value, str)
-        and a.value.startswith("-")
+        if isinstance(a, ast.Constant) and isinstance(a.value, str) and a.value.startswith("-")
     ]
     return has_def, def_repr, option_names
 
@@ -178,11 +168,7 @@ def parse_annotation(ann: ast.AST | None):
 
     inner = ann
     metadata: list[ast.AST] = []
-    if (
-        isinstance(ann, ast.Subscript)
-        and isinstance(ann.value, ast.Name)
-        and ann.value.id == "Annotated"
-    ):
+    if isinstance(ann, ast.Subscript) and isinstance(ann.value, ast.Name) and ann.value.id == "Annotated":
         sl = ann.slice
         if isinstance(sl, ast.Tuple) and sl.elts:
             inner = sl.elts[0]
@@ -266,9 +252,7 @@ def render_argparse_function(fn_name: str, cmds: Iterable[Any]) -> list[str]:
             tname = info["type_name"]
             if tname == "bool":
                 dflt = info["default_repr"] if info["has_default"] else "False"
-                L.append(
-                    f'    p.add_argument("--{pname.replace("_", "-")}", action="store_true", default={dflt})'
-                )
+                L.append(f'    p.add_argument("--{pname.replace("_", "-")}", action="store_true", default={dflt})')
             elif not info["has_default"]:
                 L.append(f"    p.add_argument({pname!r}, type={tname})")
             else:
@@ -289,9 +273,7 @@ def render_argparse_function(fn_name: str, cmds: Iterable[Any]) -> list[str]:
     return L
 
 
-def build_import_shim(
-    node: ast.stmt, indent: str, flag_name: str, is_first: bool
-) -> list[str]:
+def build_import_shim(node: ast.stmt, indent: str, flag_name: str, is_first: bool) -> list[str]:
     marker = f"  {MARKER}" if is_first else ""
     if isinstance(node, ast.Import):
         return [
@@ -309,9 +291,7 @@ def build_import_shim(
             f"{indent}    typer = _TyperStubModule()\n",
         ]
     # ast.ImportFrom typer
-    names_src = ", ".join(
-        f"{a.name} as {a.asname}" if a.asname else a.name for a in node.names
-    )
+    names_src = ", ".join(f"{a.name} as {a.asname}" if a.asname else a.name for a in node.names)
     out = [
         f"{indent}try:\n",
         f"{indent}    from typer import {names_src}\n",
@@ -367,9 +347,7 @@ def refactor(source: str, path: Path) -> str | None:
         return None
 
     # pick conflict-free helper names
-    taken = {
-        n.name for n in tree.body if isinstance(n, (ast.FunctionDef, ast.ClassDef))
-    }
+    taken = {n.name for n in tree.body if isinstance(n, (ast.FunctionDef, ast.ClassDef))}
 
     def unique(base: str) -> str:
         name, i = base, 1
@@ -399,25 +377,23 @@ def refactor(source: str, path: Path) -> str | None:
         value_src = ast.unparse(app_node.value)
     except Exception:
         value_src = "typer.Typer()"
-    edits.append(
-        (
-            s,
-            e,
-            [
-                f"{indent}class {noop_name}:\n",
-                f'{indent}    """Stand-in for typer.Typer when typer isn\'t installed."""\n',
-                f"{indent}    def command(self, *args, **kwargs):\n",
-                f"{indent}        if args and callable(args[0]) and not isinstance(args[0], str):\n",
-                f"{indent}            return args[0]\n",
-                f"{indent}        def _decorator(fn):\n",
-                f"{indent}            return fn\n",
-                f"{indent}        return _decorator\n",
-                f"{indent}    callback = command\n",
-                "\n",
-                f"{indent}{app_name} = {value_src} if {flag_name} else {noop_name}()\n",
-            ],
-        )
-    )
+    edits.append((
+        s,
+        e,
+        [
+            f"{indent}class {noop_name}:\n",
+            f'{indent}    """Stand-in for typer.Typer when typer isn\'t installed."""\n',
+            f"{indent}    def command(self, *args, **kwargs):\n",
+            f"{indent}        if args and callable(args[0]) and not isinstance(args[0], str):\n",
+            f"{indent}            return args[0]\n",
+            f"{indent}        def _decorator(fn):\n",
+            f"{indent}            return fn\n",
+            f"{indent}        return _decorator\n",
+            f"{indent}    callback = command\n",
+            "\n",
+            f"{indent}{app_name} = {value_src} if {flag_name} else {noop_name}()\n",
+        ],
+    ))
 
     # edit: main-guard body
     m_head = main_if.lineno - 1
@@ -428,23 +404,19 @@ def refactor(source: str, path: Path) -> str | None:
         if lines[j].strip():
             body_indent = lines[j][: len(lines[j]) - len(lines[j].lstrip())]
             break
-    edits.append(
-        (
-            m_body,
-            m_end,
-            [
-                f"{body_indent}if {flag_name}:\n",
-                f"{body_indent}    {app_name}()\n",
-                f"{body_indent}else:\n",
-                f"{body_indent}    {run_name}()\n",
-            ],
-        )
-    )
+    edits.append((
+        m_body,
+        m_end,
+        [
+            f"{body_indent}if {flag_name}:\n",
+            f"{body_indent}    {app_name}()\n",
+            f"{body_indent}else:\n",
+            f"{body_indent}    {run_name}()\n",
+        ],
+    ))
 
     # edit: insert generated _run_argparse just above the main guard
-    argparse_lines = [l + "\n" for l in render_argparse_function(run_name, cmds)] + [
-        "\n"
-    ]
+    argparse_lines = [l + "\n" for l in render_argparse_function(run_name, cmds)] + ["\n"]
     edits.append((m_head, m_head, argparse_lines))
 
     # apply bottom-up so earlier line numbers stay valid
@@ -459,12 +431,8 @@ def refactor(source: str, path: Path) -> str | None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(
-        description="Add argparse fallback to typer-based scripts when typer isn't installed."
-    )
-    ap.add_argument(
-        "root", nargs="?", default=".", help="directory to scan (default: .)"
-    )
+    ap = argparse.ArgumentParser(description="Add argparse fallback to typer-based scripts when typer isn't installed.")
+    ap.add_argument("root", nargs="?", default=".", help="directory to scan (default: .)")
     ap.add_argument("--dry-run", action="store_true", help="don't modify files")
     ap.add_argument("-v", "--verbose", action="store_true")
     args = ap.parse_args(argv)

@@ -93,9 +93,7 @@ class ImportCollector(ast.NodeVisitor):
         self._in_type_checking = False
 
     def visit_If(self, node: ast.If) -> None:
-        is_type_checking = (
-            isinstance(node.test, ast.Name) and node.test.id == "TYPE_CHECKING"
-        ) or (
+        is_type_checking = (isinstance(node.test, ast.Name) and node.test.id == "TYPE_CHECKING") or (
             isinstance(node.test, ast.Attribute) and node.test.attr == "TYPE_CHECKING"
         )
         if is_type_checking:
@@ -182,9 +180,7 @@ class NameCollector(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def analyze_source(
-    source: str, path: str = ""
-) -> tuple[list[UnusedImport], Optional[str]]:
+def analyze_source(source: str, path: str = "") -> tuple[list[UnusedImport], Optional[str]]:
     try:
         tree = ast.parse(source)
     except SyntaxError as exc:
@@ -329,24 +325,16 @@ def rewrite_imports(source: str, unused: list[UnusedImport]) -> tuple[str, bool]
         return source, False
 
 
-def _rebuild_import_line(
-    node: ast.AST, remove: set[str], original: str
-) -> Optional[str]:
+def _rebuild_import_line(node: ast.AST, remove: set[str], original: str) -> Optional[str]:
     indent = original[: len(original) - len(original.lstrip())]
     if isinstance(node, ast.Import):
-        kept = [
-            alias
-            for alias in node.names
-            if (alias.asname or alias.name.split(".")[0]) not in remove
-        ]
+        kept = [alias for alias in node.names if (alias.asname or alias.name.split(".")[0]) not in remove]
         if not kept:
             return None
         parts = [f"{a.name} as {a.asname}" if a.asname else a.name for a in kept]
         return f"{indent}import {', '.join(parts)}"
     if isinstance(node, ast.ImportFrom):
-        kept = [
-            alias for alias in node.names if (alias.asname or alias.name) not in remove
-        ]
+        kept = [alias for alias in node.names if (alias.asname or alias.name) not in remove]
         if not kept:
             return None
         module = node.module or ""
@@ -356,9 +344,7 @@ def _rebuild_import_line(
     return original
 
 
-def autofix_file(
-    path: str, unused: list[UnusedImport], dry_run: bool = False
-) -> tuple[bool, Optional[str]]:
+def autofix_file(path: str, unused: list[UnusedImport], dry_run: bool = False) -> tuple[bool, Optional[str]]:
     if "::" in path:
         return False, "Cannot autofix inside packed archives"
     try:
@@ -442,9 +428,7 @@ def run_autoflake_on_source(item: tuple[str, str]) -> FileResult:
     return FileResult(path=path, diff=diff, fixed_source=fixed)
 
 
-def collect_targets(
-    paths: list[str], exclude_patterns: list[str]
-) -> tuple[list[str], list[tuple[str, str]]]:
+def collect_targets(paths: list[str], exclude_patterns: list[str]) -> tuple[list[str], list[tuple[str, str]]]:
     py_files: list[str] = []
     archive_members: list[tuple[str, str]] = []
     exclude_re = [re.compile(p) for p in exclude_patterns]
@@ -519,9 +503,7 @@ def report_builtin(
         print(f"\n{Colors.BOLD}{res.path}{Colors.RESET}")
         for item in res.unused_imports:
             total_unused += 1
-            print(
-                f"  line {Colors.CYAN}{item.lineno:>5}{Colors.RESET}  {Colors.YELLOW}{item.statement}{Colors.RESET}"
-            )
+            print(f"  line {Colors.CYAN}{item.lineno:>5}{Colors.RESET}  {Colors.YELLOW}{item.statement}{Colors.RESET}")
             print(f"{'':20}[unused: {', '.join(item.unused_names)}]")
         if autofix:
             if dry_run:
@@ -532,9 +514,7 @@ def report_builtin(
                     print(f"  {Colors.GREEN}fixed{Colors.RESET} {res.path}")
                     fixed += 1
                 else:
-                    print(
-                        f"  {Colors.RED}SKIP{Colors.RESET} autofix on {res.path} — {err}"
-                    )
+                    print(f"  {Colors.RED}SKIP{Colors.RESET} autofix on {res.path} — {err}")
                     skipped += 1
     print()
     print(f"Found {total_unused} unused import(s) across {files_with_issues} file(s).")
@@ -616,25 +596,19 @@ Examples:
         default=["."],
         help="File or directory paths to analyze (default: current directory)",
     )
-    p.add_argument(
-        "-a", "--autofix", action="store_true", help="Remove unused imports in-place"
-    )
+    p.add_argument("-a", "--autofix", action="store_true", help="Remove unused imports in-place")
     p.add_argument(
         "--dry-run",
         action="store_true",
         help="Preview changes without writing (implies --autofix)",
     )
-    p.add_argument(
-        "-v", "--verbose", action="store_true", help="Show files with zero issues"
-    )
+    p.add_argument("-v", "--verbose", action="store_true", help="Show files with zero issues")
     p.add_argument(
         "--autoflake",
         action="store_true",
         help="Use external autoflake instead of built-in AST analyzer",
     )
-    p.add_argument(
-        "-d", "--diff", action="store_true", help="With --autoflake, show unified diff"
-    )
+    p.add_argument("-d", "--diff", action="store_true", help="With --autoflake, show unified diff")
     p.add_argument(
         "--exclude",
         action="append",
@@ -655,12 +629,8 @@ def main() -> int:
         return 1
     if args.verbose:
         mode = "autoflake" if args.autoflake else "built-in AST analyzer"
-        print(
-            f"Scanning {len(args.paths)} path(s) with {MAX_WORKERS} worker(s) using {mode} …"
-        )
-        print(
-            f"  {len(py_files)} .py file(s), {len(archive_members)} archive member(s) queued.\n"
-        )
+        print(f"Scanning {len(args.paths)} path(s) with {MAX_WORKERS} worker(s) using {mode} …")
+        print(f"  {len(py_files)} .py file(s), {len(archive_members)} archive member(s) queued.\n")
     results: list[FileResult] = []
     with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as pool:
         if args.autoflake:

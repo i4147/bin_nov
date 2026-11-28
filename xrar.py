@@ -38,11 +38,7 @@ def related_parts(rar_path: Path) -> list[Path]:
     base = rar_path.stem.split(".part")[0]
     parts: list[Path] = []
     for sibling in rar_path.parent.iterdir():
-        if (
-            sibling.is_file()
-            and sibling.suffix.lower() == ".rar"
-            and sibling.stem.split(".part")[0] == base
-        ):
+        if sibling.is_file() and sibling.suffix.lower() == ".rar" and sibling.stem.split(".part")[0] == base:
             parts.append(sibling)
     return parts
 
@@ -76,9 +72,7 @@ def main(root: str = ".") -> None:
         print("No .rar files found.")
         return
     with mp.Pool(processes=mp.cpu_count()) as pool:
-        results: Iterable[tuple[Path, bool, str, int, int]] = pool.map(
-            extract_one, rar_files
-        )
+        results: Iterable[tuple[Path, bool, str, int, int]] = pool.map(extract_one, rar_files)
     results = list(results)
     max_len = max(len(p.name) for p, _, _, _, _ in results)
     for path, ok, msg, in_size, out_size in results:

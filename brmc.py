@@ -52,9 +52,7 @@ def _remove_docstrings_from_source(source: str) -> tuple[str, int]:
         if preserve_module and tree.body and node is tree.body[0]:
             continue
         if hasattr(node, "lineno") and hasattr(node, "end_lineno"):
-            to_remove.append(
-                (node.lineno, node.col_offset, node.end_lineno, node.end_col_offset)
-            )
+            to_remove.append((node.lineno, node.col_offset, node.end_lineno, node.end_col_offset))
     if not to_remove:
         return source, 0
     lines = source.splitlines(keepends=True)
@@ -119,9 +117,7 @@ def process_file(path: Path, cwd: Path) -> tuple[str, int] | None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Strip docstrings from Python files (preserves module docstrings)."
-    )
+    parser = argparse.ArgumentParser(description="Strip docstrings from Python files (preserves module docstrings).")
     parser.add_argument(
         "targets",
         nargs="*",

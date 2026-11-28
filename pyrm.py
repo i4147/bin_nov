@@ -44,9 +44,7 @@ def is_directory_entry(path: Path) -> bool:
 def entry_size(path: Path) -> int:
     """Size of a file, or the total size of all files under a directory."""
     if is_directory_entry(path):
-        return sum(
-            p.lstat().st_size for p in path.rglob("*") if not is_directory_entry(p)
-        )
+        return sum(p.lstat().st_size for p in path.rglob("*") if not is_directory_entry(p))
     return path.lstat().st_size
 
 
@@ -83,9 +81,7 @@ def find_by_extension(root: Path, ext: str) -> list[Path]:
     return [
         path
         for path in root.rglob("*")
-        if not is_directory_entry(path)
-        and path.is_file()
-        and path.suffix.lower() == suffix
+        if not is_directory_entry(path) and path.is_file() and path.suffix.lower() == suffix
     ]
 
 
@@ -116,23 +112,13 @@ def main() -> int:
     logger.add(sys.stderr, format="<level>{level: <8}</level> {message}")
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Remove readme.md entries or files by extension (dry-run by default)."
-    )
+    parser = argparse.ArgumentParser(description="Remove readme.md entries or files by extension (dry-run by default).")
     scope = parser.add_mutually_exclusive_group()
-    scope.add_argument(
-        "-f", "--files", action="store_true", help="target readme.md files"
-    )
-    scope.add_argument(
-        "-d", "--dirs", action="store_true", help="target readme.md directories"
-    )
-    scope.add_argument(
-        "-e", "--ext", metavar="EXT", help="target files with this extension"
-    )
+    scope.add_argument("-f", "--files", action="store_true", help="target readme.md files")
+    scope.add_argument("-d", "--dirs", action="store_true", help="target readme.md directories")
+    scope.add_argument("-e", "--ext", metavar="EXT", help="target files with this extension")
     mode = parser.add_mutually_exclusive_group()
-    mode.add_argument(
-        "--dry-run", action="store_true", help="only list matches (default)"
-    )
+    mode.add_argument("--dry-run", action="store_true", help="only list matches (default)")
     mode.add_argument("-a", "--apply", action="store_true", help="delete the matches")
     args = parser.parse_args()
     root = Path.cwd()
@@ -152,9 +138,7 @@ def main() -> int:
         return 0
     total = len(targets)
     if not args.apply:
-        logger.info(
-            f"dry run: {total} {label} matched under '{root}' (use -a/--apply to delete)"
-        )
+        logger.info(f"dry run: {total} {label} matched under '{root}' (use -a/--apply to delete)")
         would_free = 0
         for index, path in enumerate(sorted(targets), start=1):
             rel = str(path.relative_to(root))
@@ -171,18 +155,14 @@ def main() -> int:
     freed = 0
     failed = 0
     with mp.Pool(WORKERS) as pool:
-        for index, result in enumerate(
-            pool.imap_unordered(remove_entry, targets), start=1
-        ):
+        for index, result in enumerate(pool.imap_unordered(remove_entry, targets), start=1):
             rel = str(result.path.relative_to(root))
             if result.ok:
                 freed += result.size
                 print_line(index, total, rel, result.size)
             else:
                 failed += 1
-                logger.error(
-                    f"[{index}/{total}] failed to remove '{rel}': {result.error}"
-                )
+                logger.error(f"[{index}/{total}] failed to remove '{rel}': {result.error}")
     console.print(f"\nSpace freed: [green]{format_size(freed)}[/green]")
     if failed:
         logger.warning(f"{failed} of {total} entries could not be removed")

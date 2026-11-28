@@ -77,9 +77,7 @@ class StripOptions:
         remove_all = getattr(args, "all", False)
         remove_comments = getattr(args, "comments", False) or remove_all
         remove_docstrings = getattr(args, "docstring", False) or remove_all
-        preserve_module_docstring = not (
-            getattr(args, "docstring", False) or remove_all
-        )
+        preserve_module_docstring = not (getattr(args, "docstring", False) or remove_all)
         inline_comments_only = not remove_comments and not remove_all
 
         return cls(
@@ -107,26 +105,17 @@ class ASTStripper(ast.NodeTransformer):
 
     @staticmethod
     def _is_docstring_node(node: ast.AST) -> bool:
-        return (
-            isinstance(node, ast.Expr)
-            and isinstance(node.value, ast.Constant)
-            and isinstance(node.value.value, str)
-        )
+        return isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str)
 
     def visit_Module(self, node: ast.Module) -> ast.Module:
         new_body: list[ast.stmt] = []
         for idx, stmt in enumerate(node.body):
             if idx == 0 and self._is_docstring_node(stmt):
-                if (
-                    self.options.preserve_module_docstring
-                    and not self.options.remove_all
-                ):
+                if self.options.preserve_module_docstring and not self.options.remove_all:
                     new_body.append(self.visit(stmt))
                 else:
                     continue
-            elif self._is_docstring_node(stmt) and (
-                self.options.remove_docstrings or self.options.remove_all
-            ):
+            elif self._is_docstring_node(stmt) and (self.options.remove_docstrings or self.options.remove_all):
                 continue
             else:
                 visited = self.visit(stmt)
@@ -146,15 +135,11 @@ class ASTStripper(ast.NodeTransformer):
             ):
                 continue
 
-            if (self.options.remove_types or self.options.remove_all) and isinstance(
-                stmt, ast.AnnAssign
-            ):
+            if (self.options.remove_types or self.options.remove_all) and isinstance(stmt, ast.AnnAssign):
                 if stmt.value is not None:
                     visited_target = self.visit(stmt.target)
                     visited_value = self.visit(stmt.value)
-                    new_body.append(
-                        ast.Assign(targets=[visited_target], value=visited_value)
-                    )
+                    new_body.append(ast.Assign(targets=[visited_target], value=visited_value))
                 else:
                     continue
             else:
@@ -252,9 +237,7 @@ if HAS_LIBCST:
                 return updated_node.with_changes(comment=None)
             return updated_node
 
-        def leave_EmptyLine(
-            self, original_node: cst.EmptyLine, updated_node: cst.EmptyLine
-        ) -> cst.EmptyLine:
+        def leave_EmptyLine(self, original_node: cst.EmptyLine, updated_node: cst.EmptyLine) -> cst.EmptyLine:
             if updated_node.comment is not None:
                 c_text = updated_node.comment.value
                 if self.options.remove_all:
@@ -267,24 +250,17 @@ if HAS_LIBCST:
                     return updated_node.with_changes(comment=None)
             return updated_node
 
-        def leave_Param(
-            self, original_node: cst.Param, updated_node: cst.Param
-        ) -> cst.Param:
+        def leave_Param(self, original_node: cst.Param, updated_node: cst.Param) -> cst.Param:
             if self.options.remove_types or self.options.remove_all:
                 return updated_node.with_changes(annotation=None)
             return updated_node
 
-        def _clean_statements(
-            self, stmts: list[cst.CSTNode], is_module: bool = False
-        ) -> list[cst.CSTNode]:
+        def _clean_statements(self, stmts: list[cst.CSTNode], is_module: bool = False) -> list[cst.CSTNode]:
             new_stmts: list[cst.CSTNode] = []
             for idx, stmt in enumerate(stmts):
                 if idx == 0 and is_module:
                     if self._is_docstring_stmt(stmt):
-                        if (
-                            self.options.preserve_module_docstring
-                            and not self.options.remove_all
-                        ):
+                        if self.options.preserve_module_docstring and not self.options.remove_all:
                             new_stmts.append(stmt)
                             continue
                         else:
@@ -329,37 +305,25 @@ if HAS_LIBCST:
 
             return new_stmts
 
-        def leave_Module(
-            self, original_node: cst.Module, updated_node: cst.Module
-        ) -> cst.Module:
+        def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
             new_body = self._clean_statements(list(updated_node.body), is_module=True)
             return updated_node.with_changes(body=new_body)
 
-        def leave_FunctionDef(
-            self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-        ) -> cst.FunctionDef:
+        def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
             changes: dict[str, Any] = {}
             if self.options.remove_types or self.options.remove_all:
                 changes["returns"] = None
 
             if isinstance(updated_node.body, cst.IndentedBlock):
-                new_body = self._clean_statements(
-                    list(updated_node.body.body), is_module=False
-                )
+                new_body = self._clean_statements(list(updated_node.body.body), is_module=False)
                 changes["body"] = updated_node.body.with_changes(body=new_body)
 
             return updated_node.with_changes(**changes)
 
-        def leave_ClassDef(
-            self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-        ) -> cst.ClassDef:
+        def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
             if isinstance(updated_node.body, cst.IndentedBlock):
-                new_body = self._clean_statements(
-                    list(updated_node.body.body), is_module=False
-                )
-                return updated_node.with_changes(
-                    body=updated_node.body.with_changes(body=new_body)
-                )
+                new_body = self._clean_statements(list(updated_node.body.body), is_module=False)
+                return updated_node.with_changes(body=updated_node.body.with_changes(body=new_body))
             return updated_node
 
 
@@ -413,10 +377,7 @@ def transform_tree_sitter(source: str, options: StripOptions) -> str:
             ):
                 is_module_doc = parent and parent.type == "module" and is_first
                 if is_module_doc:
-                    if options.remove_all or (
-                        options.remove_docstrings
-                        and not options.preserve_module_docstring
-                    ):
+                    if options.remove_all or (options.remove_docstrings and not options.preserve_module_docstring):
                         edits.append((node.start_byte, node.end_byte, b""))
                 elif options.remove_docstrings or options.remove_all:
                     if parent and parent.type == "block" and len(parent.children) == 1:
@@ -429,12 +390,8 @@ def transform_tree_sitter(source: str, options: StripOptions) -> str:
                 name_node = node.child_by_field_name("name")
                 if name_node:
                     edits.append((node.start_byte, node.end_byte, name_node.text))
-            elif (
-                node.type == "type" and parent and parent.type == "function_definition"
-            ):
-                arrow = next(
-                    (child for child in parent.children if child.type == "->"), None
-                )
+            elif node.type == "type" and parent and parent.type == "function_definition":
+                arrow = next((child for child in parent.children if child.type == "->"), None)
                 start = arrow.start_byte if arrow else node.start_byte
                 edits.append((start, node.end_byte, b""))
 
@@ -515,9 +472,7 @@ def discover_files(targets: list[Path]) -> list[Path]:
                 found.append(target)
         elif target.is_dir():
             for root, dirs, files in os.walk(target):
-                dirs[:] = [
-                    d for d in dirs if not d.startswith(".") and d not in SKIP_DIRS
-                ]
+                dirs[:] = [d for d in dirs if not d.startswith(".") and d not in SKIP_DIRS]
                 for file_name in files:
                     file_path = Path(root) / file_name
                     if is_python_file(file_path):
@@ -574,14 +529,10 @@ def process_file_worker(args_tuple: tuple[str, dict[str, Any]]) -> tuple[str, st
 def run_pipeline(paths: list[Path], options: StripOptions) -> None:
     actual_backend = options.backend
     if options.backend == "libcst" and not HAS_LIBCST:
-        logger.warning(
-            "LibCST requested but not installed. Falling back to 'ast' backend."
-        )
+        logger.warning("LibCST requested but not installed. Falling back to 'ast' backend.")
         actual_backend = "ast"
     elif options.backend == "tree-sitter" and not HAS_TREESITTER:
-        logger.warning(
-            "Tree-sitter requested but not installed. Falling back to 'ast' backend."
-        )
+        logger.warning("Tree-sitter requested but not installed. Falling back to 'ast' backend.")
         actual_backend = "ast"
 
     files = discover_files(paths)
@@ -621,9 +572,7 @@ def run_pipeline(paths: list[Path], options: StripOptions) -> None:
             error_count += 1
             logger.error(f"FAILURE: {file_path} - {message}")
 
-    logger.info(
-        f"Summary: {success_count} processed, {skipped_count} skipped, {error_count} failed."
-    )
+    logger.info(f"Summary: {success_count} processed, {skipped_count} skipped, {error_count} failed.")
 
 
 def build_arg_parser() -> argparse.ArgumentParser:

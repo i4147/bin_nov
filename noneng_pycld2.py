@@ -45,9 +45,7 @@ def scan_and_detect(root_dir: Path) -> None:
                     continue
 
                 lang, prob = detect_language(content)
-                snippet = content[:40].replace("\n", " ") + (
-                    "..." if len(content) > 40 else ""
-                )
+                snippet = content[:40].replace("\n", " ") + ("..." if len(content) > 40 else "")
 
                 print(
                     f"{file_path:<40} | {lang:<7} ({prob:2.0f}%) | {snippet}",

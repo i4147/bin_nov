@@ -16,9 +16,7 @@ from libcst import matchers as m
 class DataclassSlotsTransformer(cst.CSTTransformer):
     """Mutates @dataclass to include slots=True while preserving formatting."""
 
-    def leave_ClassDef(
-        self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-    ) -> cst.ClassDef:
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
         new_decorators = []
         modified = False
 
@@ -50,10 +48,7 @@ class DataclassSlotsTransformer(cst.CSTTransformer):
                 call_node = decorator.decorator
 
                 # Check if slots is already explicitly provided
-                has_slots = any(
-                    arg.keyword and arg.keyword.value == "slots"
-                    for arg in call_node.args
-                )
+                has_slots = any(arg.keyword and arg.keyword.value == "slots" for arg in call_node.args)
 
                 if not has_slots:
                     modified = True
@@ -76,9 +71,7 @@ class DataclassSlotsTransformer(cst.CSTTransformer):
                         )
                     new_args.append(slots_arg)
 
-                    new_decorator = decorator.with_changes(
-                        decorator=call_node.with_changes(args=new_args)
-                    )
+                    new_decorator = decorator.with_changes(decorator=call_node.with_changes(args=new_args))
                     new_decorators.append(new_decorator)
                 else:
                     new_decorators.append(decorator)

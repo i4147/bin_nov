@@ -235,9 +235,7 @@ def cmd_pattern(args: argparse.Namespace) -> int:
     if not pattern.strip():
         print("Error: pattern is empty", file=sys.stderr)
         return 1
-    print(
-        f"Pattern loaded from {src_desc} ({len(pattern)} chars, {len(pattern.splitlines())} lines)"
-    )
+    print(f"Pattern loaded from {src_desc} ({len(pattern)} chars, {len(pattern.splitlines())} lines)")
     roots = args.paths or [Path.cwd()]
     files = list(iter_text_files(roots, recursive=not args.no_recursive))
     if not files:
@@ -376,9 +374,7 @@ def cmd_lines(args: argparse.Namespace) -> int:
             write_text(f, "".join(kept))
             cprint(f"{f.name} | ", end="")
             cprint(str(removed), color="blue")
-    print(
-        f"\n{'Would remove' if args.dry_run else 'Removed'} {total_removed} line(s) from {modified_files} file(s)."
-    )
+    print(f"\n{'Would remove' if args.dry_run else 'Removed'} {total_removed} line(s) from {modified_files} file(s).")
     return 0
 
 
@@ -468,9 +464,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_common_walk_args(p)
     p.add_argument("-v", "--verbose", action="store_true")
     p.set_defaults(func=cmd_empty_lines)
-    p = sub.add_parser(
-        "invisible", help="Strip non-printable chars from a single file."
-    )
+    p = sub.add_parser("invisible", help="Strip non-printable chars from a single file.")
     p.add_argument("path", type=Path, help="File to clean.")
     p.add_argument(
         "--no-backup",
@@ -512,9 +506,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=[],
         help="Substring (or regex with -r). Repeatable.",
     )
-    p.add_argument(
-        "-r", "--regex", action="store_true", help="Treat patterns as regexes."
-    )
+    p.add_argument("-r", "--regex", action="store_true", help="Treat patterns as regexes.")
     p.add_argument(
         "--multiline",
         action="store_true",

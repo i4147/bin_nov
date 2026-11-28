@@ -320,9 +320,7 @@ def push_remote(
     try:
         remote = repo.remote(remote_name)
     except ValueError:
-        print(
-            f"❌ Remote '{remote_name}' not configured. Skipping push.", file=sys.stderr
-        )
+        print(f"❌ Remote '{remote_name}' not configured. Skipping push.", file=sys.stderr)
         return
     original_url = remote.url
     auth_applied = False
@@ -351,9 +349,7 @@ def push_remote(
 def cmd_commit(args: argparse.Namespace) -> int:
     load_env()
     repo = open_repo(args.repo, args.search_parent, args.init_if_missing)
-    ensure_gitignore(
-        repo, args.gitignore_mode, args.gitignore_source, args.gitignore_dest
-    )
+    ensure_gitignore(repo, args.gitignore_mode, args.gitignore_source, args.gitignore_dest)
     if args.format_black and not format_black(repo, args.black_cmd):
         sys.exit(1)
     stage_and_commit(repo, current_message(args), args.add_mode)
@@ -365,18 +361,11 @@ def cmd_push(args: argparse.Namespace) -> int:
     load_env()
     names = token_names(args.token_env_vars)
     token = get_token(names)
-    if (
-        args.create_repo
-        or args.fork_origin
-        or args.push_to_fork
-        or args.token_auth != "none"
-    ) and not token:
+    if (args.create_repo or args.fork_origin or args.push_to_fork or args.token_auth != "none") and not token:
         print("GITHUB_TOKEN not found.", file=sys.stderr)
         sys.exit(1)
     repo = open_repo(args.repo, args.search_parent, args.init_if_missing)
-    ensure_gitignore(
-        repo, args.gitignore_mode, args.gitignore_source, args.gitignore_dest
-    )
+    ensure_gitignore(repo, args.gitignore_mode, args.gitignore_source, args.gitignore_dest)
     if args.format_black and not format_black(repo, args.black_cmd):
         sys.exit(1)
     branch = active_branch(repo, args.branch)
@@ -389,12 +378,7 @@ def cmd_push(args: argparse.Namespace) -> int:
             print("Skipping push because there are no changes.")
             return 0
     github_user: Optional[str] = args.github_user
-    if token and (
-        args.create_repo
-        or args.fork_origin
-        or args.push_to_fork
-        or args.token_auth != "none"
-    ):
+    if token and (args.create_repo or args.fork_origin or args.push_to_fork or args.token_auth != "none"):
         try:
             github_user = github_login(token, github_user)
         except Exception as exc:
@@ -424,18 +408,12 @@ def cmd_push(args: argparse.Namespace) -> int:
                         args.remote_name,
                     )
     if push_remote_name not in [remote.name for remote in repo.remotes]:
-        print(
-            f"⚠️ Remote '{push_remote_name}' not configured. Changes committed locally only."
-        )
+        print(f"⚠️ Remote '{push_remote_name}' not configured. Changes committed locally only.")
         if args.require_remote:
             sys.exit(1)
         return 0
     set_upstream = args.set_upstream or changed
-    auth_mode = (
-        args.token_auth
-        if push_remote_name == args.remote_name
-        else args.fork_token_auth
-    )
+    auth_mode = args.token_auth if push_remote_name == args.remote_name else args.fork_token_auth
     push_remote(
         repo,
         push_remote_name,
@@ -458,9 +436,7 @@ def cmd_sync(args: argparse.Namespace) -> int:
         print("GITHUB_TOKEN not found.", file=sys.stderr)
         sys.exit(1)
     repo = open_repo(args.repo, args.search_parent, args.init_if_missing)
-    ensure_gitignore(
-        repo, args.gitignore_mode, args.gitignore_source, args.gitignore_dest
-    )
+    ensure_gitignore(repo, args.gitignore_mode, args.gitignore_source, args.gitignore_dest)
     if args.commit:
         stage_and_commit(repo, current_message(args), args.add_mode)
     if args.branch:
@@ -538,25 +514,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Merged git commit/push/sync tool")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    def add_common(
-        p: argparse.ArgumentParser, push_to_fork_default: bool = False
-    ) -> None:
+    def add_common(p: argparse.ArgumentParser, push_to_fork_default: bool = False) -> None:
         p.add_argument("--repo", type=Path, default=Path())
-        p.add_argument(
-            "--search-parent", action=argparse.BooleanOptionalAction, default=True
-        )
+        p.add_argument("--search-parent", action=argparse.BooleanOptionalAction, default=True)
         p.add_argument("--init-if-missing", action="store_true")
         p.add_argument("--remote-name", default="origin")
         p.add_argument("--branch", default=None)
         p.add_argument("--message", default=None)
         p.add_argument("--message-prefix", default="")
         p.add_argument("--add-mode", choices=["all", "star"], default="all")
-        p.add_argument(
-            "--gitignore-mode", choices=["none", "copy", "symlink"], default="none"
-        )
-        p.add_argument(
-            "--gitignore-source", type=Path, default=Path.home() / ".gitignore"
-        )
+        p.add_argument("--gitignore-mode", choices=["none", "copy", "symlink"], default="none")
+        p.add_argument("--gitignore-source", type=Path, default=Path.home() / ".gitignore")
         p.add_argument("--gitignore-dest", type=Path, default=Path(".gitignore"))
         p.add_argument("--format-black", action="store_true")
         p.add_argument("--black-cmd", default="black")
@@ -571,28 +539,18 @@ def build_parser() -> argparse.ArgumentParser:
         )
         p.add_argument("--fork-remote-name", default="fork")
         p.add_argument("--private", action="store_true")
-        p.add_argument(
-            "--auto-init", action=argparse.BooleanOptionalAction, default=False
-        )
+        p.add_argument("--auto-init", action=argparse.BooleanOptionalAction, default=False)
         p.add_argument("--description", default=None)
-        p.add_argument(
-            "--reuse-existing-repo", action=argparse.BooleanOptionalAction, default=True
-        )
-        p.add_argument(
-            "--token-auth", choices=["none", "temporary", "persistent"], default="none"
-        )
+        p.add_argument("--reuse-existing-repo", action=argparse.BooleanOptionalAction, default=True)
+        p.add_argument("--token-auth", choices=["none", "temporary", "persistent"], default="none")
         p.add_argument(
             "--fork-token-auth",
             choices=["none", "temporary", "persistent"],
             default="persistent",
         )
         p.add_argument("--token-url-format", choices=["user", "oauth2"], default="user")
-        p.add_argument(
-            "--set-upstream", action=argparse.BooleanOptionalAction, default=False
-        )
-        p.add_argument(
-            "--push-if-no-changes", action=argparse.BooleanOptionalAction, default=True
-        )
+        p.add_argument("--set-upstream", action=argparse.BooleanOptionalAction, default=False)
+        p.add_argument("--push-if-no-changes", action=argparse.BooleanOptionalAction, default=True)
         p.add_argument("--fail-if-no-changes", action="store_true")
         p.add_argument("--require-remote", action="store_true")
 

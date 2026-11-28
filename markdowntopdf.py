@@ -121,9 +121,7 @@ def convert_batch(
         futures = []
         for md_path in md_files:
             pdf_path = md_path.with_suffix(".pdf") if pdf is None else pdf
-            futures.append(
-                pool.submit(_convert_one, md_path, pdf_path, css, extras, extras_config)
-            )
+            futures.append(pool.submit(_convert_one, md_path, pdf_path, css, extras, extras_config))
         for f in futures:
             f.result()
     print(f"🚀 Output files generated in {(time() - started_at):.3f}s")
@@ -132,9 +130,7 @@ def convert_batch(
 def main() -> None:
     parser = argparse.ArgumentParser(prog="md2pdf", usage="python md2pdf.py readme.md")
     parser.add_argument("md", nargs="*", help="Markdown input file(s)")
-    parser.add_argument(
-        "-o", "--output", help="PDF output file (only with single input)"
-    )
+    parser.add_argument("-o", "--output", help="PDF output file (only with single input)")
     parser.add_argument("--css", help="CSS file to style the PDF (supports .xz)")
     parser.add_argument("--extras", nargs="*", help="Extra markdown extensions")
     parser.add_argument("--config", help="JSON configuration for extensions")

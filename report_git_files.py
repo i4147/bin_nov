@@ -118,9 +118,7 @@ def read_commits(repo: Path) -> list[CommitInfo]:
     return commits
 
 
-def read_added_and_removed(
-    repo: Path, commit: CommitInfo
-) -> tuple[list[str], list[str]]:
+def read_added_and_removed(repo: Path, commit: CommitInfo) -> tuple[list[str], list[str]]:
     if commit.parents:
         output = run_git(
             repo,
@@ -185,9 +183,7 @@ def print_text(repo: Path, reports: list[CommitReport]) -> None:
         print("No commits found.")
         return
     for report in reports:
-        print(
-            f"\n{report.hash[:12]}  {report.date}  {report.subject or '(no subject)'}"
-        )
+        print(f"\n{report.hash[:12]}  {report.date}  {report.subject or '(no subject)'}")
         for label, paths in (("Added", report.added), ("Removed", report.removed)):
             print(f"  {label}:")
             if paths:

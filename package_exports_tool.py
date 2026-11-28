@@ -17,9 +17,7 @@ from dh import atomic_write
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-Categories = dict[
-    str, list[str]
-]  # {"functions": [...], "classes": [...], "constants": [...]}
+Categories = dict[str, list[str]]  # {"functions": [...], "classes": [...], "constants": [...]}
 MissingMap = dict[str, Categories]  # filename -> categories
 
 
@@ -49,9 +47,7 @@ def extract_definitions(path: Path) -> Categories:
     if tree is None:
         return result
     for node in tree.body:
-        if isinstance(
-            node, (ast.FunctionDef, ast.AsyncFunctionDef)
-        ) and not node.name.startswith("_"):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and not node.name.startswith("_"):
             result["functions"].append(node.name)
         elif isinstance(node, ast.ClassDef) and not node.name.startswith("_"):
             result["classes"].append(node.name)
@@ -69,11 +65,7 @@ def literal_str_list(node: ast.expr) -> list[str]:
     """Return string constants of a list/tuple literal."""
     if not isinstance(node, (ast.List, ast.Tuple)):
         return []
-    return [
-        elt.value
-        for elt in node.elts
-        if isinstance(elt, ast.Constant) and isinstance(elt.value, str)
-    ]
+    return [elt.value for elt in node.elts if isinstance(elt, ast.Constant) and isinstance(elt.value, str)]
 
 
 def extract_exports(init_path: Path) -> tuple[set[str], ast.Assign | None]:
@@ -84,9 +76,7 @@ def extract_exports(init_path: Path) -> tuple[set[str], ast.Assign | None]:
     if tree is None:
         return exported, None
     for node in tree.body:
-        if isinstance(node, ast.Assign) and any(
-            isinstance(t, ast.Name) and t.id == "__all__" for t in node.targets
-        ):
+        if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "__all__" for t in node.targets):
             all_node = node
             exported.update(literal_str_list(node.value))
         elif isinstance(node, ast.ImportFrom):
@@ -107,19 +97,11 @@ def find_missing(directory: Path) -> MissingMap:
         raise SystemExit(msg)
     exported, _ = extract_exports(init_path)
     missing: MissingMap = {}
-    modules = sorted(
-        p
-        for p in directory.glob("*.py")
-        if p.name != "__init__.py" and not p.name.startswith("_")
-    )
+    modules = sorted(p for p in directory.glob("*.py") if p.name != "__init__.py" and not p.name.startswith("_"))
     for py_file in modules:
         file_missing: Categories = empty_categories()
         for category, names in extract_definitions(py_file).items():
-            file_missing[category] = [
-                name
-                for name in names
-                if name not in exported and py_file.stem not in exported
-            ]
+            file_missing[category] = [name for name in names if name not in exported and py_file.stem not in exported]
         if any(file_missing.values()):
             missing[py_file.name] = file_missing
     return missing
@@ -130,9 +112,7 @@ def import_lines(missing: MissingMap) -> list[str]:
     lines: list[str] = []
     for filename in sorted(missing):
         cats: Categories = missing[filename]
-        names: list[str] = sorted(
-            cats["classes"] + cats["constants"] + cats["functions"]
-        )
+        names: list[str] = sorted(cats["classes"] + cats["constants"] + cats["functions"])
         if names:
             joined: str = names[0] if len(names) == 1 else "(" + ", ".join(names) + ")"
             lines.append(f"from .{Path(filename).stem} import {joined}")
@@ -141,9 +121,7 @@ def import_lines(missing: MissingMap) -> list[str]:
 
 def all_missing_names(missing: MissingMap) -> list[str]:
     """Return every missing name, sorted."""
-    return sorted(
-        {name for cats in missing.values() for names in cats.values() for name in names}
-    )
+    return sorted({name for cats in missing.values() for names in cats.values() for name in names})
 
 
 def fix_init(init_path: Path, missing: MissingMap, dry_run: bool) -> bool:
@@ -159,23 +137,11 @@ def fix_init(init_path: Path, missing: MissingMap, dry_run: bool) -> bool:
     all_block: str = "__all__ = [\n" + "".join(f'    "{n}",\n' for n in combined) + "]"
     if all_node is not None and all_node.end_lineno is not None:
         lines: list[str] = original.splitlines(keepends=True)
-        updated: str = (
-            "".join(lines[: all_node.lineno - 1])
-            + all_block
-            + "\n"
-            + "".join(lines[all_node.end_lineno :])
-        )
+        updated: str = "".join(lines[: all_node.lineno - 1]) + all_block + "\n" + "".join(lines[all_node.end_lineno :])
         if imports:
             updated = updated.rstrip("\n") + "\n\n" + "\n".join(imports) + "\n"
     else:
-        updated = (
-            original.rstrip("\n")
-            + "\n\n"
-            + "\n".join(imports)
-            + "\n\n"
-            + all_block
-            + "\n"
-        )
+        updated = original.rstrip("\n") + "\n\n" + "\n".join(imports) + "\n\n" + all_block + "\n"
     if dry_run:
         print(f"--- would write additions to {init_path} ---")
         print("\n".join(imports))
@@ -211,9 +177,7 @@ def cmd_check(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line parser."""
-    parser = argparse.ArgumentParser(
-        description="Check __init__.py exports against package modules."
-    )
+    parser = argparse.ArgumentParser(description="Check __init__.py exports against package modules.")
     sub = parser.add_subparsers(dest="command", required=True)
     check = sub.add_parser("check", help="Report (and optionally fix) missing exports")
     check.add_argument(
@@ -223,12 +187,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path.cwd(),
         help="Package directory (default: current dir)",
     )
-    check.add_argument(
-        "-a", "--fix", action="store_true", help="Add missing imports to __init__.py"
-    )
-    check.add_argument(
-        "--dry-run", action="store_true", help="With --fix, preview without writing"
-    )
+    check.add_argument("-a", "--fix", action="store_true", help="Add missing imports to __init__.py")
+    check.add_argument("--dry-run", action="store_true", help="With --fix, preview without writing")
     check.set_defaults(handler=cmd_check)
     return parser
 

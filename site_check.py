@@ -40,9 +40,7 @@ def run_sanity_check() -> dict[str, list[Any]]:
                     try:
                         py_compile.compile(full_path, doraise=True)
                     except Exception as e:
-                        issues["compilation_errors"].append(
-                            {"file": full_path, "error": str(e)}
-                        )
+                        issues["compilation_errors"].append({"file": full_path, "error": str(e)})
         for finder, name, ispkg in pkgutil.iter_modules([site_dir]):
             if name in seen_modules:
                 continue

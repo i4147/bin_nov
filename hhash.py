@@ -308,23 +308,17 @@ class HumanHasher:
         if len(hexdigest) % 2 != 0:
             msg = "Hex digest must have even length"
             raise ValueError(msg)
-        byte_values: list[int] = [
-            int(hexdigest[i : i + 2], 16) for i in range(0, len(hexdigest), 2)
-        ]
+        byte_values: list[int] = [int(hexdigest[i : i + 2], 16) for i in range(0, len(hexdigest), 2)]
         compressed = self.compress(byte_values, words)
         return separator.join(self.wordlist[b] for b in compressed)
 
     def humanize_bytes(self, data: bytes, words: int = 4, separator: str = "-") -> str:
         return self.humanize(data.hex(), words, separator)
 
-    def humanize_uuid(
-        self, uuid_obj: uuidlib.UUID, words: int = 4, separator: str = "-"
-    ) -> str:
+    def humanize_uuid(self, uuid_obj: uuidlib.UUID, words: int = 4, separator: str = "-") -> str:
         return self.humanize(uuid_obj.hex, words, separator)
 
-    def verify(
-        self, hexdigest: str, phrase: str, words: int = 4, separator: str = "-"
-    ) -> bool:
+    def verify(self, hexdigest: str, phrase: str, words: int = 4, separator: str = "-") -> bool:
         return self.humanize(hexdigest, words, separator) == phrase
 
     def entropy_bits(self, words: int) -> int:
@@ -342,9 +336,7 @@ class HumanHasher:
             msg = "Fewer input bytes than requested output"
             raise ValueError(msg)
         seg_size = length // target
-        segments = [
-            list(byte_values[i * seg_size : (i + 1) * seg_size]) for i in range(target)
-        ]
+        segments = [list(byte_values[i * seg_size : (i + 1) * seg_size]) for i in range(target)]
         segments[-1].extend(byte_values[target * seg_size :])
         checksum = lambda b: reduce(operator.xor, b, 0)
         return [checksum(seg) for seg in segments]
@@ -353,23 +345,17 @@ class HumanHasher:
         digest = uuidlib.uuid4().hex
         return self.humanize(digest, words, separator), digest
 
-    def uuid_obj(
-        self, words: int = 4, separator: str = "-"
-    ) -> tuple[uuidlib.UUID, str, str]:
+    def uuid_obj(self, words: int = 4, separator: str = "-") -> tuple[uuidlib.UUID, str, str]:
         u = uuidlib.uuid4()
         digest = u.hex
         return u, self.humanize(digest, words, separator), digest
 
-    def uuid5(
-        self, namespace: uuidlib.UUID, name: str, words: int = 4, separator: str = "-"
-    ) -> tuple[str, str]:
+    def uuid5(self, namespace: uuidlib.UUID, name: str, words: int = 4, separator: str = "-") -> tuple[str, str]:
         u = uuidlib.uuid5(namespace, name)
         digest = u.hex
         return self.humanize(digest, words, separator), digest
 
-    def uuid3(
-        self, namespace: uuidlib.UUID, name: str, words: int = 4, separator: str = "-"
-    ) -> tuple[str, str]:
+    def uuid3(self, namespace: uuidlib.UUID, name: str, words: int = 4, separator: str = "-") -> tuple[str, str]:
         u = uuidlib.uuid3(namespace, name)
         digest = u.hex
         return self.humanize(digest, words, separator), digest
@@ -425,9 +411,7 @@ def _resolve_namespace(ns_str: str) -> uuidlib.UUID:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Human-readable UUID/hash tool")
-    parser.add_argument(
-        "--uuid", action="store_true", help="Generate a human-readable UUID"
-    )
+    parser.add_argument("--uuid", action="store_true", help="Generate a human-readable UUID")
     parser.add_argument(
         "--uuid5",
         nargs=2,
@@ -448,9 +432,7 @@ def main() -> None:
         metavar="ARG",
         help="Verify a phrase against a hex digest",
     )
-    parser.add_argument(
-        "--dehumanize", metavar="PHRASE", help="Convert a phrase back to hex"
-    )
+    parser.add_argument("--dehumanize", metavar="PHRASE", help="Convert a phrase back to hex")
     parser.add_argument(
         "--entropy",
         type=int,
@@ -458,13 +440,9 @@ def main() -> None:
         help="Show entropy bits for given word count",
     )
     parser.add_argument("--hash", metavar="TEXT", help="Hash text and humanize")
-    parser.add_argument(
-        "--algorithm", default="sha256", help="Hash algorithm (default: sha256)"
-    )
+    parser.add_argument("--algorithm", default="sha256", help="Hash algorithm (default: sha256)")
     parser.add_argument("-f", "--file", metavar="PATH", help="Read input from file")
-    parser.add_argument(
-        "--words", type=int, default=4, help="Number of words (default: 4)"
-    )
+    parser.add_argument("--words", type=int, default=4, help="Number of words (default: 4)")
     parser.add_argument("--separator", default="-", help="Word separator (default: -)")
     parser.add_argument("--wordlist-file", help="Path to custom wordlist file")
     parser.add_argument("--count", type=int, default=1, help="Number of outputs")
@@ -472,11 +450,7 @@ def main() -> None:
     parser.add_argument("--upper", action="store_true", help="Uppercase output")
     parser.add_argument("--title", action="store_true", help="Title case output")
     args = parser.parse_args()
-    hasher = (
-        HumanHasher.from_file(args.wordlist_file)
-        if args.wordlist_file
-        else DEFAULT_HASHER
-    )
+    hasher = HumanHasher.from_file(args.wordlist_file) if args.wordlist_file else DEFAULT_HASHER
 
     def format_phrase(phrase: str) -> str:
         if args.upper:
@@ -497,13 +471,7 @@ def main() -> None:
         except OSError as e:
             print(f"error: cannot read file {args.file}: {e}", file=sys.stderr)
             sys.exit(1)
-    if (
-        args.file is not None
-        and not args.hash
-        and not args.humanize
-        and not args.humanize_bytes
-        and not args.verify
-    ):
+    if args.file is not None and not args.hash and not args.humanize and not args.humanize_bytes and not args.verify:
         args.hash = file_text if file_text is not None else ""
     results: list[dict[str, Any]] = []
     for _ in range(args.count):
@@ -513,16 +481,12 @@ def main() -> None:
         elif args.uuid5:
             ns_str, name = args.uuid5
             namespace = _resolve_namespace(ns_str)
-            phrase, digest = hasher.uuid5(
-                namespace, name, words=args.words, separator=args.separator
-            )
+            phrase, digest = hasher.uuid5(namespace, name, words=args.words, separator=args.separator)
             results.append({"phrase": format_phrase(phrase), "digest": digest})
         elif args.uuid3:
             ns_str, name = args.uuid3
             namespace = _resolve_namespace(ns_str)
-            phrase, digest = hasher.uuid3(
-                namespace, name, words=args.words, separator=args.separator
-            )
+            phrase, digest = hasher.uuid3(namespace, name, words=args.words, separator=args.separator)
             results.append({"phrase": format_phrase(phrase), "digest": digest})
         elif args.humanize:
             hex_input = args.humanize
@@ -531,18 +495,14 @@ def main() -> None:
                     print("error: file is not valid UTF-8 text", file=sys.stderr)
                     sys.exit(1)
                 hex_input = file_text.strip()
-            phrase = hasher.humanize(
-                hex_input, words=args.words, separator=args.separator
-            )
+            phrase = hasher.humanize(hex_input, words=args.words, separator=args.separator)
             results.append({"phrase": format_phrase(phrase), "digest": hex_input})
         elif args.humanize_bytes:
             if args.file is not None:
                 data = file_bytes if file_bytes is not None else b""
             else:
                 data = args.humanize_bytes.encode("utf-8")
-            phrase = hasher.humanize_bytes(
-                data, words=args.words, separator=args.separator
-            )
+            phrase = hasher.humanize_bytes(data, words=args.words, separator=args.separator)
             results.append({"phrase": format_phrase(phrase), "digest": data.hex()})
         elif args.verify:
             if args.file is not None:
@@ -565,9 +525,7 @@ def main() -> None:
                     )
                     sys.exit(1)
                 hexdigest, phrase = args.verify
-            ok = hasher.verify(
-                hexdigest, phrase, words=args.words, separator=args.separator
-            )
+            ok = hasher.verify(hexdigest, phrase, words=args.words, separator=args.separator)
             results.append({"verified": ok})
         elif args.dehumanize:
             digest = hasher.dehumanize(args.dehumanize, separator=args.separator)

@@ -20,9 +20,7 @@ def read_lines_dynamically(file_path: Path, mmap_threshold_mb: float) -> list[st
     size_bytes = file_path.stat().st_size
     threshold_bytes = mmap_threshold_mb * 1024 * 1024
     if size_bytes > threshold_bytes:
-        print(
-            f"[Info] Large file detected ({size_bytes / (1024 * 1024):.2f} MB). Using mmap..."
-        )
+        print(f"[Info] Large file detected ({size_bytes / (1024 * 1024):.2f} MB). Using mmap...")
         with (
             file_path.open("r+b") as f,
             mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as mm,
@@ -35,9 +33,7 @@ def read_lines_dynamically(file_path: Path, mmap_threshold_mb: float) -> list[st
             return [line.strip() for line in f if line.strip()]
 
 
-def process_similar(
-    file_path: Path, mmap_threshold_mb: float, similar_out_file: Path
-) -> None:
+def process_similar(file_path: Path, mmap_threshold_mb: float, similar_out_file: Path) -> None:
     if not file_path.exists():
         print(f"Error: File '{file_path}' does not exist.", file=sys.stderr)
         sys.exit(1)
@@ -63,9 +59,7 @@ def process_similar(
         for word in clean_words:
             f.write(word + "\n")
     print(f"[Success] Moved {len(similar_words)} lines to {similar_out_file}")
-    print(
-        f"[Success] Updated {file_path} in-place ({len(clean_words)} lines remaining)."
-    )
+    print(f"[Success] Updated {file_path} in-place ({len(clean_words)} lines remaining).")
 
 
 def process_repeats(file_path: Path, pattern: str) -> None:

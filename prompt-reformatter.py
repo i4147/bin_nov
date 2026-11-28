@@ -17,9 +17,7 @@ import re
 from dh import SKIP_DIRS, atomic_write
 
 
-_BEFORE_MARKER = re.compile(
-    r"[ \t\r\n]+(?=(?:\d+[.)]|\(\d+\)|[-*\u2022]|\*\*[^*\n]+\*\*)\s)"
-)
+_BEFORE_MARKER = re.compile(r"[ \t\r\n]+(?=(?:\d+[.)]|\(\d+\)|[-*\u2022]|\*\*[^*\n]+\*\*)\s)")
 _COMMA_SPLIT = re.compile(r",[ \t]+")
 _SEMICOLON_SPLIT = re.compile(r";[ \t]+")
 MAX_LINE: int = 80

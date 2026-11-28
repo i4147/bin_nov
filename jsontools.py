@@ -395,14 +395,8 @@ def cmd_jsonl2json(args: argparse.Namespace) -> int:
                     file=sys.stderr,
                 )
             else:
-                extra = (
-                    f", skipped invalid lines: {res['invalid']}"
-                    if res["invalid"]
-                    else ""
-                )
-                print(
-                    f"OK      {res['source']} -> {res['destination']} ({res['records']} records{extra})"
-                )
+                extra = f", skipped invalid lines: {res['invalid']}" if res["invalid"] else ""
+                print(f"OK      {res['source']} -> {res['destination']} ({res['records']} records{extra})")
     print(
         f"\nFinished: {total} file(s), {written} record(s), {invalid} invalid line(s) skipped, {failures} failure(s).",
         file=sys.stderr,

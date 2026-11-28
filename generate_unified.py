@@ -77,9 +77,7 @@ def extract_info(text: str) -> tuple[str, list[str], str, str]:
     if not has_main:
         try:
             tree2 = ast.parse(text) if "tree" not in dir() else tree
-            notes_parts.append(
-                "no __main__ guard (top-level script or library fragment; exec runs top-level code)"
-            )
+            notes_parts.append("no __main__ guard (top-level script or library fragment; exec runs top-level code)")
         except Exception:
             pass
     elif not has_argv and not funcs:
@@ -87,12 +85,7 @@ def extract_info(text: str) -> tuple[str, list[str], str, str]:
     if not desc:
         for line in text.splitlines()[:15]:
             s = line.strip()
-            if (
-                s.startswith("#")
-                and len(s) > 2
-                and "env" not in s
-                and "coding" not in s
-            ):
+            if s.startswith("#") and len(s) > 2 and "env" not in s and "coding" not in s:
                 desc = s.lstrip("#").strip()[:140]
                 break
     if not desc:
@@ -135,26 +128,22 @@ def build_unified(folder: Path, files: list[Path]) -> str:
             const = f"{const_base}_{seen_const[const_base]}"
         else:
             seen_const[const] = 1
-        items.append(
-            {
-                "filename": f.name,
-                "san": san,
-                "cls": cls,
-                "const": const,
-                "desc": desc,
-                "funcs": funcs,
-                "notes": notes,
-                "lines": lines,
-                "nlines": nlines,
-            }
-        )
+        items.append({
+            "filename": f.name,
+            "san": san,
+            "cls": cls,
+            "const": const,
+            "desc": desc,
+            "funcs": funcs,
+            "notes": notes,
+            "lines": lines,
+            "nlines": nlines,
+        })
     map_lines: list[str] = []
     for it in items:
         extra = f" [{it['notes']}]" if it["notes"] else ""
         d = it["desc"].replace("\n", " ").replace("\r", " ")[:120]
-        map_lines.append(
-            f"  {it['san']} <- {it['filename']} ({it['nlines']}L): {d}{extra}"
-        )
+        map_lines.append(f"  {it['san']} <- {it['filename']} ({it['nlines']}L): {d}{extra}")
     mapping = "\n".join(map_lines)
     assumption = "Assumption: each original CLI preserved as `main.py <tool> [args...]` with passthrough args."
     if len(items) == 1:
@@ -178,13 +167,9 @@ def build_unified(folder: Path, files: list[Path]) -> str:
         funcs_lit = repr(it["funcs"])
         doc_safe = it["desc"].replace('"""', "'''")[:160].replace("\n", " ")
         if it["notes"]:
-            doc_safe += f" NOTE: {it['notes'][:200]}".replace('"""', "'''").replace(
-                "\n", " "
-            )
+            doc_safe += f" NOTE: {it['notes'][:200]}".replace('"""', "'''").replace("\n", " ")
         class_blocks.append(f"class {it['cls']}(BaseTool):")
-        class_blocks.append(
-            f'    """Wrapper for original {it["filename"]}: {doc_safe}."""'
-        )
+        class_blocks.append(f'    """Wrapper for original {it["filename"]}: {doc_safe}."""')
         class_blocks.append(f"    name: str = {it['san']!r}")
         class_blocks.append(f"    source_file: str = {it['filename']!r}")
         class_blocks.append(f"    description: str = {desc_lit}")
@@ -353,13 +338,9 @@ if __name__ == "__main__":
 
 
 def main() -> int:
-    folders = sorted(
-        [
-            p
-            for p in ROOT.iterdir()
-            if p.is_dir() and not p.name.startswith(".") and p.name != "__pycache__"
-        ]
-    )
+    folders = sorted([
+        p for p in ROOT.iterdir() if p.is_dir() and not p.name.startswith(".") and p.name != "__pycache__"
+    ])
     print(f"Found {len(folders)} top-level folders")
     for folder in folders:
         py_files = sorted([p for p in folder.glob("*.py") if p.name != "main.py"])

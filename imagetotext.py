@@ -120,9 +120,7 @@ def process_image(img_path_str: str):
 
 def main() -> None:
     root = Path()
-    images = [
-        str(p) for p in root.rglob("*") if p.is_file() and p.suffix.lower() in IMAGE_EXT
-    ]
+    images = [str(p) for p in root.rglob("*") if p.is_file() and p.suffix.lower() in IMAGE_EXT]
 
     print(f"Found {len(images)} image(s) under {root.resolve()}")
     if not images:

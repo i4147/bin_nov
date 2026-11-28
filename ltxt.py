@@ -74,17 +74,13 @@ def process_paths(paths: Sequence[Path], method: str) -> list[LineCounter]:
         if method == "imap_unordered":
             return list(pool.imap_unordered(process_file, paths))
         if method == "apply_async":
-            async_results: list[AsyncResult[LineCounter]] = [
-                pool.apply_async(process_file, (path,)) for path in paths
-            ]
+            async_results: list[AsyncResult[LineCounter]] = [pool.apply_async(process_file, (path,)) for path in paths]
             return [result.get() for result in async_results]
     msg = f"Unsupported pool method: {method}"
     raise ValueError(msg)
 
 
-def collect_lines_for_extension(
-    ext: str, files: Sequence[Path], pool_method: str
-) -> None:
+def collect_lines_for_extension(ext: str, files: Sequence[Path], pool_method: str) -> None:
     if not files:
         return
     global_counter: LineCounter = Counter()

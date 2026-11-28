@@ -51,9 +51,7 @@ def init_tree_sitter() -> None:
 
             TOML_LANGUAGE = tree_sitter_toml.language()
         except ImportError:
-            msg = (
-                "tree-sitter-toml not found. Install with: pip install tree-sitter-toml"
-            )
+            msg = "tree-sitter-toml not found. Install with: pip install tree-sitter-toml"
             raise ImportError(msg)
 
 
@@ -132,19 +130,13 @@ class TomlVisitor:
             ):
                 value_node = child
         if key_node and value_node:
-            key_text: str = self.source[key_node.start_byte : key_node.end_byte].decode(
-                "utf-8"
-            )
-            value_text: str = self.source[
-                value_node.start_byte : value_node.end_byte
-            ].decode("utf-8")
+            key_text: str = self.source[key_node.start_byte : key_node.end_byte].decode("utf-8")
+            value_text: str = self.source[value_node.start_byte : value_node.end_byte].decode("utf-8")
             formatted_value: str = self._format_value(value_node)
             self.output.write(f"{indent}{key_text} = {formatted_value}")
             for child in node.children:
                 if child.type == "comment":
-                    comment_text: str = self.source[
-                        child.start_byte : child.end_byte
-                    ].decode("utf-8")
+                    comment_text: str = self.source[child.start_byte : child.end_byte].decode("utf-8")
                     self.output.write(f"  {comment_text}")
             self.output.write("\n")
 
@@ -160,11 +152,7 @@ class TomlVisitor:
         elements: list[str] = []
         for child in node.children:
             if child.type not in ("[", "]", ",", "comment"):
-                elem_text: str = (
-                    self.source[child.start_byte : child.end_byte]
-                    .decode("utf-8")
-                    .strip()
-                )
+                elem_text: str = self.source[child.start_byte : child.end_byte].decode("utf-8").strip()
                 if elem_text:
                     elements.append(elem_text)
         if not elements:
@@ -184,11 +172,7 @@ class TomlVisitor:
         pairs: list[str] = []
         for child in node.children:
             if child.type == "pair":
-                pair_text: str = (
-                    self.source[child.start_byte : child.end_byte]
-                    .decode("utf-8")
-                    .strip()
-                )
+                pair_text: str = self.source[child.start_byte : child.end_byte].decode("utf-8").strip()
                 pairs.append(pair_text)
         if not pairs:
             return "{}"
@@ -227,11 +211,7 @@ def validate_toml(content: str) -> tuple[bool, Optional[str]]:
         parser.set_language(TOML_LANGUAGE)
         source_bytes: bytes = content.encode("utf-8")
         tree: Any = parser.parse(source_bytes)
-        has_error: bool = any(
-            child.type == "ERROR"
-            for child in tree.root_node.children
-            if hasattr(child, "type")
-        )
+        has_error: bool = any(child.type == "ERROR" for child in tree.root_node.children if hasattr(child, "type"))
         if has_error:
             return False, "Parse error in TOML content"
         return True, None
@@ -276,9 +256,7 @@ Examples:
         nargs="*",
         help="Files or directories to format (default: current directory)",
     )
-    parser_obj.add_argument(
-        "--indent", type=int, default=2, help="Indentation size (default: 2)"
-    )
+    parser_obj.add_argument("--indent", type=int, default=2, help="Indentation size (default: 2)")
     parser_obj.add_argument(
         "--column-width",
         type=int,
@@ -300,14 +278,10 @@ Examples:
     if not toml_files:
         print("No .toml files found")
         return 0
-    config: FormatConfig = FormatConfig(
-        indent_size=args.indent, column_width=args.column_width
-    )
+    config: FormatConfig = FormatConfig(indent_size=args.indent, column_width=args.column_width)
     num_workers: int = MAX_WORKERS or cpu_count()
     with Pool(num_workers) as pool_obj:
-        results: Any = pool_obj.imap_unordered(
-            lambda f: format_file(f, config), toml_files
-        )
+        results: Any = pool_obj.imap_unordered(lambda f: format_file(f, config), toml_files)
         success_count: int = 0
         failed_files: list[Path] = []
         for file_path, success, message in results:

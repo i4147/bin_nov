@@ -166,9 +166,7 @@ def analyze_archive(path: Path):
                 ext_size = sum(info.file_size for info in zf.infolist())
                 file_count = len(zf.infolist())
                 integrity_ok = zf.testzip() is None
-        elif ext and (
-            ext.startswith(".tar") or ext in (".tgz", ".txz", ".tbz2", ".tzst")
-        ):
+        elif ext and (ext.startswith(".tar") or ext in (".tgz", ".txz", ".tbz2", ".tzst")):
             mode = "r:*"
             if ext in (".tar.gz", ".tgz"):
                 mode = "r:gz"
@@ -256,9 +254,7 @@ def analyze_archive(path: Path):
     }
 
 
-def _copy_file_buffered(
-    src_path: Path, dst_path: Path, buffer_size: int = 65536
-) -> None:
+def _copy_file_buffered(src_path: Path, dst_path: Path, buffer_size: int = 65536) -> None:
     with open(src_path, "rb") as src, open(dst_path, "wb") as dst:
         while True:
             chunk = src.read(buffer_size)
@@ -317,11 +313,7 @@ def scan_directory(
                 res = analyze_archive(path)
                 found_archives.append(res)
                 if verbose:
-                    status_str = (
-                        "\033[32m[PASS]\033[0m"
-                        if res["integrity"]
-                        else "\033[31m[FAIL]\033[0m"
-                    )
+                    status_str = "\033[32m[PASS]\033[0m" if res["integrity"] else "\033[31m[FAIL]\033[0m"
                     print(
                         f" -> Found: {res['filename']} | Type: {res['archive_type']} | "
                         f"Comp: {fsz(res['compressed_size'])} -> "
@@ -353,24 +345,16 @@ def scan_directory(
     print(f"Total Extracted Size  : \033[1;32m{fsz(total_extracted)}\033[0m")
     if total_compressed > 0:
         ratio = total_extracted / total_compressed
-        print(
-            f"Overall Expansion     : {ratio:.2f}x ({fsz(total_extracted - total_compressed)} saved)"
-        )
+        print(f"Overall Expansion     : {ratio:.2f}x ({fsz(total_extracted - total_compressed)} saved)")
     if auto_extract and found_archives:
         out_subdir = target / "extracted_archives"
-        print(
-            f"\n\033[38;5;214m[-a] Auto-extracting {len(found_archives)} archives into:\033[0m {out_subdir}"
-        )
+        print(f"\n\033[38;5;214m[-a] Auto-extracting {len(found_archives)} archives into:\033[0m {out_subdir}")
         for item in found_archives:
             ok, dest_or_err = extract_archive(item["path"], str(out_subdir))
             if ok:
-                print(
-                    f"  \033[32m[✓]\033[0m Extracted {item['filename']} -> {dest_or_err}"
-                )
+                print(f"  \033[32m[✓]\033[0m Extracted {item['filename']} -> {dest_or_err}")
             else:
-                print(
-                    f"  \033[31m[✗]\033[0m Failed to extract {item['filename']}: {dest_or_err}"
-                )
+                print(f"  \033[31m[✗]\033[0m Failed to extract {item['filename']}: {dest_or_err}")
     return found_archives
 
 
@@ -384,16 +368,10 @@ def main() -> None:
     args = parser.parse_args()
     if args.json:
         target = Path(args.directory).resolve()
-        results = [
-            analyze_archive(p)
-            for p in target.rglob("*")
-            if p.is_file() and get_archive_type_info(p)[0]
-        ]
+        results = [analyze_archive(p) for p in target.rglob("*") if p.is_file() and get_archive_type_info(p)[0]]
         print(json.dumps(results, indent=2))
     else:
-        scan_directory(
-            args.directory, args.auto_extract_all, args.test_integrity, args.verbose
-        )
+        scan_directory(args.directory, args.auto_extract_all, args.test_integrity, args.verbose)
 
 
 if __name__ == "__main__":

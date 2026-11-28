@@ -36,9 +36,7 @@ def auto_git_workflow() -> None:
         print("Not a git repository. Initializing...")
         repo = Repo.init(repo_path)
         repo.git.add(A=True)
-        repo.index.commit(
-            f"Initial commit: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        )
+        repo.index.commit(f"Initial commit: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     if repo.submodules:
         print("Updating submodules...")
@@ -53,23 +51,13 @@ def auto_git_workflow() -> None:
     if not remotes:
         print("No remote configured. Creating new repository on GitHub...")
         try:
-            run_command(
-                ["gh", "repo", "create", repo_name, "--public", "--source=.", "--push"]
-            )
+            run_command(["gh", "repo", "create", repo_name, "--public", "--source=.", "--push"])
         except subprocess.CalledProcessError:
-            new_name = input(
-                "Repository exists. Enter a unique name for the new repo: "
-            )
-            run_command(
-                ["gh", "repo", "create", new_name, "--public", "--source=.", "--push"]
-            )
+            new_name = input("Repository exists. Enter a unique name for the new repo: ")
+            run_command(["gh", "repo", "create", new_name, "--public", "--source=.", "--push"])
     else:
         origin = remotes[0].url
-        user = (
-            subprocess.check_output(["gh", "api", "user", "--jq", ".login"])
-            .decode()
-            .strip()
-        )
+        user = subprocess.check_output(["gh", "api", "user", "--jq", ".login"]).decode().strip()
 
         if user not in origin:
             print("Not the owner. Forking repository...")

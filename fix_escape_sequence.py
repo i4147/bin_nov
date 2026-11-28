@@ -98,11 +98,7 @@ def fix_source(src: str) -> str:
         elif HAS_FSTRING_TOKENS and t == tokenize.FSTRING_END:
             if fstring_raw:
                 fstring_raw.pop()
-        elif (
-            HAS_FSTRING_TOKENS
-            and t == tokenize.FSTRING_MIDDLE
-            and not (fstring_raw and fstring_raw[-1])
-        ):
+        elif HAS_FSTRING_TOKENS and t == tokenize.FSTRING_MIDDLE and not (fstring_raw and fstring_raw[-1]):
             nb = _fix_body(tok.string)
             if nb is not None and nb != tok.string:
                 fixes.append((tok.start, tok.end, nb))
@@ -202,9 +198,7 @@ def main(argv: list[str] | None = None) -> int:
     if not targets:
         print("no files to process")
         return 0
-    tasks: list[tuple[str, bool, bool]] = [
-        (t, args.dry_run, args.quiet) for t in targets
-    ]
+    tasks: list[tuple[str, bool, bool]] = [(t, args.dry_run, args.quiet) for t in targets]
     with mp.Pool(MAX_WORKERS) as pool:
         results: list[Result] = pool.starmap(process_file, tasks)
     counts: dict[str, int] = {}

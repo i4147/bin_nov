@@ -128,9 +128,7 @@ def wheel_is_empty(path: Path, detectors: Sequence[str], quiet: bool = False) ->
         return False
 
 
-def find_wheels(
-    directory: Path, recursive: bool, exclude: Optional[Path] = None
-) -> list[Path]:
+def find_wheels(directory: Path, recursive: bool, exclude: Optional[Path] = None) -> list[Path]:
     candidates = directory.rglob("*.whl") if recursive else directory.glob("*.whl")
     result: list[Path] = []
     for candidate in candidates:
@@ -259,11 +257,7 @@ def find_empty_installed_packages(site_packages: Path) -> list[str]:
     if not site_packages.is_dir():
         return found
     for entry in sorted(site_packages.iterdir()):
-        if (
-            entry.name.endswith(".dist-info")
-            and entry.is_dir()
-            and is_empty_dist_info(entry)
-        ):
+        if entry.name.endswith(".dist-info") and entry.is_dir() and is_empty_dist_info(entry):
             found.append(str(entry))
     return found
 
@@ -279,9 +273,7 @@ def cmd_wheels(args: argparse.Namespace) -> int:
     if not wheels:
         print(f"No .whl files found in {directory}")
         return 0
-    print(
-        f"Found {len(wheels)} wheel file(s) to check (detectors: {', '.join(detectors)})"
-    )
+    print(f"Found {len(wheels)} wheel file(s) to check (detectors: {', '.join(detectors)})")
     installed: dict[str, str] = {}
     if args.check_installed:
         installed = installed_packages()
@@ -321,9 +313,7 @@ def cmd_wheels(args: argparse.Namespace) -> int:
     print(f"Valid wheels : {len(valid)}")
     print(f"Empty wheels : {len(empty)}")
     if conflicts:
-        print(
-            f"\nCRITICAL: {len(conflicts)} empty wheel(s) correspond to INSTALLED packages!"
-        )
+        print(f"\nCRITICAL: {len(conflicts)} empty wheel(s) correspond to INSTALLED packages!")
         for wheel, package, version in conflicts:
             print(f"  - {wheel.name} -> {package}=={version}")
         print("\nRECOMMENDATIONS:")
@@ -337,9 +327,7 @@ def cmd_wheels(args: argparse.Namespace) -> int:
         print("\nNo empty wheels found!")
         return 0
     if args.dry_run or not args.move:
-        print(
-            f"\nFound {len(empty)} empty wheel(s) (report only -- pass --move to relocate them)"
-        )
+        print(f"\nFound {len(empty)} empty wheel(s) (report only -- pass --move to relocate them)")
         for wheel in empty:
             print(f"  {wheel.name}")
         return 0
@@ -379,9 +367,7 @@ def cmd_wheels(args: argparse.Namespace) -> int:
         print("\nTo fix them:")
         for _, package, _ in conflicts:
             print(f"   {sys.executable} -m pip uninstall {package}")
-            print(
-                f"   {sys.executable} -m pip install {package}  # or use a valid wheel"
-            )
+            print(f"   {sys.executable} -m pip install {package}  # or use a valid wheel")
     return 0
 
 
@@ -410,13 +396,9 @@ def cmd_scan(args: argparse.Namespace) -> int:
         return 2
     site_packages = Path(args.path) if args.path else default_site_packages()
     detectors = resolve_detectors(args.detect)
-    empty_packages = (
-        find_empty_installed_packages(site_packages) if site_packages.is_dir() else []
-    )
+    empty_packages = find_empty_installed_packages(site_packages) if site_packages.is_dir() else []
     empty_wheels = [
-        wheel
-        for wheel in find_wheels(directory, args.recursive)
-        if wheel_is_empty(wheel, detectors, quiet=args.quiet)
+        wheel for wheel in find_wheels(directory, args.recursive) if wheel_is_empty(wheel, detectors, quiet=args.quiet)
     ]
     if empty_packages:
         print("\n=== Empty installed packages (site-packages) ===")

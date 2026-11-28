@@ -79,10 +79,7 @@ def run_threaded(video: Path, out_path: Path, opts: argparse.Namespace) -> None:
     in_q: "Queue" = Queue(maxsize=opts.queue_size)
     done_q: "Queue" = Queue()
     workers = [
-        threading.Thread(
-            target=worker, args=(in_q, done_q, out_path, opts), daemon=False
-        )
-        for _ in range(MAX_WORKERS)
+        threading.Thread(target=worker, args=(in_q, done_q, out_path, opts), daemon=False) for _ in range(MAX_WORKERS)
     ]
     for w in workers:
         w.start()
@@ -156,15 +153,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=1.5,
         help="Resize factor applied before OCR (default: 1.5).",
     )
-    parser.add_argument(
-        "--lang", default="eng", help="Tesseract language (default: eng)."
-    )
-    parser.add_argument(
-        "--psm", type=int, default=6, help="Tesseract PSM (default: 6)."
-    )
-    parser.add_argument(
-        "--oem", type=int, default=3, help="Tesseract OEM (default: 3)."
-    )
+    parser.add_argument("--lang", default="eng", help="Tesseract language (default: eng).")
+    parser.add_argument("--psm", type=int, default=6, help="Tesseract PSM (default: 6).")
+    parser.add_argument("--oem", type=int, default=3, help="Tesseract OEM (default: 3).")
     parser.add_argument(
         "--min-chars",
         type=int,
@@ -188,9 +179,7 @@ def main(argv: Optional[list] = None) -> int:
         parser.error(f"input video not found: {args.input}")
     if args.frame_start is None:
         args.frame_start = 1 if args.mode == "threaded" else 0
-    out_path: Path = (
-        args.output if args.output is not None else args.input.with_suffix(".txt")
-    )
+    out_path: Path = args.output if args.output is not None else args.input.with_suffix(".txt")
     if args.mode == "threaded":
         run_threaded(args.input, out_path, args)
     else:

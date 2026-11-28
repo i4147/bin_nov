@@ -115,9 +115,7 @@ def main() -> None:
             print(f"Previously failed: {', '.join(progress['failed'])}")
         sys.exit(0)
     if done:
-        print(
-            f"Resuming: {len(done)}/{len(pkgs)} already processed, {len(pending)} remaining."
-        )
+        print(f"Resuming: {len(done)}/{len(pkgs)} already processed, {len(pending)} remaining.")
     try:
         for i, pkg in enumerate(pending, 1):
             progress["current"] = pkg

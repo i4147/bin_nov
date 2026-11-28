@@ -140,9 +140,7 @@ def _compress_with_algo(algo: str, level: int, subdir: Path, tar_path: Path) -> 
     if algo == "brotli":
         with open(tar_path, "wb") as raw_out:
             compressor = brotli.Compressor(quality=level)
-            with tarfile.open(
-                fileobj=_BrotliWriter(raw_out, compressor), mode="w|"
-            ) as tar:
+            with tarfile.open(fileobj=_BrotliWriter(raw_out, compressor), mode="w|") as tar:
                 tar.add(str(subdir), arcname=subdir.name, recursive=True)
             raw_out.write(compressor.finish())
         return
@@ -315,13 +313,9 @@ def decompress_archive(archive_path: Path) -> dict[str, Any]:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Compress/decompress subdirectories with tar + (zstd|brotli|lzma)"
-    )
+    parser = argparse.ArgumentParser(description="Compress/decompress subdirectories with tar + (zstd|brotli|lzma)")
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
-        "-c", "--compress", action="store_true", help="Compress directories to archives"
-    )
+    group.add_argument("-c", "--compress", action="store_true", help="Compress directories to archives")
     group.add_argument(
         "-d",
         "--decompress",
@@ -348,18 +342,14 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=f"Use lzma (level {LZMA_LEVEL})",
     )
-    parser.add_argument(
-        "paths", nargs="*", default=None, help="Files/dirs to process (default: .)"
-    )
+    parser.add_argument("paths", nargs="*", default=None, help="Files/dirs to process (default: .)")
     parser.add_argument(
         "--level",
         type=int,
         default=None,
         help="Override compression level/quality for the selected algorithm",
     )
-    parser.add_argument(
-        "--no-recursive", action="store_true", help="Disable recursive scan for inputs"
-    )
+    parser.add_argument("--no-recursive", action="store_true", help="Disable recursive scan for inputs")
     return parser
 
 
@@ -397,9 +387,7 @@ def _run_compression(args: argparse.Namespace) -> int:
     successful = 0
     failed = 0
     with Pool(processes=MAX_WORKERS) as pool:
-        async_results = [
-            (d, pool.apply_async(compress_directory, (d, algo, level))) for d in subdirs
-        ]
+        async_results = [(d, pool.apply_async(compress_directory, (d, algo, level))) for d in subdirs]
         for subdir, ar in async_results:
             try:
                 result: dict[str, Any] = ar.get()
@@ -418,16 +406,12 @@ def _run_compression(args: argparse.Namespace) -> int:
                 )
             else:
                 failed += 1
-                logger.error(
-                    f"✗ {result.get('name', subdir.name)}: Failed - {result.get('error')}"
-                )
+                logger.error(f"✗ {result.get('name', subdir.name)}: Failed - {result.get('error')}")
     print("=" * 40)
     print(f"Compression complete: {successful} successful, {failed} failed")
     if successful > 0:
         total_freed = total_original - total_compressed
-        compression_ratio = (
-            (1 - total_compressed / total_original) * 100 if total_original else 0.0
-        )
+        compression_ratio = (1 - total_compressed / total_original) * 100 if total_original else 0.0
         print(f"Total original size:   {fsz(total_original)}")
         print(f"Total compressed size: {fsz(total_compressed)}")
         print(f"Total space freed:     {fsz(total_freed)}")
@@ -448,9 +432,7 @@ def _run_decompression(args: argparse.Namespace) -> int:
     successful = 0
     failed = 0
     with Pool(processes=MAX_WORKERS) as pool:
-        async_results = [
-            (a, pool.apply_async(decompress_archive, (a,))) for a in archives
-        ]
+        async_results = [(a, pool.apply_async(decompress_archive, (a,))) for a in archives]
         for archive, ar in async_results:
             try:
                 result: dict[str, Any] = ar.get()
@@ -472,9 +454,7 @@ def _run_decompression(args: argparse.Namespace) -> int:
                 )
             else:
                 failed += 1
-                logger.error(
-                    f"✗ {result.get('name', archive.name)}: Failed - {result.get('error')}"
-                )
+                logger.error(f"✗ {result.get('name', archive.name)}: Failed - {result.get('error')}")
     print("=" * 40)
     print(f"Decompression complete: {successful} successful, {failed} failed")
     if successful > 0:
@@ -497,8 +477,6 @@ if __name__ == "__main__":
     try:
         import zstandard
     except ImportError:
-        logger.error(
-            "zstandard package is required. Install it with: pip install zstandard"
-        )
+        logger.error("zstandard package is required. Install it with: pip install zstandard")
         sys.exit(1)
     raise SystemExit(main())

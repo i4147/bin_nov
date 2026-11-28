@@ -145,9 +145,7 @@ def extract_archive(path: Path) -> str:
         if low.endswith(".zip"):
             with zipfile.ZipFile(path) as zf:
                 zf.extractall(tmpdir, filter="data")
-        elif low.endswith(
-            (".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".tar.xz", ".txz")
-        ):
+        elif low.endswith((".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".tar.xz", ".txz")):
             with tarfile.open(path) as tf:
                 tf.extractall(tmpdir, filter="data")
         else:
@@ -181,9 +179,7 @@ def collect_python_files(base: Path) -> list[Path]:
     return files
 
 
-def _line_span_for_node(
-    wrapper: cst.MetadataWrapper, node: cst.CSTNode
-) -> tuple[int, int]:
+def _line_span_for_node(wrapper: cst.MetadataWrapper, node: cst.CSTNode) -> tuple[int, int]:
     """Return 1-based (start_line, end_line) for a CST node."""
     pos = wrapper.resolve(cst.metadata.PositionProvider)[node]
     return pos.start.line, pos.end.line
@@ -272,9 +268,7 @@ def process_file(path_str: str) -> list[ExtractedObject]:
     code = safe_read_text(path)
     if code is None:
         return []
-    return [
-        obj for obj in extract_objects_with_cst(code, str(path)) if obj.snippet.strip()
-    ]
+    return [obj for obj in extract_objects_with_cst(code, str(path)) if obj.snippet.strip()]
 
 
 def get_utils_path(base: Path, custom_output: Path | None = None) -> Path:
@@ -292,9 +286,7 @@ def get_utils_path(base: Path, custom_output: Path | None = None) -> Path:
         idx += 1
 
 
-def write_utils_file(
-    path: Path, objects: Iterable[ExtractedObject], dry_run: bool = False
-) -> bool:
+def write_utils_file(path: Path, objects: Iterable[ExtractedObject], dry_run: bool = False) -> bool:
     """Write deduplicated objects to path after validating CST syntax."""
     seen: set[tuple[str, str]] = set()
     parts: list[str] = []
@@ -324,16 +316,12 @@ def write_utils_file(
 class _RemoveTargetObjectsTransformer(cst.CSTTransformer):
     """Remove top-level statements whose 1-based line ranges match target ranges."""
 
-    def __init__(
-        self, target_ranges: set[tuple[int, int]], wrapper: cst.MetadataWrapper
-    ) -> None:
+    def __init__(self, target_ranges: set[tuple[int, int]], wrapper: cst.MetadataWrapper) -> None:
         super().__init__()
         self._target_ranges = target_ranges
         self._wrapper = wrapper
 
-    def leave_Module(
-        self, original_node: cst.Module, updated_node: cst.Module
-    ) -> cst.Module:
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
         kept_body: list[cst.BaseStatement | cst.SmallStatement] = []
         for stmt in updated_node.body:
             if isinstance(stmt, cst.BaseStatement):
@@ -344,15 +332,11 @@ class _RemoveTargetObjectsTransformer(cst.CSTTransformer):
         return updated_node.with_changes(body=kept_body)
 
 
-def _build_from_import(
-    module_name: str, names: Sequence[str]
-) -> cst.SimpleStatementLine:
+def _build_from_import(module_name: str, names: Sequence[str]) -> cst.SimpleStatementLine:
     """Construct a `from <module_name> import (<names>)` statement node."""
     sorted_names = sorted(set(names))
     if len(sorted_names) == 1:
-        imports: Sequence[cst.ImportAlias] = [
-            cst.ImportAlias(name=cst.Name(sorted_names[0]))
-        ]
+        imports: Sequence[cst.ImportAlias] = [cst.ImportAlias(name=cst.Name(sorted_names[0]))]
         import_node = cst.ImportFrom(
             module=cst.Name(module_name),
             imports=imports,
@@ -411,9 +395,7 @@ def transform_source_for_move(
         return None
 
     wrapper = cst.MetadataWrapper(module)
-    removed_module = wrapper.visit(
-        _RemoveTargetObjectsTransformer(target_ranges, wrapper)
-    )
+    removed_module = wrapper.visit(_RemoveTargetObjectsTransformer(target_ranges, wrapper))
 
     import_stmt = _build_from_import(utils_module_name, imported_names)
     new_body = list(removed_module.body)
@@ -594,9 +576,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         for h, group in duplicate_groups.items():
             print(f"Duplicate {h[:12]}:")
             for item in group:
-                print(
-                    f"  {item.file} :: {item.name} ({item.kind}) lines {item.lineno}-{item.end_lineno}"
-                )
+                print(f"  {item.file} :: {item.name} ({item.kind}) lines {item.lineno}-{item.end_lineno}")
         return 0
 
     custom_out: Path | None = args.output
@@ -613,11 +593,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.copy:
         if args.json:
-            print(
-                json.dumps(
-                    {"utils_path": str(utils_path), "mode": "copy", "updated": []}
-                )
-            )
+            print(json.dumps({"utils_path": str(utils_path), "mode": "copy", "updated": []}))
         else:
             print("Copy mode complete; source files unchanged.")
         return 0
@@ -626,20 +602,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     for group in duplicate_groups.values():
         for obj in group:
             candidate = Path(obj.file)
-            if (
-                candidate.exists()
-                and candidate.suffix == ".py"
-                and file_is_under_base(candidate, base)
-            ):
+            if candidate.exists() and candidate.suffix == ".py" and file_is_under_base(candidate, base):
                 if candidate.resolve() == utils_path.resolve():
                     continue
                 by_file[str(candidate)].append(obj)
 
     updated_files: list[str] = []
     for file_str, objs in by_file.items():
-        if update_file_for_move(
-            Path(file_str), objs, utils_module_name, dry_run=bool(args.dry_run)
-        ):
+        if update_file_for_move(Path(file_str), objs, utils_module_name, dry_run=bool(args.dry_run)):
             updated_files.append(file_str)
             if not args.json:
                 print(f"Updated {file_str}")

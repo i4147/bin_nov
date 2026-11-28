@@ -105,26 +105,24 @@ def _fixcode_can(s: str) -> bool:
     if not s:
         return True
     return (
-        s.startswith(
-            (
-                "def ",
-                "class ",
-                "if ",
-                "elif ",
-                "else:",
-                "for ",
-                "while ",
-                "try:",
-                "except ",
-                "finally:",
-                "with ",
-                "return",
-                "import ",
-                "from ",
-                "@",
-                "#",
-            )
-        )
+        s.startswith((
+            "def ",
+            "class ",
+            "if ",
+            "elif ",
+            "else:",
+            "for ",
+            "while ",
+            "try:",
+            "except ",
+            "finally:",
+            "with ",
+            "return",
+            "import ",
+            "from ",
+            "@",
+            "#",
+        ))
         or "=" in s
         or "(" in s
         or s.endswith(":")
@@ -216,12 +214,7 @@ def _fixindent_apply(path: Path, output: Optional[Path], indent_size: int) -> bo
         if not s:
             out.append("\n")
             continue
-        if (
-            any(s.startswith(k) for k in terminators)
-            and level > 0
-            and i > 0
-            and not lines[i - 1].strip().endswith(":")
-        ):
+        if any(s.startswith(k) for k in terminators) and level > 0 and i > 0 and not lines[i - 1].strip().endswith(":"):
             level = max(0, level - 1)
         out.append(" " * (level * indent_size) + s + "\n")
         if s.endswith(":"):
@@ -385,11 +378,7 @@ def _reflow_apply(path: Path, width: int) -> None:
                 buf.append(raw)
                 if stripped.endswith(token) and len(stripped) > len(token):
                     joined = "\n".join(buf)
-                    out.append(
-                        _reflow_docstring(
-                            joined[len(token) : -len(token)], token, width
-                        )
-                    )
+                    out.append(_reflow_docstring(joined[len(token) : -len(token)], token, width))
                     in_doc = False
                     buf = []
                     token = ""
@@ -398,9 +387,7 @@ def _reflow_apply(path: Path, width: int) -> None:
             buf.append(raw)
             if stripped.endswith(token) and len(stripped) > len(token):
                 joined = "\n".join(buf)
-                out.append(
-                    _reflow_docstring(joined[len(token) : -len(token)], token, width)
-                )
+                out.append(_reflow_docstring(joined[len(token) : -len(token)], token, width))
                 in_doc = False
                 buf = []
                 token = ""
@@ -720,9 +707,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Merged Python source code formatter/rewriter",
     )
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser(
-        "fixcode", help="Regex-heuristic auto-indenter (writes in place)"
-    )
+    p = sub.add_parser("fixcode", help="Regex-heuristic auto-indenter (writes in place)")
     p.add_argument("file")
     p.set_defaults(func=cmd_fixcode)
     p = sub.add_parser("fixindent", help="Simple colon-based re-indenter")
@@ -747,9 +732,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("sort", help="Sort top-level AST nodes; write *_sorted file")
     p.add_argument("file")
     p.set_defaults(func=cmd_sort)
-    p = sub.add_parser(
-        "format", help="API-based formatter (black/isort/autoflake/autopep/yapf)"
-    )
+    p = sub.add_parser("format", help="API-based formatter (black/isort/autoflake/autopep/yapf)")
     p.add_argument("--style", choices=_FORMAT_STYLES, default="black")
     p.set_defaults(func=cmd_format)
     return parser

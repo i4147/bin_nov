@@ -66,9 +66,7 @@ def build_dependency_graph(
     installed_names = set(packages)
     graph = {}
     for package_name, dependencies in results:
-        graph[package_name] = [
-            dependency for dependency in dependencies if dependency in installed_names
-        ]
+        graph[package_name] = [dependency for dependency in dependencies if dependency in installed_names]
     return graph
 
 
@@ -79,9 +77,7 @@ def reachable_graph(
     if not roots:
         selected_roots = sorted(graph)
     else:
-        selected_roots = [
-            normalize_name(root) for root in roots if normalize_name(root) in graph
-        ]
+        selected_roots = [normalize_name(root) for root in roots if normalize_name(root) in graph]
     if not selected_roots:
         msg = "None of the requested root packages are installed."
         raise ValueError(msg)
@@ -96,11 +92,7 @@ def reachable_graph(
             if dependency not in included:
                 queue.append(dependency)
     limited_graph = {
-        package: [
-            dependency
-            for dependency in graph.get(package, [])
-            if dependency in included
-        ]
+        package: [dependency for dependency in graph.get(package, []) if dependency in included]
         for package in sorted(included)
     }
     return limited_graph, selected_roots
@@ -163,20 +155,12 @@ def create_svg(
     max_nodes_on_level = max(len(nodes) for nodes in by_level.values())
     width = max(
         900,
-        margin * 2
-        + max_nodes_on_level * node_width
-        + max(0, max_nodes_on_level - 1) * horizontal_gap,
+        margin * 2 + max_nodes_on_level * node_width + max(0, max_nodes_on_level - 1) * horizontal_gap,
     )
-    height = (
-        margin * 2
-        + (max(by_level) + 1) * node_height
-        + max(0, *by_level) * vertical_gap
-    )
+    height = margin * 2 + (max(by_level) + 1) * node_height + max(0, *by_level) * vertical_gap
     positions: dict[str, tuple[int, int]] = {}
     for level, packages in by_level.items():
-        total_width = (
-            len(packages) * node_width + max(0, len(packages) - 1) * horizontal_gap
-        )
+        total_width = len(packages) * node_width + max(0, len(packages) - 1) * horizontal_gap
         start_x = max(margin, (width - total_width) // 2)
         y = margin + level * (node_height + vertical_gap)
         for index, package in enumerate(packages):
@@ -184,9 +168,7 @@ def create_svg(
             positions[package] = (x, y)
     parts = [
         '<?xml version="1.0" encoding="UTF-8"?>',
-        (
-            f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">'
-        ),
+        (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">'),
         "<defs>",
         """
         <marker id="arrow" markerWidth="10" markerHeight="10"
@@ -232,31 +214,27 @@ def create_svg(
         is_root = package in roots
         fill = "#dbeafe" if is_root else "#ffffff"
         stroke = "#2563eb" if is_root else "#9aa0a6"
-        parts.extend(
-            [
-                (
-                    f'<rect x="{x}" y="{y}" width="{node_width}" '
-                    f'height="{node_height}" rx="8" fill="{fill}" '
-                    f'stroke="{stroke}" stroke-width="1.5" '
-                    f'filter="url(#shadow)"/>'
-                ),
-                svg_text(
-                    x + node_width // 2,
-                    y + 26,
-                    package,
-                    font_size=13,
-                    weight="bold" if is_root else "normal",
-                ),
-            ]
-        )
+        parts.extend([
+            (
+                f'<rect x="{x}" y="{y}" width="{node_width}" '
+                f'height="{node_height}" rx="8" fill="{fill}" '
+                f'stroke="{stroke}" stroke-width="1.5" '
+                f'filter="url(#shadow)"/>'
+            ),
+            svg_text(
+                x + node_width // 2,
+                y + 26,
+                package,
+                font_size=13,
+                weight="bold" if is_root else "normal",
+            ),
+        ])
     parts.append("</svg>")
     atomic_write(output, "\n".join(parts), encoding="utf-8")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Create an SVG dependency graph for installed Python packages."
-    )
+    parser = argparse.ArgumentParser(description="Create an SVG dependency graph for installed Python packages.")
     parser.add_argument(
         "-o",
         "--output",

@@ -95,9 +95,7 @@ class DiskAnalyzer:
             return root_item
         results: list[FSItem] = []
         with Pool(processes=POOL_SIZE) as pool:
-            async_results = [
-                pool.apply_async(_scan_recursive, (str(p),)) for p in top_level
-            ]
+            async_results = [pool.apply_async(_scan_recursive, (str(p),)) for p in top_level]
             for ar in async_results:
                 try:
                     results.append(ar.get())

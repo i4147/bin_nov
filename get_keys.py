@@ -63,9 +63,7 @@ def write_lines(lines: list[str], path: Path) -> None:
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Extract JSON keys or values to a text file."
-    )
+    parser = argparse.ArgumentParser(description="Extract JSON keys or values to a text file.")
     parser.add_argument("input", type=Path, help="Path to input JSON file")
     parser.add_argument(
         "-o",

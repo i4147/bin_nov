@@ -47,22 +47,15 @@ def translate_text(text: str, target_lang: str = "en") -> str:
             if result:
                 return result
         except Exception as e:
-            print(
-                f"    [Warning] Fallback translation failed for '{text[:20]}...': {e}"
-            )
+            print(f"    [Warning] Fallback translation failed for '{text[:20]}...': {e}")
     return text
 
 
 def get_node_char_offsets(source_code: str, node: ast.AST) -> tuple[int, int]:
     source_bytes = source_code.encode("utf-8")
     lines_bytes = source_bytes.splitlines(keepends=True)
-    start_byte = (
-        sum(len(lines_bytes[i]) for i in range(node.lineno - 1)) + node.col_offset
-    )
-    end_byte = (
-        sum(len(lines_bytes[i]) for i in range(node.end_lineno - 1))
-        + node.end_col_offset
-    )
+    start_byte = sum(len(lines_bytes[i]) for i in range(node.lineno - 1)) + node.col_offset
+    end_byte = sum(len(lines_bytes[i]) for i in range(node.end_lineno - 1)) + node.end_col_offset
     start_char = len(source_bytes[:start_byte].decode("utf-8", errors="ignore"))
     end_char = len(source_bytes[:end_byte].decode("utf-8", errors="ignore"))
     return start_char, end_char
@@ -87,12 +80,7 @@ def reformat_literal(orig_slice: str, translated_text: str) -> str:
     if quote in ('"""', "'''"):
         escaped = translated_text.replace(quote, "\\" + quote[0] * 3)
     else:
-        escaped = (
-            translated_text.replace("\\", "\\\\")
-            .replace("\n", "\\n")
-            .replace("\r", "\\r")
-            .replace("\t", "\\t")
-        )
+        escaped = translated_text.replace("\\", "\\\\").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
         if quote == '"':
             escaped = escaped.replace('"', '\\"')
         else:
@@ -114,11 +102,7 @@ def process_python_file(file_path: Path) -> bool:
     targets: list[tuple[int, int, str, str]] = []
     for node in ast.walk(tree):
         if (
-            (
-                isinstance(node, ast.Constant)
-                and isinstance(node.value, str)
-                and contains_non_english(node.value)
-            )
+            (isinstance(node, ast.Constant) and isinstance(node.value, str) and contains_non_english(node.value))
             and hasattr(node, "lineno")
             and hasattr(node, "end_lineno")
         ):
@@ -136,13 +120,9 @@ def process_python_file(file_path: Path) -> bool:
         translated_text = translate_text(orig_text)
         if translated_text and translated_text != orig_text:
             new_literal = reformat_literal(orig_slice, translated_text)
-            modified_code = (
-                modified_code[:start_idx] + new_literal + modified_code[end_idx:]
-            )
+            modified_code = modified_code[:start_idx] + new_literal + modified_code[end_idx:]
             changes_count += 1
-            print(
-                f"  - Translated: {orig_text.strip()!r} -> {translated_text.strip()!r}"
-            )
+            print(f"  - Translated: {orig_text.strip()!r} -> {translated_text.strip()!r}")
     if changes_count > 0:
         atomic_write(file_path, modified_code, encoding="utf-8")
         print(f"Updated in-place: {file_path} ({changes_count} literal(s) updated)")
@@ -156,9 +136,7 @@ def resolve_input_paths(inputs: list[str]) -> list[Path]:
     current_script = Path(__file__).resolve()
     target_files: list[Path] = []
     if not inputs:
-        print(
-            "No input files specified. Recursively scanning current directory for .py files..."
-        )
+        print("No input files specified. Recursively scanning current directory for .py files...")
         target_files = [p for p in Path().rglob("*.py") if p.is_file()]
     else:
         for item in inputs:
@@ -169,16 +147,12 @@ def resolve_input_paths(inputs: list[str]) -> list[Path]:
                 target_files.append(p)
             else:
                 print(f"Warning: Ignored '{item}' (not a valid .py file or directory)")
-    unique_files = sorted(
-        {f.resolve() for f in target_files if f.resolve() != current_script}
-    )
+    unique_files = sorted({f.resolve() for f in target_files if f.resolve() != current_script})
     return unique_files
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Translate non-English string literals in Python scripts in-place."
-    )
+    parser = argparse.ArgumentParser(description="Translate non-English string literals in Python scripts in-place.")
     parser.add_argument(
         "files",
         nargs="*",

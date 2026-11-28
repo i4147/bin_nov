@@ -37,9 +37,7 @@ from dh import MAX_WORKERS
 from loguru import logger
 
 
-PERSIAN_RE: Final = re.compile(
-    r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]"
-)
+PERSIAN_RE: Final = re.compile(r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]")
 
 
 def contains_persian(text: str) -> bool:
@@ -56,9 +54,7 @@ def write_json(path: Path, data: dict[str, str]) -> None:
         json.dump(data, file, ensure_ascii=False, indent=2)
 
 
-def rewrite_lines(
-    path: Path, original_lines: Sequence[str], translations: dict[str, str]
-) -> None:
+def rewrite_lines(path: Path, original_lines: Sequence[str], translations: dict[str, str]) -> None:
     with path.open("w", encoding="utf-8") as file:
         for line in original_lines:
             file.write(f"{translations.get(line, line)}\n")
@@ -204,9 +200,7 @@ def translate_words(
     translations: dict[str, str] = {}
     if processes <= 1:
         for word in words:
-            _, translated = _translate_word_worker(
-                (word, source, target, retries, retry_delay)
-            )
+            _, translated = _translate_word_worker((word, source, target, retries, retry_delay))
             if translated:
                 translations[word] = translated
                 logger.info("{} → {}", word, translated)
@@ -263,9 +257,7 @@ def cmd_lines(args: argparse.Namespace) -> int:
         retries=args.retries,
         retry_delay=args.retry_delay,
     )
-    json_path: Path = (
-        args.json_out if args.json_out is not None else input_path.with_suffix(".json")
-    )
+    json_path: Path = args.json_out if args.json_out is not None else input_path.with_suffix(".json")
     try:
         write_json(json_path, translations)
         logger.info("Saved {} translations to {}", len(translations), json_path.name)
@@ -312,9 +304,7 @@ def cmd_words(args: argparse.Namespace) -> int:
         retries=args.retries,
         retry_delay=args.retry_delay,
     )
-    output_path: Path = (
-        args.output if args.output is not None else input_path.with_suffix(".json")
-    )
+    output_path: Path = args.output if args.output is not None else input_path.with_suffix(".json")
     try:
         write_json(output_path, translations)
         logger.info(
@@ -337,9 +327,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command")
     lines_parser = subparsers.add_parser(
         "lines",
-        help=(
-            "Translate Persian lines in a text file, update the file in place, and write a JSON dictionary."
-        ),
+        help=("Translate Persian lines in a text file, update the file in place, and write a JSON dictionary."),
     )
     lines_parser.add_argument("input_file", type=Path, help="Input text file.")
     lines_parser.add_argument(

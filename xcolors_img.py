@@ -28,9 +28,7 @@ def get_colors(image_path: str) -> tuple[int,]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Extract RGB and Hex color values from an image."
-    )
+    parser = argparse.ArgumentParser(description="Extract RGB and Hex color values from an image.")
     parser.add_argument("image", help="Path to the input image")
 
     # Mutually exclusive group; brief is the default behavior when neither is passed
@@ -66,15 +64,11 @@ def main() -> None:
     color_counts, total_pixels = get_colors(args.image)
 
     if args.full:
-        print(
-            f"Full Color Report ({len(color_counts)} unique colors across {total_pixels} pixels):"
-        )
+        print(f"Full Color Report ({len(color_counts)} unique colors across {total_pixels} pixels):")
         print("-" * 55)
         for rgb, count in color_counts:
             percentage = (count / total_pixels) * 100
-            print(
-                f"RGB: {rgb!s:<16} | Hex: {rgb_to_hex(rgb)} | Count: {count:<8} ({percentage:.2f}%)"
-            )
+            print(f"RGB: {rgb!s:<16} | Hex: {rgb_to_hex(rgb)} | Count: {count:<8} ({percentage:.2f}%)")
     else:
         # Runs by default when no flag is provided or when -b/--brief is passed
         print("Top 5 Most Frequent Colors:")

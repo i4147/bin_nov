@@ -68,11 +68,7 @@ def fix_source_code(source_bytes: bytes) -> tuple[bytes, bool]:
 
                         new_content = re.sub(r"\\(.)", replacer, content)
                         new_string = prefix + quote + new_content + end_quote
-                    out_tokens.append(
-                        tokenize.TokenInfo(
-                            tok.type, new_string, tok.start, tok.end, tok.line
-                        )
-                    )
+                    out_tokens.append(tokenize.TokenInfo(tok.type, new_string, tok.start, tok.end, tok.line))
                     continue
         out_tokens.append(tok)
     if changed:
@@ -95,9 +91,7 @@ def main() -> None:
                     ast.parse(new_bytes)
                 except SyntaxError as e:
                     rel_path = py_file.relative_to(root)
-                    print(
-                        f"⚠️  Skipping {rel_path} - Syntax error introduced during fix: {e}"
-                    )
+                    print(f"⚠️  Skipping {rel_path} - Syntax error introduced during fix: {e}")
                     error_files.append(rel_path)
                     continue
                 atomic_write(py_file, new_bytes)

@@ -235,9 +235,7 @@ def _iter_tar_zst_native(path: Path, messages: list[str]) -> Iterator[tuple[str,
         messages.append(f"[skip] {path}: {e}")
 
 
-def _iter_tar_zst_zstandard(
-    path: Path, messages: list[str]
-) -> Iterator[tuple[str, str]]:
+def _iter_tar_zst_zstandard(path: Path, messages: list[str]) -> Iterator[tuple[str, str]]:
     try:
         import zstandard
     except ImportError:
@@ -266,9 +264,7 @@ def _iter_tar_zst_python(path: Path, messages: list[str]) -> Iterator[tuple[str,
         yield from _iter_tar_zst_zstandard(path, messages)
 
 
-def _iter_sources_from_path(
-    path: Path, messages: list[str]
-) -> Iterator[tuple[str, str]]:
+def _iter_sources_from_path(path: Path, messages: list[str]) -> Iterator[tuple[str, str]]:
     name = path.name
     if name.endswith(".py"):
         try:
@@ -363,9 +359,7 @@ def main() -> None:
         paths = _collect_paths(directory, [])
         progress.update(task, total=len(paths))
         with mp.Pool() as pool:
-            for fd, cd, nu, au, msgs in pool.imap_unordered(
-                process_path, paths, chunksize=8
-            ):
+            for fd, cd, nu, au, msgs in pool.imap_unordered(process_path, paths, chunksize=8):
                 progress.update(task, advance=1)
                 for msg in msgs:
                     progress.console.log(msg)

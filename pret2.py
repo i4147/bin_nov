@@ -135,9 +135,7 @@ def main() -> None:
                 logger.info("✅ Formatted: {}", result.path.name)
                 success_count += 1
             else:
-                logger.error(
-                    "❌ Error: {} | Reason: {}", result.path.name, result.error_msg
-                )
+                logger.error("❌ Error: {} | Reason: {}", result.path.name, result.error_msg)
                 error_count += 1
     logger.info("Summary: {} success, {} errors.", success_count, error_count)
 

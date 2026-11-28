@@ -17,28 +17,26 @@ import typer
 if TYPE_CHECKING:
     from pathlib import Path
 
-LEGACY_COLORS: frozenset[str] = frozenset(
-    {
-        "black",
-        "red",
-        "green",
-        "yellow",
-        "blue",
-        "magenta",
-        "cyan",
-        "white",
-        "grey",
-        "gray",
-        "light_red",
-        "light_green",
-        "light_yellow",
-        "light_blue",
-        "light_magenta",
-        "light_cyan",
-        "dark_grey",
-        "light_grey",
-    }
-)
+LEGACY_COLORS: frozenset[str] = frozenset({
+    "black",
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "white",
+    "grey",
+    "gray",
+    "light_red",
+    "light_green",
+    "light_yellow",
+    "light_blue",
+    "light_magenta",
+    "light_cyan",
+    "dark_grey",
+    "light_grey",
+})
 
 
 class _Codemod(cst.CSTTransformer):
@@ -47,11 +45,7 @@ class _Codemod(cst.CSTTransformer):
 
     def leave_Call(self, original: cst.Call, updated: cst.Call) -> cst.Call:
         f = updated.func
-        name = (
-            f.value
-            if isinstance(f, cst.Name)
-            else (f.attr.value if isinstance(f, cst.Attribute) else None)
-        )
+        name = f.value if isinstance(f, cst.Name) else (f.attr.value if isinstance(f, cst.Attribute) else None)
         if name != "cprint":
             return updated
 
@@ -135,9 +129,7 @@ app = typer.Typer(add_completion=False)
 @app.command()
 def main(
     paths: list[Path] = typer.Argument(..., help="Files or directories to scan."),
-    write: bool = typer.Option(
-        False, "--write", help="Apply changes (default is dry-run)."
-    ),
+    write: bool = typer.Option(False, "--write", help="Apply changes (default is dry-run)."),
 ) -> None:
     files = _collect(paths)
 

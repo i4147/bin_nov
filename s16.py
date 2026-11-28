@@ -65,8 +65,7 @@ def get_files(path: Path) -> list[Path]:
     return [
         file
         for file in path.rglob("*")
-        if file.is_file()
-        and not file.stem.endswith(tuple(f"_{number:03d}" for number in range(1000)))
+        if file.is_file() and not file.stem.endswith(tuple(f"_{number:03d}" for number in range(1000)))
     ]
 
 

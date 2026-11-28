@@ -23,7 +23,9 @@ from dh import MAX_WORKERS
 import requests
 
 
-UA: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+UA: str = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
 HEADERS: dict[str, str] = {
     "User-Agent": UA,
     "Accept": "*/*",
@@ -43,9 +45,7 @@ QUALITY_ORDER: list[str] = [
     "unknown",
 ]
 MEDIA_EXT: str = r"(?:mp4|m3u8|mkv|webm|mov|m4v|ts|avi|flv)"
-ABS_LINK_RE = re.compile(
-    r"https?://[^\s\"'<>\\]+?\." + MEDIA_EXT + r"(?:\?[^\s\"'<>\\]*)?", re.IGNORECASE
-)
+ABS_LINK_RE = re.compile(r"https?://[^\s\"'<>\\]+?\." + MEDIA_EXT + r"(?:\?[^\s\"'<>\\]*)?", re.IGNORECASE)
 REL_LINK_RE = re.compile(
     r"""(?:src|href|data-src|data-video|data-file|file|url)\s*[=:]\s*"""
     r"""["']([^"']+?\.""" + MEDIA_EXT + r"""(?:\?[^"']*)?)["']""",
@@ -83,9 +83,7 @@ def quality_rank(q: str) -> int:
 
 def guess_quality(*texts: Any) -> str:
     blob = " ".join(t for t in texts if t)
-    m = re.search(
-        r"(?<![\d])(2160|1440|1080|900|720|576|540|480|360|240)\s*[pP](?!\w)", blob
-    )
+    m = re.search(r"(?<![\d])(2160|1440|1080|900|720|576|540|480|360|240)\s*[pP](?!\w)", blob)
     if m:
         return m.group(1) + "p"
     m = re.search(r"(?<![\d])(2160|1440|1080|720|576|480|360|240)(?![\d])", blob)
@@ -188,15 +186,13 @@ def parse_master_playlist(text: str, base_url: str) -> list:
             except ValueError:
                 height = None
         bw = attrs.get("BANDWIDTH", "")
-        variants.append(
-            {
-                "url": full,
-                "height": height,
-                "resolution": res or None,
-                "bandwidth": int(bw) if bw.isdigit() else None,
-                "codecs": attrs.get("CODECS"),
-            }
-        )
+        variants.append({
+            "url": full,
+            "height": height,
+            "resolution": res or None,
+            "bandwidth": int(bw) if bw.isdigit() else None,
+            "codecs": attrs.get("CODECS"),
+        })
     return variants
 
 
@@ -240,9 +236,7 @@ def sum_sizes(urls: list, timeout: float, workers: int = 16):
     return total, ok, unknown
 
 
-def hls_entry(
-    url: str, quality: str, args: list[Any], extra: dict | None = None
-) -> dict:
+def hls_entry(url: str, quality: str, args: list[Any], extra: dict | None = None) -> dict:
     text = fetch_text(url, args.timeout)
     segs, duration, byterange = parse_media_playlist(text, url)
     entry = {
@@ -316,16 +310,14 @@ def analyze(
         try:
             text = fetch_text(final, args.timeout)
         except requests.RequestException as e:
-            entries.append(
-                {
-                    "url": final,
-                    "quality": guess_quality(final),
-                    "kind": "hls",
-                    "size_bytes": None,
-                    "size_human": "unknown",
-                    "error": str(e),
-                }
-            )
+            entries.append({
+                "url": final,
+                "quality": guess_quality(final),
+                "kind": "hls",
+                "size_bytes": None,
+                "size_human": "unknown",
+                "error": str(e),
+            })
             return entries
         if "#EXT-X-STREAM-INF" in text.upper():
             for v in parse_master_playlist(text, final):
@@ -338,31 +330,27 @@ def analyze(
                 try:
                     entries.append(hls_entry(v["url"], q, args, extra))
                 except requests.RequestException as e:
-                    entries.append(
-                        {
-                            "url": v["url"],
-                            "quality": q,
-                            "kind": "hls",
-                            "size_bytes": None,
-                            "size_human": "unknown",
-                            "error": str(e),
-                            **extra,
-                        }
-                    )
+                    entries.append({
+                        "url": v["url"],
+                        "quality": q,
+                        "kind": "hls",
+                        "size_bytes": None,
+                        "size_human": "unknown",
+                        "error": str(e),
+                        **extra,
+                    })
             return entries
         try:
             entries.append(hls_entry(final, guess_quality(final), args))
         except requests.RequestException as e:
-            entries.append(
-                {
-                    "url": final,
-                    "quality": guess_quality(final),
-                    "kind": "hls",
-                    "size_bytes": None,
-                    "size_human": "unknown",
-                    "error": str(e),
-                }
-            )
+            entries.append({
+                "url": final,
+                "quality": guess_quality(final),
+                "kind": "hls",
+                "size_bytes": None,
+                "size_human": "unknown",
+                "error": str(e),
+            })
         return entries
     if is_html:
         try:
@@ -375,17 +363,15 @@ def analyze(
         for link in links:
             analyze(link, args, depth + 1, entries, seen)
         return entries
-    entries.append(
-        {
-            "url": final,
-            "quality": guess_quality(final, Path(urlparse(final).path).name),
-            "kind": "file",
-            "content_type": ctype,
-            "size_bytes": size,
-            "size_human": human_size(size),
-            "size_is_estimate": False,
-        }
-    )
+    entries.append({
+        "url": final,
+        "quality": guess_quality(final, Path(urlparse(final).path).name),
+        "kind": "file",
+        "content_type": ctype,
+        "size_bytes": size,
+        "size_human": human_size(size),
+        "size_is_estimate": False,
+    })
     return entries
 
 
@@ -398,9 +384,7 @@ def build_report(source: str, entries: list) -> dict:
     total = sum(known) if known else None
     return {
         "source": source,
-        "generated_at": datetime.now(timezone.utc)
-        .astimezone()
-        .isoformat(timespec="seconds"),
+        "generated_at": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
         "video_count": len(entries),
         "videos_with_known_size": len(known),
         "total_bytes": total,
@@ -460,9 +444,7 @@ def print_report(report: dict) -> None:
         if v.get("segments"):
             flags.append(f"{v['segments']} segs")
         note = ("  [" + ", ".join(flags) + "]") if flags else ""
-        print(
-            f"  {v.get('quality', 'unknown'):>7} | {v['size_human']:>11} | {v['url']}{note}"
-        )
+        print(f"  {v.get('quality', 'unknown'):>7} | {v['size_human']:>11} | {v['url']}{note}")
     print(line)
 
 
@@ -471,12 +453,8 @@ def main(argv: list[str] | None = None) -> int:
         description="Report the size of videos behind direct links, web pages and HLS playlists."
     )
     ap.add_argument("urls", nargs="+", help="video url / web page / m3u8 playlist")
-    ap.add_argument(
-        "--outdir", default="reports", help="where to write JSON (default: reports)"
-    )
-    ap.add_argument(
-        "--timeout", type=float, default=25.0, help="HTTP timeout in seconds"
-    )
+    ap.add_argument("--outdir", default="reports", help="where to write JSON (default: reports)")
+    ap.add_argument("--timeout", type=float, default=25.0, help="HTTP timeout in seconds")
     ap.add_argument(
         "--max-depth",
         type=int,

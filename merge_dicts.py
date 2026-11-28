@@ -31,25 +31,23 @@ import tempfile
 # --- normalization -------------------------------------------------------
 
 # Arabic/Persian look-alike characters -> canonical Persian form
-_CHAR_MAP = str.maketrans(
-    {
-        "ي": "ی",  # Arabic yeh      -> Persian yeh
-        "ى": "ی",  # alef maksura    -> Persian yeh
-        "ك": "ک",  # Arabic kaf      -> Persian kaf
-        "\u200c": " ",  # ZWNJ -> space (for comparison only)
-        "\u200f": "",  # RLM
-        "\u200e": "",  # LRM
-        "\u064b": "",  # Arabic diacritics (fathatan)
-        "\u064c": "",
-        "\u064d": "",
-        "\u064e": "",
-        "\u064f": "",
-        "\u0650": "",
-        "\u0651": "",
-        "\u0652": "",
-        "\u0670": "",
-    }
-)
+_CHAR_MAP = str.maketrans({
+    "ي": "ی",  # Arabic yeh      -> Persian yeh
+    "ى": "ی",  # alef maksura    -> Persian yeh
+    "ك": "ک",  # Arabic kaf      -> Persian kaf
+    "\u200c": " ",  # ZWNJ -> space (for comparison only)
+    "\u200f": "",  # RLM
+    "\u200e": "",  # LRM
+    "\u064b": "",  # Arabic diacritics (fathatan)
+    "\u064c": "",
+    "\u064d": "",
+    "\u064e": "",
+    "\u064f": "",
+    "\u0650": "",
+    "\u0651": "",
+    "\u0652": "",
+    "\u0670": "",
+})
 
 _WS_RE = re.compile(r"\s+")
 
@@ -131,9 +129,7 @@ def check_target_available(target: Path) -> None:
 # --- writing -------------------------------------------------------------
 
 
-def write_json_atomic(
-    path: Path, data: dict, *, indent: int = 2, ensure_ascii: bool = False
-) -> None:
+def write_json_atomic(path: Path, data: dict, *, indent: int = 2, ensure_ascii: bool = False) -> None:
     """Write JSON to `path` via a temp file + rename, so a crash can't
     corrupt the target."""
     path = path.resolve()
@@ -175,9 +171,7 @@ def main(argv: list[str] | None = None) -> int:
         "in-place rewrite of the input; in merge mode "
         "defaults to 'merged.json'. Must not already exist.",
     )
-    parser.add_argument(
-        "--indent", type=int, default=2, help="JSON indentation (default: 2)"
-    )
+    parser.add_argument("--indent", type=int, default=2, help="JSON indentation (default: 2)")
     parser.add_argument(
         "--ensure-ascii",
         action="store_true",

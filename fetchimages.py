@@ -182,10 +182,7 @@ def crawl(
             seen_images.add(img_url)
             st, ct, data = fetch(img_url, timeout=timeout)
             if st == 200 and data:
-                is_img = (
-                    ct.startswith("image/")
-                    or Path(urlparse(img_url).path).suffix.lower() in IMAGE_EXTS
-                )
+                is_img = ct.startswith("image/") or Path(urlparse(img_url).path).suffix.lower() in IMAGE_EXTS
                 if is_img:
                     path = save_image(img_url, data, out_dir)
                     print(f"  -> saved {path}")
@@ -202,15 +199,11 @@ def crawl(
                 continue
             if nxt not in visited_pages:
                 queue.append((nxt, depth + 1))
-    print(
-        f"\nDone. Pages crawled: {len(visited_pages)}  Images downloaded: {len(seen_images)}"
-    )
+    print(f"\nDone. Pages crawled: {len(visited_pages)}  Images downloaded: {len(seen_images)}")
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(
-        description="Recursively download images from a website."
-    )
+    ap = argparse.ArgumentParser(description="Recursively download images from a website.")
     ap.add_argument("url", help="Starting URL, e.g. https://example.com/")
     ap.add_argument(
         "-o",
@@ -224,15 +217,9 @@ def main() -> int:
         default=200,
         help="Maximum number of HTML pages to crawl",
     )
-    ap.add_argument(
-        "--max-depth", type=int, default=3, help="Maximum link-following depth"
-    )
-    ap.add_argument(
-        "--all-hosts", action="store_true", help="Follow links to external hosts too"
-    )
-    ap.add_argument(
-        "--timeout", type=int, default=30, help="Per-request timeout in seconds"
-    )
+    ap.add_argument("--max-depth", type=int, default=3, help="Maximum link-following depth")
+    ap.add_argument("--all-hosts", action="store_true", help="Follow links to external hosts too")
+    ap.add_argument("--timeout", type=int, default=30, help="Per-request timeout in seconds")
     args = ap.parse_args()
     crawl(
         start_url=args.url,

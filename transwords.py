@@ -64,9 +64,7 @@ def chunk_file(file_path: Path, chunk_size: int = CHUNK_SIZE) -> list[Chunk]:
     return chunks
 
 
-def translate_chunk(
-    chunk_data: Chunk, chunk_index: int, total_chunks: int
-) -> TranslationResult | None:
+def translate_chunk(chunk_data: Chunk, chunk_index: int, total_chunks: int) -> TranslationResult | None:
     start_line, end_line, text = chunk_data
     if chunk_index > 0:
         time.sleep(2)
@@ -102,8 +100,7 @@ def main() -> None:
     total_chunks: int = len(chunks)
     with Pool(processes=MAX_WORKERS) as pool:
         async_results: list[AsyncResult[TranslationResult | None]] = [
-            pool.apply_async(translate_chunk, (chunk, idx, total_chunks))
-            for idx, chunk in enumerate(chunks)
+            pool.apply_async(translate_chunk, (chunk, idx, total_chunks)) for idx, chunk in enumerate(chunks)
         ]
         for i, async_res in enumerate(async_results, 1):
             result: TranslationResult | None = async_res.get()

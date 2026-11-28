@@ -94,27 +94,21 @@ def check_and_fix_file(args: list[Any]):
                             new_string = prefix + "r" + rest
                             issues.append((tok.start[0], tok.string, new_string))
                             try:
-                                original_ast = ast.dump(
-                                    ast.parse(tok.string, mode="eval")
-                                )
-                                replacement_ast = ast.dump(
-                                    ast.parse(new_string, mode="eval")
-                                )
+                                original_ast = ast.dump(ast.parse(tok.string, mode="eval"))
+                                replacement_ast = ast.dump(ast.parse(new_string, mode="eval"))
                             except SyntaxError:
                                 manual_review_lines.append(tok.start[0])
                                 continue
                             if original_ast != replacement_ast:
                                 manual_review_lines.append(tok.start[0])
                                 continue
-                            replacements.append(
-                                (
-                                    tok.start[0],
-                                    tok.start[1],
-                                    tok.end[0],
-                                    tok.end[1],
-                                    new_string,
-                                )
-                            )
+                            replacements.append((
+                                tok.start[0],
+                                tok.start[1],
+                                tok.end[0],
+                                tok.end[1],
+                                new_string,
+                            ))
     if not issues:
         return filepath_str, False, [], None
     lines = source_text.splitlines(keepends=True)
@@ -133,9 +127,7 @@ def check_and_fix_file(args: list[Any]):
             output.append(f"  {idx + 2}: {next_line}")
         output.append("-" * 40)
     for lineno in sorted(set(manual_review_lines)):
-        output.append(
-            f"Line {lineno} needs manual review; a raw string could change its meaning or be invalid."
-        )
+        output.append(f"Line {lineno} needs manual review; a raw string could change its meaning or be invalid.")
     new_content = None
     if fix and replacements:
         replacements.sort(key=lambda x: (x[0], x[1]), reverse=True)
@@ -189,9 +181,7 @@ def main() -> None:
         sys.exit(0)
     tasks = [(str(f), args.apply) for f in files]
     with mp.Pool(8) as pool:
-        for filepath_str, has_issues, output_lines, new_content in pool.imap_unordered(
-            check_and_fix_file, tasks
-        ):
+        for filepath_str, has_issues, output_lines, new_content in pool.imap_unordered(check_and_fix_file, tasks):
             if has_issues:
                 for line in output_lines:
                     print(line)

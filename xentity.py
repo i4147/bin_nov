@@ -86,14 +86,10 @@ def _filter_trys_and_imports(
 
     candidate_trys = [(t, anc) for t, anc in try_nodes if id(t) in try_ids_with_imports]
     candidate_ids = {id(t) for t, _ in candidate_trys}
-    outermost_trys = [
-        t for t, anc in candidate_trys if not any(id(a) in candidate_ids for a in anc)
-    ]
+    outermost_trys = [t for t, anc in candidate_trys if not any(id(a) in candidate_ids for a in anc)]
 
     try_ids = {id(t) for t in outermost_trys}
-    individual_imports = [
-        imp for imp, anc in import_nodes if not any(id(a) in try_ids for a in anc)
-    ]
+    individual_imports = [imp for imp, anc in import_nodes if not any(id(a) in try_ids for a in anc)]
     return outermost_trys + individual_imports
 
 
@@ -172,11 +168,7 @@ def _cst_classify(node: object, cst: object) -> str | None:
             inner = target.target
             if isinstance(inner, cst.Name) and _is_const_name(inner.value):
                 return "const"
-    if (
-        isinstance(node, cst.AnnAssign)
-        and isinstance(node.target, cst.Name)
-        and _is_const_name(node.target.value)
-    ):
+    if isinstance(node, cst.AnnAssign) and isinstance(node.target, cst.Name) and _is_const_name(node.target.value):
         return "const"
     return None
 
@@ -239,11 +231,7 @@ def _ast_classify(node: ast.AST) -> str | None:
         for target in node.targets:
             if isinstance(target, ast.Name) and _is_const_name(target.id):
                 return "const"
-    if (
-        isinstance(node, ast.AnnAssign)
-        and isinstance(node.target, ast.Name)
-        and _is_const_name(node.target.id)
-    ):
+    if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and _is_const_name(node.target.id):
         return "const"
     return None
 
@@ -325,9 +313,7 @@ def _is_python_file(path: Path) -> bool:
 
 def _walk_dir(root: Path) -> Iterator[Path]:
     for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
-        dirnames[:] = [
-            d for d in dirnames if d not in SKIP_DIRS and not d.startswith(".")
-        ]
+        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS and not d.startswith(".")]
         base = Path(dirpath)
         for fn in filenames:
             p = base / fn

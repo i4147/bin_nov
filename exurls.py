@@ -34,19 +34,17 @@ if TYPE_CHECKING:
 
 def create_session() -> Session:
     session = requests.Session()
-    session.headers.update(
-        {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-            ),
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.9,fa;q=0.8",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
-            "Upgrade-Insecure-Requests": "1",
-            "Cache-Control": "max-age=0",
-        }
-    )
+    session.headers.update({
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9,fa;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Cache-Control": "max-age=0",
+    })
     return session
 
 
@@ -73,9 +71,7 @@ def extract_links(url: str, session: requests.Session):
     return sorted(links)
 
 
-def split_internal_external(
-    base_url: str, links: Iterable[Any]
-) -> tuple[list[Any], list[Any]]:
+def split_internal_external(base_url: str, links: Iterable[Any]) -> tuple[list[Any], list[Any]]:
     base_domain = urlparse(base_url).netloc
     internal = []
     external = []
@@ -95,9 +91,7 @@ def save_links(name: str, links: Sequence[Any]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Extract and save all URLs from a webpage"
-    )
+    parser = argparse.ArgumentParser(description="Extract and save all URLs from a webpage")
     parser.add_argument("url", nargs="?", help="Target URL")
     args = parser.parse_args()
     url = args.url or input("Enter URL: ").strip()
@@ -125,9 +119,7 @@ def main() -> None:
         save_links("internal.txt", internal)
     if external:
         save_links("external.txt", external)
-    print(
-        f"Total links: {len(links)} (Internal: {len(internal)}, External: {len(external)})"
-    )
+    print(f"Total links: {len(links)} (Internal: {len(internal)}, External: {len(external)})")
 
 
 if __name__ == "__main__":

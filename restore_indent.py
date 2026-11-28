@@ -33,11 +33,7 @@ def restore_indentation(source_code: str, indent_size: int = 4) -> str:
         else:
             target_indent = block_stack[-1]["indent"]
 
-        if (
-            not is_branch
-            and len(block_stack) > 1
-            and block_stack[-1].get("expect_indent", False)
-        ):
+        if not is_branch and len(block_stack) > 1 and block_stack[-1].get("expect_indent", False):
             target_indent = block_stack[-1]["indent"] + indent_size
             block_stack[-1]["expect_indent"] = False
 
@@ -52,15 +48,8 @@ def restore_indentation(source_code: str, indent_size: int = 4) -> str:
                 }
             else:
                 block_type = line.split()[0] if line else "block"
-                block_stack.append(
-                    {"type": block_type, "indent": target_indent, "expect_indent": True}
-                )
-        elif (
-            line.startswith(
-                ("def ", "class ", "import ", "from ", "BACKENDS =", "DEFAULT_")
-            )
-            and len(block_stack) > 1
-        ):
+                block_stack.append({"type": block_type, "indent": target_indent, "expect_indent": True})
+        elif line.startswith(("def ", "class ", "import ", "from ", "BACKENDS =", "DEFAULT_")) and len(block_stack) > 1:
             while len(block_stack) > 1:
                 block_stack.pop()
             target_indent = block_stack[-1]["indent"]
@@ -70,12 +59,8 @@ def restore_indentation(source_code: str, indent_size: int = 4) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Restore indentation to unindented Python files."
-    )
-    parser.add_argument(
-        "input", type=Path, help="Input Python file with lost indentation"
-    )
+    parser = argparse.ArgumentParser(description="Restore indentation to unindented Python files.")
+    parser.add_argument("input", type=Path, help="Input Python file with lost indentation")
     parser.add_argument(
         "-o",
         "--output",

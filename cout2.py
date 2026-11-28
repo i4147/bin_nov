@@ -110,9 +110,7 @@ def process_lines(
     last: int = len(lines) if end is None else min(end, len(lines))
     changed: int = 0
     for index in range(start - 1, last):
-        new: str = (uncomment_line if undo else comment_line)(
-            lines[index], open_token, close_token
-        )
+        new: str = (uncomment_line if undo else comment_line)(lines[index], open_token, close_token)
         if new != lines[index]:
             lines[index] = new
             changed += 1
@@ -127,9 +125,7 @@ def cmd_comment(args: argparse.Namespace) -> int:
     if args.start < 1 or (args.end is not None and args.end < args.start):
         print("Error: lines are 1-based and end must be >= start.", file=sys.stderr)
         return 2
-    lines: list[str] = path.read_text(encoding="utf-8", errors="ignore").splitlines(
-        keepends=True
-    )
+    lines: list[str] = path.read_text(encoding="utf-8", errors="ignore").splitlines(keepends=True)
     if args.start > len(lines):
         print(
             f"Error: start line {args.start} exceeds file length ({len(lines)} lines).",
@@ -137,9 +133,7 @@ def cmd_comment(args: argparse.Namespace) -> int:
         )
         return 1
     open_token, close_token = tokens_for(path, args.token)
-    changed: int = process_lines(
-        lines, args.start, args.end, open_token, close_token, args.undo
-    )
+    changed: int = process_lines(lines, args.start, args.end, open_token, close_token, args.undo)
     verb: str = "Uncommented" if args.undo else "Commented"
     if args.stdout:
         print("".join(lines), end="")
@@ -155,31 +149,17 @@ def cmd_comment(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Comment/uncomment a line range in a file."
-    )
+    parser = argparse.ArgumentParser(description="Comment/uncomment a line range in a file.")
     sub = parser.add_subparsers(dest="command", required=True)
     cmd = sub.add_parser("comment", help="Comment (or --undo) lines START..END")
     cmd.add_argument("file", type=Path)
     cmd.add_argument("start", type=int, help="First line (1-based)")
-    cmd.add_argument(
-        "end", nargs="?", type=int, default=None, help="Last line (default: EOF)"
-    )
-    cmd.add_argument(
-        "--token", default=None, help="Comment token override, e.g. --token //"
-    )
-    cmd.add_argument(
-        "--undo", action="store_true", help="Uncomment instead of commenting"
-    )
-    cmd.add_argument(
-        "-n", "--dry-run", action="store_true", help="Only report how many lines change"
-    )
-    cmd.add_argument(
-        "--stdout", action="store_true", help="Print result instead of writing the file"
-    )
-    cmd.add_argument(
-        "--backup", action="store_true", help="Keep a .bak copy before writing"
-    )
+    cmd.add_argument("end", nargs="?", type=int, default=None, help="Last line (default: EOF)")
+    cmd.add_argument("--token", default=None, help="Comment token override, e.g. --token //")
+    cmd.add_argument("--undo", action="store_true", help="Uncomment instead of commenting")
+    cmd.add_argument("-n", "--dry-run", action="store_true", help="Only report how many lines change")
+    cmd.add_argument("--stdout", action="store_true", help="Print result instead of writing the file")
+    cmd.add_argument("--backup", action="store_true", help="Keep a .bak copy before writing")
     cmd.set_defaults(handler=cmd_comment)
     return parser
 

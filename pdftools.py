@@ -82,9 +82,7 @@ def scan_resources(job: tuple[str, int, int]) -> tuple[list[int], list[int]]:
     fonts: set[int] = set()
     with pymupdf.open(pdf_name) as document:
         for number in range(start, end):
-            images.update(
-                item[0] for item in document.get_page_images(number, full=True)
-            )
+            images.update(item[0] for item in document.get_page_images(number, full=True))
             fonts.update(item[0] for item in document.get_page_fonts(number, full=True))
     images.discard(0)
     fonts.discard(0)
@@ -121,9 +119,7 @@ def extract_fonts(job: tuple[str, list[int], str]) -> int:
                 continue
             if not content or ext == "n/a":
                 continue
-            atomic_write(
-                (folder / f"{safe_name(str(name), 'font')}_{xref:06d}.{ext}"), content
-            )
+            atomic_write((folder / f"{safe_name(str(name), 'font')}_{xref:06d}.{ext}"), content)
             saved += 1
     return saved
 
@@ -135,18 +131,14 @@ def extract_annotation_files(job: tuple[str, int, int, str]) -> int:
     with pymupdf.open(pdf_name) as document:
         for number in range(start, end):
             page = document.load_page(number)
-            for index, annot in enumerate(
-                page.annots(types=[pymupdf.PDF_ANNOT_FILE_ATTACHMENT])
-            ):
+            for index, annot in enumerate(page.annots(types=[pymupdf.PDF_ANNOT_FILE_ATTACHMENT])):
                 try:
                     info = annot.file_info
                     content = annot.get_file()
                 except (RuntimeError, ValueError):
                     continue
                 filename = safe_name(str(info.get("filename") or ""), "attachment")
-                atomic_write(
-                    (folder / f"page{number + 1:04d}_{index:02d}_{filename}"), content
-                )
+                atomic_write((folder / f"page{number + 1:04d}_{index:02d}_{filename}"), content)
                 saved += 1
     return saved
 
@@ -166,9 +158,7 @@ def extract_embedded_files(pdf: Path, target: Path) -> int:
     return saved
 
 
-def run_per_page(
-    pdf: Path, out_root: Path, pool: ProcessPoolExecutor, jobs: int
-) -> int:
+def run_per_page(pdf: Path, out_root: Path, pool: ProcessPoolExecutor, jobs: int) -> int:
     total = count_pages(pdf)
     width = len(str(total))
     folder = out_root / pdf.stem
@@ -177,9 +167,7 @@ def run_per_page(
     chunksize = max(1, total // (jobs * 4))
     results = pool.map(extract_one_page, tasks, chunksize=chunksize)
     for number, text in enumerate(results, start=1):
-        atomic_write(
-            (folder / f"{pdf.stem}_page_{number:0{width}d}.txt"), text, encoding="utf-8"
-        )
+        atomic_write((folder / f"{pdf.stem}_page_{number:0{width}d}.txt"), text, encoding="utf-8")
     return total
 
 
@@ -188,45 +176,28 @@ def run_split(pdf: Path, out_root: Path, pool: ProcessPoolExecutor, jobs: int) -
     width = len(str(total))
     folder = out_root / pdf.stem
     folder.mkdir(parents=True, exist_ok=True)
-    tasks = [
-        (str(pdf), number, str(folder / f"{pdf.stem}_page_{number + 1:0{width}d}.pdf"))
-        for number in range(total)
-    ]
+    tasks = [(str(pdf), number, str(folder / f"{pdf.stem}_page_{number + 1:0{width}d}.pdf")) for number in range(total)]
     chunksize = max(1, total // (jobs * 4))
     for _ in pool.map(split_one_page, tasks, chunksize=chunksize):
         pass
     return total
 
 
-def run_extract(
-    pdf: Path, out_root: Path, pool: ProcessPoolExecutor, jobs: int
-) -> dict[str, int]:
+def run_extract(pdf: Path, out_root: Path, pool: ProcessPoolExecutor, jobs: int) -> dict[str, int]:
     total = count_pages(pdf)
     base = out_root / pdf.stem
-    folders: dict[str, Path] = {
-        name: base / name for name in ("images", "fonts", "attachments")
-    }
+    folders: dict[str, Path] = {name: base / name for name in ("images", "fonts", "attachments")}
     for folder in folders.values():
         folder.mkdir(parents=True, exist_ok=True)
     ranges = [(part[0], part[-1] + 1) for part in chunked(range(total), jobs * 2)]
     image_xrefs: set[int] = set()
     font_xrefs: set[int] = set()
-    for images, fonts in pool.map(
-        scan_resources, [(str(pdf), start, end) for start, end in ranges]
-    ):
+    for images, fonts in pool.map(scan_resources, [(str(pdf), start, end) for start, end in ranges]):
         image_xrefs.update(images)
         font_xrefs.update(fonts)
-    image_jobs = [
-        (str(pdf), part, str(folders["images"]))
-        for part in chunked(sorted(image_xrefs), jobs)
-    ]
-    font_jobs = [
-        (str(pdf), part, str(folders["fonts"]))
-        for part in chunked(sorted(font_xrefs), jobs)
-    ]
-    annot_jobs = [
-        (str(pdf), start, end, str(folders["attachments"])) for start, end in ranges
-    ]
+    image_jobs = [(str(pdf), part, str(folders["images"])) for part in chunked(sorted(image_xrefs), jobs)]
+    font_jobs = [(str(pdf), part, str(folders["fonts"])) for part in chunked(sorted(font_xrefs), jobs)]
+    annot_jobs = [(str(pdf), start, end, str(folders["attachments"])) for start, end in ranges]
     counts: dict[str, int] = {
         "images": sum(pool.map(extract_images, image_jobs)),
         "fonts": sum(pool.map(extract_fonts, font_jobs)),
@@ -287,9 +258,7 @@ def parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
         action="store_true",
         help="extract embedded images, fonts and attached files into <stem>/images, fonts and attachments",
     )
-    parser.add_argument(
-        "-o", "--output-dir", type=Path, default=Path(), help="base output directory"
-    )
+    parser.add_argument("-o", "--output-dir", type=Path, default=Path(), help="base output directory")
     args = parser.parse_args(argv)
     if not (args.per_page or args.split or args.merge or args.extract):
         parser.error("choose at least one of -p, -s, -m, -x")
@@ -324,14 +293,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                     print(f"{pdf.name}: text of {pages} pages -> {out_root / pdf.stem}")
                 if args.split:
                     pages = run_split(pdf, out_root, pool, jobs)
-                    print(
-                        f"{pdf.name}: split into {pages} pdf files -> {out_root / pdf.stem}"
-                    )
+                    print(f"{pdf.name}: split into {pages} pdf files -> {out_root / pdf.stem}")
                 if args.extract:
                     counts = run_extract(pdf, out_root, pool, jobs)
-                    summary = ", ".join(
-                        f"{name}={count}" for name, count in counts.items()
-                    )
+                    summary = ", ".join(f"{name}={count}" for name, count in counts.items())
                     print(f"{pdf.name}: extracted {summary} -> {out_root / pdf.stem}")
             except Exception as error:
                 print(f"{pdf.name}: failed: {error}", file=sys.stderr)

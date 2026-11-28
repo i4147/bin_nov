@@ -38,21 +38,19 @@ _S: str = (
     r"|'(?:\\.|[^'\\\n])*')"
 )
 TOKEN_RE = re.compile(
-    "|".join(
-        [
-            r"(?P<ws>[ \t\r]+)",
-            r"(?P<nl>\n)",
-            r"(?P<comment>#[^\n]*)",
-            r"(?P<string>[rRbBuUfF]{0,2}" + _S + ")",
-            r"(?P<number>\d[\d_]*(?:\.\d*)?(?:[eE][+-]?\d+)?[jJ]?)",
-            r"(?P<name>[^\W\d]\w*)",
-            (
-                r"(?P<op>\.\.\.|->|:=|\*\*=?|//=?|>>=?|<<=?|[=!<>+\-*/%&|^@]=|"
-                r"[-+*/%&|^~@<>=!.,:;()\[\]{}])"
-            ),
-            r"(?P<other>.)",
-        ]
-    ),
+    "|".join([
+        r"(?P<ws>[ \t\r]+)",
+        r"(?P<nl>\n)",
+        r"(?P<comment>#[^\n]*)",
+        r"(?P<string>[rRbBuUfF]{0,2}" + _S + ")",
+        r"(?P<number>\d[\d_]*(?:\.\d*)?(?:[eE][+-]?\d+)?[jJ]?)",
+        r"(?P<name>[^\W\d]\w*)",
+        (
+            r"(?P<op>\.\.\.|->|:=|\*\*=?|//=?|>>=?|<<=?|[=!<>+\-*/%&|^@]=|"
+            r"[-+*/%&|^~@<>=!.,:;()\[\]{}])"
+        ),
+        r"(?P<other>.)",
+    ]),
     re.DOTALL,
 )
 OPEN, CLOSE = "([{", ")]}"
@@ -272,11 +270,7 @@ def assigned(st: Stmt) -> set[str]:
             depth += (t.s in OPEN) - (t.s in CLOSE)
             if t.s == "=" and depth == 0:
                 return out
-        elif (
-            t.kind == "name"
-            and t.s not in keyword.kwlist
-            and not (i and tk[i - 1].s == ".")
-        ):
+        elif t.kind == "name" and t.s not in keyword.kwlist and not (i and tk[i - 1].s == "."):
             out.add(t.s)
     return set()
 
@@ -298,9 +292,7 @@ def header_names(st: Stmt) -> set[str]:
         for i, t in enumerate(tk):
             if t.kind == "op":
                 depth += (t.s in OPEN) - (t.s in CLOSE)
-            elif (
-                t.kind == "name" and depth == 1 and tk[i - 1].s in ("(", ",", "*", "**")
-            ):
+            elif t.kind == "name" and depth == 1 and tk[i - 1].s in ("(", ",", "*", "**"):
                 out.add(t.s)
     return out
 
@@ -314,13 +306,11 @@ class Frame:
 
 
 def is_terminator(st: Stmt, text: str) -> bool:
-    return st.kind in ("return", "raise", "continue", "break") or text.startswith(
-        (
-            "pytest.skip(",
-            "sys.exit(",
-            "exit(",
-        )
-    )
+    return st.kind in ("return", "raise", "continue", "break") or text.startswith((
+        "pytest.skip(",
+        "sys.exit(",
+        "exit(",
+    ))
 
 
 def rebuild_python(source: str) -> str:
@@ -363,9 +353,7 @@ def rebuild_python(source: str) -> str:
             if not cleared and not (k in ("def", "class") and prev == "@"):
                 while stack:
                     top = stack[-1]
-                    if top.closed or (
-                        top.kind in SCOPED and top.body > 0 and not (top.names & names)
-                    ):
+                    if top.closed or (top.kind in SCOPED and top.body > 0 and not (top.names & names)):
                         stack.pop()
                     else:
                         break
@@ -456,14 +444,10 @@ def convert(text: str, use_black: bool = True) -> tuple[str, list[tuple[str, str
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("input", nargs="?", help="flattened file (default: stdin)")
     ap.add_argument("-o", "--output", help="restored shell script (default: stdout)")
-    ap.add_argument(
-        "--extract", metavar="DIR", help="also write each heredoc body as a file"
-    )
+    ap.add_argument("--extract", metavar="DIR", help="also write each heredoc body as a file")
     ap.add_argument("--no-black", action="store_true", help="skip black formatting")
     a = ap.parse_args()
     text = Path(a.input).read_text(encoding="utf-8") if a.input else sys.stdin.read()

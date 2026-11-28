@@ -121,9 +121,7 @@ class NLTKFrequencySummarizer:
                 score = sum(freqs.get(t, 0) for t in tokens)
                 n = len(tokens)
             else:
-                relevant = [
-                    t for t in tokens if t.isalnum() and t not in self.stop_words
-                ]
+                relevant = [t for t in tokens if t.isalnum() and t not in self.stop_words]
                 score = sum(freqs.get(t, 0) for t in relevant)
                 n = len(relevant)
             scores[i] = score / n if n else 0.0

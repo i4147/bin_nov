@@ -109,9 +109,7 @@ class DriveClient:
 
     def _installed_oauth_flow(self):
         if Path(self.credentials_file).exists():
-            flow = InstalledAppFlow.from_client_secrets_file(
-                self.credentials_file, SCOPES
-            )
+            flow = InstalledAppFlow.from_client_secrets_file(self.credentials_file, SCOPES)
         else:
             if not self.client_id or not self.client_secret:
                 msg = (
@@ -185,13 +183,12 @@ class DriveClient:
         while True:
             try:
                 resp = (
-                    self.service.files()
+                    self.service
+                    .files()
                     .list(
                         q=f"'{folder_id}' in parents and trashed=false",
                         pageSize=1000,
-                        fields=(
-                            "nextPageToken, files(id, name, mimeType, size, modifiedTime)"
-                        ),
+                        fields=("nextPageToken, files(id, name, mimeType, size, modifiedTime)"),
                         pageToken=page_token,
                     )
                     .execute()
@@ -382,9 +379,7 @@ def _add_auth_arguments(parser: argparse.ArgumentParser) -> None:
         help=f"dotenv file with GOOGLE_CLIENT_ID/SECRET (default: {DEFAULT_ENV_FILE}).",
     )
     grp.add_argument("--client-id", default=None, help="Override GOOGLE_CLIENT_ID.")
-    grp.add_argument(
-        "--client-secret", default=None, help="Override GOOGLE_CLIENT_SECRET."
-    )
+    grp.add_argument("--client-secret", default=None, help="Override GOOGLE_CLIENT_SECRET.")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -406,12 +401,8 @@ def build_parser() -> argparse.ArgumentParser:
         "download",
         help="Download a single named folder from Drive root (gdrive_downloader.py).",
     )
-    p_down.add_argument(
-        "--folder", required=True, help="Folder name directly under Drive root."
-    )
-    p_down.add_argument(
-        "--dest", default=None, help="Destination directory (default: ./<folder>)."
-    )
+    p_down.add_argument("--folder", required=True, help="Folder name directly under Drive root.")
+    p_down.add_argument("--dest", default=None, help="Destination directory (default: ./<folder>).")
     p_down.add_argument(
         "--sanitize",
         action="store_true",

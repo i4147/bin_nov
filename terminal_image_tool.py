@@ -15,19 +15,17 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-IMAGE_SUFFIXES: frozenset[str] = frozenset(
-    {
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".webp",
-        ".bmp",
-        ".gif",
-        ".tiff",
-        ".svg",
-        ".ppm",
-    }
-)
+IMAGE_SUFFIXES: frozenset[str] = frozenset({
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".webp",
+    ".bmp",
+    ".gif",
+    ".tiff",
+    ".svg",
+    ".ppm",
+})
 ASCII_RAMP: str = " .:-=+*#%@"
 RESET: str = "\x1b[0m"
 
@@ -66,16 +64,12 @@ def load_image(path: Path, dpi: int, bg_color: str | None) -> object:
             ImageColor,
         )
 
-        background = pil_image.new(
-            "RGBA", image.size, ImageColor.getcolor(bg_color, "RGBA")
-        )
+        background = pil_image.new("RGBA", image.size, ImageColor.getcolor(bg_color, "RGBA"))
         image = pil_image.alpha_composite(background, image)
     return image.convert("RGB")
 
 
-def fit_size(
-    src_w: int, src_h: int, max_w: int, max_h: int | None, cell_aspect: float
-) -> tuple[int, int]:
+def fit_size(src_w: int, src_h: int, max_w: int, max_h: int | None, cell_aspect: float) -> tuple[int, int]:
     """Target pixel-grid size fitting the terminal (cells are tall)."""
     width: int = max(1, max_w)
     height: int = max(1, round(src_h / src_w * width / cell_aspect))
@@ -109,9 +103,7 @@ def render_full_blocks(image: object, max_w: int, max_h: int | None) -> str:
     from PIL import Image as pil_image
 
     rgb = image.convert("RGB")  # type: ignore[attr-defined]
-    width, height = fit_size(
-        rgb.width, rgb.height, max(1, max_w // 2), max_h, cell_aspect=2.0
-    )
+    width, height = fit_size(rgb.width, rgb.height, max(1, max_w // 2), max_h, cell_aspect=2.0)
     small = rgb.resize((width, height), pil_image.Resampling.LANCZOS)
     pixels = small.load()
     lines: list[str] = []
@@ -162,11 +154,7 @@ def find_images(inputs: Sequence[Path], recursive: bool) -> list[Path]:
             found.append(root)
         elif root.is_dir():
             candidates = root.rglob("*") if recursive else root.iterdir()
-            found.extend(
-                p
-                for p in candidates
-                if p.is_file() and p.suffix.lower() in IMAGE_SUFFIXES
-            )
+            found.extend(p for p in candidates if p.is_file() and p.suffix.lower() in IMAGE_SUFFIXES)
     return sorted(found)
 
 
@@ -201,23 +189,13 @@ def build_parser() -> argparse.ArgumentParser:
     sh = sub.add_parser("show", help="Display image file(s)/dir(s)")
     sh.add_argument("inputs", nargs="*", type=Path, help="Images or dirs (default: .)")
     sh.add_argument("--mode", choices=("blocks", "ascii"), default="blocks")
-    sh.add_argument(
-        "-W", "--width", type=int, default=None, help="Max columns (default: terminal)"
-    )
-    sh.add_argument(
-        "-H", "--height", type=int, default=None, help="Max rows (default: terminal)"
-    )
-    sh.add_argument(
-        "--no-limit-height", action="store_true", help="Ignore terminal height"
-    )
-    sh.add_argument(
-        "--no-half-blocks", action="store_true", help="Lower-res space cells"
-    )
+    sh.add_argument("-W", "--width", type=int, default=None, help="Max columns (default: terminal)")
+    sh.add_argument("-H", "--height", type=int, default=None, help="Max rows (default: terminal)")
+    sh.add_argument("--no-limit-height", action="store_true", help="Ignore terminal height")
+    sh.add_argument("--no-half-blocks", action="store_true", help="Lower-res space cells")
     sh.add_argument("--invert", action="store_true", help="Invert the ASCII ramp")
     sh.add_argument("--dpi", type=int, default=96, help="SVG raster DPI (default: 96)")
-    sh.add_argument(
-        "--bg-color", default=None, help="Composite transparency onto, e.g. black"
-    )
+    sh.add_argument("--bg-color", default=None, help="Composite transparency onto, e.g. black")
     sh.add_argument("--no-recursive", dest="recursive", action="store_false")
     sh.set_defaults(handler=cmd_show, recursive=True)
     return parser

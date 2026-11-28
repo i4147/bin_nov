@@ -44,9 +44,7 @@ SKIP_DIRS: tuple[str, ...] = (
     ".pytest_cache",
     ".mypy_cache",
 )
-MAIN_GUARD_PATTERN: re.Pattern[str] = re.compile(
-    r"""if\s+__name__\s*==\s*["']__main__["']\s*:"""
-)
+MAIN_GUARD_PATTERN: re.Pattern[str] = re.compile(r"""if\s+__name__\s*==\s*["']__main__["']\s*:""")
 GUARD_SNIPPET: str = '\n\nif __name__ == "__main__":\n    raise SystemExit(main())\n'
 Status = Literal["skipped", "missing", "would_add", "added", "fixed", "error"]
 Method = Literal["ast", "regex"]
@@ -91,20 +89,14 @@ def should_wrap(node: ast.stmt) -> bool:
         ),
     ):
         return False
-    if (
-        isinstance(node, ast.Expr)
-        and isinstance(node.value, ast.Constant)
-        and isinstance(node.value.value, str)
-    ):
+    if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
         return False
     return not is_main_guard(node)
 
 
 def indent_block(block: str, spaces: int = 4) -> str:
     prefix: str = " " * spaces
-    return "".join(
-        prefix + line if line.strip() else line for line in block.splitlines(True)
-    )
+    return "".join(prefix + line if line.strip() else line for line in block.splitlines(True))
 
 
 def fix_file_ast(path: Path, dry_run: bool = False) -> FileResult:
@@ -140,11 +132,7 @@ def fix_file_ast(path: Path, dry_run: bool = False) -> FileResult:
         new_parts.append("".join(lines[cursor - 1 :]))
     main_body: str = "".join(main_parts).rstrip("\n")
     main_fn: str = "\n\ndef main() -> None:\n"
-    main_fn += (
-        (indent_block(main_body + "\n").rstrip("\n") + "\n")
-        if main_body.strip()
-        else "    pass\n"
-    )
+    main_fn += (indent_block(main_body + "\n").rstrip("\n") + "\n") if main_body.strip() else "    pass\n"
     new_src: str = "".join(new_parts).rstrip() + main_fn + GUARD_SNIPPET
     if dry_run:
         return FileResult(path, "would_add", "Would wrap code in main() (dry-run)")
@@ -175,11 +163,7 @@ def collect_files(inputs: Sequence[str], excludes: Sequence[str]) -> list[Path]:
     for root in roots:
         candidates = root.rglob("*.py") if root.is_dir() else iter((root,))
         for path in candidates:
-            if (
-                path.is_file()
-                and path.suffix == ".py"
-                and not excluded.intersection(path.parts)
-            ):
+            if path.is_file() and path.suffix == ".py" and not excluded.intersection(path.parts):
                 out.add(path)
     return sorted(out)
 
@@ -190,9 +174,7 @@ def cmd_check(files: list[Path]) -> int:
     errors: int = 0
     for path in files:
         try:
-            tree: ast.Module = ast.parse(
-                path.read_text(encoding="utf-8"), filename=str(path)
-            )
+            tree: ast.Module = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         except (SyntaxError, OSError):
             errors += 1
             continue
@@ -238,9 +220,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("fix", "Add guards to files"),
     ):
         child = sub.add_parser(name, help=help_text)
-        child.add_argument(
-            "paths", nargs="*", help="Files or directories (default: current dir)"
-        )
+        child.add_argument("paths", nargs="*", help="Files or directories (default: current dir)")
         child.add_argument(
             "--exclude",
             nargs="+",
@@ -256,9 +236,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="ast",
         help="Fix method (default: ast)",
     )
-    fix_parser.add_argument(
-        "--dry-run", action="store_true", help="Preview changes without modifying files"
-    )
+    fix_parser.add_argument("--dry-run", action="store_true", help="Preview changes without modifying files")
     return parser
 
 

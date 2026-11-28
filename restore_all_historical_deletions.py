@@ -17,9 +17,7 @@ import subprocess
 
 def run_git_command(args: list[str]) -> str:
     try:
-        result = subprocess.run(
-            ["git"] + args, capture_output=True, text=True, check=True
-        )
+        result = subprocess.run(["git"] + args, capture_output=True, text=True, check=True)
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         print(f"❌ Git error executing {' '.join(e.cmd)}:\n{e.stderr.strip()}")
@@ -28,16 +26,11 @@ def run_git_command(args: list[str]) -> str:
 
 def main() -> None:
     repo_root = Path()
-    if (
-        not (repo_root / ".git").exists()
-        and not run_git_command(["rev-parse", "--is-inside-work-tree"]) == "true"
-    ):
+    if not (repo_root / ".git").exists() and not run_git_command(["rev-parse", "--is-inside-work-tree"]) == "true":
         print("❌ Error: Current directory is not a Git repository root.")
         return
     print("🔍 Analyzing repository history for all historical file deletions...")
-    log_output = run_git_command(
-        ["log", "--diff-filter=D", "--pretty=format:%H", "--name-only"]
-    )
+    log_output = run_git_command(["log", "--diff-filter=D", "--pretty=format:%H", "--name-only"])
     if not log_output:
         print("🎉 No deleted files were found in this repository's entire history.")
         return
@@ -58,13 +51,9 @@ def main() -> None:
         if not Path(path_str).exists():
             files_to_restore.append((path_str, deletion_commit))
     if not files_to_restore:
-        print(
-            "ℹ️  All historically deleted files are already active or restored in your workspace."
-        )
+        print("ℹ️  All historically deleted files are already active or restored in your workspace.")
         return
-    print(
-        f"⚠️  Found {len(files_to_restore)} historically deleted file(s) missing from your workspace.\n"
-    )
+    print(f"⚠️  Found {len(files_to_restore)} historically deleted file(s) missing from your workspace.\n")
     restored_count = 0
     for path_str, deletion_commit in files_to_restore:
         print(f"🔄 Restoring: {path_str} (From commit prior to {deletion_commit[:8]})")

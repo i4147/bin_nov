@@ -82,9 +82,7 @@ SKIP_FILE_SUFFIXES: set[str] = {
 }
 
 
-def _is_binary(
-    file_path: Path, chunk_size: int = 1024, threshold: float = 0.30
-) -> bool:
+def _is_binary(file_path: Path, chunk_size: int = 1024, threshold: float = 0.30) -> bool:
     try:
         with file_path.open("rb") as f:
             chunk = f.read(chunk_size)
@@ -128,9 +126,7 @@ def _process_file(file_path_str: str) -> set[str]:
 
 def _iter_candidate_files(root: Path, skip: Path) -> Iterator[Path]:
     for dirpath, dirnames, filenames in root.walk(follow_symlinks=False):
-        dirnames[:] = [
-            d for d in dirnames if d not in SKIP_DIRS and not (dirpath / d).is_symlink()
-        ]
+        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS and not (dirpath / d).is_symlink()]
         for name in filenames:
             entry = dirpath / name
             try:
@@ -145,9 +141,7 @@ def _iter_candidate_files(root: Path, skip: Path) -> Iterator[Path]:
             yield entry
 
 
-def collect_words(
-    root_dir: Path, output_path: Path, workers: int | None = None
-) -> set[str]:
+def collect_words(root_dir: Path, output_path: Path, workers: int | None = None) -> set[str]:
     all_words: set[str] = set()
     files = [str(p) for p in _iter_candidate_files(root_dir, output_path)]
     if not files:
@@ -157,9 +151,7 @@ def collect_words(
     chunksize = max(1, len(files) // (workers * 8))
     with mp.Pool(processes=workers) as pool:
         try:
-            for word_set in pool.imap_unordered(
-                _process_file, files, chunksize=chunksize
-            ):
+            for word_set in pool.imap_unordered(_process_file, files, chunksize=chunksize):
                 all_words.update(word_set)
         except KeyboardInterrupt:
             pool.terminate()

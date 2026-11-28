@@ -49,9 +49,7 @@ def iter_paths(root: Path) -> Iterator[Path]:
             yield base / name
 
 
-def replace_in_file(
-    path: Path, pattern: re.Pattern, repl: Callable[[re.Match], str]
-) -> bool:
+def replace_in_file(path: Path, pattern: re.Pattern, repl: Callable[[re.Match], str]) -> bool:
     try:
         text = path.read_text(encoding="utf-8")
     except (UnicodeDecodeError, OSError):
@@ -104,11 +102,7 @@ def main(argv: list[str]) -> int:
 
     files_updated = 0
     for path in paths:
-        if (
-            path.is_file()
-            and not path.is_symlink()
-            and replace_in_file(path, pattern, repl)
-        ):
+        if path.is_file() and not path.is_symlink() and replace_in_file(path, pattern, repl):
             files_updated += 1
 
     renamed: list[tuple[str, str]] = []
@@ -120,9 +114,7 @@ def main(argv: list[str]) -> int:
         new_name = pattern.sub(repl, src.name)
         dst = src.with_name(new_name)
         if dst.exists():
-            print(
-                f"skipped: '{dst}' already exists, rename it manually", file=sys.stderr
-            )
+            print(f"skipped: '{dst}' already exists, rename it manually", file=sys.stderr)
             failed += 1
             continue
         try:

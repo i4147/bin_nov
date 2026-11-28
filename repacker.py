@@ -269,9 +269,7 @@ def repack_package(
     # RECORD of the wheel itself (no hash, no size) must be appended last.
     new_record.append((record_rel, "", ""))
 
-    wheel_name = (
-        f"{normalize_name(pkg.name)}-{normalize_name(pkg.version)}-{pkg.tag}.whl"
-    )
+    wheel_name = f"{normalize_name(pkg.name)}-{normalize_name(pkg.version)}-{pkg.tag}.whl"
     wheel_path = out_dir / wheel_name
 
     try:
@@ -369,9 +367,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     # $PREFIX/bin is exactly $PREFIX/lib/pythonX.Y/site-packages/../../../bin
     prefix = site_packages.parent.parent.parent
     if not (prefix / "bin").is_dir():
-        logger.warning(
-            f"prefix {prefix} has no bin/ directory; scripts will not be included"
-        )
+        logger.warning(f"prefix {prefix} has no bin/ directory; scripts will not be included")
 
     out_dir: Path = args.output.expanduser().resolve()
     try:
@@ -407,10 +403,7 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     failures: list[str] = []
     with ProcessPoolExecutor(max_workers=args.jobs) as pool:
-        futures = {
-            pool.submit(repack_package, site_packages, prefix, pkg, out_dir): pkg
-            for pkg in selected
-        }
+        futures = {pool.submit(repack_package, site_packages, prefix, pkg, out_dir): pkg for pkg in selected}
         for fut in as_completed(futures):
             pkg = futures[fut]
             try:

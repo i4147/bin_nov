@@ -48,11 +48,7 @@ def process_file(path: Path) -> tuple[Path, bool]:
 if __name__ == "__main__":
     cwd = Path.cwd()
     args = sys.argv[1:]
-    files = (
-        [Path(p) for p in args]
-        if args
-        else get_files(cwd, ext=[".html", ".htm", ".xhtml", ".xhtm"])
-    )
+    files = [Path(p) for p in args] if args else get_files(cwd, ext=[".html", ".htm", ".xhtml", ".xhtm"])
     if len(files) == 1:
         process_file(files[0])
         sys.exit(0)

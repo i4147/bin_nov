@@ -76,16 +76,10 @@ def replace_tag_in_filename(filename: str, new_tag: str) -> str:
 
 
 def find_wheel_members(zf: zipfile.ZipFile) -> list[str]:
-    return [
-        name
-        for name in zf.namelist()
-        if name.count("/") == 1 and name.endswith(".dist-info/WHEEL")
-    ]
+    return [name for name in zf.namelist() if name.count("/") == 1 and name.endswith(".dist-info/WHEEL")]
 
 
-def rewrite_wheel(
-    src_path: Path, wheel_member: str, dst_path: Path, content: str
-) -> None:
+def rewrite_wheel(src_path: Path, wheel_member: str, dst_path: Path, content: str) -> None:
     """Write a copy of ``src_path`` with ``wheel_member`` replaced by ``content``,
     then move it to ``dst_path`` (removing ``src_path`` if different)."""
     fd, tmp_name = tempfile.mkstemp(dir=str(src_path.parent), suffix=".whl.tmp")
@@ -111,9 +105,7 @@ def rewrite_wheel(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Fix tags in .whl filenames and their WHEEL metadata."
-    )
+    parser = argparse.ArgumentParser(description="Fix tags in .whl filenames and their WHEEL metadata.")
     parser.add_argument(
         "--check",
         "--dry-run",
@@ -147,9 +139,7 @@ def main(argv: list[str] | None = None) -> int:
             with zipfile.ZipFile(whl) as zf:
                 members = find_wheel_members(zf)
                 if not members:
-                    print(
-                        f"SKIP  {whl.name}: no .dist-info/WHEEL entry", file=sys.stderr
-                    )
+                    print(f"SKIP  {whl.name}: no .dist-info/WHEEL entry", file=sys.stderr)
                     continue
                 if len(members) > 1:
                     print(

@@ -138,9 +138,7 @@ class FunctionCollector(ast.NodeVisitor):
         body_first = node.body[0].lineno - 1
         body_last = node.body[-1].end_lineno
         body = "\n".join(self.source_lines[body_first:body_last])
-        self.functions.append(
-            FunctionRecord(name=node.name, body=body, lineno=node.lineno, node=node)
-        )
+        self.functions.append(FunctionRecord(name=node.name, body=body, lineno=node.lineno, node=node))
         self.generic_visit(node)
 
 
@@ -270,11 +268,7 @@ def extract_objects_from_file(path: Path) -> list[dict[str, Any]]:
             obj_type, obj_name = "function", node.name
         elif isinstance(node, ast.ClassDef):
             obj_type, obj_name = "class", node.name
-        elif (
-            isinstance(node, ast.Assign)
-            and len(node.targets) == 1
-            and isinstance(node.targets[0], ast.Name)
-        ):
+        elif isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
             obj_type, obj_name = "constant", node.targets[0].id
         elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
             obj_type, obj_name = "constant", node.target.id
@@ -282,17 +276,15 @@ def extract_objects_from_file(path: Path) -> list[dict[str, Any]]:
             continue
         source = ast.unparse(node)
         content_hash = hashlib.sha256(source.encode("utf-8")).hexdigest()
-        objects.append(
-            {
-                "object_type": obj_type,
-                "object_name": obj_name,
-                "source_code": source,
-                "reference_file": str(path),
-                "content_hash": content_hash,
-                "start_line": node.lineno,
-                "end_line": node.end_lineno,
-            }
-        )
+        objects.append({
+            "object_type": obj_type,
+            "object_name": obj_name,
+            "source_code": source,
+            "reference_file": str(path),
+            "content_hash": content_hash,
+            "start_line": node.lineno,
+            "end_line": node.end_lineno,
+        })
     return objects
 
 
@@ -309,9 +301,7 @@ def find_exact_duplicates(
     return {h: v for h, v in by_hash.items() if len(v) > 1}
 
 
-def save_scan_reports(
-    groups: dict[str, list[dict[str, Any]]], output_dir: Path
-) -> None:
+def save_scan_reports(groups: dict[str, list[dict[str, Any]]], output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     flat: list[dict[str, Any]] = []
     for objs in groups.values():
@@ -346,20 +336,14 @@ def save_scan_reports(
     }
     for obj_type, fname in per_type.items():
         subset = [o for o in flat if o["object_type"] == obj_type]
-        atomic_write(
-            (output_dir / fname), json.dumps(subset, indent=4), encoding="utf-8"
-        )
-        print(
-            f"[+] Saved {len(subset)} {obj_type} duplicate instances to {output_dir / fname}"
-        )
+        atomic_write((output_dir / fname), json.dumps(subset, indent=4), encoding="utf-8")
+        print(f"[+] Saved {len(subset)} {obj_type} duplicate instances to {output_dir / fname}")
     atomic_write(
         (output_dir / "exact_duplicates.json"),
         json.dumps(flat, indent=4),
         encoding="utf-8",
     )
-    print(
-        f"[+] Saved {len(flat)} exact duplicate instances to {output_dir / 'exact_duplicates.json'}"
-    )
+    print(f"[+] Saved {len(flat)} exact duplicate instances to {output_dir / 'exact_duplicates.json'}")
 
 
 def refactor_to_shared_module(
@@ -367,9 +351,7 @@ def refactor_to_shared_module(
     shared_module: Path,
     min_occurrences: int,
 ) -> None:
-    content = (
-        shared_module.read_text(encoding="utf-8") if shared_module.exists() else ""
-    )
+    content = shared_module.read_text(encoding="utf-8") if shared_module.exists() else ""
     imports_to_add: dict[str, set[str]] = defaultdict(set)
     for objs in groups.values():
         if len(objs) <= min_occurrences:
@@ -418,13 +400,9 @@ def find_fuzzy_duplicates(
         from rapidfuzz import fuzz
         import ssdeep
     except ImportError:
-        logger.error(
-            "Please install dependencies for --fuzzy: pip install ssdeep rapidfuzz"
-        )
+        logger.error("Please install dependencies for --fuzzy: pip install ssdeep rapidfuzz")
         return
-    print(
-        "[*] Calculating fuzzy similarities (this may take a while for large codebases)..."
-    )
+    print("[*] Calculating fuzzy similarities (this may take a while for large codebases)...")
     n = len(objects)
     pairs: list[dict[str, Any]] = []
     for i in range(n):
@@ -439,24 +417,22 @@ def find_fuzzy_duplicates(
                 continue
             ratio = fuzz.ratio(a["source_code"], b["source_code"])
             if ratio > similarity_threshold:
-                pairs.append(
-                    {
-                        "object_1": {
-                            "type": a["object_type"],
-                            "name": a["object_name"],
-                            "file": a["reference_file"],
-                            "source_code": a["source_code"],
-                        },
-                        "object_2": {
-                            "type": b["object_type"],
-                            "name": b["object_name"],
-                            "file": b["reference_file"],
-                            "source_code": b["source_code"],
-                        },
-                        "similarity_percentage": round(ratio, 2),
-                        "ssdeep_score": score,
-                    }
-                )
+                pairs.append({
+                    "object_1": {
+                        "type": a["object_type"],
+                        "name": a["object_name"],
+                        "file": a["reference_file"],
+                        "source_code": a["source_code"],
+                    },
+                    "object_2": {
+                        "type": b["object_type"],
+                        "name": b["object_name"],
+                        "file": b["reference_file"],
+                        "source_code": b["source_code"],
+                    },
+                    "similarity_percentage": round(ratio, 2),
+                    "ssdeep_score": score,
+                })
     atomic_write(output_path, json.dumps(pairs, indent=4), encoding="utf-8")
     print(f"[+] Saved {len(pairs)} fuzzy duplicate pairs to {output_path}")
 
@@ -508,11 +484,7 @@ def extract_definitions(
         elif isinstance(node, ast.ClassDef):
             key = ("class", node.name, ast.unparse(node))
             found[key] = {"name": node.name, "type": "class", "node": node}
-        elif (
-            isinstance(node, ast.Assign)
-            and len(node.targets) == 1
-            and isinstance(node.targets[0], ast.Name)
-        ):
+        elif isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
             name = node.targets[0].id
             key = ("constant", name, ast.unparse(node))
             found[key] = {"name": name, "type": "constant", "node": node}
@@ -525,16 +497,12 @@ def _consolidate_worker(
     return extract_definitions(Path(path_str))
 
 
-def strip_definition_from_source(
-    source: str, name: str, kind: str, source_code: str, module_name: str
-) -> str:
+def strip_definition_from_source(source: str, name: str, kind: str, source_code: str, module_name: str) -> str:
     tree = ast.parse(source)
     new_body: list[ast.AST] = []
     removed = False
     for node in tree.body:
-        if kind in ("function", "class") and isinstance(
-            node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
-        ):
+        if kind in ("function", "class") and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
             if node.name == name and ast.unparse(node) == source_code:
                 removed = True
                 continue
@@ -553,9 +521,7 @@ def strip_definition_from_source(
         new_body.append(node)
     if not removed:
         return source
-    import_node = ast.ImportFrom(
-        module=module_name, names=[ast.alias(name=name, asname=None)], level=0
-    )
+    import_node = ast.ImportFrom(module=module_name, names=[ast.alias(name=name, asname=None)], level=0)
     new_body.insert(0, import_node)
     tree.body = new_body
     new_source = ast.unparse(tree)
@@ -572,9 +538,7 @@ def cmd_consolidate(args: argparse.Namespace) -> int:
         print("🔍 No Python files found to scan.")
         return 0
     print(f"🔍 Scanning {len(files)} files concurrently...")
-    groups: dict[tuple[str, str, str], list[tuple[str, dict[str, Any]]]] = defaultdict(
-        list
-    )
+    groups: dict[tuple[str, str, str], list[tuple[str, dict[str, Any]]]] = defaultdict(list)
     workers = MAX_WORKERS or os.cpu_count() or 1
     with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as ex:
         futures = {ex.submit(_consolidate_worker, str(f)): f for f in files}
@@ -601,18 +565,14 @@ def cmd_consolidate(args: argparse.Namespace) -> int:
     if not args.move:
         return 0
     print("🛠️  Processing Consolidation (-m flag active)...")
-    existing = (
-        shared_module.read_text(encoding="utf-8") if shared_module.exists() else ""
-    )
+    existing = shared_module.read_text(encoding="utf-8") if shared_module.exists() else ""
     merged = existing + "\n\n" + "\n\n".join(sources_to_move)
     try:
         ast.parse(merged)
         atomic_write(shared_module, merged, encoding="utf-8")
         print(f"✅ Extracted duplicate definitions safely written to: {shared_module}")
     except Exception as e:
-        print(
-            f"❌ Aborted: Merged definitions inside {shared_module} failed AST parsing: {e}"
-        )
+        print(f"❌ Aborted: Merged definitions inside {shared_module} failed AST parsing: {e}")
         return 1
     module_name = shared_module.stem
     updated = 0
@@ -626,9 +586,7 @@ def cmd_consolidate(args: argparse.Namespace) -> int:
             print(f"✅ In-place code updated & verified: {path_str}")
             updated += 1
         except Exception as e:
-            print(
-                f"❌ Failed to parse or modify file safely {path_str}: {e}. Skipping."
-            )
+            print(f"❌ Failed to parse or modify file safely {path_str}: {e}. Skipping.")
     print(f"\n📊 Refactor complete. Adjusted and verified {updated} files.")
     return 0
 
@@ -670,9 +628,7 @@ def analyze_file_functions(path: Path) -> Optional[dict[str, dict[str, Any]]]:
     return result
 
 
-def _prune_worker(
-    path_str: str, ref_hashes: dict[str, str], apply: bool
-) -> dict[str, Any]:
+def _prune_worker(path_str: str, ref_hashes: dict[str, str], apply: bool) -> dict[str, Any]:
     path = Path(path_str)
     defs = analyze_file_functions(path)
     if defs is None or not defs:
@@ -680,14 +636,12 @@ def _prune_worker(
     dups: list[dict[str, Any]] = []
     for name, info in defs.items():
         if info["hash"] in ref_hashes:
-            dups.append(
-                {
-                    "name": name,
-                    "lineno": info["lineno"],
-                    "end_lineno": info["end_lineno"],
-                    "ref_name": ref_hashes[info["hash"]],
-                }
-            )
+            dups.append({
+                "name": name,
+                "lineno": info["lineno"],
+                "end_lineno": info["end_lineno"],
+                "ref_name": ref_hashes[info["hash"]],
+            })
     if not dups:
         return {"file": path, "status": "ok", "duplicates": []}
     if not apply:
@@ -699,10 +653,7 @@ def _prune_worker(
         for dup in dups:
             start = dup["lineno"] - 1
             end = dup["end_lineno"]
-            while start > 0 and (
-                lines[start - 1].strip().startswith("@")
-                or lines[start - 1].strip() == ""
-            ):
+            while start > 0 and (lines[start - 1].strip().startswith("@") or lines[start - 1].strip() == ""):
                 start -= 1
             del lines[start:end]
             removed.append(dup["name"])
@@ -744,11 +695,7 @@ def cmd_prune(args: argparse.Namespace) -> int:
         return 1
     ref_hashes = {info["hash"]: info["name"] for info in ref_funcs.values()}
     print(f"  Found {len(ref_hashes)} functions")
-    targets = [
-        t
-        for t in _collect_prune_targets(args.inputs)
-        if t.resolve() != ref_path.resolve()
-    ]
+    targets = [t for t in _collect_prune_targets(args.inputs) if t.resolve() != ref_path.resolve()]
     if not targets:
         logger.warning("⚠️  No target files found")
         return 0
@@ -759,10 +706,7 @@ def cmd_prune(args: argparse.Namespace) -> int:
     removed_count = 0
     workers = MAX_WORKERS or 8
     with multiprocessing.Pool(processes=workers) as pool:
-        async_results = [
-            pool.apply_async(_prune_worker, (str(f), ref_hashes, args.apply))
-            for f in targets
-        ]
+        async_results = [pool.apply_async(_prune_worker, (str(f), ref_hashes, args.apply)) for f in targets]
         for ar in async_results:
             res = ar.get()
             status = res["status"]
@@ -878,9 +822,7 @@ def build_parser() -> argparse.ArgumentParser:
         nargs="*",
         help="Target files/directories (default: current directory).",
     )
-    p.add_argument(
-        "-a", "--apply", action="store_true", help="Apply changes (default: dry-run)."
-    )
+    p.add_argument("-a", "--apply", action="store_true", help="Apply changes (default: dry-run).")
     p.set_defaults(func=cmd_prune)
     return parser
 

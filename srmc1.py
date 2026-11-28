@@ -80,9 +80,7 @@ class UnsupportedEncodingError(Exception):
 def decode_source(data: bytes) -> DecodedSource:
     if data.startswith(UTF8_BOM):
         try:
-            return DecodedSource(
-                data[len(UTF8_BOM) :].decode("utf-8"), "utf-8", UTF8_BOM
-            )
+            return DecodedSource(data[len(UTF8_BOM) :].decode("utf-8"), "utf-8", UTF8_BOM)
         except UnicodeDecodeError:
             pass
     else:
@@ -150,9 +148,7 @@ def commented_code_lines(source: str) -> frozenset[int]:
     return frozenset(protected)
 
 
-def is_protected_comment(
-    comment: str, line_number: int, remove_everything: bool, full_line: bool
-) -> bool:
+def is_protected_comment(comment: str, line_number: int, remove_everything: bool, full_line: bool) -> bool:
     if remove_everything:
         return False
     if full_line and line_number == 1 and comment.startswith("#!"):
@@ -179,9 +175,7 @@ def is_docstring_statement(statement: cst.BaseStatement) -> bool:
     if len(statement.body) != 1:
         return False
     only_statement = statement.body[0]
-    return isinstance(only_statement, cst.Expr) and is_string_expression(
-        only_statement.value
-    )
+    return isinstance(only_statement, cst.Expr) and is_string_expression(only_statement.value)
 
 
 def is_docstring_small_statement(statement: cst.BaseSmallStatement) -> bool:
@@ -192,9 +186,7 @@ def line_with_pass(statement: cst.SimpleStatementLine) -> cst.SimpleStatementLin
     return statement.with_changes(body=(cst.Pass(),))
 
 
-def prepend_leading_lines(
-    removed: cst.SimpleStatementLine, replacement: cst.BaseStatement
-) -> cst.BaseStatement:
+def prepend_leading_lines(removed: cst.SimpleStatementLine, replacement: cst.BaseStatement) -> cst.BaseStatement:
     leading_lines = removed.leading_lines
     if not leading_lines:
         return replacement
@@ -236,9 +228,7 @@ def remove_module_docstring(module: cst.Module) -> tuple[cst.Module, bool]:
 class StripTransformer(cst.CSTTransformer):
     METADATA_DEPENDENCIES: ClassVar[tuple[object, ...]] = (PositionProvider,)
 
-    def __init__(
-        self, options: TransformOptions, protected_code_lines: frozenset[int]
-    ) -> None:
+    def __init__(self, options: TransformOptions, protected_code_lines: frozenset[int]) -> None:
         self.options = options
         self.protected_code_lines = protected_code_lines
         self.comments_removed = 0
@@ -262,9 +252,7 @@ class StripTransformer(cst.CSTTransformer):
         ):
             return updated_node
         self.comments_removed += 1
-        return updated_node.with_changes(
-            whitespace=cst.SimpleWhitespace(""), comment=None
-        )
+        return updated_node.with_changes(whitespace=cst.SimpleWhitespace(""), comment=None)
 
     def leave_EmptyLine(
         self, original_node: cst.EmptyLine, updated_node: cst.EmptyLine
@@ -276,21 +264,14 @@ class StripTransformer(cst.CSTTransformer):
             return updated_node
         position = self.get_metadata(PositionProvider, original_node)
         line_number = position.start.line
-        if is_protected_comment(
-            comment.value, line_number, self.options.remove_protected_comments, True
-        ):
+        if is_protected_comment(comment.value, line_number, self.options.remove_protected_comments, True):
             return updated_node
-        if (
-            not self.options.remove_module_docstring
-            and line_number in self.protected_code_lines
-        ):
+        if not self.options.remove_module_docstring and line_number in self.protected_code_lines:
             return updated_node
         self.comments_removed += 1
         return cst.RemoveFromParent()
 
-    def leave_Param(
-        self, original_node: cst.Param, updated_node: cst.Param
-    ) -> cst.Param:
+    def leave_Param(self, original_node: cst.Param, updated_node: cst.Param) -> cst.Param:
         if self.options.remove_annotations and original_node.annotation is not None:
             self.annotations_removed += 1
             return updated_node.with_changes(annotation=None)
@@ -334,9 +315,7 @@ class StripTransformer(cst.CSTTransformer):
             return updated_node.with_changes(body=(cst.Pass(),))
         return updated_node.with_changes(body=tuple(new_body))
 
-    def leave_FunctionDef(
-        self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-    ) -> cst.FunctionDef:
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
         result = updated_node
         if self.options.remove_annotations and original_node.returns is not None:
             self.annotations_removed += 1
@@ -348,9 +327,7 @@ class StripTransformer(cst.CSTTransformer):
                 result = result.with_changes(body=body)
         return result
 
-    def leave_ClassDef(
-        self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-    ) -> cst.ClassDef:
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
         if not self.options.remove_docstrings:
             return updated_node
         body, removed = remove_docstring_from_suite(updated_node.body)
@@ -359,9 +336,7 @@ class StripTransformer(cst.CSTTransformer):
         self.docstrings_removed += 1
         return updated_node.with_changes(body=body)
 
-    def leave_Module(
-        self, original_node: cst.Module, updated_node: cst.Module
-    ) -> cst.Module:
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
         if not self.options.remove_module_docstring:
             return updated_node
         module, removed = remove_module_docstring(updated_node)
@@ -390,21 +365,13 @@ def process_file(item: WorkItem) -> FileResult:
     try:
         raw = path.read_bytes()
     except OSError as error:
-        return FileResult(
-            path=str(path), status="skipped", message=f"cannot read: {error}"
-        )
+        return FileResult(path=str(path), status="skipped", message=f"cannot read: {error}")
     try:
         decoded = decode_source(raw)
     except UnsupportedEncodingError as error:
-        return FileResult(
-            path=str(path), status="skipped", message=f"unsupported encoding: {error}"
-        )
+        return FileResult(path=str(path), status="skipped", message=f"unsupported encoding: {error}")
     try:
-        protected_lines = (
-            commented_code_lines(decoded.text)
-            if item.options.remove_all_comments
-            else frozenset()
-        )
+        protected_lines = commented_code_lines(decoded.text) if item.options.remove_all_comments else frozenset()
         module = cst.parse_module(decoded.text)
         transformer = StripTransformer(item.options, protected_lines)
         transformed = MetadataWrapper(module).visit(transformer).code
@@ -452,9 +419,7 @@ def is_within(path: Path, parent: Path) -> bool:
     return True
 
 
-def matches_patterns(
-    path: Path, root: Path, includes: Sequence[str], excludes: Sequence[str]
-) -> bool:
+def matches_patterns(path: Path, root: Path, includes: Sequence[str], excludes: Sequence[str]) -> bool:
     relative = path.relative_to(root)
     if excludes and any(relative.match(pattern) for pattern in excludes):
         return False
@@ -486,21 +451,13 @@ def scan_paths(
             )
             continue
         if not exists:
-            scan_results.append(
-                FileResult(
-                    path=str(path), status="skipped", message="path does not exist"
-                )
-            )
+            scan_results.append(FileResult(path=str(path), status="skipped", message="path does not exist"))
             continue
         try:
             is_file = path.is_file()
             is_directory = path.is_dir()
         except OSError as error:
-            scan_results.append(
-                FileResult(
-                    path=str(path), status="skipped", message=f"cannot inspect: {error}"
-                )
-            )
+            scan_results.append(FileResult(path=str(path), status="skipped", message=f"cannot inspect: {error}"))
             continue
         if is_file:
             root = path.parent
@@ -538,11 +495,7 @@ def scan_paths(
                 if previous_root is None or len(root.parts) < len(previous_root.parts):
                     discovered[resolved] = root
         except OSError as error:
-            scan_results.append(
-                FileResult(
-                    path=str(path), status="skipped", message=f"cannot scan: {error}"
-                )
-            )
+            scan_results.append(FileResult(path=str(path), status="skipped", message=f"cannot scan: {error}"))
     return sorted(discovered.items(), key=lambda pair: str(pair[0])), scan_results
 
 
@@ -597,11 +550,7 @@ def summary_data(results: Sequence[FileResult]) -> dict[str, int]:
         "unchanged": sum(result.status == "unchanged" for result in results),
         "skipped": sum(result.status == "skipped" for result in results),
         "failed": sum(result.status == "failed" for result in results),
-        "bytes_saved": sum(
-            result.bytes_saved
-            for result in results
-            if result.status in {"modified", "would_modify"}
-        ),
+        "bytes_saved": sum(result.bytes_saved for result in results if result.status in {"modified", "would_modify"}),
         "comments_removed": sum(result.comments_removed for result in results),
         "docstrings_removed": sum(result.docstrings_removed for result in results),
         "annotations_removed": sum(result.annotations_removed for result in results),
@@ -644,13 +593,9 @@ def report_results(
     for result in results:
         if result.status in {"modified", "would_modify"}:
             action = "would modify" if result.status == "would_modify" else "modified"
-            sys.stdout.write(
-                f"{result.path}: {action}; {format_counts(result, show_stats)}\n"
-            )
+            sys.stdout.write(f"{result.path}: {action}; {format_counts(result, show_stats)}\n")
         elif result.status == "unchanged":
-            sys.stdout.write(
-                f"{result.path}: unchanged; {format_counts(result, show_stats)}\n"
-            )
+            sys.stdout.write(f"{result.path}: unchanged; {format_counts(result, show_stats)}\n")
         else:
             sys.stdout.write(f"{result.path}: {result.status}; {result.message}\n")
     summary_line = (
@@ -686,59 +631,33 @@ def build_parser() -> argparse.ArgumentParser:
         description="Strip selected Python comments, docstrings, and annotations in place.",
     )
     parser.add_argument("paths", nargs="*", type=Path, default=[Path()])
-    parser.add_argument(
-        "-c", "--comments", action="store_true", help="remove all removable comments"
-    )
+    parser.add_argument("-c", "--comments", action="store_true", help="remove all removable comments")
     parser.add_argument(
         "-d",
         "--docstrings",
         action="store_true",
         help="remove function and class docstrings",
     )
-    parser.add_argument(
-        "-a", "--all", action="store_true", help="remove all selected source metadata"
-    )
-    parser.add_argument(
-        "-n", "--stats", action="store_true", help="show removal counts"
-    )
-    parser.add_argument(
-        "--dry-run", action="store_true", help="report changes without writing"
-    )
+    parser.add_argument("-a", "--all", action="store_true", help="remove all selected source metadata")
+    parser.add_argument("-n", "--stats", action="store_true", help="show removal counts")
+    parser.add_argument("--dry-run", action="store_true", help="report changes without writing")
     parser.add_argument("--diff", action="store_true", help="emit unified diffs")
     backups = parser.add_mutually_exclusive_group()
-    backups.add_argument(
-        "--backup", action="store_true", help="write a .bak file beside each change"
-    )
-    backups.add_argument(
-        "--backup-dir", type=Path, help="write .bak files under this directory"
-    )
+    backups.add_argument("--backup", action="store_true", help="write a .bak file beside each change")
+    backups.add_argument("--backup-dir", type=Path, help="write .bak files under this directory")
     parser.add_argument(
         "--pool-method",
         choices=("imap_unordered", "imap", "map"),
         default="imap_unordered",
         help="Pool dispatch method",
     )
-    parser.add_argument(
-        "--include", action="append", default=[], metavar="GLOB", help="include glob"
-    )
-    parser.add_argument(
-        "--exclude", action="append", default=[], metavar="GLOB", help="exclude glob"
-    )
-    parser.add_argument(
-        "--check", action="store_true", help="exit 1 if changes would be made"
-    )
-    parser.add_argument(
-        "--json", action="store_true", help="write a machine-readable report"
-    )
-    parser.add_argument(
-        "--no-recursive", action="store_true", help="do not descend into directories"
-    )
-    parser.add_argument(
-        "-q", "--quiet", action="count", default=0, help="suppress normal output"
-    )
-    parser.add_argument(
-        "-v", "--verbose", action="count", default=0, help="increase logging detail"
-    )
+    parser.add_argument("--include", action="append", default=[], metavar="GLOB", help="include glob")
+    parser.add_argument("--exclude", action="append", default=[], metavar="GLOB", help="exclude glob")
+    parser.add_argument("--check", action="store_true", help="exit 1 if changes would be made")
+    parser.add_argument("--json", action="store_true", help="write a machine-readable report")
+    parser.add_argument("--no-recursive", action="store_true", help="do not descend into directories")
+    parser.add_argument("-q", "--quiet", action="count", default=0, help="suppress normal output")
+    parser.add_argument("-v", "--verbose", action="count", default=0, help="increase logging detail")
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
     return parser
 
@@ -758,11 +677,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     arguments = parser.parse_args(argv)
     configure_logging(arguments.quiet, arguments.verbose)
-    backup_directory = (
-        arguments.backup_dir.expanduser().resolve()
-        if arguments.backup_dir is not None
-        else None
-    )
+    backup_directory = arguments.backup_dir.expanduser().resolve() if arguments.backup_dir is not None else None
     options = TransformOptions(
         remove_all_comments=arguments.comments or arguments.all,
         remove_protected_comments=arguments.all,
@@ -791,10 +706,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     except Exception as error:
         logger.error(f"worker pool failed: {type(error).__name__}: {error}")
         processed = [
-            FileResult(
-                path=str(item.path), status="failed", message="worker pool failed"
-            )
-            for item in work_items
+            FileResult(path=str(item.path), status="failed", message="worker pool failed") for item in work_items
         ]
     results = sorted(scan_results + processed, key=lambda result: result.path)
     for result in results:
@@ -802,9 +714,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             logger.error(f"{result.path}: {result.message}")
         elif result.status == "skipped":
             logger.debug(f"{result.path}: {result.message}")
-    report_results(
-        results, arguments.stats, arguments.diff, arguments.json, bool(arguments.quiet)
-    )
+    report_results(results, arguments.stats, arguments.diff, arguments.json, bool(arguments.quiet))
     if any(result.status == "failed" for result in results):
         return 2
     if arguments.check and any(result.status == "would_modify" for result in results):

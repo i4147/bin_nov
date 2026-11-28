@@ -24,9 +24,7 @@ from dh import SKIP_DIRS, atomic_write
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-SEPARATOR_RE: re.Pattern[str] = re.compile(
-    r"""(cprint|print)\s*\(\s*['"](.)['"](\s*\*\s*)(\d+)([^)]*)\)"""
-)
+SEPARATOR_RE: re.Pattern[str] = re.compile(r"""(cprint|print)\s*\(\s*['"](.)['"](\s*\*\s*)(\d+)([^)]*)\)""")
 DEFAULT_REPLACEMENT: str = "print('-'*42)"
 OPENERS: dict[str, str] = {"(": ")", "[": "]", "{": "}"}
 CLOSERS: dict[str, str] = {v: k for k, v in OPENERS.items()}
@@ -50,11 +48,7 @@ def find_py_files(inputs: Sequence[Path]) -> list[Path]:
     for root in roots:
         candidates = root.rglob("*.py") if root.is_dir() else iter((root,))
         for path in candidates:
-            if (
-                path.is_file()
-                and not SKIP_DIRS.intersection(path.parts)
-                and path.resolve() != self_path
-            ):
+            if path.is_file() and not SKIP_DIRS.intersection(path.parts) and path.resolve() != self_path:
                 found.add(path)
     return sorted(found)
 
@@ -74,9 +68,7 @@ def brackets_balanced_tokens(path: Path) -> bool:
             continue
         if tok.string in OPENERS:
             stack.append(tok.string)
-        elif tok.string in CLOSERS and (
-            not stack or stack.pop() != CLOSERS[tok.string]
-        ):
+        elif tok.string in CLOSERS and (not stack or stack.pop() != CLOSERS[tok.string]):
             return False
     return not stack
 
@@ -100,9 +92,7 @@ def cmd_brackets(args: argparse.Namespace) -> int:
     for path in find_py_files(args.paths):
         try:
             balanced: bool = (
-                brackets_balanced_naive(
-                    path.read_text(encoding="utf-8", errors="ignore")
-                )
+                brackets_balanced_naive(path.read_text(encoding="utf-8", errors="ignore"))
                 if args.naive
                 else brackets_balanced_tokens(path)
             )
@@ -134,9 +124,7 @@ def fix_is_not(path: Path, fix: bool) -> ScanResult:
     index: int = 0
     while index < len(tokens):
         tok: tokenize.TokenInfo = tokens[index]
-        nxt: tokenize.TokenInfo | None = (
-            tokens[index + 1] if index + 1 < len(tokens) else None
-        )
+        nxt: tokenize.TokenInfo | None = tokens[index + 1] if index + 1 < len(tokens) else None
         if (
             tok.type == tokenize.NAME
             and tok.string == "is"
@@ -196,9 +184,7 @@ def cmd_print_sep(args: argparse.Namespace) -> int:
         if count:
             files_total += 1
             hits_total += count
-            print(
-                f"{path}: {count} replacement(s)" + ("" if args.fix else " (dry run)")
-            )
+            print(f"{path}: {count} replacement(s)" + ("" if args.fix else " (dry run)"))
             if args.fix:
                 atomic_write(path, updated, encoding="utf-8")
     print(f"Summary: {files_total} file(s), {hits_total} replacement(s).")
@@ -213,19 +199,13 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     br = sub.add_parser("brackets", help="Check bracket balance")
     br.add_argument("paths", nargs="*", type=Path)
-    br.add_argument(
-        "--naive", action="store_true", help="Original char-counting algorithm"
-    )
-    br.add_argument(
-        "--bad-only", action="store_true", help="Only list unbalanced files"
-    )
+    br.add_argument("--naive", action="store_true", help="Original char-counting algorithm")
+    br.add_argument("--bad-only", action="store_true", help="Only list unbalanced files")
     br.add_argument("-v", "--verbose", action="store_true")
     br.set_defaults(handler=cmd_brackets)
     isn = sub.add_parser("is-not", help="Find/fix 'is not' -> '!='")
     isn.add_argument("paths", nargs="*", type=Path)
-    isn.add_argument(
-        "-a", "--fix", action="store_true", help="Rewrite files (default: report)"
-    )
+    isn.add_argument("-a", "--fix", action="store_true", help="Rewrite files (default: report)")
     isn.set_defaults(handler=cmd_is_not)
     ps = sub.add_parser("print-sep", help="Normalize print('='*N) separators")
     ps.add_argument("paths", nargs="*", type=Path)

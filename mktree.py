@@ -34,14 +34,10 @@ NODE_MARKERS: tuple[str, str, str, str] = (
     "|--",
     "`--",
 )
-FOOTER_RE = re.compile(
-    r"^\d+\s+(directories|files|dirs|items)(,\s*\d+\s+(directories|files|dirs|items))?$"
-)
+FOOTER_RE = re.compile(r"^\d+\s+(directories|files|dirs|items)(,\s*\d+\s+(directories|files|dirs|items))?$")
 JUNK_LINE_CHARS = set(" \u2502\u251c\u2514\u2500|+-`")
 JUNK_TOKEN_RE = re.compile(r"^[\u2502\u251c\u2514\u2500|+\-]+$")
-LEAD_JUNK_RE = re.compile(
-    r"^([\u2502\u251c\u2514\u2500|+`\-]{2,}|[\u2502\u251c\u2514\u2500|+`\-]+\s+)"
-)
+LEAD_JUNK_RE = re.compile(r"^([\u2502\u251c\u2514\u2500|+`\-]{2,}|[\u2502\u251c\u2514\u2500|+`\-]+\s+)")
 
 
 def strip_leading_junk(left: Any, text: str):
@@ -148,15 +144,13 @@ def parse_tree_text(text: str, keep_suffix: bool = False, warn: Any = print):
             depth = col_to_depth[idx]
         else:
             depth = 1
-        entries.append(
-            {
-                "depth": depth,
-                "name": name,
-                "is_dir": explicit,
-                "explicit_dir": explicit,
-                "line_no": line_no,
-            }
-        )
+        entries.append({
+            "depth": depth,
+            "name": name,
+            "is_dir": explicit,
+            "explicit_dir": explicit,
+            "line_no": line_no,
+        })
     for w in warnings:
         warn("warning: " + w)
     return entries
@@ -181,25 +175,19 @@ def load_ocr(choice: str):
                         conf = 0.0
                     xs = [float(p[0]) for p in box]
                     ys = [float(p[1]) for p in box]
-                    tokens.append(
-                        (min(xs), min(ys), max(xs) - min(xs), str(text).strip(), conf)
-                    )
+                    tokens.append((min(xs), min(ys), max(xs) - min(xs), str(text).strip(), conf))
                 return tokens
 
             return "rapidocr", run
         except ImportError:
             if choice == "rapidocr":
-                sys.exit(
-                    "error: rapidocr-onnxruntime is not installed (pip install rapidocr-onnxruntime)"
-                )
+                sys.exit("error: rapidocr-onnxruntime is not installed (pip install rapidocr-onnxruntime)")
     if choice in ("auto", "pytesseract"):
         try:
             import pytesseract
 
             def run(img: Any):
-                data = pytesseract.image_to_data(
-                    img, output_type=pytesseract.Output.DICT, config="--psm 6"
-                )
+                data = pytesseract.image_to_data(img, output_type=pytesseract.Output.DICT, config="--psm 6")
                 tokens = []
                 for i, t in enumerate(data["text"]):
                     t = (t or "").strip()
@@ -211,23 +199,19 @@ def load_ocr(choice: str):
                         conf = 0.0
                     if conf < 40:
                         continue
-                    tokens.append(
-                        (
-                            int(data["left"][i]),
-                            int(data["top"][i]),
-                            int(data["width"][i]),
-                            t,
-                            conf,
-                        )
-                    )
+                    tokens.append((
+                        int(data["left"][i]),
+                        int(data["top"][i]),
+                        int(data["width"][i]),
+                        t,
+                        conf,
+                    ))
                 return tokens
 
             return "pytesseract", run
         except ImportError:
             if choice == "pytesseract":
-                sys.exit(
-                    "error: pytesseract is not installed (pip install pytesseract)"
-                )
+                sys.exit("error: pytesseract is not installed (pip install pytesseract)")
     sys.exit(
         "error: no OCR engine available — install one with:\n"
         "    pip install rapidocr-onnxruntime     (recommended, self-contained)\n"
@@ -261,12 +245,7 @@ def detect_marker_xs(img: Any, rows: Iterable[Any], pitch: float, char_width: in
                 i = j
             else:
                 i += 1
-        cand = [
-            s
-            for s, e in runs
-            if 1.2 * char_width <= (e - s) <= 6 * char_width
-            and s < left - 0.2 * char_width
-        ]
+        cand = [s for s, e in runs if 1.2 * char_width <= (e - s) <= 6 * char_width and s < left - 0.2 * char_width]
         out.append(min(cand) if cand else None)
     return out
 
@@ -286,9 +265,7 @@ def image_to_entries(path: Path, keep_suffix: bool = False, engine: str = "auto"
     small = min(img.size)
     if small < 800:
         factor = min(800 / small, 4.0)
-        img = img.resize(
-            (round(img.width * factor), round(img.height * factor)), Image.LANCZOS
-        )
+        img = img.resize((round(img.width * factor), round(img.height * factor)), Image.LANCZOS)
     engine_name, ocr = load_ocr(engine)
     tokens = ocr(img)
     raw_count = len(tokens)
@@ -309,9 +286,7 @@ def image_to_entries(path: Path, keep_suffix: bool = False, engine: str = "auto"
     tokens = kept
     if not tokens:
         sys.exit(f"error: OCR found no readable entries in {path}")
-    cell_widths = [
-        w / max(1, len(t)) for _l, _t, w, t, *_ in tokens if len(t) >= 2 and w > 0
-    ]
+    cell_widths = [w / max(1, len(t)) for _l, _t, w, t, *_ in tokens if len(t) >= 2 and w > 0]
     tokens.sort(key=lambda t: (t[1], t[0]))
     tops = [t[1] for t in tokens]
     top_diffs = [b - a for a, b in itertools.pairwise(tops) if b - a > 0]
@@ -335,9 +310,7 @@ def image_to_entries(path: Path, keep_suffix: bool = False, engine: str = "auto"
     col_gap = 0.8 * char_width
     ocr_means = cluster_means(row_lefts, min_gap=col_gap)
     ocr_depth = {m: k + 1 for k, m in enumerate(ocr_means)}
-    marker_means = cluster_means(
-        [m for m in marker_xs if m is not None], min_gap=col_gap
-    )
+    marker_means = cluster_means([m for m in marker_xs if m is not None], min_gap=col_gap)
     marker_depth = {m: k + 1 for k, m in enumerate(marker_means)}
 
     def depth_of(i: Any):
@@ -349,21 +322,17 @@ def image_to_entries(path: Path, keep_suffix: bool = False, engine: str = "auto"
         return ocr_depth[nearest]
 
     entries = []
-    for i, (top, left, raw) in enumerate(
-        zip((r[0] for r in rows), row_lefts, row_names, strict=False)
-    ):
+    for i, (top, left, raw) in enumerate(zip((r[0] for r in rows), row_lefts, row_names, strict=False)):
         name, explicit = clean_name(raw, keep_suffix=keep_suffix)
         if name is None:
             continue
-        entries.append(
-            {
-                "depth": depth_of(i),
-                "name": name,
-                "is_dir": explicit,
-                "explicit_dir": explicit,
-                "line_no": round(top),
-            }
-        )
+        entries.append({
+            "depth": depth_of(i),
+            "name": name,
+            "is_dir": explicit,
+            "explicit_dir": explicit,
+            "line_no": round(top),
+        })
     if not entries:
         sys.exit(f"error: OCR found no usable entries in {path}")
     return engine_name, entries, {"tokens": raw_count, "rows": len(rows)}
@@ -411,17 +380,10 @@ def ambiguous_notes(entries: list[Any], assume_dir: bool = False):
 
 def _unsafe_name(name: str) -> bool:
     p = Path(name)
-    return (
-        not name
-        or "\\" in name
-        or p.is_absolute()
-        or any(part in ("", ".", "..") for part in p.parts)
-    )
+    return not name or "\\" in name or p.is_absolute() or any(part in ("", ".", "..") for part in p.parts)
 
 
-def create_tree(
-    entries: list[Any], base_dir: Path, dry_run: bool = False
-) -> dict[str, int]:
+def create_tree(entries: list[Any], base_dir: Path, dry_run: bool = False) -> dict[str, int]:
     base_dir = base_dir.resolve()
     if not dry_run:
         base_dir.mkdir(parents=True, exist_ok=True)
@@ -549,12 +511,8 @@ def main() -> None:
         print(f"error: input file not found: {input_path}", file=sys.stderr)
         sys.exit(1)
     if detect_mode(input_path) == "image":
-        engine_name, entries, stats = image_to_entries(
-            input_path, keep_suffix=args.keep_suffix, engine=args.engine
-        )
-        print(
-            f"OCR ({engine_name}): {stats['rows']} rows from {stats['tokens']} raw tokens"
-        )
+        engine_name, entries, stats = image_to_entries(input_path, keep_suffix=args.keep_suffix, engine=args.engine)
+        print(f"OCR ({engine_name}): {stats['rows']} rows from {stats['tokens']} raw tokens")
     else:
         try:
             text = input_path.read_text(encoding="utf-8", errors="replace")

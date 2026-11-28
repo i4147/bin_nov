@@ -39,9 +39,7 @@ class ProcessResult:
 
 class CommentRemover:
     STRING_PATTERN = r"""(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')"""
-    RAW_STRING_PATTERN = (
-        r'(?:u8|u|U|L)?R"(?P<raw_delimiter>[^()\s\\]{0,16})\(.*?\)(?P=raw_delimiter)"'
-    )
+    RAW_STRING_PATTERN = r'(?:u8|u|U|L)?R"(?P<raw_delimiter>[^()\s\\]{0,16})\(.*?\)(?P=raw_delimiter)"'
     SINGLE_COMMENT_PATTERN = r"//(?:\\\r?\n|[^\n])*"
     MULTI_COMMENT_PATTERN = r"/\*.*?\*/"
 
@@ -163,9 +161,7 @@ def collect_source_files(targets: list[str]) -> list[Path]:
     return sorted(all_files)
 
 
-def process_files_parallel(
-    paths: list[Path], num_workers: int | None = None
-) -> list[ProcessResult]:
+def process_files_parallel(paths: list[Path], num_workers: int | None = None) -> list[ProcessResult]:
     num_workers = num_workers or cpu_count()
     remover = CommentRemover()
     with Pool(num_workers) as pool:
@@ -260,16 +256,12 @@ def main(
                 final_size = len(cleaned.encode("utf-8"))
                 freed = original_size - final_size
                 total_preview_freed += freed
-                print(
-                    f"  {path.name}: {comments} comments, would free {_format_bytes(freed)}"
-                )
+                print(f"  {path.name}: {comments} comments, would free {_format_bytes(freed)}")
             except Exception as e:
                 logger.error(f"  {path.name}: {e}")
         if len(source_files) > 5:
             print(f"  ... and {len(source_files) - 5} more files")
-            print(
-                f"Preview: Would free approximately {_format_bytes(total_preview_freed)} (for {5} processed files)"
-            )
+            print(f"Preview: Would free approximately {_format_bytes(total_preview_freed)} (for {5} processed files)")
         return 0
     print(f"Using {num_workers or cpu_count()} workers for parallel processing")
     results = process_files_parallel(source_files, num_workers)
@@ -306,9 +298,7 @@ if __name__ == "__main__":
         action="store_true",
         help="Remove .bak backup files after processing",
     )
-    parser.add_argument(
-        "--dry-run", action="store_true", help="Preview changes without modifying files"
-    )
+    parser.add_argument("--dry-run", action="store_true", help="Preview changes without modifying files")
     args = parser.parse_args()
     targets = args.targets or None
     exit_code = main(

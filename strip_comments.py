@@ -80,12 +80,7 @@ def strip_rust(source: str) -> str:
                 result.append(source[i:end_idx])
                 i = end_idx
                 continue
-        if (
-            not in_raw_string
-            and (not in_char)
-            and (source[i] == '"')
-            and (not in_string)
-        ):
+        if not in_raw_string and (not in_char) and (source[i] == '"') and (not in_string):
             in_string = True
             result.append(source[i])
             i += 1
@@ -230,9 +225,7 @@ def strip_js(source: str) -> str:
     return _collapse_blank_lines("".join(result))
 
 
-_PRESERVE_COMMENT: Final[re.Pattern[str]] = re.compile(
-    r"^\s*#\s*(type|fmt|noqa|pyright|pylint|mypy|ruff)\s*[:\s]"
-)
+_PRESERVE_COMMENT: Final[re.Pattern[str]] = re.compile(r"^\s*#\s*(type|fmt|noqa|pyright|pylint|mypy|ruff)\s*[:\s]")
 
 
 def strip_python(source: str) -> str:
@@ -279,9 +272,7 @@ def strip_python(source: str) -> str:
                     continue
             if module_docstring_done:
                 stripped_line = tline.strip()
-                is_docstring = (
-                    stripped_line.startswith(ttext[:3]) if len(ttext) >= 3 else False
-                )
+                is_docstring = stripped_line.startswith(ttext[:3]) if len(ttext) >= 3 else False
                 if is_docstring and ttext.startswith(('"""', "'''", 'r"""', "r'''")):
                     prev_end = tend
                     continue
@@ -485,9 +476,7 @@ _EXT_ICON: Final[dict[str, str]] = {
 def print_header(active_exts: set[str]) -> None:
     exts_str = "  ".join(sorted(active_exts))
     logger.opt(colors=True).info("")
-    logger.opt(colors=True).info(
-        _c("  strip_comments ", BOLD, CYAN) + _c(f"targeting: {exts_str}", DIM)
-    )
+    logger.opt(colors=True).info(_c("  strip_comments ", BOLD, CYAN) + _c(f"targeting: {exts_str}", DIM))
     logger.opt(colors=True).info(_c("  " + "─" * 40, DIM))
 
 
@@ -501,14 +490,10 @@ def print_file_result(r: FileResult) -> None:
     if r.changed:
         status = _c(" stripped ", BOLD, GREEN)
         lines_badge = (
-            _c(f"-{r.lines_removed}", YELLOW) + _c(" lines", DIM)
-            if r.lines_removed > 0
-            else _c("±0 lines", DIM)
+            _c(f"-{r.lines_removed}", YELLOW) + _c(" lines", DIM) if r.lines_removed > 0 else _c("±0 lines", DIM)
         )
         bytes_badge = _c(f"-{fsz(r.bytes_saved)}", MAGENTA)
-        logger.opt(colors=True).info(
-            f"  {icon}  {_c(r.rel, WHITE)}  {status}  {lines_badge}  {bytes_badge}"
-        )
+        logger.opt(colors=True).info(f"  {icon}  {_c(r.rel, WHITE)}  {status}  {lines_badge}  {bytes_badge}")
     else:
         status = _c(" clean  ", DIM)
         logger.opt(colors=True).info(f"  {icon}  {_c(r.rel, DIM)}  {status}")
@@ -596,9 +581,7 @@ def main() -> int:
             if getattr(args, flag):
                 active_exts.update(exts)
     if not active_exts:
-        parser.error(
-            "No language flag specified. Use --rs, --toml, --js, --py, --sh, --lua, or --all."
-        )
+        parser.error("No language flag specified. Use --rs, --toml, --js, --py, --sh, --lua, or --all.")
     cwd = Path.cwd()
     files = collect_files(args.dirs, active_exts)
     if not files:

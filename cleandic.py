@@ -52,14 +52,8 @@ def main() -> None:
     elif isinstance(data, list):
         parsed_list: list[tuple[str, Any]] = []
         for entry in data:
-            if (
-                not isinstance(entry, dict)
-                or "orig" not in entry
-                or "translated" not in entry
-            ):
-                print(
-                    "Error: list entries must be objects with 'orig' and 'translated' keys."
-                )
+            if not isinstance(entry, dict) or "orig" not in entry or "translated" not in entry:
+                print("Error: list entries must be objects with 'orig' and 'translated' keys.")
                 sys.exit(1)
             parsed_list.append((str(entry["orig"]), entry["translated"]))
         items = parsed_list
@@ -80,9 +74,7 @@ def main() -> None:
     if isinstance(data, dict):
         good_data = dict(good)
     else:
-        good_data = [
-            {"orig": orig, "translated": translated} for orig, translated in good
-        ]
+        good_data = [{"orig": orig, "translated": translated} for orig, translated in good]
 
     with json_path.open("w", encoding="utf-8") as f:
         json.dump(good_data, f, ensure_ascii=False, indent=2)

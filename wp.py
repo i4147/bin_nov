@@ -273,12 +273,8 @@ def main() -> int:
         action="store_true",
         help="process every top-level directory in '.' one by one",
     )
-    parser.add_argument(
-        "dirs", nargs="*", metavar="DIR", help="directories to pack (relative to '.')"
-    )
-    parser.add_argument(
-        "--skip-hidden", action="store_true", help="in -a mode, skip dotfiles/dot-dirs"
-    )
+    parser.add_argument("dirs", nargs="*", metavar="DIR", help="directories to pack (relative to '.')")
+    parser.add_argument("--skip-hidden", action="store_true", help="in -a mode, skip dotfiles/dot-dirs")
     parser.add_argument(
         "--exclude",
         action="append",
@@ -307,9 +303,7 @@ def main() -> int:
         metavar="SIZE",
         help="skip dirs larger than SIZE (-a mode)",
     )
-    parser.add_argument(
-        "--skip-symlinks", action="store_true", help="skip top-level symlinks (-a mode)"
-    )
+    parser.add_argument("--skip-symlinks", action="store_true", help="skip top-level symlinks (-a mode)")
 
     # ---- sorting ----
     parser.add_argument(
@@ -332,12 +326,8 @@ def main() -> int:
         action="store_true",
         help="show what would happen; do nothing",
     )
-    parser.add_argument(
-        "--keep", action="store_true", help="pack but do not remove directories"
-    )
-    parser.add_argument(
-        "--no-verify", action="store_true", help="skip verifying the produced wheel"
-    )
+    parser.add_argument("--keep", action="store_true", help="pack but do not remove directories")
+    parser.add_argument("--no-verify", action="store_true", help="skip verifying the produced wheel")
     parser.add_argument(
         "--trash",
         nargs="?",
@@ -346,9 +336,7 @@ def main() -> int:
         metavar="DIR",
         help="move dirs to DIR instead of deleting (default: XDG trash)",
     )
-    parser.add_argument(
-        "--fail-fast", action="store_true", help="stop at first failure"
-    )
+    parser.add_argument("--fail-fast", action="store_true", help="stop at first failure")
     parser.add_argument(
         "--max-delete",
         type=int,
@@ -367,9 +355,7 @@ def main() -> int:
         metavar="FILE",
         help="resume-able state file (JSON)",
     )
-    parser.add_argument(
-        "-d", "--dest", default=None, metavar="DIR", help="pass -d DIR to `wheel pack`"
-    )
+    parser.add_argument("-d", "--dest", default=None, metavar="DIR", help="pass -d DIR to `wheel pack`")
     parser.add_argument(
         "--build-number",
         type=int,
@@ -386,13 +372,9 @@ def main() -> int:
     )
 
     # ---- output ----
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="show wheel pack stdout"
-    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="show wheel pack stdout")
     parser.add_argument("-q", "--quiet", action="store_true", help="only print errors")
-    parser.add_argument(
-        "--log", default=None, metavar="FILE", help="append per-dir log lines to FILE"
-    )
+    parser.add_argument("--log", default=None, metavar="FILE", help="append per-dir log lines to FILE")
     parser.add_argument(
         "--report",
         default=None,
@@ -497,9 +479,7 @@ def main() -> int:
             if not args.quiet:
                 print(f"[{i}/{len(dirs)}]", file=sys.stderr, end=" ", flush=True)
 
-            res = process_dir(
-                directory, sizes.get(directory, 0), args, args.trash, state
-            )
+            res = process_dir(directory, sizes.get(directory, 0), args, args.trash, state)
             results.append(res)
 
             if res.skipped:

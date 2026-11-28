@@ -263,9 +263,7 @@ def cmd_move_chinese(args: argparse.Namespace) -> int:
     return 0
 
 
-def _write_extraction(
-    src: Path, kept: list[str], removed: list[str], out_name: str = DEFAULT_NONENG_FILE
-) -> None:
+def _write_extraction(src: Path, kept: list[str], removed: list[str], out_name: str = DEFAULT_NONENG_FILE) -> None:
     if not removed:
         print("ℹ️  No non-English lines found to extract. Base file left unchanged.")
         return
@@ -307,11 +305,7 @@ def _filter_simple(path: Path, move: bool, out_name: str) -> int:
             kept.append(raw)
         else:
             removed.append(raw)
-            tag = (
-                f"[{res.language.upper()} (Prob: {res.probability:.2f})]"
-                if res.language != "und"
-                else "[UNKNOWN]"
-            )
+            tag = f"[{res.language.upper()} (Prob: {res.probability:.2f})]" if res.language != "und" else "[UNKNOWN]"
             print(f"Line {i} {tag}: {stripped}")
     print("-" * 40)
     print(f"📊 Summary: Found {len(removed)} non-English lines.")
@@ -384,16 +378,12 @@ def cmd_find_files(args: argparse.Namespace) -> int:
         stats = _scan_detailed(root, args.min_bytes, args.max_bytes)
         _report_detailed(stats, show_files=args.verbose or args.list_languages)
     else:
-        stats = _scan_simple(
-            root, args.min_bytes, args.max_bytes, show_progress=not args.no_progress
-        )
+        stats = _scan_simple(root, args.min_bytes, args.max_bytes, show_progress=not args.no_progress)
         _report_simple(stats, only_non_english=not args.all)
     return 0
 
 
-def _scan_simple(
-    root: Path, min_bytes: int, max_bytes: int, show_progress: bool
-) -> dict:
+def _scan_simple(root: Path, min_bytes: int, max_bytes: int, show_progress: bool) -> dict:
     stats = {
         "total_files": 0,
         "skipped_binary": 0,
@@ -426,15 +416,13 @@ def _scan_simple(
             continue
         stats["languages"][name] += 1
         if code != "en":
-            stats["non_english"].append(
-                {
-                    "file": f,
-                    "language": name,
-                    "code": code,
-                    "reliable": conf >= 70,
-                    "confidence": conf,
-                }
-            )
+            stats["non_english"].append({
+                "file": f,
+                "language": name,
+                "code": code,
+                "reliable": conf >= 70,
+                "confidence": conf,
+            })
     if show_progress:
         print()
     return stats
@@ -550,9 +538,7 @@ def _report_detailed(stats: dict, show_files: bool) -> None:
     print(f"   └─ Skipped (encoding issues): {stats['skipped_encoding']}")
     print("\n🌍 Language breakdown:")
     print(f"   ├─ 🇺🇸 English files: {eng}")
-    for lang, files in sorted(
-        stats["non_english"].items(), key=lambda x: len(x[1]), reverse=True
-    ):
+    for lang, files in sorted(stats["non_english"].items(), key=lambda x: len(x[1]), reverse=True):
         pct_l = (len(files) / checked * 100) if checked else 0
         print(f"   ├─ 🌐 {lang.upper()}: {len(files)} files ({pct_l:.1f}%)")
     if undet:
@@ -565,9 +551,7 @@ def _report_detailed(stats: dict, show_files: bool) -> None:
             pct_d = s["non_english"] / s["total"] * 100
             label = d if d != "." else "(root)"
             print(f"   ├─ {label}:")
-            print(
-                f"   │   {s['non_english']}/{s['total']} files ({pct_d:.1f}% non-English)"
-            )
+            print(f"   │   {s['non_english']}/{s['total']} files ({pct_d:.1f}% non-English)")
     if show_files and stats["non_english"]:
         print("\n📄 Non-English files by language:")
         for lang, files in sorted(stats["non_english"].items()):
@@ -590,11 +574,7 @@ def _report_detailed(stats: dict, show_files: bool) -> None:
 def cmd_find_lines(args: argparse.Namespace) -> int:
     _require_pycld2()
     root = Path(args.root)
-    exts = (
-        {e.strip().lower().lstrip(".") for e in args.ext.split(",") if e.strip()}
-        if args.ext
-        else None
-    )
+    exts = {e.strip().lower().lstrip(".") for e in args.ext.split(",") if e.strip()} if args.ext else None
     out_path = Path(args.out)
     scanned = 0
     hits = 0
@@ -628,9 +608,7 @@ def cmd_find_lines(args: argparse.Namespace) -> int:
                     flat = raw.replace("\r", " ").replace("\n", " ").replace("\t", " ")
                     writer.writerow([str(fp), str(lineno), code, f"{score:.3f}", flat])
                     hits += 1
-    print(
-        f"Scanned files: {scanned}; non-English lines found: {hits}; results saved to {out_path}"
-    )
+    print(f"Scanned files: {scanned}; non-English lines found: {hits}; results saved to {out_path}")
     return 0
 
 
@@ -641,9 +619,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     sub = p.add_subparsers(dest="command", required=True)
-    mc = sub.add_parser(
-        "move-chinese", help="Move files containing Chinese characters."
-    )
+    mc = sub.add_parser("move-chinese", help="Move files containing Chinese characters.")
     mc.add_argument(
         "directory",
         nargs="?",
@@ -656,9 +632,7 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"Target folder name (default: {DEFAULT_MOVE_TARGET}).",
     )
     mc.set_defaults(func=cmd_move_chinese)
-    fl = sub.add_parser(
-        "filter-lines", help="Filter non-English lines out of one file."
-    )
+    fl = sub.add_parser("filter-lines", help="Filter non-English lines out of one file.")
     fl.add_argument("file", help="File to inspect line-by-line.")
     fl.add_argument(
         "-m",
@@ -666,9 +640,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Extract non-English lines to noneng.txt and edit source in place.",
     )
-    fl.add_argument(
-        "--strict", action="store_true", help="Use gcld3 + NLTK word-ratio (strict)."
-    )
+    fl.add_argument("--strict", action="store_true", help="Use gcld3 + NLTK word-ratio (strict).")
     fl.add_argument(
         "-t",
         "--threshold",
@@ -683,9 +655,7 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"Output filename for extracted lines (default {DEFAULT_NONENG_FILE}).",
     )
     fl.set_defaults(func=cmd_filter_lines)
-    ff = sub.add_parser(
-        "find-files", help="Recursively find non-English files (pycld2)."
-    )
+    ff = sub.add_parser("find-files", help="Recursively find non-English files (pycld2).")
     ff.add_argument(
         "directory",
         nargs="?",
@@ -716,9 +686,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Don't print per-file progress.",
     )
-    ff.add_argument(
-        "-o", "--output", help="Write the report to this file instead of stdout."
-    )
+    ff.add_argument("-o", "--output", help="Write the report to this file instead of stdout.")
     ff.add_argument(
         "--detailed",
         action="store_true",
@@ -737,12 +705,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Detailed mode: same as --verbose (list all detected files).",
     )
     ff.set_defaults(func=cmd_find_files)
-    fnd = sub.add_parser(
-        "find-lines", help="Find non-English lines across many files, save TSV."
-    )
-    fnd.add_argument(
-        "-r", "--root", default=".", help="Root directory to scan (default: .)."
-    )
+    fnd = sub.add_parser("find-lines", help="Find non-English lines across many files, save TSV.")
+    fnd.add_argument("-r", "--root", default=".", help="Root directory to scan (default: .).")
     fnd.add_argument(
         "-e",
         "--ext",

@@ -120,12 +120,7 @@ def load_project_info() -> ProjectInfo:
     if not name:
         print("Error: Project name is missing from pyproject.toml.")
         sys.exit(1)
-    authors = (
-        project.get("authors")
-        or project.get("maintainers")
-        or poetry_tool.get("authors")
-        or []
-    )
+    authors = project.get("authors") or project.get("maintainers") or poetry_tool.get("authors") or []
     author, author_email = _split_authors(authors)
     version_static = project.get("version") or poetry_tool.get("version", "0.1.0")
     description = project.get("description") or poetry_tool.get("description", "")
@@ -142,9 +137,7 @@ def load_project_info() -> ProjectInfo:
         install_requires = _clean_poetry_deps(poetry_deps)
     if not extras_require and "extras" in poetry_tool:
         extras_require = {g: list(items) for g, items in poetry_tool["extras"].items()}
-    classifiers = list(
-        project.get("classifiers", []) or poetry_tool.get("classifiers", [])
-    )
+    classifiers = list(project.get("classifiers", []) or poetry_tool.get("classifiers", []))
     return ProjectInfo(
         config=config,
         project=project,
@@ -212,12 +205,7 @@ setup(
 
 
 def build_flit(info: ProjectInfo) -> str:
-    import_name = (
-        info.config.get("tool", {})
-        .get("flit", {})
-        .get("module", {})
-        .get("name", info.name)
-    )
+    import_name = info.config.get("tool", {}).get("flit", {}).get("module", {}).get("name", info.name)
     extraction = f"""    candidates = [Path({import_name!r} + ".py"), Path({import_name!r}) / "__init__.py"]
     target = next((p for p in candidates if p.is_file()), None)
     if target is None:
@@ -256,9 +244,7 @@ def build_hatch(info: ProjectInfo) -> str:
     custom_includes = hatch_cfg.get("build", {}).get("include", [])
     py_modules = [p.replace(".py", "") for p in custom_includes if p.endswith(".py")]
     version_path = hatch_cfg.get("version", {}).get("path", "")
-    uses_vcs = any(
-        "hatch-vcs" in r for r in config.get("build-system", {}).get("requires", [])
-    )
+    uses_vcs = any("hatch-vcs" in r for r in config.get("build-system", {}).get("requires", []))
     module = info.module_name
     search_paths = (
         [version_path]
@@ -346,9 +332,7 @@ def build_maturin(info: ProjectInfo) -> str:
 def build_meson(info: ProjectInfo) -> str:
     meson_meta = info.config.get("tool", {}).get("meson-python", {}).get("metadata", {})
     version_cfg = meson_meta.get("version", {})
-    version_provider = (
-        version_cfg.get("provider", "") if isinstance(version_cfg, dict) else ""
-    )
+    version_provider = version_cfg.get("provider", "") if isinstance(version_cfg, dict) else ""
     vcs_block = ""
     if version_provider and "DiscoverVersion" in version_provider:
         vcs_block = """    try:
@@ -427,7 +411,9 @@ def build_setuptools(info: ProjectInfo) -> str:
                         return
                     except Exception:
                         pass"""
-    setup_kwargs = f"    packages=find_packages(where={find_where!r}, include={find_include!r}, exclude={find_exclude!r}),\n"
+    setup_kwargs = (
+        f"    packages=find_packages(where={find_where!r}, include={find_include!r}, exclude={find_exclude!r}),\n"
+    )
     if find_where != ".":
         setup_kwargs += f'    package_dir={{"": {find_where!r}}},\n'
     return _render_setup(
@@ -446,9 +432,7 @@ def build_pdm(info: ProjectInfo) -> str:
     package_dir_src = pdm_build.get("package-dir", "")
     custom_includes = pdm_build.get("includes", [])
     py_modules = [m.replace(".py", "") for m in custom_includes if m.endswith(".py")]
-    version_source = pdm_version_cfg.get(
-        "source", "file" if "version" in info.dynamic_fields else "static"
-    )
+    version_source = pdm_version_cfg.get("source", "file" if "version" in info.dynamic_fields else "static")
     version_path = pdm_version_cfg.get("path", "")
     module = info.module_name
     search_paths = (
@@ -545,12 +529,7 @@ def build_skbuild(info: ProjectInfo) -> str:
                 elif "setuptools_scm" in provider:
                     version_is_scm = True
     if not version_regex_file and not version_is_scm:
-        legacy = (
-            config.get("tool", {})
-            .get("scikit-build", {})
-            .get("metadata", {})
-            .get("version", {})
-        )
+        legacy = config.get("tool", {}).get("scikit-build", {}).get("metadata", {}).get("version", {})
         provider = legacy.get("provider", "")
         if "regex" in provider:
             version_regex_file = legacy.get("input", "")
@@ -630,9 +609,7 @@ def main() -> None:
         sys.exit(1)
     source = builder(info)
     atomic_write(SETUP_PATH, source, encoding="utf-8")
-    print(
-        f"Successfully generated setup.py for project: '{info.name}' (backend: {backend})"
-    )
+    print(f"Successfully generated setup.py for project: '{info.name}' (backend: {backend})")
 
 
 if __name__ == "__main__":

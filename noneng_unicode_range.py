@@ -53,10 +53,7 @@ def detect_scripts(text: str) -> set[str]:
         code = ord(char)
         if _in_ranges(code, ARABIC_PERSIAN_RANGES):
             found.add("Arabic/Persian")
-        if (
-            HIRAGANA_RANGE[0] <= code <= HIRAGANA_RANGE[1]
-            or KATAKANA_RANGE[0] <= code <= KATAKANA_RANGE[1]
-        ):
+        if HIRAGANA_RANGE[0] <= code <= HIRAGANA_RANGE[1] or KATAKANA_RANGE[0] <= code <= KATAKANA_RANGE[1]:
             found.add("Japanese")
         if _in_ranges(code, HANGUL_RANGES):
             found.add("Korean")
@@ -87,9 +84,7 @@ def extract_sample(text: str, max_chars: int = 80) -> str:
 def iter_files(root: Path) -> Iterator[Path]:
     root = root.resolve()
     for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
-        dirnames[:] = [
-            d for d in dirnames if d != ".git" and not (Path(dirpath) / d).is_symlink()
-        ]
+        dirnames[:] = [d for d in dirnames if d != ".git" and not (Path(dirpath) / d).is_symlink()]
 
         for name in filenames:
             path = Path(dirpath) / name

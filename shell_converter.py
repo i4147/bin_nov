@@ -265,16 +265,12 @@ def rewrite_references(converted: dict[str, str], base_dir: Path) -> int:
     alternatives = "|".join(re.escape(stem) for stem in stems)
 
     # Matches foo.sh, foo.zsh, ./foo.sh, and similar extensioned references.
-    extensioned_pattern = re.compile(
-        rf"(?<![A-Za-z0-9_.-])({alternatives})(\.(?:sh|zsh))(?![A-Za-z0-9_.-])"
-    )
+    extensioned_pattern = re.compile(rf"(?<![A-Za-z0-9_.-])({alternatives})(\.(?:sh|zsh))(?![A-Za-z0-9_.-])")
 
     # Matches bare extensionless references such as ./install or $BIN/install.
     # This is deliberately conservative: it does not alter words embedded in
     # larger identifiers.
-    extensionless_pattern = re.compile(
-        rf"(?<![A-Za-z0-9_.-])({alternatives})(?![A-Za-z0-9_.-])"
-    )
+    extensionless_pattern = re.compile(rf"(?<![A-Za-z0-9_.-])({alternatives})(?![A-Za-z0-9_.-])")
 
     try:
         listed = subprocess.run(
@@ -525,9 +521,7 @@ def check(
     wrong_targets = find_wrong_symlink_targets(links, direction)
 
     if wrong_targets:
-        problems.append(
-            "symlinks still target the old extension: " + ", ".join(wrong_targets)
-        )
+        problems.append("symlinks still target the old extension: " + ", ".join(wrong_targets))
 
     problems.extend(validate_syntax(scripts))
 

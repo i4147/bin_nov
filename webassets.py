@@ -142,9 +142,7 @@ def print_file_result(r: Result) -> None:
     elif r.no_change:
         cprint(f"= {rel}: (no change)", color="yellow")
     elif r.dry_run:
-        cprint(
-            f"~ {rel}: would save {human_size(r.saved)} ({r.ratio:.1f}%)", color="cyan"
-        )
+        cprint(f"~ {rel}: would save {human_size(r.saved)} ({r.ratio:.1f}%)", color="cyan")
     else:
         cprint(
             f"✓ {rel}: {human_size(r.original_size)} → "
@@ -259,9 +257,7 @@ def minify_html_hmin(path: Path, timeout: Optional[int] = None) -> Result:
         return Result(path, orig, orig, False, str(e))
     tmp_cfg: Optional[Path] = None
     try:
-        with tempfile.NamedTemporaryFile(
-            "w", suffix=".json", delete=False, encoding="utf-8"
-        ) as f:
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as f:
             json.dump(HTML_HMIN_CONFIG, f)
             tmp_cfg = Path(f.name)
         content = path.read_text(encoding="utf-8")
@@ -346,9 +342,7 @@ def minify_css_rcssmin(path: Path) -> Result:
     path = Path(path)
     orig = file_size(path)
     if _rcssmin is None:
-        return Result(
-            path, orig, orig, False, "rcssmin not installed (pip install rcssmin)"
-        )
+        return Result(path, orig, orig, False, "rcssmin not installed (pip install rcssmin)")
     try:
         content = path.read_text(encoding="utf-8")
         out = _rcssmin(content)
@@ -364,9 +358,7 @@ def minify_js_rjsmin(path: Path) -> Result:
     path = Path(path)
     orig = file_size(path)
     if _rjsmin is None:
-        return Result(
-            path, orig, orig, False, "rjsmin not installed (pip install rjsmin)"
-        )
+        return Result(path, orig, orig, False, "rjsmin not installed (pip install rjsmin)")
     try:
         content = path.read_text(encoding="utf-8")
         out = _rjsmin(content)
@@ -419,9 +411,7 @@ def minify_svg_svgcleaner(path: Path, skip_parts: Sequence[str] = ("lazy",)) -> 
             text=True,
         )
         if proc.returncode != 0:
-            return Result(
-                path, orig, orig, False, proc.stderr.strip() or "svgcleaner failed"
-            )
+            return Result(path, orig, orig, False, proc.stderr.strip() or "svgcleaner failed")
         new = file_size(tmp_path)
         if not new:
             return Result(path, orig, orig, False, "svgcleaner produced empty output")
@@ -618,12 +608,8 @@ def _v_object(prefix: str, name: str, d: dict) -> None:
     if r["defined_by_module"] is not None:
         assert r["defined_by_module"] in _MESON_DB["objects"], f"{prefix}.{name}"
         assert r["object_type"] == "RETURNED", f"{prefix}.{name}"
-        assert (
-            _MESON_DB["objects"][r["defined_by_module"]]["object_type"] == "MODULE"
-        ), f"{prefix}.{name}"
-        assert (
-            name in _MESON_DB["objects_by_type"]["modules"][r["defined_by_module"]]
-        ), f"{prefix}.{name}"
+        assert _MESON_DB["objects"][r["defined_by_module"]]["object_type"] == "MODULE", f"{prefix}.{name}"
+        assert name in _MESON_DB["objects_by_type"]["modules"][r["defined_by_module"]], f"{prefix}.{name}"
         return
     assert r["object_type"] in {
         "ELEMENTARY",
@@ -668,33 +654,14 @@ def validate_meson_json(doc_file: Path) -> int:
         assert all(x in db["objects"] for x in db["objects_by_type"][kind])
     assert all(isinstance(x, str) for x in db["objects_by_type"]["modules"])
     assert all(x in db["objects"] for x in db["objects_by_type"]["modules"])
+    assert all(db["objects"][x]["object_type"] == "ELEMENTARY" for x in db["objects_by_type"]["elementary"])
+    assert all(db["objects"][x]["object_type"] == "BUILTIN" for x in db["objects_by_type"]["builtins"])
+    assert all(db["objects"][x]["object_type"] == "RETURNED" for x in db["objects_by_type"]["returned"])
+    assert all(db["objects"][x]["object_type"] == "MODULE" for x in db["objects_by_type"]["modules"])
+    assert all(all(isinstance(x, str) for x in v) for v in db["objects_by_type"]["modules"].values())
+    assert all(all(x in db["objects"] for x in v) for v in db["objects_by_type"]["modules"].values())
     assert all(
-        db["objects"][x]["object_type"] == "ELEMENTARY"
-        for x in db["objects_by_type"]["elementary"]
-    )
-    assert all(
-        db["objects"][x]["object_type"] == "BUILTIN"
-        for x in db["objects_by_type"]["builtins"]
-    )
-    assert all(
-        db["objects"][x]["object_type"] == "RETURNED"
-        for x in db["objects_by_type"]["returned"]
-    )
-    assert all(
-        db["objects"][x]["object_type"] == "MODULE"
-        for x in db["objects_by_type"]["modules"]
-    )
-    assert all(
-        all(isinstance(x, str) for x in v)
-        for v in db["objects_by_type"]["modules"].values()
-    )
-    assert all(
-        all(x in db["objects"] for x in v)
-        for v in db["objects_by_type"]["modules"].values()
-    )
-    assert all(
-        all(db["objects"][x]["defined_by_module"] == k for x in v)
-        for k, v in db["objects_by_type"]["modules"].items()
+        all(db["objects"][x]["defined_by_module"] == k for x in v) for k, v in db["objects_by_type"]["modules"].items()
     )
     for name, body in r["functions"].items():
         _v_func("root", name, body)
@@ -873,21 +840,15 @@ def build_parser() -> argparse.ArgumentParser:
         default="rcssmin",
         help="rcssmin = pure Python (default); csso = external CLI.",
     )
-    pc.add_argument(
-        "--ext", default=".css", help="Comma-separated extensions (default: .css)."
-    )
+    pc.add_argument("--ext", default=".css", help="Comma-separated extensions (default: .css).")
     pc.set_defaults(func=cmd_css)
     pj = sub.add_parser("js", help="Minify JS files (rjsmin).")
     pj.add_argument("paths", nargs="*", default=["."])
-    pj.add_argument(
-        "--ext", default=".js", help="Comma-separated extensions (default: .js)."
-    )
+    pj.add_argument("--ext", default=".js", help="Comma-separated extensions (default: .js).")
     pj.set_defaults(func=cmd_js)
     pq = sub.add_parser("json", help="Minify JSON files.")
     pq.add_argument("paths", nargs="*", default=["."])
-    pq.add_argument(
-        "--dry", action="store_true", help="Report what would change without writing."
-    )
+    pq.add_argument("--dry", action="store_true", help="Report what would change without writing.")
     pq.add_argument(
         "--spaced",
         action="store_true",
@@ -905,9 +866,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ps.add_argument("--ext", default=".svg")
     ps.set_defaults(func=cmd_svg)
-    pt = sub.add_parser(
-        "truncate", help="Truncate files at their last closing tag (fixsvg.py)."
-    )
+    pt = sub.add_parser("truncate", help="Truncate files at their last closing tag (fixsvg.py).")
     pt.add_argument("paths", nargs="*", default=["."])
     pt.add_argument(
         "--ext",
@@ -922,16 +881,12 @@ def build_parser() -> argparse.ArgumentParser:
         "</svg> </html> </body> </script> </div> in that order.",
     )
     pt.set_defaults(func=cmd_truncate)
-    pm = sub.add_parser(
-        "mixed", help="Dispatch CSS/JSON/HTML by extension (minjch.py)."
-    )
+    pm = sub.add_parser("mixed", help="Dispatch CSS/JSON/HTML by extension (minjch.py).")
     pm.add_argument("paths", nargs="*", default=["."])
     pm.add_argument("--ext", default=".css,.json,.html,.htm")
     pm.set_defaults(func=cmd_mixed)
     pv = sub.add_parser("validate-meson-json", help="Validate a Meson JSON-docs file.")
-    pv.add_argument(
-        "doc_file", type=Path, help="Path to the JSON docs file to validate."
-    )
+    pv.add_argument("doc_file", type=Path, help="Path to the JSON docs file to validate.")
     pv.set_defaults(func=cmd_validate_meson_json)
     return p
 

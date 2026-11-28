@@ -169,9 +169,7 @@ def get_package_location(package_name: str) -> tuple[Optional[str], bool]:
     return None, False
 
 
-def check_installed_package(
-    wheel_path: Path, installed_packages: dict[str, str]
-) -> Optional[WheelInfo]:
+def check_installed_package(wheel_path: Path, installed_packages: dict[str, str]) -> Optional[WheelInfo]:
     package_name, _version = parse_wheel_name(wheel_path)
     if not package_name:
         return None
@@ -222,9 +220,7 @@ def scan_site_packages() -> list[Path]:
                         continue
                     file_path = row[0]
                     resolved_path = (dist_info.parent / file_path).resolve()
-                    if not str(resolved_path).startswith(
-                        str(dist_info.resolve()) + "/"
-                    ):
+                    if not str(resolved_path).startswith(str(dist_info.resolve()) + "/"):
                         is_empty = False
                         break
             if is_empty:
@@ -324,9 +320,7 @@ def cmd_all(args: argparse.Namespace) -> int:
     installed_packages = {}
     if args.check_installed:
         installed_packages = get_installed_packages()
-        print(
-            f"Found {len(installed_packages)} installed packages in current environment\n"
-        )
+        print(f"Found {len(installed_packages)} installed packages in current environment\n")
     empty_wheels = []
     installed_empty_wheels = []
     valid_wheels = []
@@ -337,9 +331,7 @@ def cmd_all(args: argparse.Namespace) -> int:
             if args.check_installed:
                 pkg_info = check_installed_package(wheel, installed_packages)
                 if pkg_info:
-                    print(
-                        f"  ⚠ WARNING: Package '{pkg_info['package']}' is INSTALLED (version {pkg_info['version']})"
-                    )
+                    print(f"  ⚠ WARNING: Package '{pkg_info['package']}' is INSTALLED (version {pkg_info['version']})")
                     if pkg_info["location"]:
                         print(f"  📍 Installed at: {pkg_info['location']}")
                         if not pkg_info["has_files"]:
@@ -359,9 +351,7 @@ def cmd_all(args: argparse.Namespace) -> int:
     print(f"Valid wheels: {len(valid_wheels)}")
     print(f"Empty wheels: {len(empty_wheels)}")
     if installed_empty_wheels:
-        print(
-            f"\n⚠ CRITICAL: {len(installed_empty_wheels)} empty wheels correspond to INSTALLED packages!"
-        )
+        print(f"\n⚠ CRITICAL: {len(installed_empty_wheels)} empty wheels correspond to INSTALLED packages!")
         for info in installed_empty_wheels:
             print(f"  - {info['wheel'].name} -> {info['package']}=={info['version']}")
         print("\nRECOMMENDATIONS:")
@@ -375,21 +365,13 @@ def cmd_all(args: argparse.Namespace) -> int:
         print(f"\nFound {len(empty_wheels)} empty wheel(s) total")
         wheels_to_move = []
         if installed_empty_wheels and not args.auto_move_all:
-            response = input(
-                "\nSome empty wheels are INSTALLED. Move ONLY the uninstalled empty wheels? (y/n): "
-            )
+            response = input("\nSome empty wheels are INSTALLED. Move ONLY the uninstalled empty wheels? (y/n): ")
             installed_wheels = {info["wheel"] for info in installed_empty_wheels}
-            wheels_to_move = (
-                [w for w in empty_wheels if w not in installed_wheels]
-                if response.lower() == "y"
-                else []
-            )
+            wheels_to_move = [w for w in empty_wheels if w not in installed_wheels] if response.lower() == "y" else []
         elif args.auto_move_all:
             wheels_to_move = empty_wheels
         else:
-            response = input(
-                f"\nMove all {len(empty_wheels)} empty wheels to '{args.dest}/'? (y/n): "
-            )
+            response = input(f"\nMove all {len(empty_wheels)} empty wheels to '{args.dest}/'? (y/n): ")
             wheels_to_move = empty_wheels if response.lower() == "y" else []
         if wheels_to_move:
             dest_dir.mkdir(exist_ok=True)
@@ -438,9 +420,7 @@ Examples:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     subparsers = parser.add_subparsers(dest="command", help="Command to execute")
-    check_parser = subparsers.add_parser(
-        "check", help="Check wheels and list empty ones (no moving)"
-    )
+    check_parser = subparsers.add_parser("check", help="Check wheels and list empty ones (no moving)")
     check_parser.add_argument(
         "directory",
         nargs="?",
@@ -454,16 +434,10 @@ Examples:
         default=DEFAULT_METHOD,
         help=f"Detection method (default: {DEFAULT_METHOD})",
     )
-    check_parser.add_argument(
-        "-r", "--recursive", action="store_true", help="Search recursively for wheels"
-    )
-    check_parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Show detailed output"
-    )
+    check_parser.add_argument("-r", "--recursive", action="store_true", help="Search recursively for wheels")
+    check_parser.add_argument("-v", "--verbose", action="store_true", help="Show detailed output")
     check_parser.set_defaults(func=cmd_check)
-    move_parser = subparsers.add_parser(
-        "move", help="Move empty wheels to destination directory"
-    )
+    move_parser = subparsers.add_parser("move", help="Move empty wheels to destination directory")
     move_parser.add_argument(
         "directory",
         nargs="?",
@@ -483,16 +457,10 @@ Examples:
         default=DEFAULT_METHOD,
         help=f"Detection method (default: {DEFAULT_METHOD})",
     )
-    move_parser.add_argument(
-        "-r", "--recursive", action="store_true", help="Search recursively for wheels"
-    )
-    move_parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Show detailed output"
-    )
+    move_parser.add_argument("-r", "--recursive", action="store_true", help="Search recursively for wheels")
+    move_parser.add_argument("-v", "--verbose", action="store_true", help="Show detailed output")
     move_parser.set_defaults(func=cmd_move)
-    scan_parser = subparsers.add_parser(
-        "scan", help="Scan site-packages for empty installed packages"
-    )
+    scan_parser = subparsers.add_parser("scan", help="Scan site-packages for empty installed packages")
     scan_parser.add_argument(
         "-m",
         "--method",
@@ -506,13 +474,9 @@ Examples:
         action="store_true",
         help="Search recursively for wheels in current directory",
     )
-    scan_parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Show detailed output"
-    )
+    scan_parser.add_argument("-v", "--verbose", action="store_true", help="Show detailed output")
     scan_parser.set_defaults(func=cmd_scan)
-    all_parser = subparsers.add_parser(
-        "all", help="Full workflow: check wheels, warn about installed, move empty ones"
-    )
+    all_parser = subparsers.add_parser("all", help="Full workflow: check wheels, warn about installed, move empty ones")
     all_parser.add_argument(
         "directory",
         nargs="?",
@@ -532,9 +496,7 @@ Examples:
         default=DEFAULT_METHOD,
         help=f"Detection method (default: {DEFAULT_METHOD})",
     )
-    all_parser.add_argument(
-        "-r", "--recursive", action="store_true", help="Search recursively for wheels"
-    )
+    all_parser.add_argument("-r", "--recursive", action="store_true", help="Search recursively for wheels")
     all_parser.add_argument(
         "--check-installed",
         dest="check_installed",
@@ -553,9 +515,7 @@ Examples:
         action="store_true",
         help="Automatically move all empty wheels without prompting",
     )
-    all_parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Show detailed output"
-    )
+    all_parser.add_argument("-v", "--verbose", action="store_true", help="Show detailed output")
     all_parser.set_defaults(func=cmd_all)
     return parser
 

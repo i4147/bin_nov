@@ -98,9 +98,7 @@ def parse_package_file(file_path: Path):
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
-    parser = argparse.ArgumentParser(
-        description="Reinstall pure Python packages or from a list file."
-    )
+    parser = argparse.ArgumentParser(description="Reinstall pure Python packages or from a list file.")
     parser.add_argument(
         "-f",
         "--file",
@@ -111,9 +109,7 @@ if __name__ == "__main__":
     if args.file:
         print(f"[*] Reading packages from file: {args.file}")
         pkgs_to_process = parse_package_file(args.file)
-        print(
-            f"[*] Loaded {len(pkgs_to_process)} packages from file. Skipping filters and sort."
-        )
+        print(f"[*] Loaded {len(pkgs_to_process)} packages from file. Skipping filters and sort.")
     else:
         print("[*] Scanning site-packages folder for pure Python packages...")
         pkgs_to_process = get_pure_python_packages_sorted()

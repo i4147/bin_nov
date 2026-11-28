@@ -54,9 +54,7 @@ def create_monthly_branch() -> bool:
         print(f"✓ Branch '{branch_name}' already exists")
         return True
     try:
-        subprocess.run(
-            ["git", "fetch", "--all"], cwd=REPO_PATH, check=True, capture_output=True
-        )
+        subprocess.run(["git", "fetch", "--all"], cwd=REPO_PATH, check=True, capture_output=True)
         subprocess.run(
             ["git", "checkout", MAIN_BRANCH],
             cwd=REPO_PATH,

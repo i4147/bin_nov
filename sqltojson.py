@@ -64,27 +64,17 @@ def _last_day_month(current_date: str) -> str:
     return current_date.replace(day=month_last_day)
 
 
-def _parse_field(
-    field: str, to_add: Any, current_date: Any, date_format: str = "%Y-%m-%d"
-):
+def _parse_field(field: str, to_add: Any, current_date: Any, date_format: str = "%Y-%m-%d"):
     if field == "CURRENT_DATE":
         return (current_date + dt.timedelta(days=to_add)).strftime(date_format)
     elif field == "START_CURRENT_MONTH":
-        return (_first_day_month(current_date) + relativedelta(months=to_add)).strftime(
-            date_format
-        )
+        return (_first_day_month(current_date) + relativedelta(months=to_add)).strftime(date_format)
     elif field == "END_CURRENT_MONTH":
-        return (_last_day_month(current_date) + relativedelta(months=to_add)).strftime(
-            date_format
-        )
+        return (_last_day_month(current_date) + relativedelta(months=to_add)).strftime(date_format)
     elif field == "START_CURRENT_YEAR":
-        return (_first_day_year(current_date) + relativedelta(years=to_add)).strftime(
-            date_format
-        )
+        return (_first_day_year(current_date) + relativedelta(years=to_add)).strftime(date_format)
     elif field == "END_CURRENT_YEAR":
-        return (_last_day_year(current_date) + relativedelta(years=to_add)).strftime(
-            date_format
-        )
+        return (_last_day_year(current_date) + relativedelta(years=to_add)).strftime(date_format)
     else:
         return field
 
@@ -93,14 +83,10 @@ def _parse_formula(formula: str, current_date: Any, date_format: str = "%Y-%m-%d
     if any(ext in formula for ext in DATE_FIELDS):
         if "+" in formula:
             parts = formula.split("+")
-            return _parse_field(
-                parts[0].strip(), int(parts[1]), current_date, date_format
-            )
+            return _parse_field(parts[0].strip(), int(parts[1]), current_date, date_format)
         elif "-" in formula:
             parts = formula.split("-")
-            return _parse_field(
-                parts[0].strip(), -int(parts[1]), current_date, date_format
-            )
+            return _parse_field(parts[0].strip(), -int(parts[1]), current_date, date_format)
     return _parse_field(formula.strip(), 0, current_date, date_format)
 
 
@@ -173,9 +159,7 @@ def handle_run_query2json(
             if query == "default":
                 query = "@" + name
             if output is None:
-                output = (str(Path(name).with_suffix("")), Path(name).suffix)[
-                    0
-                ] + ".json"
+                output = (str(Path(name).with_suffix("")), Path(name).suffix)[0] + ".json"
             name = "default"
         if list_connections:
             config_path = kwargs.get("config")
@@ -304,9 +288,7 @@ def _get_connection_queries_dict(config: dict, connections: dict) -> dict:
         raise ValueError(msg)
     for connection_name, queries in connection_queries.items():
         if connection_name not in connections:
-            msg = (
-                f"connection_queries references unknown connection '{connection_name}'"
-            )
+            msg = f"connection_queries references unknown connection '{connection_name}'"
             raise ValueError(msg)
         if not isinstance(queries, dict):
             msg = f"connection_queries.{connection_name} must be an object"
@@ -334,8 +316,7 @@ def list_queries(
         return {
             "global": global_query_names,
             "connections": {
-                connection_name: list(queries.keys())
-                for connection_name, queries in connection_queries.items()
+                connection_name: list(queries.keys()) for connection_name, queries in connection_queries.items()
             },
         }
     if connection is not None:
@@ -351,9 +332,7 @@ _list_connections = list_connections
 _list_queries = list_queries
 
 
-def _resolve_query_string(
-    connection_name: str, query_name: str, connections: dict, config: dict
-) -> str:
+def _resolve_query_string(connection_name: str, query_name: str, connections: dict, config: dict) -> str:
     connection_queries = _get_connection_queries_dict(config, connections)
     scoped_queries = connection_queries.get(connection_name, {})
     if connection_name in connections and query_name in scoped_queries:
@@ -362,24 +341,18 @@ def _resolve_query_string(
     return config_queries.get(query_name, query_name)
 
 
-def run_query_by_name(
-    conection_name: str = "default", query_name: str = "default", **kwargs: Any
-) -> list | dict:
+def run_query_by_name(conection_name: str = "default", query_name: str = "default", **kwargs: Any) -> list | dict:
     config_path = kwargs.pop("config", None) or _find_config()
     timezone = kwargs.pop("timezone", None)
     read_only = kwargs.pop("read_only", False)
     config = load_config_file(config_path)
     config_dbs = _get_connections_dict(config)
     conection_string = config_dbs.get(conection_name, conection_name)
-    raw_query_string = _resolve_query_string(
-        conection_name, query_name, config_dbs, config
-    )
+    raw_query_string = _resolve_query_string(conection_name, query_name, config_dbs, config)
     if raw_query_string.startswith("@"):
         raw_query_string = load_query_from_file(raw_query_string[1:])
     engine = create_engine(conection_string)
-    return run_query(
-        engine, raw_query_string, timezone=timezone, read_only=read_only, **kwargs
-    )
+    return run_query(engine, raw_query_string, timezone=timezone, read_only=read_only, **kwargs)
 
 
 def parse_json_columns(result: dict, jsonkeys: str = "") -> dict:
@@ -399,9 +372,7 @@ def parse_json_columns(result: dict, jsonkeys: str = "") -> dict:
     return response
 
 
-def apply_wrapper(
-    result: str | dict | list, wrapper: bool | str = False
-) -> str | dict | list:
+def apply_wrapper(result: str | dict | list, wrapper: bool | str = False) -> str | dict | list:
     if isinstance(wrapper, str) and wrapper:
         return {wrapper: result}
     elif wrapper:
@@ -430,12 +401,7 @@ def apply_output_transforms(
             result = "" if key and not value else {}
     elif key and value:
         result = [
-            (
-                {item.get(key): item.get(value)}
-                if key and key in item and value in item
-                else item
-            )
-            for item in results
+            ({item.get(key): item.get(value)} if key and key in item and value in item else item) for item in results
         ]
     else:
         result = [item.get(key) if key and key in item else item for item in results]
@@ -462,9 +428,7 @@ def run_query2json(
     **kwargs: Any,
 ) -> str | dict | list:
     read_only = _coerce_bool(read_only)
-    result = run_query_by_name(
-        name, query, timezone=timezone, read_only=read_only, **kwargs
-    )
+    result = run_query_by_name(name, query, timezone=timezone, read_only=read_only, **kwargs)
     if isinstance(result, dict):
         if read_only:
             _warn_read_only_write(result)
@@ -499,9 +463,7 @@ def json_dumps(value: Any) -> str:
 def save_json(rows: Iterable[Any], file_name: str, timezone: str | None = None) -> None:
     current_date = _current_date(timezone)
     parsed_filename = parse_filename(file_name, current_date)
-    final_file_name = (
-        parsed_filename if ".json" in parsed_filename else parsed_filename + ".json"
-    )
+    final_file_name = parsed_filename if ".json" in parsed_filename else parsed_filename + ".json"
     with open(final_file_name, "w") as outfile:
         outfile.write(json_dumps(rows))
 
@@ -516,9 +478,7 @@ def save_csv(
     current_date = _current_date(timezone)
     parsed_filename = parse_filename(file_name, current_date)
     ext = ".xls" if dialect == "excel" else ".csv"
-    final_file_name = (
-        parsed_filename if ext in parsed_filename else parsed_filename + ext
-    )
+    final_file_name = parsed_filename if ext in parsed_filename else parsed_filename + ext
     first_row = None
     final_rows = None
     try:
@@ -592,9 +552,7 @@ def handle_run_query2json(
             if query == "default":
                 query = "@" + name
             if output is None:
-                output = (str(Path(name).with_suffix("")), Path(name).suffix)[
-                    0
-                ] + ".json"
+                output = (str(Path(name).with_suffix("")), Path(name).suffix)[0] + ".json"
             name = "default"
         if list_connections:
             config_path = kwargs.get("config")

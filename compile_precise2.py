@@ -21,9 +21,7 @@ def get_font_b64_or_fallback(filename: str) -> str:
     path = Path(filename)
     if not path.exists():
         print(f"⚠️  Warning: '{filename}' not found in current directory.")
-        print(
-            f"   WeasyPrint will fall back to default system typography for this style."
-        )
+        print(f"   WeasyPrint will fall back to default system typography for this style.")
         return ""
     binary_data = path.read_bytes()
     b64_encoded = base64.b64encode(binary_data).decode("utf-8")

@@ -26,11 +26,7 @@ OUTPUT_DIR = CURRENT_DIR / "wheels"
 def is_package_dir(path: Path) -> bool:
     if not path.is_dir():
         return False
-    return (
-        (path / "setup.py").exists()
-        or (path / "pyproject.toml").exists()
-        or (path / "setup.cfg").exists()
-    )
+    return (path / "setup.py").exists() or (path / "pyproject.toml").exists() or (path / "setup.cfg").exists()
 
 
 def build_wheel(pkg_dir: Path) -> tuple[str, bool, str]:
@@ -58,9 +54,7 @@ def build_wheel(pkg_dir: Path) -> tuple[str, bool, str]:
 
 def main() -> None:
     OUTPUT_DIR.mkdir(exist_ok=True)
-    pkg_dirs = sorted(
-        p for p in CURRENT_DIR.iterdir() if is_package_dir(p) and p != OUTPUT_DIR
-    )
+    pkg_dirs = sorted(p for p in CURRENT_DIR.iterdir() if is_package_dir(p) and p != OUTPUT_DIR)
     if not pkg_dirs:
         print("No package directories found in", CURRENT_DIR)
         return
@@ -71,9 +65,7 @@ def main() -> None:
     print(f"Using {MAX_WORKERS} workers\n")
     results = []
     with Pool(processes=MAX_WORKERS) as pool:
-        async_results = [
-            (pkg_dir, pool.apply_async(build_wheel, (pkg_dir,))) for pkg_dir in pkg_dirs
-        ]
+        async_results = [(pkg_dir, pool.apply_async(build_wheel, (pkg_dir,))) for pkg_dir in pkg_dirs]
         for pkg_dir, ar in async_results:
             name, ok, msg = ar.get()
             status = "✓" if ok else "✗"

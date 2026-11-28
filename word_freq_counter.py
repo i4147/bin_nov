@@ -50,9 +50,7 @@ def collect_text_files(directory: Path | None = None) -> list[Path]:
 def process_files_parallel(paths: list[Path]) -> Counter[str]:
     total_counter: Counter[str] = Counter()
     with Pool(processes=MAX_WORKERS) as pool:
-        async_results: list[Any] = [
-            pool.apply_async(process_file, (path,)) for path in paths
-        ]
+        async_results: list[Any] = [pool.apply_async(process_file, (path,)) for path in paths]
         for path, async_result in zip(paths, async_results):
             try:
                 file_counter: Counter[str] = async_result.get()
@@ -70,9 +68,7 @@ def _now_isoformat() -> str:
 
 
 def save_results_json(counter: Counter[str], output_file: Path) -> None:
-    sorted_words: dict[str, int] = dict(
-        sorted(counter.items(), key=lambda x: (-x[1], x[0]))
-    )
+    sorted_words: dict[str, int] = dict(sorted(counter.items(), key=lambda x: (-x[1], x[0])))
     results: dict[str, Any] = {
         "metadata": {
             "total_words": sum(counter.values()),

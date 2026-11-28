@@ -90,9 +90,7 @@ def find_extensionless_scripts(cwd: Path) -> None:
         for script in scripts:
             print(script.relative_to(cwd))
     else:
-        print(
-            "No Python scripts without extension found in the current directory or its subdirectories."
-        )
+        print("No Python scripts without extension found in the current directory or its subdirectories.")
 
 
 def list_by_prefix(cwd: Path, prefix: str) -> None:
@@ -119,25 +117,13 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Unified File Utilities CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("clean-bak", help="Recursively delete .bak files")
-    p_ext = subparsers.add_parser(
-        "extinfo", help="Get file count and total size for an extension"
-    )
-    p_ext.add_argument(
-        "extension", help="File extension to scan for (e.g., 'py' or '.py')"
-    )
-    subparsers.add_parser(
-        "find-scripts", help="Find extensionless Python scripts recursively"
-    )
-    p_prefix = subparsers.add_parser(
-        "prefix", help="List items in current directory starting with prefix"
-    )
+    p_ext = subparsers.add_parser("extinfo", help="Get file count and total size for an extension")
+    p_ext.add_argument("extension", help="File extension to scan for (e.g., 'py' or '.py')")
+    subparsers.add_parser("find-scripts", help="Find extensionless Python scripts recursively")
+    p_prefix = subparsers.add_parser("prefix", help="List items in current directory starting with prefix")
     p_prefix.add_argument("prefix", help="Prefix string to match")
-    p_search = subparsers.add_parser(
-        "search", help="Search items in current directory containing substring"
-    )
-    p_search.add_argument(
-        "substring", nargs="?", default="", help="Substring to match in filenames"
-    )
+    p_search = subparsers.add_parser("search", help="Search items in current directory containing substring")
+    p_search.add_argument("substring", nargs="?", default="", help="Substring to match in filenames")
     p_search.add_argument(
         "-s",
         "--show-symlinks",

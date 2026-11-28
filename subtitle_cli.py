@@ -51,9 +51,7 @@ def main() -> None:
 
     if subtitles[video]:
         save_subtitles(video, subtitles[video])
-        print(
-            f"Success! Downloaded {len(subtitles[video])} subtitle file(s) for '{args.path}'."
-        )
+        print(f"Success! Downloaded {len(subtitles[video])} subtitle file(s) for '{args.path}'.")
     else:
         print("No matching subtitles found across providers.", file=sys.stderr)
 

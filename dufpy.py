@@ -77,9 +77,7 @@ class SourceNormalizer(ast.NodeTransformer):
         node.body = self._without_docstring(node.body)
         return node
 
-    def visit_AsyncFunctionDef(
-        self, node: ast.AsyncFunctionDef
-    ) -> ast.AsyncFunctionDef:
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> ast.AsyncFunctionDef:
         node.returns = None
         node.type_comment = None
         self._remove_type_parameters(node)
@@ -255,9 +253,7 @@ def identify_duplicates(
                 failures.append((str(path), f"{type(error).__name__}: {error}"))
         for matched_paths in exact_matches.values():
             if len(matched_paths) > 1:
-                duplicate_groups.append(
-                    DuplicateGroup(digest, sorted(matched_paths, key=str))
-                )
+                duplicate_groups.append(DuplicateGroup(digest, sorted(matched_paths, key=str)))
     duplicate_groups.sort(key=lambda group: str(group.paths[0]))
     failures.sort(key=lambda failure: failure[0])
     return duplicate_groups, failures
@@ -309,9 +305,7 @@ def clear_duplicates_cache(root: Path) -> None:
     except FileNotFoundError:
         return
     except OSError as error:
-        print(
-            f"Failed to remove cache file {_cache_path(root)}: {error}", file=sys.stderr
-        )
+        print(f"Failed to remove cache file {_cache_path(root)}: {error}", file=sys.stderr)
 
 
 def verify_cached_groups(groups: list[DuplicateGroup]) -> list[DuplicateGroup]:
@@ -344,9 +338,7 @@ def _positive_int(value: str) -> int:
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Find Python files with identical normalized ASTs."
-    )
+    parser = argparse.ArgumentParser(description="Find Python files with identical normalized ASTs.")
     parser.add_argument(
         "-r",
         "--remove",

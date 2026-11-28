@@ -82,15 +82,9 @@ LANGUAGES: Final[dict[str, Language]] = {
         re.compile(r"^#!.*\bpython[23]?(?:\.\d+)?\b"),
     ),
     ".zsh": Language("zsh", f"#!{TERMUX_BIN}/zsh", re.compile(r"^#!.*\bzsh\b")),
-    ".sh": Language(
-        "sh", f"#!{TERMUX_BIN}/sh", re.compile(r"^#!.*\b(?:sh|bash|dash|ksh)\b")
-    ),
-    ".rb": Language(
-        "ruby", f"#!{TERMUX_BIN}/env ruby", re.compile(r"^#!.*\bruby[\d.]*\b")
-    ),
-    ".pl": Language(
-        "perl", f"#!{TERMUX_BIN}/env perl", re.compile(r"^#!.*\bperl[\d.]*\b")
-    ),
+    ".sh": Language("sh", f"#!{TERMUX_BIN}/sh", re.compile(r"^#!.*\b(?:sh|bash|dash|ksh)\b")),
+    ".rb": Language("ruby", f"#!{TERMUX_BIN}/env ruby", re.compile(r"^#!.*\bruby[\d.]*\b")),
+    ".pl": Language("perl", f"#!{TERMUX_BIN}/env perl", re.compile(r"^#!.*\bperl[\d.]*\b")),
 }
 
 # Maps ``--assume`` values to the canonical suffix key in ``LANGUAGES``.
@@ -276,20 +270,14 @@ def parse_args(argv: list[str] | None) -> Args:
         description="Normalise shebangs to Termux paths.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument(
-        "paths", nargs="*", type=Path, help="Files or directories (default: .)"
-    )
-    parser.add_argument(
-        "--dry-run", action="store_true", help="Report changes without writing"
-    )
+    parser.add_argument("paths", nargs="*", type=Path, help="Files or directories (default: .)")
+    parser.add_argument("--dry-run", action="store_true", help="Report changes without writing")
     parser.add_argument(
         "--check",
         action="store_true",
         help="Like --dry-run, but exit 1 if any file would be modified",
     )
-    parser.add_argument(
-        "--workers", type=int, default=MAX_WORKERS, help="Parallel workers"
-    )
+    parser.add_argument("--workers", type=int, default=MAX_WORKERS, help="Parallel workers")
     parser.add_argument(
         "--log-level",
         default="INFO",
@@ -350,9 +338,7 @@ def parse_args(argv: list[str] | None) -> Args:
 
 def filter_targets(targets: list[Path], args: Args) -> list[Path]:
     if args.extensions:
-        exts = {
-            e.lower() if e.startswith(".") else f".{e.lower()}" for e in args.extensions
-        }
+        exts = {e.lower() if e.startswith(".") else f".{e.lower()}" for e in args.extensions}
         targets = [p for p in targets if p.suffix.lower() in exts]
     if args.exclude:
         targets = [p for p in targets if not any(p.match(pat) for pat in args.exclude)]

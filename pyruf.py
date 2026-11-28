@@ -51,9 +51,7 @@ def main() -> None:
         if path.is_dir():
             native_targets.append(str(path))
             for p in path.rglob("*"):
-                if not any(
-                    part.startswith(".") for part in p.parts
-                ) and is_extensionless_python(p):
+                if not any(part.startswith(".") for part in p.parts) and is_extensionless_python(p):
                     extensionless_files.append(p)
         elif path.is_file():
             if is_extensionless_python(path):
@@ -64,15 +62,9 @@ def main() -> None:
     for file_path in extensionless_files:
         try:
             content = file_path.read_bytes()
-            cmd = (
-                ["ruff", subcommand, "--stdin-filename", str(file_path)] + flags + ["-"]
-            )
+            cmd = ["ruff", subcommand, "--stdin-filename", str(file_path)] + flags + ["-"]
             result = subprocess.run(cmd, input=content, capture_output=True)
-            if (
-                subcommand == "format"
-                and "--check" not in flags
-                and "--diff" not in flags
-            ):
+            if subcommand == "format" and "--check" not in flags and "--diff" not in flags:
                 if result.returncode == 0 and result.stdout:
                     atomic_write(file_path, result.stdout)
             else:

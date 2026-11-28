@@ -71,16 +71,14 @@ DEFAULT_INDEXES: tuple[str, str, str] = (
     TSINGHUA_SIMPLE_URL,
     YANDEX_SIMPLE_URL,
 )
-HASH_ALGORITHMS = frozenset(
-    {
-        "sha256",
-        "sha512",
-        "sha384",
-        "sha224",
-        "sha1",
-        "md5",
-    }
-)
+HASH_ALGORITHMS = frozenset({
+    "sha256",
+    "sha512",
+    "sha384",
+    "sha224",
+    "sha1",
+    "md5",
+})
 SOURCE_SUFFIXES: tuple[str, ...] = (
     ".tar.gz",
     ".tar.bz2",
@@ -107,18 +105,16 @@ HASH_PREFERENCE: dict[str, int] = {
 }
 CHUNK_SIZE: int = 1024 * 1024
 PARALLEL_DOWNLOAD_THRESHOLD: int = 5 * 1024 * 1024
-SIMPLE_ACCEPT_HEADER: str = "application/vnd.pypi.simple.v1+json, application/vnd.pypi.simple.v1+html; q=0.1, text/html; q=0.01"
-JSON_SIMPLE_CONTENT_TYPES = frozenset(
-    {
-        "application/vnd.pypi.simple.v1+json",
-    }
+SIMPLE_ACCEPT_HEADER: str = (
+    "application/vnd.pypi.simple.v1+json, application/vnd.pypi.simple.v1+html; q=0.1, text/html; q=0.01"
 )
-HTML_SIMPLE_CONTENT_TYPES = frozenset(
-    {
-        "application/vnd.pypi.simple.v1+html",
-        "text/html",
-    }
-)
+JSON_SIMPLE_CONTENT_TYPES = frozenset({
+    "application/vnd.pypi.simple.v1+json",
+})
+HTML_SIMPLE_CONTENT_TYPES = frozenset({
+    "application/vnd.pypi.simple.v1+html",
+    "text/html",
+})
 
 
 @dataclass(frozen=True, slots=True)
@@ -217,11 +213,7 @@ class TargetPython:
     def _compute_tags(self) -> list[Tag]:
         implementation = self.implementation or interpreter_name()
         python_version = self.py_version[:2] if self.py_version else None
-        version_digits = (
-            "".join(map(str, python_version))
-            if python_version
-            else interpreter_version()
-        )
+        version_digits = "".join(map(str, python_version)) if python_version else interpreter_version()
         interpreter = f"{implementation}{version_digits}"
         tags: list[Tag] = []
         if implementation == "cp":
@@ -278,9 +270,7 @@ def parse_json_simple_page(response: httpx.Response) -> Iterator[Link]:
             url=urljoin(base_url, artifact_url),
             comes_from=base_url,
             requires_python=file_data.get("requires-python"),
-            yanked=(
-                yanked if isinstance(yanked, str) else "yanked" if yanked else None
-            ),
+            yanked=(yanked if isinstance(yanked, str) else "yanked" if yanked else None),
             hashes=file_data.get("hashes") or {},
         )
 
@@ -313,9 +303,7 @@ def requires_python_matches(
     try:
         specifier = SpecifierSet(requires_python)
     except InvalidSpecifier:
-        logger.warning(
-            "Ignoring invalid Requires-Python specifier: {}", requires_python
-        )
+        logger.warning("Ignoring invalid Requires-Python specifier: {}", requires_python)
         return True
     return specifier.contains(
         target_python.python_version_str(),
@@ -403,10 +391,7 @@ class PackageFinder:
         self.sources.extend(("find_links", url) for url in find_links)
         self.target_python = target_python or TargetPython()
         self._client = client
-        self._tag_priorities = {
-            tag: priority
-            for priority, tag in enumerate(self.target_python.supported_tags())
-        }
+        self._tag_priorities = {tag: priority for priority, tag in enumerate(self.target_python.supported_tags())}
 
     @property
     def client(self) -> httpx.Client:
@@ -495,11 +480,7 @@ class PackageFinder:
             return [Link(url=path.resolve().as_uri())]
         if not path.is_dir():
             raise FileNotFoundError(path)
-        return [
-            Link(url=item.resolve().as_uri())
-            for item in path.iterdir()
-            if item.is_file()
-        ]
+        return [Link(url=item.resolve().as_uri()) for item in path.iterdir() if item.is_file()]
 
     def _sort_key(self, package: Package) -> tuple[int, Version, int, int, str]:
         link = package.link
@@ -685,10 +666,7 @@ def download_httpx_parallel(
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
         with ThreadPoolExecutor(max_workers=len(ranges)) as executor:
-            futures = [
-                executor.submit(download_range, start, end, part_path)
-                for start, end, part_path in ranges
-            ]
+            futures = [executor.submit(download_range, start, end, part_path) for start, end, part_path in ranges]
             for future in as_completed(futures):
                 future.result()
         with destination.open("wb") as output:
@@ -785,9 +763,7 @@ def download(
     filename = link.filename or "download.bin"
     destination = destination_dir / filename
     if destination.exists():
-        if verify_hashes(destination, link.hashes) and verify_archive_integrity(
-            destination
-        ):
+        if verify_hashes(destination, link.hashes) and verify_archive_integrity(destination):
             logger.info("Using cached artifact: {}", destination)
             return destination
         logger.warning("Removing invalid cached artifact: {}", destination)
@@ -808,11 +784,7 @@ def download(
                     active_client,
                     link.url_without_fragment,
                 )
-                if (
-                    file_size is not None
-                    and file_size > PARALLEL_DOWNLOAD_THRESHOLD
-                    and range_supported
-                ):
+                if file_size is not None and file_size > PARALLEL_DOWNLOAD_THRESHOLD and range_supported:
                     logger.info(
                         "Using parallel ranged download ({} MiB)",
                         round(file_size / 1024 / 1024, 2),
@@ -867,9 +839,7 @@ def parse_python_version(value: str) -> tuple[int, ...]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="pkgfetch",
-        description=(
-            "Find and download Python distributions from PEP 503/691 indexes."
-        ),
+        description=("Find and download Python distributions from PEP 503/691 indexes."),
     )
     parser.add_argument(
         "requirement",
@@ -882,9 +852,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         metavar="URL",
-        help=(
-            "Simple index URL, repeatable. If omitted: PyPI, Tsinghua, and Yandex are tried in order."
-        ),
+        help=("Simple index URL, repeatable. If omitted: PyPI, Tsinghua, and Yandex are tried in order."),
     )
     parser.add_argument(
         "-f",

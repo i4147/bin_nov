@@ -55,11 +55,7 @@ def extract_definitions(path: Path) -> dict[str, list[str]]:
                 defs["classes"].append(node.name)
         elif isinstance(node, ast.Assign):
             for t in node.targets:
-                if (
-                    isinstance(t, ast.Name)
-                    and t.id.isupper()
-                    and not t.id.startswith("_")
-                ):
+                if isinstance(t, ast.Name) and t.id.isupper() and not t.id.startswith("_"):
                     defs["constants"].append(t.id)
         elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
             n = node.target.id
@@ -85,9 +81,7 @@ def extract_exports(init_path: Path) -> set[str]:
                 if isinstance(t, ast.Name) and t.id == "__all__":
                     if isinstance(node.value, (ast.List, ast.Tuple)):
                         for elt in node.value.elts:
-                            if isinstance(elt, ast.Constant) and isinstance(
-                                elt.value, str
-                            ):
+                            if isinstance(elt, ast.Constant) and isinstance(elt.value, str):
                                 exported.add(elt.value)
         elif isinstance(node, ast.ImportFrom):
             for a in node.names:
@@ -215,9 +209,7 @@ def autofix_init(
             updated += "\n"
         if import_lines:
             updated += "\n" + "\n".join(import_lines) + "\n"
-        updated += (
-            "\n__all__ = [\n" + "".join(f'    "{n}",\n' for n in new_names) + "]\n"
-        )
+        updated += "\n__all__ = [\n" + "".join(f'    "{n}",\n' for n in new_names) + "]\n"
     if dry_run:
         print("\n" + "=" * 70)
         print(f"DRY RUN — would write to {init_path}:")
@@ -307,13 +299,9 @@ def main() -> int:
                     print(f"  ⚠️  Not exported from {init_path.name}:")
                     for cat, names in missing.items():
                         if names:
-                            print(
-                                f"      {ICONS[cat]} {cat.capitalize()}: {', '.join(sorted(names))}"
-                            )
+                            print(f"      {ICONS[cat]} {cat.capitalize()}: {', '.join(sorted(names))}")
                             total_missing += len(names)
-                    bucket = missing_by_init.setdefault(
-                        init_path, {"functions": [], "classes": [], "constants": []}
-                    )
+                    bucket = missing_by_init.setdefault(init_path, {"functions": [], "classes": [], "constants": []})
                     for cat, names in missing.items():
                         bucket[cat].extend(names)
         print()
@@ -323,11 +311,7 @@ def main() -> int:
     logger.warning(f"Total definitions not exported: {total_missing}")
     if args.autofix:
         print()
-        print(
-            "Dry-run mode — no files will be modified"
-            if args.dry_run
-            else "Autofix — updating __init__.py files"
-        )
+        print("Dry-run mode — no files will be modified" if args.dry_run else "Autofix — updating __init__.py files")
         ok = True
         for init_path, missing in missing_by_init.items():
             deduped = {cat: sorted(set(names)) for cat, names in missing.items()}

@@ -165,9 +165,7 @@ def process_node(node: Any, minify: Any, keep_tags: str, all_attrs: bool = False
         else:
             return s
     else:
-        bits = [
-            process_node(child, minify, keep_tags, all_attrs) for child in node.contents
-        ]
+        bits = [process_node(child, minify, keep_tags, all_attrs) for child in node.contents]
         s = "".join(bits)
         if node.name in keep_tags:
             s = tag_with_attributes(node, s, all_attrs)

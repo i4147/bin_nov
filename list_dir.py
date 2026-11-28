@@ -50,9 +50,7 @@ import sys
 from typing import Sequence
 
 
-SKIP_DIRS: frozenset[str] = frozenset(
-    {".mypy_cache", ".ruff_cache", ".git", "__pycache__"}
-)
+SKIP_DIRS: frozenset[str] = frozenset({".mypy_cache", ".ruff_cache", ".git", "__pycache__"})
 ICON_IMAGE_EXTS: frozenset[str] = frozenset({"png", "jpg", "jpeg", "gif", "webp"})
 ICON_CODE_EXTS: frozenset[str] = frozenset({"py", "sh"})
 ICON_ARCHIVE_EXTS: frozenset[str] = frozenset({"zip", "tar", "gz", "bz2", "xz"})
@@ -326,9 +324,7 @@ def render_long(entries: list[Entry], opts: LsOptions) -> None:
         if e.link_target:
             name += f" -> {e.link_target}"
         suffix = f" {e.git}" if e.git else ""
-        print(
-            f"{mode} {nlink:>2} {uname:<8} {gname:<8} {size_str:>8} {time_str} {name}{suffix}"
-        )
+        print(f"{mode} {nlink:>2} {uname:<8} {gname:<8} {size_str:>8} {time_str} {name}{suffix}")
 
 
 def render_json(entries: list[Entry], opts: LsOptions) -> None:
@@ -341,16 +337,14 @@ def render_json(entries: list[Entry], opts: LsOptions) -> None:
             kind = "link"
         else:
             kind = "file"
-        out.append(
-            {
-                "name": e.name,
-                "size": e.st.st_size,
-                "mode": statlib.filemode(m),
-                "mtime": e.st.st_mtime,
-                "git": e.git,
-                "type": kind,
-            }
-        )
+        out.append({
+            "name": e.name,
+            "size": e.st.st_size,
+            "mode": statlib.filemode(m),
+            "mtime": e.st.st_mtime,
+            "git": e.git,
+            "type": kind,
+        })
     print(jsonlib.dumps(out, indent=2))
 
 
@@ -533,9 +527,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
-    p_stems = sub.add_parser(
-        "stems", help="Print file stems, truncated at the first '-'"
-    )
+    p_stems = sub.add_parser("stems", help="Print file stems, truncated at the first '-'")
     p_stems.add_argument("directory", nargs="?", default=".")
     p_stems.add_argument("--sep", default="   ", help="Separator (default: 3 spaces)")
     p_dirs = sub.add_parser("dirs", help="Print directory names prefixed with '-'")

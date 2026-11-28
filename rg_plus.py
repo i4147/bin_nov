@@ -79,9 +79,7 @@ def is_probably_binary(data: bytes, sample_size: int = 4096) -> bool:
     return (non_text / len(chunk)) > 0.30
 
 
-def search_text_bytes(
-    data: bytes, source_label: str, cfg: SearchConfig
-) -> list[MatchResult]:
+def search_text_bytes(data: bytes, source_label: str, cfg: SearchConfig) -> list[MatchResult]:
     if len(data) > cfg.max_filesize or is_probably_binary(data):
         return []
     text = data.decode("utf-8", errors="replace")
@@ -108,18 +106,11 @@ def is_single_gz(path: Path) -> bool:
 
 def is_single_zst(path: Path) -> bool:
     name = path.name.lower()
-    return name.endswith(ZSTD_SINGLE_SUFFIXES) and not name.endswith(
-        (".tar.zst", ".tzst")
-    )
+    return name.endswith(ZSTD_SINGLE_SUFFIXES) and not name.endswith((".tar.zst", ".tzst"))
 
 
 def is_archive_file(path: Path) -> bool:
-    return (
-        is_zip_archive(path)
-        or is_tar_archive(path)
-        or is_single_gz(path)
-        or is_single_zst(path)
-    )
+    return is_zip_archive(path) or is_tar_archive(path) or is_single_gz(path) or is_single_zst(path)
 
 
 def search_archive_file(path: Path, cfg: SearchConfig) -> list[MatchResult]:
@@ -182,9 +173,7 @@ def search_regular_file(path: Path, cfg: SearchConfig) -> list[MatchResult]:
     return search_text_bytes(data, str(path), cfg)
 
 
-def discover_targets(
-    roots: list[Path], cfg: SearchConfig
-) -> tuple[list[Path], list[Path]]:
+def discover_targets(roots: list[Path], cfg: SearchConfig) -> tuple[list[Path], list[Path]]:
     """Return (regular_or_archive_files, git_repo_roots)."""
     files: list[Path] = []
     git_repos: list[Path] = []
@@ -243,9 +232,7 @@ def search_git_deleted_files(repo_root: Path, cfg: SearchConfig) -> list[MatchRe
             commit,
         ]
         try:
-            name_proc = subprocess.run(
-                name_cmd, capture_output=True, text=True, check=True
-            )
+            name_proc = subprocess.run(name_cmd, capture_output=True, text=True, check=True)
         except subprocess.SubprocessError:
             continue
 
@@ -298,12 +285,8 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         default=["."],
         help="Files or directories to search (default: current directory)",
     )
-    parser.add_argument(
-        "-i", "--ignore-case", action="store_true", help="Case-insensitive search"
-    )
-    parser.add_argument(
-        "-s", "--case-sensitive", action="store_true", help="Case-sensitive search"
-    )
+    parser.add_argument("-i", "--ignore-case", action="store_true", help="Case-insensitive search")
+    parser.add_argument("-s", "--case-sensitive", action="store_true", help="Case-sensitive search")
     parser.add_argument(
         "-S",
         "--smart-case",
@@ -316,9 +299,7 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         action="store_true",
         help="Treat pattern as a literal string",
     )
-    parser.add_argument(
-        "--no-archives", action="store_true", help="Skip compressed archives"
-    )
+    parser.add_argument("--no-archives", action="store_true", help="Skip compressed archives")
     parser.add_argument(
         "--no-git-deleted",
         action="store_true",
@@ -336,9 +317,7 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         default=25 * 1024 * 1024,
         help="Max file/entry size in bytes to read (default: 25MB)",
     )
-    parser.add_argument(
-        "-j", "--jobs", type=int, default=os.cpu_count() or 4, help="Worker processes"
-    )
+    parser.add_argument("-j", "--jobs", type=int, default=os.cpu_count() or 4, help="Worker processes")
     return parser.parse_args(argv)
 
 

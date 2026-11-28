@@ -68,9 +68,7 @@ def remove_empty_subdirs(root_dir: str | Path) -> list[Path]:
 if __name__ == "__main__":
     import argparse
 
-    ap = argparse.ArgumentParser(
-        description="Flatten only-child subdirectory chains and remove empty dirs."
-    )
+    ap = argparse.ArgumentParser(description="Flatten only-child subdirectory chains and remove empty dirs.")
     ap.add_argument("root", nargs="?", default=".", help="root directory (default: .)")
     args = ap.parse_args()
     flatten_only_children(args.root)

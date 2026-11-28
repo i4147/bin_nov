@@ -81,9 +81,7 @@ def generate_report(
         if show_size:
             info = fsz(total_size)
         else:
-            examples = ", ".join(
-                str(p.relative_to(Path.cwd())) for p in paths[:max_examples]
-            )
+            examples = ", ".join(str(p.relative_to(Path.cwd())) for p in paths[:max_examples])
             info = examples
         report_data.append((ext, count, info))
     return report_data
@@ -167,9 +165,7 @@ def write_pie_chart(
         shown = total_exts
     values = [s for _, s in ordered]
     total_size = sum(values) or 1
-    legend_labels = [
-        f"{ext}  ({size / total_size * 100:.1f}%, {fsz(size)})" for ext, size in ordered
-    ]
+    legend_labels = [f"{ext}  ({size / total_size * 100:.1f}%, {fsz(size)})" for ext, size in ordered]
     fig, ax = plt.subplots(figsize=(11, 8))
     wedges, _ = ax.pie(
         values,
@@ -197,9 +193,7 @@ def write_pie_chart(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Report file extensions in current directory recursively."
-    )
+    parser = argparse.ArgumentParser(description="Report file extensions in current directory recursively.")
     parser.add_argument(
         "-s",
         "--size",
@@ -225,9 +219,7 @@ def main() -> None:
             print("No files found.")
             sys.exit(0)
         report_data = generate_report(ext_map, show_size=args.size)
-        table = format_table(
-            report_data, term_width, show_size=args.size, use_color=use_color
-        )
+        table = format_table(report_data, term_width, show_size=args.size, use_color=use_color)
         print(table)
         total_files = sum(count for _, count, _ in report_data)
         total_exts = len(report_data)

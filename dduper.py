@@ -222,41 +222,33 @@ def extract_with_libcst(code: str) -> list[RawExtractedObject]:
         end_line = pos.end.line if pos is not None else None
 
         if isinstance(stmt, cst.FunctionDef):
-            objects.append(
-                {
-                    "name": stmt.name.value,
-                    "kind": "function",
-                    "snippet": wrapper.module.code_for_node(stmt),
-                    "start_line": start_line,
-                    "end_line": end_line,
-                }
-            )
+            objects.append({
+                "name": stmt.name.value,
+                "kind": "function",
+                "snippet": wrapper.module.code_for_node(stmt),
+                "start_line": start_line,
+                "end_line": end_line,
+            })
         elif isinstance(stmt, cst.ClassDef):
-            objects.append(
-                {
-                    "name": stmt.name.value,
-                    "kind": "class",
-                    "snippet": wrapper.module.code_for_node(stmt),
-                    "start_line": start_line,
-                    "end_line": end_line,
-                }
-            )
+            objects.append({
+                "name": stmt.name.value,
+                "kind": "class",
+                "snippet": wrapper.module.code_for_node(stmt),
+                "start_line": start_line,
+                "end_line": end_line,
+            })
         elif isinstance(stmt, cst.SimpleStatementLine) and len(stmt.body) == 1:
             inner = stmt.body[0]
             if isinstance(inner, cst.Assign):
                 const_name = _assigned_name_if_single_target(inner)
                 if const_name is not None:
-                    objects.append(
-                        {
-                            "name": const_name,
-                            "kind": "constant",
-                            "snippet": wrapper.module.code_for_node(stmt).rstrip(
-                                "\r\n"
-                            ),
-                            "start_line": start_line,
-                            "end_line": end_line,
-                        }
-                    )
+                    objects.append({
+                        "name": const_name,
+                        "kind": "constant",
+                        "snippet": wrapper.module.code_for_node(stmt).rstrip("\r\n"),
+                        "start_line": start_line,
+                        "end_line": end_line,
+                    })
 
     return objects
 
@@ -281,22 +273,16 @@ def extract_with_tree_sitter(code: str) -> list[RawExtractedObject] | None:
                 name_node = node.child_by_field_name("name")
                 if name_node is None:
                     continue
-                name = encoded[name_node.start_byte : name_node.end_byte].decode(
-                    "utf-8"
-                )
+                name = encoded[name_node.start_byte : name_node.end_byte].decode("utf-8")
                 snippet = encoded[node.start_byte : node.end_byte].decode("utf-8")
-                kind: ObjectKind = (
-                    "function" if node.type == "function_definition" else "class"
-                )
-                objects.append(
-                    {
-                        "name": name,
-                        "kind": kind,
-                        "snippet": snippet,
-                        "start_line": start_line,
-                        "end_line": end_line,
-                    }
-                )
+                kind: ObjectKind = "function" if node.type == "function_definition" else "class"
+                objects.append({
+                    "name": name,
+                    "kind": kind,
+                    "snippet": snippet,
+                    "start_line": start_line,
+                    "end_line": end_line,
+                })
             elif node.type == "expression_statement":
                 snippet = encoded[node.start_byte : node.end_byte].decode("utf-8")
                 try:
@@ -308,19 +294,15 @@ def extract_with_tree_sitter(code: str) -> list[RawExtractedObject] | None:
                     if isinstance(inner, cst.Assign):
                         const_name = _assigned_name_if_single_target(inner)
                         if const_name is not None:
-                            objects.append(
-                                {
-                                    "name": const_name,
-                                    "kind": "constant",
-                                    "snippet": snippet,
-                                    "start_line": start_line,
-                                    "end_line": end_line,
-                                }
-                            )
+                            objects.append({
+                                "name": const_name,
+                                "kind": "constant",
+                                "snippet": snippet,
+                                "start_line": start_line,
+                                "end_line": end_line,
+                            })
     except Exception as exc:
-        _logger.warning(
-            "Tree-sitter extraction failed ({}); falling back to libcst.", exc
-        )
+        _logger.warning("Tree-sitter extraction failed ({}); falling back to libcst.", exc)
         return None
     else:
         return objects
@@ -364,17 +346,15 @@ def extract_archive(path: Path) -> Path:
         if lower.endswith(".zip"):
             with zipfile.ZipFile(path) as zf:
                 zf.extractall(temp_dir)
-        elif lower.endswith(
-            (
-                ".tar",
-                ".tar.gz",
-                ".tgz",
-                ".tar.bz2",
-                ".tbz2",
-                ".tar.xz",
-                ".txz",
-            )
-        ):
+        elif lower.endswith((
+            ".tar",
+            ".tar.gz",
+            ".tgz",
+            ".tar.bz2",
+            ".tbz2",
+            ".tar.xz",
+            ".txz",
+        )):
             with tarfile.open(path) as tf:
                 tf.extractall(temp_dir, filter="data")
         elif lower.endswith(".gz") and not lower.endswith(".tar.gz"):
@@ -485,9 +465,7 @@ def get_utils_path(base: Path) -> Path:
         idx += 1
 
 
-def build_import_statement(
-    utils_module_name: str, names: Sequence[str]
-) -> cst.ImportFrom:
+def build_import_statement(utils_module_name: str, names: Sequence[str]) -> cst.ImportFrom:
     """Build a `libcst.ImportFrom` node importing `names` from `utils_module_name`."""
     unique_sorted = sorted(set(names))
     aliases = [cst.ImportAlias(name=cst.Name(value=n)) for n in unique_sorted]
@@ -557,9 +535,7 @@ def _remove_objects_via_cst(code: str, objects: Iterable[IndexedObject]) -> str:
     return transformed.code
 
 
-def _insert_import_via_cst(
-    code: str, utils_module_name: str, names: Sequence[str]
-) -> str:
+def _insert_import_via_cst(code: str, utils_module_name: str, names: Sequence[str]) -> str:
     """Insert a `from <utils_module_name> import ...` statement after shebang/module header."""
     if not names:
         return code
@@ -571,11 +547,9 @@ def _insert_import_via_cst(
 
     new_body: list[cst.BaseStatement] = list(module.body)
     insert_idx = 0
-    if (
-        new_body
-        and isinstance(new_body[0], cst.EmptyLine)
-        and new_body[0].comment is not None
-    ) and new_body[0].comment.value.startswith("#!"):
+    if (new_body and isinstance(new_body[0], cst.EmptyLine) and new_body[0].comment is not None) and new_body[
+        0
+    ].comment.value.startswith("#!"):
         insert_idx = 1
 
     new_body.insert(insert_idx, import_stmt)
@@ -706,9 +680,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         by_hash[obj.digest].append(obj)
 
     duplicate_groups: dict[str, list[IndexedObject]] = {
-        digest: group
-        for digest, group in by_hash.items()
-        if len(group) >= opts.min_occurrences
+        digest: group for digest, group in by_hash.items() if len(group) >= opts.min_occurrences
     }
     if not duplicate_groups:
         if opts.as_json:

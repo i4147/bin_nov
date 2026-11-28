@@ -105,11 +105,7 @@ class Tokenizer:
             self.advance()
             self.advance()
             while self.pos < len(self.source):
-                if (
-                    self.current_char() == quote
-                    and self.peek_char() == quote
-                    and self.peek_char(2) == quote
-                ):
+                if self.current_char() == quote and self.peek_char() == quote and self.peek_char(2) == quote:
                     self.advance()
                     self.advance()
                     self.advance()
@@ -149,11 +145,7 @@ class Tokenizer:
                     self.advance()
             if self.current_char() == quote:
                 self.advance()
-        return (
-            quote + "".join(result) + quote
-            if is_multiline
-            else quote + "".join(result) + quote
-        )
+        return quote + "".join(result) + quote if is_multiline else quote + "".join(result) + quote
 
     def read_number(self) -> tuple[TokenType, str]:
         start = self.pos
@@ -178,9 +170,7 @@ class Tokenizer:
 
     def read_key(self) -> str:
         start = self.pos
-        while self.current_char() and (
-            self.current_char().isalnum() or self.current_char() in "_-"
-        ):
+        while self.current_char() and (self.current_char().isalnum() or self.current_char() in "_-"):
             self.advance()
         return self.source[start : self.pos]
 
@@ -192,9 +182,7 @@ class Tokenizer:
                 start = self.pos
                 while self.current_char() and self.current_char() != "\n":
                     self.advance()
-                self.tokens.append(
-                    Token(TokenType.COMMENT, self.source[start : self.pos], line, col)
-                )
+                self.tokens.append(Token(TokenType.COMMENT, self.source[start : self.pos], line, col))
             elif ch == "\n":
                 self.tokens.append(Token(TokenType.NEWLINE, "\n", line, col))
                 self.advance()
@@ -202,11 +190,7 @@ class Tokenizer:
                 start = self.pos
                 while self.current_char() in (" ", "\t"):
                     self.advance()
-                self.tokens.append(
-                    Token(
-                        TokenType.WHITESPACE, self.source[start : self.pos], line, col
-                    )
-                )
+                self.tokens.append(Token(TokenType.WHITESPACE, self.source[start : self.pos], line, col))
             elif ch == "[":
                 if self.peek_char() == "[":
                     self.advance()
@@ -263,9 +247,7 @@ class Tokenizer:
         return self.tokens
 
     def _is_datetime(self, s: str) -> bool:
-        iso_pattern = (
-            r"^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})?$"
-        )
+        iso_pattern = r"^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})?$"
         return bool(re.match(iso_pattern, s))
 
 
@@ -413,15 +395,9 @@ class Parser:
                 else:
                     current = current.setdefault(keys[-1], {})
                 ast.order.append(".".join(keys))
-                while (
-                    self.current().type != TokenType.EOF
-                    and self.current().type != TokenType.LSQUARE
-                ):
+                while self.current().type != TokenType.EOF and self.current().type != TokenType.LSQUARE:
                     self.skip_whitespace_and_comments()
-                    if (
-                        self.current().type == TokenType.KEY
-                        or self.current().type == TokenType.STRING
-                    ):
+                    if self.current().type == TokenType.KEY or self.current().type == TokenType.STRING:
                         keys = self.parse_key()
                         self.skip_whitespace_and_comments()
                         self.expect(TokenType.EQUALS)
@@ -430,10 +406,7 @@ class Parser:
                         for k in keys[:-1]:
                             nested = nested.setdefault(k, {})
                         nested[keys[-1]] = val
-            elif (
-                self.current().type == TokenType.KEY
-                or self.current().type == TokenType.STRING
-            ):
+            elif self.current().type == TokenType.KEY or self.current().type == TokenType.STRING:
                 keys = self.parse_key()
                 self.skip_whitespace_and_comments()
                 self.expect(TokenType.EQUALS)
@@ -460,9 +433,7 @@ class Formatter:
     def _indent(self) -> str:
         return " " * (self.indent_level * self.config.indent_size)
 
-    def _format_table(
-        self, table: dict[str, Any], path: list[str], is_root: bool = False
-    ) -> None:
+    def _format_table(self, table: dict[str, Any], path: list[str], is_root: bool = False) -> None:
         if not is_root and table:
             if path:
                 self.output.write("\n[" + ".".join(path) + "]\n")
@@ -601,9 +572,7 @@ class TOMLFormatter:
         formatted = self.format_file(path)
         atomic_write(path, formatted, encoding="utf-8")
 
-    def stream_format(
-        self, input_path: Path, output_path: Path, chunk_size: int = 8192
-    ) -> None:
+    def stream_format(self, input_path: Path, output_path: Path, chunk_size: int = 8192) -> None:
         source = input_path.read_text(encoding="utf-8")
         formatted = self.format_string(source)
         atomic_write(output_path, formatted, encoding="utf-8")

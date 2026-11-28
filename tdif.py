@@ -202,9 +202,7 @@ class DiffViewerApp(App):
                 self.search_term = submitted_text
                 self.highlight_search_results()
 
-        self.push_screen(
-            "input", on_input, title="Search", instructions="Enter text to search for:"
-        )
+        self.push_screen("input", on_input, title="Search", instructions="Enter text to search for:")
 
     def highlight_search_results(self) -> None:
         if not self.search_term:

@@ -111,9 +111,7 @@ class BasicEditor(App):
         editor = self.query_one(TextEditor)
         if editor.text and self.is_dirty:
             try:
-                confirm = input(
-                    "You have unsaved changes. Are you sure you want to quit? (y/n): "
-                )
+                confirm = input("You have unsaved changes. Are you sure you want to quit? (y/n): ")
                 if confirm.lower() == "y":
                     self.exit()
                 else:

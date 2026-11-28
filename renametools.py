@@ -152,9 +152,7 @@ def _common_suffix(strings: Sequence[str]) -> str:
     return _common_prefix([s[::-1] for s in strings])[::-1]
 
 
-def _lowercase_name(
-    paths: Sequence[Path], *, recursive: bool, dry_run: bool, verbose: bool
-) -> int:
+def _lowercase_name(paths: Sequence[Path], *, recursive: bool, dry_run: bool, verbose: bool) -> int:
     items = list(iter_paths(paths, recursive=recursive, include_dirs=True))
     items.sort(key=lambda p: len(p.parts), reverse=True)
     count = 0
@@ -172,9 +170,7 @@ def _lowercase_name(
     return count
 
 
-def _lowercase_ext(
-    paths: Sequence[Path], *, recursive: bool, dry_run: bool, verbose: bool
-) -> int:
+def _lowercase_ext(paths: Sequence[Path], *, recursive: bool, dry_run: bool, verbose: bool) -> int:
     count = 0
     for p in iter_paths(paths, recursive=recursive):
         ext = p.suffix[1:]
@@ -298,9 +294,7 @@ def cmd_images(args: argparse.Namespace) -> int:
                 failed += 1
                 print(f"✗ FAIL {path.name}: {msg}", file=sys.stderr)
     print("-" * 40)
-    print(
-        f"[SUMMARY] Renamed: {renamed} | Skipped: {skipped} | Failed: {failed} | Total: {len(files)}"
-    )
+    print(f"[SUMMARY] Renamed: {renamed} | Skipped: {skipped} | Failed: {failed} | Total: {len(files)}")
     return 0 if failed == 0 else 1
 
 
@@ -324,11 +318,7 @@ def _strip_junk(name: str, patterns: Sequence[re.Pattern[str]]) -> str:
 
 def cmd_clean_names(args: argparse.Namespace) -> int:
     patterns = [re.compile(p, re.IGNORECASE) for p in args.pattern]
-    files = list(
-        iter_paths(
-            args.paths, recursive=args.recursive, suffixes=DEFAULT_MEDIA_SUFFIXES
-        )
-    )
+    files = list(iter_paths(args.paths, recursive=args.recursive, suffixes=DEFAULT_MEDIA_SUFFIXES))
     if not files:
         print("No matching files found.")
         return 1
@@ -342,11 +332,7 @@ def cmd_clean_names(args: argparse.Namespace) -> int:
     changed = 0
     for f in files:
         original = f.name
-        middle = (
-            original[len(prefix) : len(original) - len(suffix)]
-            if suffix
-            else original[len(prefix) :]
-        )
+        middle = original[len(prefix) : len(original) - len(suffix)] if suffix else original[len(prefix) :]
         middle = _strip_junk(middle, patterns)
         new_name = f"{f.stem.split('.')[0]}.{middle}{f.suffix}"
         new_name = re.sub(r"\.+", ".", new_name)
@@ -369,9 +355,7 @@ def cmd_clean_names(args: argparse.Namespace) -> int:
 
 _QUERY_ANY_RE = re.compile(r"(\.(?:js|css))([?#].*)?$", re.IGNORECASE)
 _QUERY_PARAM_RE = re.compile(r"\?[a-zA-Z0-9_-]+=[^\"'\s>]+", re.IGNORECASE)
-_JS_CSS_REF_RE = re.compile(
-    r"\b([^\s<>\"']*?\.(?:js|css))([?#][^\s<>\"']*)?\b", re.IGNORECASE
-)
+_JS_CSS_REF_RE = re.compile(r"\b([^\s<>\"']*?\.(?:js|css))([?#][^\s<>\"']*)?\b", re.IGNORECASE)
 
 
 def _strip_query(name: str, style: str) -> str:
@@ -468,9 +452,7 @@ class SourceAnalyzer:
         return None
 
     def purpose(self) -> Optional[str]:
-        return (
-            self.module_docstring() or self.argparse_epilog() or self.main_docstring()
-        )
+        return self.module_docstring() or self.argparse_epilog() or self.main_docstring()
 
     def is_meaningful_name(self) -> bool:
         stem = self.path.stem
@@ -532,9 +514,7 @@ def cmd_suggest_names(args: argparse.Namespace) -> int:
     renames = sum(1 for s in results if s.renamed)
     print("=" * 78)
     print(f"  Mode: {'APPLY' if args.apply else 'DRY RUN'}")
-    print(
-        f"  Total files: {len(results)} | Meaningful: {meaningful} | Unnamed: {unnamed}"
-    )
+    print(f"  Total files: {len(results)} | Meaningful: {meaningful} | Unnamed: {unnamed}")
     print(f"  Errors: {errors} | Renamed: {renames}")
     print("=" * 78)
     if unnamed:
@@ -595,9 +575,7 @@ def _pnr_remove(root: Path, needle: str, *, dry_run: bool, recursive: bool) -> i
     return count
 
 
-def _pnr_replace(
-    root: Path, old: str, new: str, *, dry_run: bool, recursive: bool
-) -> int:
+def _pnr_replace(root: Path, old: str, new: str, *, dry_run: bool, recursive: bool) -> int:
     count = 0
     try:
         entries = list(root.iterdir())
@@ -625,11 +603,7 @@ def _pnr_replace(
 def _pnr_template(root: Path, prefix: str, *, dry_run: bool, recursive: bool) -> int:
     count = 0
     try:
-        files = [
-            p
-            for p in root.iterdir()
-            if p.is_file() and not _is_skippable(p) and p.name != Path(__file__).name
-        ]
+        files = [p for p in root.iterdir() if p.is_file() and not _is_skippable(p) and p.name != Path(__file__).name]
     except PermissionError:
         print(f"Permission denied: {root}", file=sys.stderr)
         return 0
@@ -660,16 +634,12 @@ def cmd_pnr(args: argparse.Namespace) -> int:
     if args.dry_run:
         print("DRY RUN MODE — no changes will be made.\n")
     if args.remove is not None:
-        n = _pnr_remove(
-            root, args.remove, dry_run=args.dry_run, recursive=args.recursive
-        )
+        n = _pnr_remove(root, args.remove, dry_run=args.dry_run, recursive=args.recursive)
     elif args.replace is not None:
         old, new = args.replace
         n = _pnr_replace(root, old, new, dry_run=args.dry_run, recursive=args.recursive)
     else:
-        n = _pnr_template(
-            root, args.template, dry_run=args.dry_run, recursive=args.recursive
-        )
+        n = _pnr_template(root, args.template, dry_run=args.dry_run, recursive=args.recursive)
     print(f"\nOperation complete. {n} item(s) affected.")
     return 0
 
@@ -687,13 +657,9 @@ def _add_paths(p: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="renametools",
-        description=(
-            "Unified renamer / normalizer: lowercase, images, clean-names, jscss, suggest-names, pnr."
-        ),
+        description=("Unified renamer / normalizer: lowercase, images, clean-names, jscss, suggest-names, pnr."),
     )
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Enable debug logging."
-    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable debug logging.")
     sub = parser.add_subparsers(dest="command", required=True)
     lc = sub.add_parser(
         "lowercase",
@@ -746,12 +712,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Strip common prefix/suffix and junk patterns from media files.",
     )
     _add_paths(cn)
-    cn.add_argument(
-        "-r", "--recursive", action="store_true", help="Recurse into subdirectories."
-    )
-    cn.add_argument(
-        "--apply", action="store_true", help="Actually rename (default: dry-run)."
-    )
+    cn.add_argument("-r", "--recursive", action="store_true", help="Recurse into subdirectories.")
+    cn.add_argument("--apply", action="store_true", help="Actually rename (default: dry-run).")
     cn.add_argument(
         "--pattern",
         action="append",
@@ -767,13 +729,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--query-style",
         choices=["any", "param"],
         default="any",
-        help=(
-            "'any' strips everything after ? or # (default); 'param' strips only ?key=value patterns."
-        ),
+        help=("'any' strips everything after ? or # (default); 'param' strips only ?key=value patterns."),
     )
-    js.add_argument(
-        "--also-html", action="store_true", help="Also rewrite .html/.js content."
-    )
+    js.add_argument("--also-html", action="store_true", help="Also rewrite .html/.js content.")
     js.add_argument("--dry-run", action="store_true", help="Preview only.")
     sn = sub.add_parser(
         "suggest-names",
@@ -798,9 +756,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Rename files to NAME + sequential number.",
     )
     pnr.add_argument("--dry-run", action="store_true", help="Preview only.")
-    pnr.add_argument(
-        "--recursive", action="store_true", help="Recurse into subdirectories."
-    )
+    pnr.add_argument("--recursive", action="store_true", help="Recurse into subdirectories.")
     pnr.add_argument(
         "--root",
         type=Path,

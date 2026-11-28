@@ -201,9 +201,7 @@ def _iter_tar(path: Path) -> Iterator[Source]:
     try:
         with tarfile.open(path, "r:*") as tf:
             for member in tf.getmembers():
-                if not member.isfile() or not member.name.lower().endswith(
-                    PYTHON_SUFFIX
-                ):
+                if not member.isfile() or not member.name.lower().endswith(PYTHON_SUFFIX):
                     continue
                 fh = tf.extractfile(member)
                 if fh is None:
@@ -261,9 +259,7 @@ def iter_sources(root: Path, include_archives: bool = True) -> Iterator[Source]:
         full_suffixes = "".join(path.suffixes).lower()
         if full_suffixes.endswith((".zip", ".whl")):
             yield from _iter_zip(path)
-        elif full_suffixes.endswith(
-            (".tar", ".tar.gz", ".tar.bz2", ".tar.xz", ".tgz", ".tbz2", ".txz")
-        ):
+        elif full_suffixes.endswith((".tar", ".tar.gz", ".tar.bz2", ".tar.xz", ".tgz", ".tbz2", ".txz")):
             yield from _iter_tar(path)
         elif full_suffixes.endswith(COMPRESSED_SUFFIXES):
             yield from _iter_compressed(path)
@@ -293,9 +289,7 @@ def _collect_imports(tree: ast.Module, node: ast.AST) -> list[str]:
                 if stmt not in seen:
                     seen.add(stmt)
                     result.append(stmt)
-        elif isinstance(top, ast.ImportFrom) and any(
-            (a.asname or a.name) in used for a in top.names
-        ):
+        elif isinstance(top, ast.ImportFrom) and any((a.asname or a.name) in used for a in top.names):
             stmt = ast.unparse(top)
             if stmt not in seen:
                 seen.add(stmt)
@@ -309,10 +303,7 @@ def _is_literal_value(node: ast.AST) -> bool:
     if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
         return all(_is_literal_value(e) for e in node.elts)
     if isinstance(node, ast.Dict):
-        return all(
-            _is_literal_value(k) and _is_literal_value(v)
-            for k, v in zip(node.keys, node.values)
-        )
+        return all(_is_literal_value(k) and _is_literal_value(v) for k, v in zip(node.keys, node.values))
     return False
 
 
@@ -346,9 +337,7 @@ def _const_names(node: ast.AST, mode: str) -> list[str]:
         if not all(n.isupper() for n in names):
             if not (isinstance(node, ast.Assign) and _is_typevar_call(node)):
                 return []
-    elif mode == "literal" and not (
-        isinstance(node, ast.Assign) and _is_literal_value(node.value)
-    ):
+    elif mode == "literal" and not (isinstance(node, ast.Assign) and _is_literal_value(node.value)):
         return []
     return names
 
@@ -480,9 +469,7 @@ def write_utils(
         seen_names: set[str] = set()
         for r in new_reps:
             if r.name in seen_names:
-                logger.warning(
-                    f"name collision in {target.name}: '{r.name}' — skipping"
-                )
+                logger.warning(f"name collision in {target.name}: '{r.name}' — skipping")
                 continue
             seen_names.add(r.name)
             deduped.append(r)
@@ -582,9 +569,7 @@ def _patch_file(
         logger.error(f"patched {path} has syntax errors — original preserved: {exc}")
         return
     if dry_run:
-        logger.info(
-            f"[dry-run] would patch {path}: -{len(defs)} definition(s), +imports"
-        )
+        logger.info(f"[dry-run] would patch {path}: -{len(defs)} definition(s), +imports")
     else:
         atomic_write(path, new_text, encoding="utf-8")
         _success(f"patched {path}: -{len(defs)} definition(s)")
@@ -714,9 +699,7 @@ def _extract_and_group(
     defs = _collect_all(sources, MAX_WORKERS, args.const_mode)
     logger.info(f"extracted {len(defs)} top-level definition(s)")
     groups = group_duplicates(defs, args.min_occurs, args.match_mode)
-    logger.info(
-        f"found {len(groups)} duplicate group(s) (min-occurs={args.min_occurs}, match-mode={args.match_mode})"
-    )
+    logger.info(f"found {len(groups)} duplicate group(s) (min-occurs={args.min_occurs}, match-mode={args.match_mode})")
     return defs, groups
 
 
@@ -727,9 +710,7 @@ def cmd_report(args: argparse.Namespace) -> int:
         return 0
     total = sum(len(g) for g in groups.values())
     _success(f"{len(groups)} duplicate group(s) covering {total} definition(s)")
-    for key, group in sorted(
-        groups.items(), key=lambda kv: (-len(kv[1]), kv[1][0].kind, kv[1][0].name)
-    ):
+    for key, group in sorted(groups.items(), key=lambda kv: (-len(kv[1]), kv[1][0].kind, kv[1][0].name)):
         rep = group[0]
         header = f"{rep.kind} '{rep.name}' — {len(group)} occurrence(s)"
         print()
@@ -780,9 +761,7 @@ def cmd_move(args: argparse.Namespace) -> int:
         args.const_file,
         dry_run=args.dry_run,
     )
-    patchable: dict[str, list[Definition]] = {
-        key: group for key, group in groups.items() if group[0].kind in written
-    }
+    patchable: dict[str, list[Definition]] = {key: group for key, group in groups.items() if group[0].kind in written}
     if not patchable:
         logger.warning("nothing was written; skipping originals patching")
         return 0

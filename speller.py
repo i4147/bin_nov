@@ -53,9 +53,7 @@ def process_line(line: str, autofix: bool = False) -> tuple:
     return updated_line, misspelled_count, fixed_count
 
 
-def process_file(
-    path: str, autofix: bool = False, num_processes: int | None = None
-) -> None:
+def process_file(path: str, autofix: bool = False, num_processes: int | None = None) -> None:
     try:
         with open(path, "r", encoding="utf-8") as f:
             lines = f.readlines()
@@ -90,17 +88,13 @@ def process_file(
                 print(f"\nAutofixed {total_fixed} misspelled word(s) in '{path}'.")
                 if total_misspelled > total_fixed:
                     skipped = total_misspelled - total_fixed
-                    print(
-                        f"({skipped} misspelled word(s) had no suggestions and were skipped.)"
-                    )
+                    print(f"({skipped} misspelled word(s) had no suggestions and were skipped.)")
             except Exception as e:
                 print(f"Error writing to file: {e}")
         elif total_misspelled == 0:
             print("No misspelled words found to autofix.")
         else:
-            print(
-                "Found misspelled words, but no automatic corrections were available."
-            )
+            print("Found misspelled words, but no automatic corrections were available.")
     elif total_misspelled == 0:
         print("No misspelled words found.")
     else:

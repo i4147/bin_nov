@@ -112,9 +112,7 @@ def iter_text_files(root: str) -> Iterator[str]:
 
     for dirpath, dirnames, filenames in os.walk(root):
         # prune hidden dirs and common VCS dirs
-        dirnames[:] = [
-            d for d in dirnames if not d.startswith(".") and d != "__pycache__"
-        ]
+        dirnames[:] = [d for d in dirnames if not d.startswith(".") and d != "__pycache__"]
         for fname in filenames:
             if fname.startswith(".") or fname == OUTPUT_DEFAULT:
                 continue
@@ -133,15 +131,9 @@ OUTPUT_DEFAULT: str = "fa.txt"
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(
-        description="Extract unique Persian words from text files under a directory."
-    )
-    ap.add_argument(
-        "root", nargs="?", default=".", help="directory to walk (default: .)"
-    )
-    ap.add_argument(
-        "-o", "--output", default=OUTPUT_DEFAULT, help="output file (default: fa.txt)"
-    )
+    ap = argparse.ArgumentParser(description="Extract unique Persian words from text files under a directory.")
+    ap.add_argument("root", nargs="?", default=".", help="directory to walk (default: .)")
+    ap.add_argument("-o", "--output", default=OUTPUT_DEFAULT, help="output file (default: fa.txt)")
     ap.add_argument(
         "-j",
         "--jobs",
@@ -177,25 +169,18 @@ def main(argv: list[str] | None = None) -> int:
         task = progress.add_task("extracting Persian words", total=len(files))
         # 4 parallel workers
         with ProcessPoolExecutor(max_workers=args.jobs) as pool:
-            futures = {
-                pool.submit(process_file, path, args.min_len): path for path in files
-            }
+            futures = {pool.submit(process_file, path, args.min_len): path for path in files}
             for future in as_completed(futures):
                 try:
                     unique_words |= future.result()
                 except Exception as exc:  # never lose the whole run
-                    progress.console.print(
-                        "[red]error in %s: %s[/red]" % (futures[future], exc)
-                    )
+                    progress.console.print("[red]error in %s: %s[/red]" % (futures[future], exc))
                 progress.advance(task)
 
     with open(args.output, "w", encoding="utf-8") as f:
         f.writelines(word + "\n" for word in sorted(unique_words))
 
-    print(
-        "done: %d files scanned, %d unique Persian words -> %s"
-        % (len(files), len(unique_words), args.output)
-    )
+    print("done: %d files scanned, %d unique Persian words -> %s" % (len(files), len(unique_words), args.output))
     return 0
 
 

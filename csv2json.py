@@ -65,9 +65,7 @@ class ConversionConfig:
     stream: bool = False
     memory_map: bool = False
     atomic_write: bool = True
-    temp_dir: Path = field(
-        default_factory=lambda: Path(__import__("tempfile").gettempdir())
-    )
+    temp_dir: Path = field(default_factory=lambda: Path(__import__("tempfile").gettempdir()))
     preserve_order: bool = True
     nan_inf: bool = False
     allow_nan: bool = True
@@ -86,9 +84,7 @@ class ConversionConfig:
     parse_constant_fn: callable | None = None
 
 
-async def detect_encoding_async(
-    file_path: Path, detector: EncodingDetector | None = None
-) -> str:
+async def detect_encoding_async(file_path: Path, detector: EncodingDetector | None = None) -> str:
     detector = detector or chardet
     data = await asyncio.to_thread(file_path.read_bytes)
     result = await asyncio.to_thread(detector.detect, data)
@@ -175,9 +171,7 @@ async def convert_csv_to_json_async(
         json_kwargs["separators"] = (",", ":")
 
     if config.atomic_write:
-        temp_file = (
-            config.temp_dir / f"{json_path.stem}_{__import__('uuid').uuid4().hex}.tmp"
-        )
+        temp_file = config.temp_dir / f"{json_path.stem}_{__import__('uuid').uuid4().hex}.tmp"
         try:
             await asyncio.to_thread(
                 lambda: temp_file.write_text(
@@ -187,9 +181,7 @@ async def convert_csv_to_json_async(
                 )
             )
             if config.backup and json_path.exists():
-                backup_path = json_path.with_suffix(
-                    json_path.suffix + config.backup_suffix
-                )
+                backup_path = json_path.with_suffix(json_path.suffix + config.backup_suffix)
                 await asyncio.to_thread(lambda: json_path.replace(backup_path))
             await asyncio.to_thread(lambda: temp_file.replace(json_path))
         finally:
@@ -214,9 +206,7 @@ async def convert_file_async(file_path: Path, config: ConversionConfig) -> bool:
     output_path = config.output_dir / f"{file_path.stem}.json"
 
     if output_path.exists() and config.no_overwrite and not config.force:
-        logger.warning(
-            f"{output_path} already exists. Skipping due to --no-overwrite option."
-        )
+        logger.warning(f"{output_path} already exists. Skipping due to --no-overwrite option.")
         return False
 
     if config.dry_run:
@@ -274,9 +264,7 @@ def parse_args() -> ConversionConfig:
         default=Path(),
         help="Output directory for JSON files",
     )
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Enable verbose output"
-    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
     parser.add_argument(
         "-r",
         "--recursive",
@@ -295,76 +283,38 @@ def parse_args() -> ConversionConfig:
         help="Input CSV encoding (default: auto-detect)",
     )
     parser.add_argument("--compact", action="store_true", help="Output compact JSON")
-    parser.add_argument(
-        "-j", "--jobs", type=int, default=4, help="Max parallel workers"
-    )
+    parser.add_argument("-j", "--jobs", type=int, default=4, help="Max parallel workers")
     parser.add_argument("--skip-empty", action="store_true", help="Skip empty rows")
-    parser.add_argument(
-        "--flatten", action="store_true", help="Remove None values from rows"
-    )
+    parser.add_argument("--flatten", action="store_true", help="Remove None values from rows")
     parser.add_argument("-k", "--key-field", help="Use field as JSON object key")
-    parser.add_argument(
-        "--include-headers", action="store_true", help="Include headers in output"
-    )
-    parser.add_argument(
-        "--no-detect-dialect", action="store_true", help="Disable CSV dialect detection"
-    )
+    parser.add_argument("--include-headers", action="store_true", help="Include headers in output")
+    parser.add_argument("--no-detect-dialect", action="store_true", help="Disable CSV dialect detection")
     parser.add_argument("--delimiter", help="CSV delimiter (overrides auto-detection)")
-    parser.add_argument(
-        "--quotechar", help="CSV quote character (overrides auto-detection)"
-    )
-    parser.add_argument(
-        "--skipinitialspace", action="store_true", help="Skip spaces after delimiter"
-    )
-    parser.add_argument(
-        "--strict", action="store_true", help="Enable strict CSV parsing"
-    )
+    parser.add_argument("--quotechar", help="CSV quote character (overrides auto-detection)")
+    parser.add_argument("--skipinitialspace", action="store_true", help="Skip spaces after delimiter")
+    parser.add_argument("--strict", action="store_true", help="Enable strict CSV parsing")
     parser.add_argument("--fieldnames", nargs="+", help="Custom field names")
     parser.add_argument("--restkey", help="Key for extra fields")
     parser.add_argument("--restval", help="Value for missing fields")
-    parser.add_argument(
-        "--errors", default="strict", help="Error handling for CSV reading"
-    )
-    parser.add_argument(
-        "--encoding-errors", default="strict", help="Error handling for encoding"
-    )
+    parser.add_argument("--errors", default="strict", help="Error handling for CSV reading")
+    parser.add_argument("--encoding-errors", default="strict", help="Error handling for encoding")
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Show what would be done without doing it",
     )
-    parser.add_argument(
-        "--force", action="store_true", help="Force overwrite even with --no-overwrite"
-    )
-    parser.add_argument(
-        "--backup", action="store_true", help="Backup existing files before overwrite"
-    )
+    parser.add_argument("--force", action="store_true", help="Force overwrite even with --no-overwrite")
+    parser.add_argument("--backup", action="store_true", help="Backup existing files before overwrite")
     parser.add_argument("--backup-suffix", default=".bak", help="Backup file suffix")
-    parser.add_argument(
-        "--checksum", action="store_true", help="Calculate and display SHA256 checksums"
-    )
-    parser.add_argument(
-        "--no-parallel", action="store_true", help="Disable parallel processing"
-    )
-    parser.add_argument(
-        "--batch-size", type=int, default=1000, help="Batch size for processing"
-    )
+    parser.add_argument("--checksum", action="store_true", help="Calculate and display SHA256 checksums")
+    parser.add_argument("--no-parallel", action="store_true", help="Disable parallel processing")
+    parser.add_argument("--batch-size", type=int, default=1000, help="Batch size for processing")
     parser.add_argument("--stream", action="store_true", help="Stream processing mode")
-    parser.add_argument(
-        "--no-atomic-write", action="store_true", help="Disable atomic file writes"
-    )
-    parser.add_argument(
-        "--temp-dir", type=Path, help="Temporary directory for atomic writes"
-    )
-    parser.add_argument(
-        "--no-preserve-order", action="store_true", help="Don't preserve key order"
-    )
-    parser.add_argument(
-        "--nan-inf", action="store_true", help="Allow NaN/Infinity in JSON"
-    )
-    parser.add_argument(
-        "--no-allow-nan", action="store_true", help="Disallow NaN/Infinity in JSON"
-    )
+    parser.add_argument("--no-atomic-write", action="store_true", help="Disable atomic file writes")
+    parser.add_argument("--temp-dir", type=Path, help="Temporary directory for atomic writes")
+    parser.add_argument("--no-preserve-order", action="store_true", help="Don't preserve key order")
+    parser.add_argument("--nan-inf", action="store_true", help="Allow NaN/Infinity in JSON")
+    parser.add_argument("--no-allow-nan", action="store_true", help="Disallow NaN/Infinity in JSON")
     parser.add_argument("--separators", nargs=2, help="JSON item and key separators")
     parser.add_argument("--sort-keys", action="store_true", help="Sort JSON keys")
     parser.add_argument(
@@ -463,13 +413,9 @@ async def main_async_fixed() -> int:
 async def run() -> int:
     parser = argparse.ArgumentParser(description="Convert CSV files to JSON")
     parser.add_argument("path", type=Path, help="File or directory path")
-    parser.add_argument(
-        "-o", "--output", type=Path, default=Path(), help="Output directory"
-    )
+    parser.add_argument("-o", "--output", type=Path, default=Path(), help="Output directory")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
-    parser.add_argument(
-        "-r", "--recursive", action="store_true", help="Recursive search"
-    )
+    parser.add_argument("-r", "--recursive", action="store_true", help="Recursive search")
     parser.add_argument("--no-overwrite", action="store_true", help="No overwrite")
     parser.add_argument("-e", "--encoding", default="auto", help="Encoding")
     parser.add_argument("--compact", action="store_true", help="Compact JSON")
@@ -482,9 +428,7 @@ async def run() -> int:
     parser.add_argument("--backup", action="store_true", help="Backup files")
     parser.add_argument("--checksum", action="store_true", help="Checksums")
     parser.add_argument("--no-parallel", action="store_true", help="Disable parallel")
-    parser.add_argument(
-        "--no-atomic-write", action="store_true", help="Disable atomic writes"
-    )
+    parser.add_argument("--no-atomic-write", action="store_true", help="Disable atomic writes")
     parser.add_argument("--log-level", default="INFO", help="Log level")
 
     args = parser.parse_args()

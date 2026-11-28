@@ -123,9 +123,7 @@ class Renderer:
             if not shutil.which(argv[0]):
                 continue
             try:
-                res = subprocess.run(
-                    argv, stdout=subprocess.PIPE, stderr=DEVNULL, timeout=60
-                )
+                res = subprocess.run(argv, stdout=subprocess.PIPE, stderr=DEVNULL, timeout=60)
             except (OSError, subprocess.SubprocessError):
                 continue
             if res.returncode != 0:
@@ -161,14 +159,10 @@ class Renderer:
         ]
         res = subprocess.run(argv, stdout=DEVNULL, stderr=subprocess.PIPE, timeout=300)
         if res.returncode != 0:
-            raise RenderError(
-                res.stderr.decode("utf-8", "replace").strip() or "pdftoppm failed"
-            )
+            raise RenderError(res.stderr.decode("utf-8", "replace").strip() or "pdftoppm failed")
         out = root + ".ppm"
         if not Path(out).exists():
-            leftovers = [
-                Path(self._tmp).joinpath(f) for f in sorted(os.listdir(self._tmp))
-            ]
+            leftovers = [Path(self._tmp).joinpath(f) for f in sorted(os.listdir(self._tmp))]
             if not leftovers:
                 msg = "pdftoppm produced no output"
                 raise RenderError(msg)
@@ -192,9 +186,7 @@ class Renderer:
         ]
         res = subprocess.run(argv, stdout=DEVNULL, stderr=subprocess.PIPE, timeout=300)
         if res.returncode != 0:
-            raise RenderError(
-                res.stderr.decode("utf-8", "replace").strip() or "mutool draw failed"
-            )
+            raise RenderError(res.stderr.decode("utf-8", "replace").strip() or "mutool draw failed")
         try:
             with open(out, "rb") as fh:
                 return fh.read()

@@ -105,7 +105,9 @@ HTTP_TIMEOUT: int = 30
 CHUNKED_THRESHOLD: int = 5 * 1024 * 1024
 SCRAPE_RETRIES: int = 3
 SCRAPE_BACKOFF: int = 2
-DEFAULT_USER_AGENT: str = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+DEFAULT_USER_AGENT: str = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+)
 
 
 def _require(mod: Any, pkg_name: str, mode: str) -> None:
@@ -126,12 +128,7 @@ def human_size(n: float) -> str:
 
 
 def _clean_spec(spec: str) -> str:
-    return (
-        spec.split("==", maxsplit=1)[0]
-        .split(">=", maxsplit=1)[0]
-        .split("<=", maxsplit=1)[0]
-        .strip()
-    )
+    return spec.split("==", maxsplit=1)[0].split(">=", maxsplit=1)[0].split("<=", maxsplit=1)[0].strip()
 
 
 def fetch_json_multi_mirror(pkg_name: str) -> dict:
@@ -139,9 +136,7 @@ def fetch_json_multi_mirror(pkg_name: str) -> dict:
         url = f"{mirror}/{pkg_name}/json"
         for _ in range(MIRROR_RETRIES):
             try:
-                req = urllib.request.Request(
-                    url, headers={"User-Agent": "PyPIDownloader/1.0"}
-                )
+                req = urllib.request.Request(url, headers={"User-Agent": "PyPIDownloader/1.0"})
                 with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as resp:
                     if resp.status == 200:
                         return json.loads(resp.read().decode("utf-8"))
@@ -276,9 +271,7 @@ def download_requests_stream(url: str, target: Path) -> None:
     print()
 
 
-def download_urlopen_progress(
-    url: str, target: Path, size: int, chunk: int = 8192
-) -> tuple[bool, str]:
+def download_urlopen_progress(url: str, target: Path, size: int, chunk: int = 8192) -> tuple[bool, str]:
     print(f"  📥 Downloading {target.name} ({size / 1024 / 1024:.2f} MB)...")
     try:
         with urllib.request.urlopen(url) as r:
@@ -308,9 +301,7 @@ def verify_hash(path: Path, digests: dict) -> bool:
     elif "md5" in digests:
         algo, expected = "md5", digests["md5"]
     else:
-        print(
-            "[yellow]No known hash provided in metadata. Skipping hash verification.[/yellow]"
-        )
+        print("[yellow]No known hash provided in metadata. Skipping hash verification.[/yellow]")
         return True
     h = hashlib.new(algo)
     with path.open("rb") as fh:
@@ -323,9 +314,7 @@ def verify_hash(path: Path, digests: dict) -> bool:
     if actual == expected.lower():
         print(f"[bold green]✓ Integrity check passed ({algo.upper()})[/bold green]")
         return True
-    print(
-        f"[bold red]✗ Hash verification failed! Expected: {expected}, Got: {actual}[/bold red]"
-    )
+    print(f"[bold red]✗ Hash verification failed! Expected: {expected}, Got: {actual}[/bold red]")
     return False
 
 
@@ -386,9 +375,7 @@ def cmd_download(args: argparse.Namespace) -> int:
     return 0
 
 
-def _download_wheel_worker(
-    pkg: str, out_dir: Path, python_version: str
-) -> tuple[str, bool, str]:
+def _download_wheel_worker(pkg: str, out_dir: Path, python_version: str) -> tuple[str, bool, str]:
     print(f"🔍 Fetching info for: {pkg}")
     meta = fetch_json_urlopen(pkg)
     if meta is None:
@@ -412,10 +399,7 @@ def cmd_wheels(args: argparse.Namespace) -> int:
     print(f"📁 Saving wheels to: {out_dir}\n")
     downloaded = 0
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
-        futures = {
-            pool.submit(_download_wheel_worker, pkg, out_dir, args.python): pkg
-            for pkg in args.packages
-        }
+        futures = {pool.submit(_download_wheel_worker, pkg, out_dir, args.python): pkg for pkg in args.packages}
         for fut in as_completed(futures):
             pkg, success, err = fut.result()
             if success:
@@ -449,9 +433,7 @@ def _mirror_download_pycurl(url: str, target: Path, total: int) -> None:
     size = target.stat().st_size if target.exists() else 0
     mode = "ab" if size > 0 else "wb"
     with _progress_bar() as progress:
-        task = progress.add_task(
-            "download", filename=target.name, total=total, completed=size
-        )
+        task = progress.add_task("download", filename=target.name, total=total, completed=size)
 
         def write_cb(data: bytes) -> int:
             n = len(data)
@@ -487,14 +469,10 @@ def _mirror_download_requests(url: str, target: Path, total: int) -> None:
         headers["Range"] = f"bytes={size}-"
     chunked = total > CHUNKED_THRESHOLD
     with _progress_bar() as progress:
-        task = progress.add_task(
-            "download", filename=target.name, total=total, completed=size
-        )
+        task = progress.add_task("download", filename=target.name, total=total, completed=size)
         for attempt in range(1, MIRROR_RETRIES + 1):
             try:
-                r = requests.get(
-                    url, headers=headers, stream=True, timeout=HTTP_TIMEOUT
-                )
+                r = requests.get(url, headers=headers, stream=True, timeout=HTTP_TIMEOUT)
                 if r.status_code == 200 and size > 0:
                     mode = "wb"
                     size = 0
@@ -702,11 +680,7 @@ def _pick_scrape_link(links: Iterable[Any]) -> Optional[tuple[str, str, str]]:
 
 
 def _scrape_fetch_html(pkg: str, mirror_url: str, trailing_slash: bool) -> str:
-    url = (
-        f"{mirror_url.rstrip('/')}/{pkg}/"
-        if trailing_slash
-        else f"{mirror_url.rstrip('/')}/{pkg}"
-    )
+    url = f"{mirror_url.rstrip('/')}/{pkg}/" if trailing_slash else f"{mirror_url.rstrip('/')}/{pkg}"
     buf = io.BytesIO()
     c = pycurl.Curl()
     c.setopt(c.URL, url)
@@ -837,9 +811,7 @@ def cmd_scrape(args: argparse.Namespace) -> int:
     if args.directory:
         out_dir = Path(args.directory).expanduser().resolve()
         if not out_dir.is_dir():
-            print(
-                f"Error: download directory does not exist: {out_dir}", file=sys.stderr
-            )
+            print(f"Error: download directory does not exist: {out_dir}", file=sys.stderr)
             return 1
     else:
         out_dir = Path.cwd()
@@ -934,9 +906,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser(
-        "basic", help="Simple API download, prefers py3-none-any wheel (pd.py)"
-    )
+    p = sub.add_parser("basic", help="Simple API download, prefers py3-none-any wheel (pd.py)")
     p.add_argument("package", help="Package name")
     p.add_argument(
         "-o",
@@ -947,9 +917,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_basic)
     p = sub.add_parser("download", help="Version-aware streaming download (pdown.py)")
     p.add_argument("package", help="Package name")
-    p.add_argument(
-        "-v", "--version", default=None, help="Specific version (default: latest)"
-    )
+    p.add_argument("-v", "--version", default=None, help="Specific version (default: latest)")
     p.add_argument(
         "-o",
         "--output",
@@ -957,13 +925,9 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output directory (default: current directory)",
     )
     p.set_defaults(func=cmd_download)
-    p = sub.add_parser(
-        "wheels", help="Parallel wheel downloads scored by Python version (pdown2.py)"
-    )
+    p = sub.add_parser("wheels", help="Parallel wheel downloads scored by Python version (pdown2.py)")
     p.add_argument("packages", nargs="+", help="Package names")
-    p.add_argument(
-        "--python", default="3.12", help="Target Python version (default: 3.12)"
-    )
+    p.add_argument("--python", default="3.12", help="Target Python version (default: 3.12)")
     p.add_argument(
         "--output",
         type=Path,
@@ -971,9 +935,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output directory (default: wheels)",
     )
     p.set_defaults(func=cmd_wheels)
-    p = sub.add_parser(
-        "mirror", help="Multi-mirror + hash-verified downloads (pip_get.py)"
-    )
+    p = sub.add_parser("mirror", help="Multi-mirror + hash-verified downloads (pip_get.py)")
     p.add_argument(
         "packages",
         nargs="*",
@@ -1000,9 +962,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_mirror)
     p = sub.add_parser("scrape", help="HTML /simple index scraper (pipget.py)")
     p.add_argument("packages", nargs="*", help="Package names")
-    p.add_argument(
-        "-f", "--file", default=None, help="Read package names from file (one per line)"
-    )
+    p.add_argument("-f", "--file", default=None, help="Read package names from file (one per line)")
     p.add_argument(
         "-d",
         "--dir",
@@ -1011,9 +971,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Download directory (default: current directory)",
     )
     group = p.add_mutually_exclusive_group()
-    group.add_argument(
-        "-p", "--pypi", action="store_true", help="Use official PyPI simple index"
-    )
+    group.add_argument("-p", "--pypi", action="store_true", help="Use official PyPI simple index")
     group.add_argument("-c", "--china", action="store_true", help="Use Tsinghua mirror")
     group.add_argument(
         "-m",

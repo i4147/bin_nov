@@ -48,12 +48,8 @@ FormatResult: TypeAlias = tuple[bool, str]
 def has_shell_shebang(path: Path) -> bool:
     try:
         with path.open("rb") as f:
-            first = (
-                f.readline(SHEBANG_READ_BYTES).decode("utf-8", errors="ignore").strip()
-            )
-        return first.startswith("#!") and (
-            "bash" in first or "sh" in first or "zsh" in first
-        )
+            first = f.readline(SHEBANG_READ_BYTES).decode("utf-8", errors="ignore").strip()
+        return first.startswith("#!") and ("bash" in first or "sh" in first or "zsh" in first)
     except OSError:
         return False
 
@@ -104,11 +100,7 @@ def _run_pool(paths: Sequence[str], method: str) -> list[FormatResult]:
 
 
 def collect_shell_files(cwd: Path) -> list[Path]:
-    files = [
-        p
-        for p in get_files(cwd)
-        if (not p.suffix and has_shell_shebang(p)) or p.suffix == ".sh"
-    ]
+    files = [p for p in get_files(cwd) if (not p.suffix and has_shell_shebang(p)) or p.suffix == ".sh"]
     return [p for p in files if not is_binary(p)]
 
 
@@ -176,9 +168,7 @@ def main() -> int:
     if len(args.paths) == 1:
         single = Path(args.paths[0])
         if not is_formattable_file(single):
-            logger.warning(
-                f"Not a formattable file (missing or binary), skipping: {single}"
-            )
+            logger.warning(f"Not a formattable file (missing or binary), skipping: {single}")
             return 0
         logger.info(f"Single file mode: formatting {single.name} directly.")
         success, p_str = process_file(str(single))
@@ -190,9 +180,7 @@ def main() -> int:
                 move_failed_files([failed_path], cwd)
         return 0
     if args.paths:
-        non_binary_files: list[Path] = [
-            Path(p) for p in args.paths if is_shell_file(Path(p))
-        ]
+        non_binary_files: list[Path] = [Path(p) for p in args.paths if is_shell_file(Path(p))]
     else:
         non_binary_files = collect_shell_files(cwd)
     if not non_binary_files:

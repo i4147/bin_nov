@@ -174,9 +174,7 @@ def main() -> None:
             total_removed += res.removed_count
             print(f"Modified: {res.path} | Removed comments: {res.removed_count}")
             if res.unremoved_count > 0:
-                logger.warning(
-                    f"Lingering comments detected in {res.path}: {res.unremoved_count} remain."
-                )
+                logger.warning(f"Lingering comments detected in {res.path}: {res.unremoved_count} remain.")
     print("--- Execution Summary ---")
     print(f"Total files scanned:  {len(targets)}")
     print(f"Files modified:        {total_modified}")

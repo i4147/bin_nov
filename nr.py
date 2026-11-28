@@ -153,17 +153,13 @@ def create_github_repo(
         logger.info(f"✓ Created GitHub repo: {data['full_name']}")
         return data.get("ssh_url") or data["clone_url"]
     if r.status_code == 422:
-        logger.warning(
-            f"Repo '{user_login}/{repo_name}' already exists on GitHub — reusing it."
-        )
+        logger.warning(f"Repo '{user_login}/{repo_name}' already exists on GitHub — reusing it.")
         return f"git@github.com:{user_login}/{repo_name}.git"
     if r.status_code == 401:
         msg = "Invalid GitHub token (401 Unauthorized)."
         raise ValueError(msg)
     if r.status_code == 403:
-        msg = (
-            f"GitHub API forbidden (rate limit or insufficient scopes): {r.text[:200]}"
-        )
+        msg = f"GitHub API forbidden (rate limit or insufficient scopes): {r.text[:200]}"
         raise ValueError(msg)
     msg = f"GitHub API error {r.status_code}: {r.text[:200]}"
     raise requests.RequestException(msg)
@@ -204,16 +200,12 @@ def is_git_repo(cwd: Path) -> bool:
 
 
 def get_remote_url(cwd: Path, remote: str = "origin") -> Optional[str]:
-    url, rc = run_git_command(
-        ["git", "config", "--get", f"remote.{remote}.url"], cwd, check=False
-    )
+    url, rc = run_git_command(["git", "config", "--get", f"remote.{remote}.url"], cwd, check=False)
     return url if rc == 0 and url else None
 
 
 _GH_SSH_RE = re.compile(r"^git@github\.com:([^/]+)/(.+?)(?:\.git)?/?$")
-_GH_HTTPS_RE = re.compile(
-    r"^https?://(?:[^@/]+@)?github\.com/([^/]+)/(.+?)(?:\.git)?/?$"
-)
+_GH_HTTPS_RE = re.compile(r"^https?://(?:[^@/]+@)?github\.com/([^/]+)/(.+?)(?:\.git)?/?$")
 
 
 def parse_github_url(url: str) -> tuple[str, str]:
@@ -298,9 +290,7 @@ def initialize_git_repo(cwd: Path, remote_url: str) -> None:
 
 
 def commit_and_push(cwd: Path, commit_message: str = DEFAULT_COMMIT_MSG) -> None:
-    _, has_head = run_git_command(
-        ["git", "rev-parse", "--verify", "HEAD"], cwd, check=False
-    )
+    _, has_head = run_git_command(["git", "rev-parse", "--verify", "HEAD"], cwd, check=False)
     if has_head != 0:
         run_git_command(
             ["git", "symbolic-ref", "HEAD", f"refs/heads/{DEFAULT_BRANCH}"],
@@ -310,9 +300,7 @@ def commit_and_push(cwd: Path, commit_message: str = DEFAULT_COMMIT_MSG) -> None
     logger.info("Staging files...")
     run_git_command(["git", "add", "-A"], cwd)
     status, _ = run_git_command(["git", "status", "--porcelain"], cwd)
-    _, has_head = run_git_command(
-        ["git", "rev-parse", "--verify", "HEAD"], cwd, check=False
-    )
+    _, has_head = run_git_command(["git", "rev-parse", "--verify", "HEAD"], cwd, check=False)
     if not status and has_head != 0:
         msg = "Nothing to commit and no prior commit exists (empty repository)."
         raise RuntimeError(msg)
@@ -334,9 +322,7 @@ def commit_and_push(cwd: Path, commit_message: str = DEFAULT_COMMIT_MSG) -> None
         )
     except RuntimeError as e:
         logger.error(f"Push failed: {e}")
-        logger.info(
-            "Troubleshoot: ensure your SSH key is registered on GitHub, or run 'gh auth login'."
-        )
+        logger.info("Troubleshoot: ensure your SSH key is registered on GitHub, or run 'gh auth login'.")
         raise
     logger.info(f"✓ Pushed to origin/{DEFAULT_BRANCH}")
 
@@ -433,26 +419,16 @@ Examples:
                 try:
                     owner, _ = parse_github_url(remote_url)
                 except ValueError:
-                    logger.warning(
-                        f"Remote is not a GitHub URL; leaving it alone: {remote_url}"
-                    )
+                    logger.warning(f"Remote is not a GitHub URL; leaving it alone: {remote_url}")
                     owner = None
                 if owner and owner.lower() == current_user.lower():
                     logger.info("✓ You own this remote — proceeding")
                 elif owner:
-                    logger.warning(
-                        f"Remote belongs to '{owner}', not you ('{current_user}')"
-                    )
+                    logger.warning(f"Remote belongs to '{owner}', not you ('{current_user}')")
                     if non_interactive:
                         logger.info("Non-interactive mode: keeping existing remote.")
                     else:
-                        resp = (
-                            input(
-                                "Remove remote and create a new repo in your account? [y/N]: "
-                            )
-                            .strip()
-                            .lower()
-                        )
+                        resp = input("Remove remote and create a new repo in your account? [y/N]: ").strip().lower()
                         if resp != "y":
                             logger.info("Aborted")
                             return 1

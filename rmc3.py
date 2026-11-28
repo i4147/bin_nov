@@ -154,9 +154,7 @@ def _parses_as_meaningful_code(code: str) -> bool:
     except Exception:
         return False
     for stmt in module.body:
-        if isinstance(stmt, ast.Expr) and isinstance(
-            stmt.value, (ast.Name, ast.Constant)
-        ):
+        if isinstance(stmt, ast.Expr) and isinstance(stmt.value, (ast.Name, ast.Constant)):
             continue
         return True
     return False
@@ -221,9 +219,7 @@ def keep_comment(text: str, lineno: int) -> bool:
     return KEEP_COMMENT_RE.match(text) is not None
 
 
-def comment_edit(
-    raw: bytes, line_start: int, comment_start: int, comment_end: int
-) -> Edit:
+def comment_edit(raw: bytes, line_start: int, comment_start: int, comment_end: int) -> Edit:
     prefix = raw[line_start:comment_start]
     if not prefix.strip():
         return Edit(line_start, comment_end, b"", "comment")
@@ -235,9 +231,7 @@ def comment_edit(
     )
 
 
-def statement_edit(
-    raw: bytes, start: int, end: int, replacement: bytes, kind: str
-) -> Edit:
+def statement_edit(raw: bytes, start: int, end: int, replacement: bytes, kind: str) -> Edit:
     match = SEMICOLON_RE.match(raw, end)
     if match is not None:
         end = match.end()
@@ -253,11 +247,7 @@ def _filter_comments(entries: Sequence[_CommentEntry], opts: Options) -> list[Ed
             i += 1
             continue
         j = i
-        while (
-            j + 1 < n
-            and entries[j + 1].is_full_line
-            and entries[j + 1].lineno == entries[j].lineno + 1
-        ):
+        while j + 1 < n and entries[j + 1].is_full_line and entries[j + 1].lineno == entries[j].lineno + 1:
             j += 1
         for k in range(i, j + 1):
             group_ids[k] = i
@@ -334,9 +324,7 @@ def libcst_remover() -> type[cst.CSTTransformer]:
         return False
 
     class Remover(cst.CSTTransformer):
-        def __init__(
-            self, drop_module: bool, drop_other: bool, preserve_commented_code: bool
-        ) -> None:
+        def __init__(self, drop_module: bool, drop_other: bool, preserve_commented_code: bool) -> None:
             super().__init__()
             self.drop_module = drop_module
             self.drop_other = drop_other
@@ -351,15 +339,9 @@ def libcst_remover() -> type[cst.CSTTransformer]:
                 return False
             return _is_commented_out_docstring(content)
 
-        def strip_lines(
-            self, body: Sequence[cst.BaseStatement], keep_empty: bool
-        ) -> list[cst.BaseStatement]:
+        def strip_lines(self, body: Sequence[cst.BaseStatement], keep_empty: bool) -> list[cst.BaseStatement]:
             first = body[0] if body else None
-            if (
-                not isinstance(first, cst.SimpleStatementLine)
-                or not first.body
-                or not is_docstring(first.body[0])
-            ):
+            if not isinstance(first, cst.SimpleStatementLine) or not first.body or not is_docstring(first.body[0]):
                 return list(body)
             if self._is_commented_docstring(first.body[0]):
                 return list(body)
@@ -381,25 +363,17 @@ def libcst_remover() -> type[cst.CSTTransformer]:
                 return suite.with_changes(body=list(small[1:]) or [cst.Pass()])
             return suite
 
-        def leave_Module(
-            self, original_node: cst.Module, updated_node: cst.Module
-        ) -> cst.Module:
+        def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
             if not self.drop_module:
                 return updated_node
-            return updated_node.with_changes(
-                body=self.strip_lines(updated_node.body, True)
-            )
+            return updated_node.with_changes(body=self.strip_lines(updated_node.body, True))
 
-        def leave_FunctionDef(
-            self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-        ) -> cst.FunctionDef:
+        def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
             if not self.drop_other:
                 return updated_node
             return updated_node.with_changes(body=self.strip_suite(updated_node.body))
 
-        def leave_ClassDef(
-            self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-        ) -> cst.ClassDef:
+        def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
             if not self.drop_other:
                 return updated_node
             return updated_node.with_changes(body=self.strip_suite(updated_node.body))
@@ -436,9 +410,7 @@ def is_plain_string(node: Node, raw: bytes) -> bool:
         return not any(letter in b"bft" for letter in letters)
     if node.type == "concatenated_string":
         parts = node.named_children
-        return bool(parts) and all(
-            part.type == "string" and is_plain_string(part, raw) for part in parts
-        )
+        return bool(parts) and all(part.type == "string" and is_plain_string(part, raw) for part in parts)
     return False
 
 
@@ -472,9 +444,7 @@ def tree_sitter_docstring(node: Node, raw: bytes, opts: Options) -> Edit | None:
     siblings = [child for child in parent.named_children if child.type != "comment"]
     if not siblings or siblings[0] != node:
         return None
-    if len(node.named_children) != 1 or not is_plain_string(
-        node.named_children[0], raw
-    ):
+    if len(node.named_children) != 1 or not is_plain_string(node.named_children[0], raw):
         return None
     if not opts.strip_all:
         content = _extract_string_content(raw, node.named_children[0])
@@ -484,9 +454,7 @@ def tree_sitter_docstring(node: Node, raw: bytes, opts: Options) -> Edit | None:
     return statement_edit(raw, node.start_byte, node.end_byte, replacement, "docstring")
 
 
-def _tree_sitter_comment_edits(
-    raw: bytes, comment_nodes: Sequence[Node], opts: Options
-) -> list[Edit]:
+def _tree_sitter_comment_edits(raw: bytes, comment_nodes: Sequence[Node], opts: Options) -> list[Edit]:
     entries: list[_CommentEntry] = []
     for node in comment_nodes:
         end = node.end_byte
@@ -534,10 +502,7 @@ def backend_available(name: str) -> bool:
     if name == "libcst":
         return importlib.util.find_spec("libcst") is not None
     if name == "tree-sitter":
-        return all(
-            importlib.util.find_spec(module) is not None
-            for module in ("tree_sitter", "tree_sitter_python")
-        )
+        return all(importlib.util.find_spec(module) is not None for module in ("tree_sitter", "tree_sitter_python"))
     return False
 
 
@@ -545,11 +510,7 @@ def resolve_backends(requested: str | None) -> tuple[str, ...]:
     if requested is not None and not backend_available(requested):
         raise SystemExit(INSTALL_HINTS.get(requested, f"Unknown backend: {requested}"))
     order: list[str] = [requested] if requested else []
-    order += [
-        name
-        for name in DEFAULT_BACKENDS
-        if name not in order and backend_available(name)
-    ]
+    order += [name for name in DEFAULT_BACKENDS if name not in order and backend_available(name)]
     if not order:
         hints = "\n".join(INSTALL_HINTS.values())
         msg = f"No stripping backend available. Install one:\n{hints}"
@@ -572,9 +533,7 @@ def strip_source(text: str, opts: Options) -> Stripped:
         except Exception as exc:
             logger.debug("backend {} failed: {}", name, exc)
             errors.append(exc)
-    syntax_error = next(
-        (error for error in errors if isinstance(error, SyntaxError)), None
-    )
+    syntax_error = next((error for error in errors if isinstance(error, SyntaxError)), None)
     if syntax_error is not None:
         raise syntax_error
     raise errors[-1] if errors else RuntimeError("no backend available")
@@ -622,9 +581,7 @@ def process_wheel(path: Path, opts: Options) -> FileResult:
     result = FileResult(path)
     wheel_backends: set[str] = set()
     try:
-        with tempfile.TemporaryDirectory(
-            prefix="strip_whl_", dir=path.parent
-        ) as directory:
+        with tempfile.TemporaryDirectory(prefix="strip_whl_", dir=path.parent) as directory:
             staged = Path(directory) / path.name
             removed = comments = docstrings = 0
             modified = False
@@ -637,9 +594,7 @@ def process_wheel(path: Path, opts: Options) -> FileResult:
                 target = (
                     None
                     if opts.dry_run
-                    else stack.enter_context(
-                        zipfile.ZipFile(staged, "w", compression=zipfile.ZIP_DEFLATED)
-                    )
+                    else stack.enter_context(zipfile.ZipFile(staged, "w", compression=zipfile.ZIP_DEFLATED))
                 )
                 for info in source.infolist():
                     data = source.read(info.filename)
@@ -715,8 +670,7 @@ def walk_directory(root: Path) -> Iterator[Path]:
         directories[:] = [
             name
             for name in directories
-            if name not in SKIP_DIRS
-            and not any(PurePath(name).match(pattern) for pattern in SKIP_DIR_PATTERNS)
+            if name not in SKIP_DIRS and not any(PurePath(name).match(pattern) for pattern in SKIP_DIR_PATTERNS)
         ]
         for name in files:
             candidate = current / name
@@ -801,15 +755,11 @@ def summarize(results: Sequence[FileResult]) -> None:
     summary.append("\nSummary: ")
     summary.append(f"{len(results)} files | ")
     summary.append(f"{changed} changed", style="green" if changed else "dim")
-    summary.append(
-        f" | {removed} bytes removed | {comments} comments | {docstrings} docstrings | "
-    )
+    summary.append(f" | {removed} bytes removed | {comments} comments | {docstrings} docstrings | ")
     summary.append(f"{errors} errors", style="red" if errors else "dim")
     console.print(summary)
     if backend_counts:
-        parts = ", ".join(
-            f"{name}={count}" for name, count in sorted(backend_counts.items())
-        )
+        parts = ", ".join(f"{name}={count}" for name, count in sorted(backend_counts.items()))
         console.print(Text(f"Backends used: {parts}", style="dim"))
 
 
@@ -834,12 +784,8 @@ def run_sources(paths: Sequence[Path], opts: Options) -> Iterator[FileResult]:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Strip comments and docstrings from Python files."
-    )
-    parser.add_argument(
-        "paths", nargs="*", type=Path, help="Files or directories (default: cwd)"
-    )
+    parser = argparse.ArgumentParser(description="Strip comments and docstrings from Python files.")
+    parser.add_argument("paths", nargs="*", type=Path, help="Files or directories (default: cwd)")
     parser.add_argument(
         "-c",
         "--comments",
@@ -874,9 +820,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Default order: libcst, then tree-sitter as fallback."
         ),
     )
-    parser.add_argument(
-        "--dry-run", action="store_true", help="Show changes without writing."
-    )
+    parser.add_argument("--dry-run", action="store_true", help="Show changes without writing.")
     parser.add_argument(
         "--remove-module-docstring",
         action="store_true",

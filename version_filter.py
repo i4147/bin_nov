@@ -58,12 +58,8 @@ def cleanup_wheels(whl_files: list[str], directory: Path = WHL_DIRECTORY) -> int
     latest_versions = _latest_dates(parsed)
     deleted = 0
     for filename, name, version, python_variant in parsed:
-        blocked_py3 = (
-            name in PY3_NONE_ANY_BLOCKLIST and python_variant == "py3-none-any"
-        )
-        outdated = "-" in version and version.rsplit("-", 1)[-1] != latest_versions.get(
-            name
-        )
+        blocked_py3 = name in PY3_NONE_ANY_BLOCKLIST and python_variant == "py3-none-any"
+        outdated = "-" in version and version.rsplit("-", 1)[-1] != latest_versions.get(name)
         if not (blocked_py3 or outdated):
             continue
         (directory / filename).unlink()

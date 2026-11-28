@@ -33,9 +33,7 @@ def i(a: Path) -> list[Path]:
 def j() -> None:
     args = sys.argv[1:]
     if not args:
-        print(
-            f"usage: {Path(sys.argv[0]).name} [-f LISTFILE] [FILE ...]", file=sys.stderr
-        )
+        print(f"usage: {Path(sys.argv[0]).name} [-f LISTFILE] [FILE ...]", file=sys.stderr)
         raise SystemExit(1)
     patterns = []
     listfile = None

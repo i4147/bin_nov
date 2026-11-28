@@ -102,9 +102,7 @@ class CodeNormalizer(ast.NodeTransformer):
         self.generic_visit(node)
         return node
 
-    def visit_AsyncFunctionDef(
-        self, node: ast.AsyncFunctionDef
-    ) -> ast.AsyncFunctionDef:
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> ast.AsyncFunctionDef:
         if (
             node.body
             and isinstance(node.body[0], ast.Expr)
@@ -159,9 +157,7 @@ def normalize_source(code_text: str) -> tuple[str, list[str]]:
         normalized_ast = normalizer.visit(parsed_ast)
         normalized_text = ast.unparse(normalized_ast)
     except SyntaxError as se:
-        logger.warning(
-            f"Syntax error during AST normalization (falling back to raw stripped): {se}"
-        )
+        logger.warning(f"Syntax error during AST normalization (falling back to raw stripped): {se}")
         normalized_text = clean_code
     except Exception as exc:
         logger.error(f"Unexpected normalization error: {exc}")
@@ -179,9 +175,7 @@ def process_single_file(file_path: Path) -> FileRecord | None:
             raw_code = file_path.read_text(encoding="latin-1", errors="ignore")
         size = file_path.stat().st_size
         normalized_code, tokens = normalize_source(raw_code)
-        exact_hash = hashlib.sha256(
-            normalized_code.encode("utf-8", errors="ignore")
-        ).hexdigest()
+        exact_hash = hashlib.sha256(normalized_code.encode("utf-8", errors="ignore")).hexdigest()
         ssdeep_hash = ssdeep.hash(normalized_code) if HAS_SSDEEP else None
         tlsh_hash = (
             tlsh.hash(normalized_code.encode("utf-8", errors="ignore"))
@@ -209,9 +203,7 @@ def compute_similarity(f1: FileRecord, f2: FileRecord) -> dict[str, Any]:
     sequence_score = round(seq_matcher.ratio() * 100.0, 2)
     set1, set2 = set(f1.tokens), set(f2.tokens)
     union_len = len(set1 | set2)
-    jaccard_score = round(
-        (len(set1 & set2) / union_len * 100.0) if union_len > 0 else 0.0, 2
-    )
+    jaccard_score = round((len(set1 & set2) / union_len * 100.0) if union_len > 0 else 0.0, 2)
     ssdeep_score = 0.0
     if HAS_SSDEEP and f1.ssdeep_hash and f2.ssdeep_hash:
         with contextlib.suppress(Exception):
@@ -243,9 +235,7 @@ def compute_similarity(f1: FileRecord, f2: FileRecord) -> dict[str, Any]:
     }
 
 
-def parallel_map(
-    method: str, func: Any, items: list[Any], max_workers: int | None = None
-) -> list[Any]:
+def parallel_map(method: str, func: Any, items: list[Any], max_workers: int | None = None) -> list[Any]:
     if method == "thread-pool":
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             return list(executor.map(func, items))
@@ -264,9 +254,7 @@ def parallel_map(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Detect identical and similar Python files recursively."
-    )
+    parser = argparse.ArgumentParser(description="Detect identical and similar Python files recursively.")
     parser.add_argument(
         "--dir",
         type=str,
@@ -301,9 +289,7 @@ def main() -> None:
     args = parser.parse_args()
     root_dir = Path(args.dir).resolve()
     if not root_dir.exists():
-        console.print(
-            f"[bold red]Error:[/] Directory '{root_dir}' does not exist.", style="red"
-        )
+        console.print(f"[bold red]Error:[/] Directory '{root_dir}' does not exist.", style="red")
         sys.exit(1)
     console.print(f"[bold cyan]Scanning directory:[/] {root_dir} recursively...")
     py_files: list[Path] = []
@@ -314,9 +300,7 @@ def main() -> None:
     if not py_files:
         console.print("[yellow]No Python files found matching criteria.[/yellow]")
         sys.exit(0)
-    console.print(
-        f"[green]Found {len(py_files)} Python files. Processing in parallel ({args.mp_method})...[/green]"
-    )
+    console.print(f"[green]Found {len(py_files)} Python files. Processing in parallel ({args.mp_method})...[/green]")
     start_time = time.time()
     records: list[FileRecord | None] = []
     with Progress(
@@ -326,28 +310,18 @@ def main() -> None:
         TaskProgressColumn(),
         console=console,
     ) as progress:
-        task = progress.add_task(
-            "[cyan]Normalizing and hashing files...", total=len(py_files)
-        )
+        task = progress.add_task("[cyan]Normalizing and hashing files...", total=len(py_files))
         results = parallel_map(args.mp_method, process_single_file, py_files)
         records = [r for r in results if r is not None]
         progress.update(task, completed=len(py_files))
-    console.print(
-        f"[green]Successfully processed {len(records)} files in {time.time() - start_time:.2f}s.[/green]"
-    )
+    console.print(f"[green]Successfully processed {len(records)} files in {time.time() - start_time:.2f}s.[/green]")
     exact_clusters: dict[str, list[str]] = {}
     for rec in records:
         exact_clusters.setdefault(rec.exact_hash, []).append(rec.path)
-    identical_groups = {
-        h: paths for h, paths in exact_clusters.items() if len(paths) > 1
-    }
+    identical_groups = {h: paths for h, paths in exact_clusters.items() if len(paths) > 1}
     console.print("[cyan]Performing pairwise fuzzy similarity analysis...[/cyan]")
     similar_pairs: list[dict[str, Any]] = []
-    pairs = [
-        (records[i], records[j])
-        for i in range(len(records))
-        for j in range(i + 1, len(records))
-    ]
+    pairs = [(records[i], records[j]) for i in range(len(records)) for j in range(i + 1, len(records))]
     for f1, f2 in pairs:
         res = compute_similarity(f1, f2)
         if res["composite_similarity"] >= args.threshold:
@@ -366,24 +340,16 @@ def main() -> None:
                 "tlsh_available": HAS_TLSH,
             },
         },
-        "identical_groups": [
-            {"sha256": h, "files": paths} for h, paths in identical_groups.items()
-        ],
+        "identical_groups": [{"sha256": h, "files": paths} for h, paths in identical_groups.items()],
         "similar_pairs": similar_pairs,
     }
     output_path = Path(args.output)
     atomic_write(output_path, json.dumps(report_data, indent=2), encoding="utf-8")
-    console.print(
-        f"[bold green]JSON report successfully saved to:[/] {output_path.resolve()}"
-    )
+    console.print(f"[bold green]JSON report successfully saved to:[/] {output_path.resolve()}")
     console.print("\n")
-    console.print(
-        f"[bold underline]Summary Report (Threshold >= {args.threshold}%)[/bold underline]"
-    )
+    console.print(f"[bold underline]Summary Report (Threshold >= {args.threshold}%)[/bold underline]")
     if identical_groups:
-        console.print(
-            f"\n[bold yellow]Found {len(identical_groups)} Identical File Group(s):[/bold yellow]"
-        )
+        console.print(f"\n[bold yellow]Found {len(identical_groups)} Identical File Group(s):[/bold yellow]")
         for idx, (h, paths) in enumerate(identical_groups.items(), 1):
             console.print(f"  [cyan]Group {idx} (SHA: {h[:12]}...):[/cyan]")
             for p in paths:
@@ -417,9 +383,7 @@ def main() -> None:
                 f"[italic dim]...and {len(similar_pairs) - 20} more pairs saved in the JSON report.[/italic dim]"
             )
     else:
-        console.print(
-            f"[green]No similar file pairs found above {args.threshold}% threshold.[/green]"
-        )
+        console.print(f"[green]No similar file pairs found above {args.threshold}% threshold.[/green]")
 
 
 if __name__ == "__main__":

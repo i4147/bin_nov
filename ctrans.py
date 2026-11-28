@@ -165,17 +165,13 @@ def _import(module: str, hint: str):
     try:
         return importlib.import_module(module)
     except Exception as exc:
-        raise BackendError(
-            "cannot import '%s' (%s). Install with: %s" % (module, exc, hint)
-        )
+        raise BackendError("cannot import '%s' (%s). Install with: %s" % (module, exc, hint))
 
 
 def _require_env(name: str, backend: str) -> str:
     value = os.environ.get(name, "").strip()
     if not value:
-        raise ConfigError(
-            "backend '%s' needs the %s environment variable" % (backend, name)
-        )
+        raise ConfigError("backend '%s' needs the %s environment variable" % (backend, name))
     return value
 
 
@@ -194,9 +190,7 @@ def _make_deepl(source: str, target: str, script_path: str) -> Translator:
 
     def call(text: str) -> str:
         client = deepl.Translator(key)
-        return _as_text(
-            client.translate_text(text, source_lang=src, target_lang=tgt).text
-        )
+        return _as_text(client.translate_text(text, source_lang=src, target_lang=tgt).text)
 
     return call
 
@@ -204,9 +198,7 @@ def _make_deepl(source: str, target: str, script_path: str) -> Translator:
 def _make_deep_translator(source: str, target: str, script_path: str) -> Translator:
     mod = _import("deep_translator", "pip install deep_translator")
     service = os.environ.get("DEEP_TRANSLATOR_SERVICE", "google").lower()
-    cls_name = {"google": "GoogleTranslator", "mymemory": "MyMemoryTranslator"}.get(
-        service
-    )
+    cls_name = {"google": "GoogleTranslator", "mymemory": "MyMemoryTranslator"}.get(service)
     if cls_name is None or not hasattr(mod, cls_name):
         msg = "DEEP_TRANSLATOR_SERVICE must be 'google' or 'mymemory'"
         raise BackendError(msg)
@@ -222,14 +214,10 @@ def _make_deep_translator(source: str, target: str, script_path: str) -> Transla
     return call
 
 
-def _make_libretranslate_remote(
-    source: str, target: str, script_path: str
-) -> Translator:
+def _make_libretranslate_remote(source: str, target: str, script_path: str) -> Translator:
     url = _require_env("LIBRETRANSLATE_URL", "libretranslate_remote")
     mod = _import("deep_translator", "pip install deep_translator")
-    cls = getattr(mod, "LibreTranslator", None) or getattr(
-        mod, "LibreTranslateTranslator", None
-    )
+    cls = getattr(mod, "LibreTranslator", None) or getattr(mod, "LibreTranslateTranslator", None)
     if cls is None:
         msg = "this deep_translator has no LibreTranslate class; upgrade it"
         raise BackendError(msg)
@@ -262,16 +250,12 @@ def _make_translate(source: str, target: str, script_path: str) -> Translator:
     if hasattr(mod, "Translator"):
 
         def call(text: str) -> str:
-            return _as_text(
-                mod.Translator(from_lang=source, to_lang=target).translate(text)
-            )
+            return _as_text(mod.Translator(from_lang=source, to_lang=target).translate(text))
 
     elif hasattr(mod, "GoogleTranslator"):
 
         def call(text: str) -> str:
-            return _as_text(
-                mod.GoogleTranslator(source=source, target=target).translate(text)
-            )
+            return _as_text(mod.GoogleTranslator(source=source, target=target).translate(text))
 
     else:
         msg = "module 'translate' has neither Translator nor GoogleTranslator"
@@ -289,17 +273,13 @@ def _make_translators_bing(source: str, target: str, script_path: str) -> Transl
         _map_lang("translators_bing", target),
     )
     lock = threading.Lock()
-    logger.warning(
-        "translators_bing spawns a JS subprocess per call: expect low throughput"
-    )
+    logger.warning("translators_bing spawns a JS subprocess per call: expect low throughput")
 
     def call(text: str) -> str:
         with lock:
             fn = getattr(ts, "translate_text", None)
             if fn is not None:
-                return _as_text(
-                    fn(text, translator="bing", from_language=src, to_language=tgt)
-                )
+                return _as_text(fn(text, translator="bing", from_language=src, to_language=tgt))
             return _as_text(ts.bing(text, from_language=src, to_language=tgt))
 
     return call
@@ -343,19 +323,13 @@ def _make_boto3(source: str, target: str, script_path: str) -> Translator:
     if boto3.Session().get_credentials() is None:
         msg = "backend 'boto3' found no AWS credentials (set AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)"
         raise ConfigError(msg)
-    region = (
-        os.environ.get("AWS_REGION")
-        or os.environ.get("AWS_DEFAULT_REGION")
-        or "us-east-1"
-    )
+    region = os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION") or "us-east-1"
     src, tgt = _map_lang("boto3", source), _map_lang("boto3", target)
 
     def call(text: str) -> str:
         client = boto3.client("translate", region_name=region)
         return _as_text(
-            client.translate_text(
-                Text=text, SourceLanguageCode=src, TargetLanguageCode=tgt
-            )["TranslatedText"]
+            client.translate_text(Text=text, SourceLanguageCode=src, TargetLanguageCode=tgt)["TranslatedText"]
         )
 
     return call
@@ -372,9 +346,7 @@ def _make_baidu(source: str, target: str, script_path: str) -> Translator:
         client = aip.AipMachineTranslation(app_id, api_key, secret)
         res = client.translate(text, src, tgt)
         if "error_code" in res:
-            raise RuntimeError(
-                "baidu error %s: %s" % (res.get("error_code"), res.get("error_msg"))
-            )
+            raise RuntimeError("baidu error %s: %s" % (res.get("error_code"), res.get("error_msg")))
         return _as_text(res["result"]["trans_result"][0]["dst"])
 
     return call
@@ -412,9 +384,7 @@ def _make_watson(source: str, target: str, script_path: str) -> Translator:
     model = "%s-%s" % (_map_lang("watson", source), _map_lang("watson", target))
 
     def call(text: str) -> str:
-        service = wat.LanguageTranslatorV3(
-            version="2018-05-01", authenticator=auth.IAMAuthenticator(api_key)
-        )
+        service = wat.LanguageTranslatorV3(version="2018-05-01", authenticator=auth.IAMAuthenticator(api_key))
         service.set_service_url(url)
         res = service.translate(text=text, model_id=model).get_result()
         return _as_text(res["translations"][0]["translation"])
@@ -426,12 +396,8 @@ def _make_azure(source: str, target: str, script_path: str) -> Translator:
     key = _require_env("AZURE_TRANSLATOR_KEY", "azure")
     region = _require_env("AZURE_TRANSLATOR_REGION", "azure")
     endpoint = os.environ.get("AZURE_TRANSLATOR_ENDPOINT", "")
-    text_mod = _import(
-        "azure.ai.translation.text", "pip install azure-ai-translation-text"
-    )
-    cred_mod = _import(
-        "azure.core.credentials", "pip install azure-ai-translation-text"
-    )
+    text_mod = _import("azure.ai.translation.text", "pip install azure-ai-translation-text")
+    cred_mod = _import("azure.core.credentials", "pip install azure-ai-translation-text")
     src, tgt = _map_lang("azure", source), _map_lang("azure", target)
 
     def call(text: str) -> str:
@@ -499,14 +465,10 @@ def _validate_backend_name(name: str) -> str:
             "Offline alternative: run a LibreTranslate server on another machine "
             "on your LAN, then:\n"
             "  export LIBRETRANSLATE_URL=http://192.168.1.50:5000\n"
-            "  python translate_words.py -b libretranslate_remote"
-            % (name, _FORBIDDEN[key])
+            "  python translate_words.py -b libretranslate_remote" % (name, _FORBIDDEN[key])
         )
     if key not in _BACKEND_FACTORIES:
-        raise UserError(
-            "Unknown backend '%s'. Choose one of: %s"
-            % (name, ", ".join(sorted(_BACKEND_FACTORIES)))
-        )
+        raise UserError("Unknown backend '%s'. Choose one of: %s" % (name, ", ".join(sorted(_BACKEND_FACTORIES))))
     return key
 
 
@@ -523,9 +485,7 @@ def _build_chain(preferred: Optional[str]) -> list[str]:
     return chain
 
 
-def build_translator(
-    preferred: Optional[str], source: str, target: str, script_path: str
-) -> tuple[str, Translator]:
+def build_translator(preferred: Optional[str], source: str, target: str, script_path: str) -> tuple[str, Translator]:
     failed: list[tuple[str, str]] = []
     for name in _build_chain(preferred):
         try:
@@ -545,16 +505,12 @@ def build_translator(
             if failed:
                 logger.warning("falling back from {!r} to {!r}", failed[0][0], name)
                 with _CONSOLE_LOCK:
-                    print(
-                        "\u26a0\ufe0f  Backend '%s' unavailable \u2014 falling back to '%s'."
-                        % (failed[0][0], name)
-                    )
+                    print("\u26a0\ufe0f  Backend '%s' unavailable \u2014 falling back to '%s'." % (failed[0][0], name))
                     print("    reason: %s" % failed[0][1])
             return name, fn
     detail = "\n".join("  - %s: %s" % item for item in failed)
     raise UserError(
-        "No translation backend could be initialised.\n%s\nInstall one, e.g.: pip install deep_translator"
-        % detail
+        "No translation backend could be initialised.\n%s\nInstall one, e.g.: pip install deep_translator" % detail
     )
 
 
@@ -593,8 +549,7 @@ def load_results(path: str) -> dict[str, str]:
             data = json.load(handle)
     except (OSError, ValueError) as exc:
         raise UserError(
-            "Cannot read existing output '%s' (%s). Fix or delete it, or rerun with --no-continue."
-            % (path, exc)
+            "Cannot read existing output '%s' (%s). Fix or delete it, or rerun with --no-continue." % (path, exc)
         )
     if not isinstance(data, dict):
         raise UserError("Output '%s' is not a JSON object; use --no-continue." % path)
@@ -648,9 +603,7 @@ def translate_with_retries(sh: Shared, word: str) -> tuple[Optional[str], object
         try:
             raw = sh.fn(word)
         except Exception as exc:
-            logger.warning(
-                "attempt {}/{} for {!r} raised {!r}", attempt, MAX_ATTEMPTS, word, exc
-            )
+            logger.warning("attempt {}/{} for {!r} raised {!r}", attempt, MAX_ATTEMPTS, word, exc)
         else:
             last_raw = raw
             text = raw.strip() if isinstance(raw, str) else ""
@@ -679,11 +632,7 @@ def worker(sh: Shared, word: str) -> tuple[str, Optional[str]]:
         with sh.counter_lock:
             sh.counter += 1
             n = sh.counter
-        shown = (
-            raw
-            if isinstance(raw, str)
-            else ("<no result>" if raw is None else repr(raw))
-        )
+        shown = raw if isinstance(raw, str) else ("<no result>" if raw is None else repr(raw))
         if translation is not None:
             with _CONSOLE_LOCK:
                 print("  %s => %s" % (word, shown))
@@ -695,15 +644,10 @@ def worker(sh: Shared, word: str) -> tuple[str, Optional[str]]:
                     with open(sh.args.failed, "a", encoding="utf-8") as handle:
                         handle.write(word + "\n")
                 except OSError as exc:
-                    logger.error(
-                        "could not append {!r} to {!r}: {}", word, sh.args.failed, exc
-                    )
+                    logger.error("could not append {!r} to {!r}: {}", word, sh.args.failed, exc)
             with _CONSOLE_LOCK:
                 print("  %s => %s" % (word, shown))
-                print(
-                    "[%d/%d] \u2717 %s (failed -> %s)"
-                    % (n, sh.total, word, sh.args.failed)
-                )
+                print("[%d/%d] \u2717 %s (failed -> %s)" % (n, sh.total, word, sh.args.failed))
         return word, translation
     except Exception as exc:
         logger.error("unexpected worker error for {!r}: {!r}", word, exc)
@@ -711,18 +655,10 @@ def worker(sh: Shared, word: str) -> tuple[str, Optional[str]]:
 
 
 def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
-    p = argparse.ArgumentParser(
-        description="Translate a one-word-per-line file into a JSON map (Termux-friendly)."
-    )
-    p.add_argument(
-        "-i", "--input", default="words.txt", help="input file (default: words.txt)"
-    )
-    p.add_argument(
-        "-o", "--output", default="words.json", help="output JSON (default: words.json)"
-    )
-    p.add_argument(
-        "--failed", default="failed.txt", help="failed words file (default: failed.txt)"
-    )
+    p = argparse.ArgumentParser(description="Translate a one-word-per-line file into a JSON map (Termux-friendly).")
+    p.add_argument("-i", "--input", default="words.txt", help="input file (default: words.txt)")
+    p.add_argument("-o", "--output", default="words.json", help="output JSON (default: words.json)")
+    p.add_argument("--failed", default="failed.txt", help="failed words file (default: failed.txt)")
     p.add_argument("-s", "--source", default="fr", help="source language (default: fr)")
     p.add_argument("-t", "--target", default="en", help="target language (default: en)")
     p.add_argument(
@@ -732,9 +668,7 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         help="preferred backend (default: deep_translator, after deepl if "
         "DEEPL_API_KEY is set). Choices: %s" % ", ".join(sorted(_BACKEND_FACTORIES)),
     )
-    p.add_argument(
-        "-w", "--workers", type=int, default=2, help="worker threads (default: 2)"
-    )
+    p.add_argument("-w", "--workers", type=int, default=2, help="worker threads (default: 2)")
     p.add_argument(
         "-d",
         "--delay",
@@ -742,12 +676,8 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         default=0.5,
         help="seconds before each request, per worker (default: 0.5)",
     )
-    p.add_argument(
-        "--save-every", type=int, default=50, help="save every N words (default: 50)"
-    )
-    p.add_argument(
-        "--no-continue", action="store_true", help="ignore existing output; start fresh"
-    )
+    p.add_argument("--save-every", type=int, default=50, help="save every N words (default: 50)")
+    p.add_argument("--no-continue", action="store_true", help="ignore existing output; start fresh")
     return p.parse_args(argv)
 
 
@@ -759,14 +689,8 @@ def print_next_steps(failed_count: int, args: argparse.Namespace) -> None:
     with _CONSOLE_LOCK:
         print("\nNext steps:")
         if failed_count:
-            print(
-                "  * %d word(s) are in %s. Retry them with another backend, e.g.:"
-                % (failed_count, args.failed)
-            )
-            print(
-                "      python translate_words.py -i %s -o %s -b translate"
-                % (args.failed, args.output)
-            )
+            print("  * %d word(s) are in %s. Retry them with another backend, e.g.:" % (failed_count, args.failed))
+            print("      python translate_words.py -i %s -o %s -b translate" % (args.failed, args.output))
             print("    (the output file is resumed, so only missing words are redone)")
         print("  * Offline setup: run LibreTranslate on a LAN machine, then")
         print("      export LIBRETRANSLATE_URL=http://192.168.1.50:5000")
@@ -775,10 +699,7 @@ def print_next_steps(failed_count: int, args: argparse.Namespace) -> None:
 
 def run(args: argparse.Namespace) -> int:
     if not Path(args.input).is_file():
-        raise UserError(
-            "Input file '%s' not found. Create it with one word per line or pass -i."
-            % args.input
-        )
+        raise UserError("Input file '%s' not found. Create it with one word per line or pass -i." % args.input)
     if args.workers < 1 or args.save_every < 1 or args.delay < 0:
         msg = "--workers and --save-every must be >= 1 and --delay >= 0."
         raise UserError(msg)
@@ -852,10 +773,7 @@ def run(args: argparse.Namespace) -> int:
                 % (done, "saved to" if saved else "NOT saved to", args.output)
             )
         else:
-            print(
-                "\nDone: %d translated, %d failed. Output: %s"
-                % (done, failed_count, args.output)
-            )
+            print("\nDone: %d translated, %d failed. Output: %s" % (done, failed_count, args.output))
     print_next_steps(failed_count, args)
     return 130 if interrupted else 0
 

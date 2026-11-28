@@ -95,9 +95,7 @@ def main() -> int:
     if not files:
         print("No C/C++/header files found.", file=sys.stderr)
         return 0
-    print(
-        f"Checking {len(files)} file(s) with {MAX_WORKERS} workers...", file=sys.stderr
-    )
+    print(f"Checking {len(files)} file(s) with {MAX_WORKERS} workers...", file=sys.stderr)
     failures = 0
     with mp.Pool(processes=MAX_WORKERS) as pool:
         for path, ok, output in pool.imap_unordered(check_file, files):

@@ -53,9 +53,7 @@ def list_matches(root: Path, algorithm: str, show_reduction: bool) -> None:
             continue
         temp_path = None
         try:
-            with tempfile.NamedTemporaryFile(
-                dir=source.parent, prefix=".compress-test-", delete=False
-            ) as temp:
+            with tempfile.NamedTemporaryFile(dir=source.parent, prefix=".compress-test-", delete=False) as temp:
                 temp_path = Path(temp.name)
             compress_stream(source, temp_path, algorithm)
             original_size = source.stat().st_size
@@ -183,9 +181,7 @@ def compress_tree(root: Path, algorithm: str) -> None:
             continue
         temp_path = None
         try:
-            with tempfile.NamedTemporaryFile(
-                dir=source.parent, prefix=".compress-", delete=False
-            ) as temp:
+            with tempfile.NamedTemporaryFile(dir=source.parent, prefix=".compress-", delete=False) as temp:
                 temp_path = Path(temp.name)
             compress_stream(source, temp_path, algorithm)
             compressed_size = temp_path.stat().st_size
@@ -220,9 +216,7 @@ def decompress_tree(root: Path) -> None:
         if not algorithm:
             continue
         if algorithm == "7z":
-            print(
-                f"SKIP {source}: 7z extraction is not supported by this single-file script"
-            )
+            print(f"SKIP {source}: 7z extraction is not supported by this single-file script")
             continue
         if destination.exists():
             print(f"SKIP {source}: output already exists: {destination.name}")
@@ -230,9 +224,7 @@ def decompress_tree(root: Path) -> None:
         archive_size = source.stat().st_size
         temp_path = None
         try:
-            with tempfile.NamedTemporaryFile(
-                dir=source.parent, prefix=".decompress-", delete=False
-            ) as temp:
+            with tempfile.NamedTemporaryFile(dir=source.parent, prefix=".decompress-", delete=False) as temp:
                 temp_path = Path(temp.name)
             decompress_stream(source, temp_path, algorithm)
             output_size = temp_path.stat().st_size
@@ -256,9 +248,7 @@ def decompress_tree(root: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Recursively compress or decompress files under the current folder."
-    )
+    parser = argparse.ArgumentParser(description="Recursively compress or decompress files under the current folder.")
     parser.add_argument(
         "-b",
         choices=("xz", "zstd", "gz", "bz2", "br", "lz4", "7z"),

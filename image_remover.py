@@ -74,9 +74,7 @@ HTML_BADGE_PATTERN = re.compile(
 RST_IMAGE_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"^\s*\.\.\ +image::\s+https?://[^\s]+", re.IGNORECASE | re.MULTILINE),
     re.compile(r"^\s*\.\.\ +figure::\s+https?://[^\s]+", re.IGNORECASE | re.MULTILINE),
-    re.compile(
-        r"^\s*\.\.\ +\|.*\|\s+image::\s+https?://[^\s]+", re.IGNORECASE | re.MULTILINE
-    ),
+    re.compile(r"^\s*\.\.\ +\|.*\|\s+image::\s+https?://[^\s]+", re.IGNORECASE | re.MULTILINE),
 ]
 MD_PATTERNS_SMART: list[re.Pattern[str]] = [
     re.compile(r"^\[!\[.*?\]\(https?://[^\)]+\)\]\(https?://[^\)]+\)", re.MULTILINE),
@@ -95,14 +93,10 @@ BADGE_DOMAINS: list[str] = [
     "packagist.org",
 ]
 REMOTE_PREFIXES: tuple[str, str, str] = ("http://", "https://", "//")
-IMG_TAG_RE = re.compile(
-    r'<img\b[^>]*\bsrc\s*=\s*["\']([^"\']) ["\'][^>]*>', re.IGNORECASE
-)
+IMG_TAG_RE = re.compile(r'<img\b[^>]*\bsrc\s*=\s*["\']([^"\']) ["\'][^>]*>', re.IGNORECASE)
 MD_INLINE_IMG_RE = re.compile(r"!\[.*?\]\((.*?)\)", re.IGNORECASE)
 MD_REF_DEF_RE = re.compile(r"^\s*\[(.*?)\]:\s*(\S+)", re.MULTILINE)
-RST_IMG_RE = re.compile(
-    r"^\s*\.\.\ \|[^|]+\|\ image::\ https?://[^\s]+.*$", re.MULTILINE
-)
+RST_IMG_RE = re.compile(r"^\s*\.\.\ \|[^|]+\|\ image::\ https?://[^\s]+.*$", re.MULTILINE)
 
 
 def has_badge_domain(line: str) -> bool:
@@ -110,11 +104,7 @@ def has_badge_domain(line: str) -> bool:
 
 
 def is_image_ext(line: str) -> bool:
-    return bool(
-        re.search(
-            r"\.(?:png|jpg|jpeg|gif|svg|ico|webp|bmp)(?:\?|#|$|\))", line, re.IGNORECASE
-        )
-    )
+    return bool(re.search(r"\.(?:png|jpg|jpeg|gif|svg|ico|webp|bmp)(?:\?|#|$|\))", line, re.IGNORECASE))
 
 
 def clean_file_fast(path: Path) -> FileStats:
@@ -142,9 +132,7 @@ def clean_file_smart(path: Path) -> FileStats:
             new_lines = []
             for i, line in enumerate(lines):
                 should_remove = any(p.match(line) for p in RST_IMAGE_PATTERNS)
-                if should_remove or (
-                    "image::" in line and (has_badge_domain(line) or is_image_ext(line))
-                ):
+                if should_remove or ("image::" in line and (has_badge_domain(line) or is_image_ext(line))):
                     removed += 1
                     if i + 1 < len(lines) and lines[i + 1].strip().startswith(":"):
                         i += 1
@@ -159,9 +147,7 @@ def clean_file_smart(path: Path) -> FileStats:
                 for pattern in MD_PATTERNS_SMART:
                     if pattern.search(line):
                         cleaned = pattern.sub("", line).strip()
-                        if not cleaned or (
-                            has_badge_domain(line) or is_image_ext(line)
-                        ):
+                        if not cleaned or (has_badge_domain(line) or is_image_ext(line)):
                             should_remove = True
                             removed += 1
                         else:
@@ -174,9 +160,7 @@ def clean_file_smart(path: Path) -> FileStats:
             atomic_write(path, content, encoding="utf-8")
         lines_after = content.count("\n") + 1
         size_after = len(content.encode("utf-8"))
-        return FileStats(
-            path, removed, size_before, size_after, lines_before, lines_after
-        )
+        return FileStats(path, removed, size_before, size_after, lines_before, lines_after)
     except Exception as e:
         return FileStats(path, 0, error=str(e))
 
@@ -189,18 +173,12 @@ def clean_file_markdown(path: Path) -> FileStats:
         content = MD_IMAGE_PATTERN.sub("", content)
         removed += len(re.findall(MD_IMAGE_PATTERN, original))
         content = re.sub(r"<img\s+[^>]*/?>", "", content, flags=re.IGNORECASE)
-        content = re.sub(
-            r"<picture\s*>.*?</picture>", "", content, flags=re.DOTALL | re.IGNORECASE
-        )
-        content = re.sub(
-            r"<figure\s*>.*?</figure>", "", content, flags=re.DOTALL | re.IGNORECASE
-        )
+        content = re.sub(r"<picture\s*>.*?</picture>", "", content, flags=re.DOTALL | re.IGNORECASE)
+        content = re.sub(r"<figure\s*>.*?</figure>", "", content, flags=re.DOTALL | re.IGNORECASE)
         content = re.sub(r"\n\n\n+", "\n\n", content)
         if content != original:
             atomic_write(path, content.rstrip() + "\n", encoding="utf-8")
-        return FileStats(
-            path, removed, len(original.encode("utf-8")), len(content.encode("utf-8"))
-        )
+        return FileStats(path, removed, len(original.encode("utf-8")), len(content.encode("utf-8")))
     except Exception as e:
         return FileStats(path, 0, error=str(e))
 
@@ -242,9 +220,7 @@ def clean_file_remote(path: Path) -> FileStats:
             modified = RST_IMG_RE.sub(rst_repl, modified)
         if modified != original:
             atomic_write(path, modified, encoding="utf-8")
-        return FileStats(
-            path, removed, len(original.encode("utf-8")), len(modified.encode("utf-8"))
-        )
+        return FileStats(path, removed, len(original.encode("utf-8")), len(modified.encode("utf-8")))
     except Exception as e:
         return FileStats(path, 0, error=str(e))
 

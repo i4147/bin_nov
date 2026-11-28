@@ -114,9 +114,7 @@ def main() -> None:
         for lineno, line in iter_lines(text):
             lang, conf = detect(line)
             if lang and lang != "en" and conf >= MIN_CONF:
-                print(
-                    f"{YELLOW}{rel}:{lineno}{RESET} {MAGENTA}[{lang} {conf:.2f}]{RESET} {line}"
-                )
+                print(f"{YELLOW}{rel}:{lineno}{RESET} {MAGENTA}[{lang} {conf:.2f}]{RESET} {line}")
                 sys.stdout.flush()
 
 

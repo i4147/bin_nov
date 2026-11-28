@@ -119,9 +119,7 @@ def worker(args: tuple[Path, int]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Translate non-English (Chinese) lines in-place."
-    )
+    parser = argparse.ArgumentParser(description="Translate non-English (Chinese) lines in-place.")
     parser.add_argument("files", nargs="+", help="Files or directories to process")
     parser.add_argument(
         "--extensions",
@@ -129,9 +127,7 @@ def main() -> None:
         default=[".txt", ".md", ".py", ".js", ".html", ".css", ".json", ".xml", ".csv"],
         help="File extensions to process",
     )
-    parser.add_argument(
-        "--batch-size", type=int, default=10, help="Batch size for progress logging"
-    )
+    parser.add_argument("--batch-size", type=int, default=10, help="Batch size for progress logging")
     parser.add_argument("--exclude", nargs="+", default=[], help="Paths to exclude")
     args = parser.parse_args()
     exclude_paths = {Path(p).resolve() for p in args.exclude}

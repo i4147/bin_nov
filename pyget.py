@@ -278,9 +278,7 @@ class PurePythonBackend(Backend):
     name = "python"
 
     @contextmanager
-    def open(
-        self, url: str, offset: int, timeout: float
-    ) -> Iterator[tuple[StreamInfo, Iterator[bytes]]]:
+    def open(self, url: str, offset: int, timeout: float) -> Iterator[tuple[StreamInfo, Iterator[bytes]]]:
         headers = {"User-Agent": USER_AGENT, "Accept-Encoding": "identity"}
         if offset:
             headers["Range"] = f"bytes={offset}-"
@@ -321,9 +319,7 @@ class RequestsBackend(Backend):
         self._requests = requests
 
     @contextmanager
-    def open(
-        self, url: str, offset: int, timeout: float
-    ) -> Iterator[tuple[StreamInfo, Iterator[bytes]]]:
+    def open(self, url: str, offset: int, timeout: float) -> Iterator[tuple[StreamInfo, Iterator[bytes]]]:
         headers = {"User-Agent": USER_AGENT, "Accept-Encoding": "identity"}
         if offset:
             headers["Range"] = f"bytes={offset}-"
@@ -366,9 +362,7 @@ class PycurlBackend(Backend):
         self._pc = pycurl
 
     @contextmanager
-    def open(
-        self, url: str, offset: int, timeout: float
-    ) -> Iterator[tuple[StreamInfo, Iterator[bytes]]]:
+    def open(self, url: str, offset: int, timeout: float) -> Iterator[tuple[StreamInfo, Iterator[bytes]]]:
         pc = self._pc
         q: "queue.Queue[bytes | None]" = queue.Queue()
         headers_ready = threading.Event()
@@ -465,9 +459,7 @@ def get_backend(name: str) -> Backend:
         try:
             return RequestsBackend()
         except ImportError as exc:
-            msg = (
-                "backend 'requests' requires the requests package: pip install requests"
-            )
+            msg = "backend 'requests' requires the requests package: pip install requests"
             raise SystemExit(msg) from exc
     if name == "pycurl":
         try:
@@ -657,9 +649,7 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def collect_urls(
-    args: argparse.Namespace, parser: argparse.ArgumentParser
-) -> list[str]:
+def collect_urls(args: argparse.Namespace, parser: argparse.ArgumentParser) -> list[str]:
     urls: list[str] = list(args.urls)
     for path_str in args.file:
         fpath = Path(path_str)
@@ -761,9 +751,7 @@ def main(argv: list[str] | None = None) -> int:
         if failed:
             parts.append(f"failed {failed}")
         if parts:
-            print(
-                f"{', '.join(parts)} ({fmt_size(total_bytes)} new) in {fmt_time(elapsed)}"
-            )
+            print(f"{', '.join(parts)} ({fmt_size(total_bytes)} new) in {fmt_time(elapsed)}")
     if interrupted:
         return 130
     if any(exc is not None for _, _, _, exc in results):

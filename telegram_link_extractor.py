@@ -63,9 +63,7 @@ async def run_extractor(args: argparse.Namespace) -> None:
         if args.search:
             iter_kwargs["search"] = args.search
         found_count = 0
-        output_file_handle = (
-            open(args.output, "a", encoding="utf-8") if args.output else None
-        )
+        output_file_handle = open(args.output, "a", encoding="utf-8") if args.output else None
         try:
             async for message in client.iter_messages(entity, **iter_kwargs):
                 if not message.text:
@@ -86,9 +84,7 @@ async def run_extractor(args: argparse.Namespace) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Extract URLs/links from a Telegram channel using Telethon."
-    )
+    parser = argparse.ArgumentParser(description="Extract URLs/links from a Telegram channel using Telethon.")
     parser.add_argument(
         "channel",
         type=str,

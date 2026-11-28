@@ -140,9 +140,7 @@ def strip_comments_libcst(source: str, options: argparse.Namespace) -> str:
             comment_text = original_node.value
             if comment_text.startswith(SHEBANG_PREFIX):
                 return updated_node
-            if not self.options.all and any(
-                comment_text.startswith(p) for p in PRESERVED_COMMENTS
-            ):
+            if not self.options.all and any(comment_text.startswith(p) for p in PRESERVED_COMMENTS):
                 return updated_node
             if self.options.all or self.options.comments:
                 return cst.RemoveFromParent()
@@ -169,31 +167,23 @@ def strip_comments_libcst(source: str, options: argparse.Namespace) -> str:
                             return new_body
             return body
 
-        def leave_Module(
-            self, original_node: cst.Module, updated_node: cst.Module
-        ) -> cst.Module:
+        def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
             new_body = self._remove_docstring_from_body(updated_node.body, True)
             return updated_node.with_changes(body=new_body)
 
-        def leave_ClassDef(
-            self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-        ) -> cst.ClassDef:
+        def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
             new_body = self._remove_docstring_from_body(updated_node.body.body, False)
             new_body_stmt = updated_node.body.with_changes(body=new_body)
             return updated_node.with_changes(body=new_body_stmt)
 
-        def leave_FunctionDef(
-            self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-        ) -> cst.FunctionDef:
+        def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
             new_body = self._remove_docstring_from_body(updated_node.body.body, False)
             new_body_stmt = updated_node.body.with_changes(body=new_body)
             if self.options.type:
                 updated_node = updated_node.with_changes(returns=None)
             return updated_node.with_changes(body=new_body_stmt)
 
-        def leave_Param(
-            self, original_node: cst.Param, updated_node: cst.Param
-        ) -> cst.Param:
+        def leave_Param(self, original_node: cst.Param, updated_node: cst.Param) -> cst.Param:
             if self.options.type:
                 return updated_node.with_changes(annotation=None)
             return updated_node
@@ -258,9 +248,7 @@ class AstTransformer(ast_module.NodeTransformer):
         self.generic_visit(node)
         return node
 
-    def visit_AsyncFunctionDef(
-        self, node: ast_module.AsyncFunctionDef
-    ) -> ast_module.AsyncFunctionDef:
+    def visit_AsyncFunctionDef(self, node: ast_module.AsyncFunctionDef) -> ast_module.AsyncFunctionDef:
         self._remove_docstring(node)
         if self.options.type:
             node.returns = None
@@ -322,9 +310,7 @@ def validate_python_code(code: str) -> bool:
         return False
 
 
-def process_file(
-    file_path: Path, options: argparse.Namespace
-) -> tuple[Path, bool, str]:
+def process_file(file_path: Path, options: argparse.Namespace) -> tuple[Path, bool, str]:
     try:
         logger.debug(f"Processing: {file_path}")
         source = file_path.read_text(encoding="utf-8")
@@ -369,9 +355,7 @@ def main() -> None:
         results.append(process_file(files[0], args))
     else:
         with mp.Pool(processes=min(MAX_WORKERS, len(files))) as pool:
-            async_results = [
-                pool.apply_async(process_file, (file_path, args)) for file_path in files
-            ]
+            async_results = [pool.apply_async(process_file, (file_path, args)) for file_path in files]
             for async_result in async_results:
                 try:
                     results.append(async_result.get(timeout=60))
@@ -379,9 +363,7 @@ def main() -> None:
                     logger.error(f"Worker failed: {e}")
     success_count = sum(1 for _, success, _ in results if success)
     failed_count = len(results) - success_count
-    logger.info(
-        f"Processing complete: {success_count} succeeded, {failed_count} failed"
-    )
+    logger.info(f"Processing complete: {success_count} succeeded, {failed_count} failed")
     if failed_count > 0:
         logger.warning("Failed files:")
         for file_path, success, error in results:

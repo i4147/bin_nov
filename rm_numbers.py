@@ -78,11 +78,7 @@ def _clean_stem(stem: str, cfg: CleanConfig) -> str:
     if cfg.strip_sep:
         stem = stem.strip("_-.")
     if cfg.ascii_fold:
-        stem = (
-            unicodedata.normalize("NFKD", stem)
-            .encode("ascii", "ignore")
-            .decode("ascii")
-        )
+        stem = unicodedata.normalize("NFKD", stem).encode("ascii", "ignore").decode("ascii")
     if cfg.case == "lower":
         stem = stem.lower()
     elif cfg.case == "upper":
@@ -98,12 +94,7 @@ def _clean_stem(stem: str, cfg: CleanConfig) -> str:
 def _compute_target(path: Path, cfg: CleanConfig) -> Path:
     stem = _clean_stem(path.stem, cfg)
     suffix = path.suffix
-    if (
-        cfg.fix_double_ext
-        and suffix
-        and stem.lower().endswith(suffix.lower())
-        and len(stem) > len(suffix)
-    ):
+    if cfg.fix_double_ext and suffix and stem.lower().endswith(suffix.lower()) and len(stem) > len(suffix):
         stem = stem[: -len(suffix)]
     return path.with_name(f"{stem}{suffix}")
 
@@ -229,9 +220,7 @@ def plan_renames(root: Path, cfg: CleanConfig) -> list[tuple[Path, Path]]:
     return build_plan(files, cfg)
 
 
-def clean_filenames(
-    root: Optional[Path] = None, cfg: Optional[CleanConfig] = None
-) -> list[RenameResult]:
+def clean_filenames(root: Optional[Path] = None, cfg: Optional[CleanConfig] = None) -> list[RenameResult]:
     cfg = cfg or CleanConfig()
     root = root or Path.cwd()
     plan = plan_renames(root, cfg)
@@ -283,9 +272,7 @@ def _print_summary(results: list[RenameResult]) -> None:
 
 
 def cli(argv: Optional[list[str]] = None) -> int:
-    p = argparse.ArgumentParser(
-        prog="cleaner", description="Clean filenames recursively."
-    )
+    p = argparse.ArgumentParser(prog="cleaner", description="Clean filenames recursively.")
     p.add_argument("root", nargs="?", default=".", help="root directory")
     p.add_argument("--dry-run", action="store_true", help="plan only, no changes")
     p.add_argument(
@@ -295,26 +282,18 @@ def cli(argv: Optional[list[str]] = None) -> int:
         help="only top-level files",
     )
     p.add_argument("--max-depth", type=int, default=None, help="max directory depth")
-    p.add_argument(
-        "--ext", default=None, help="comma-separated extensions, e.g. .jpg,.png"
-    )
+    p.add_argument("--ext", default=None, help="comma-separated extensions, e.g. .jpg,.png")
     p.add_argument(
         "--exclude",
         action="append",
         default=None,
         help="exclude directory name (repeatable)",
     )
-    p.add_argument(
-        "--include-hidden", action="store_true", help="also process dotfiles"
-    )
-    p.add_argument(
-        "--on-conflict", choices=["suffix", "skip", "error"], default="suffix"
-    )
+    p.add_argument("--include-hidden", action="store_true", help="also process dotfiles")
+    p.add_argument("--on-conflict", choices=["suffix", "skip", "error"], default="suffix")
     p.add_argument("--lower", action="store_true", help="lowercase stems")
     p.add_argument("--upper", action="store_true", help="uppercase stems")
-    p.add_argument(
-        "--collapse", action="store_true", help="collapse repeated separators"
-    )
+    p.add_argument("--collapse", action="store_true", help="collapse repeated separators")
     p.add_argument(
         "--no-strip",
         action="store_false",
@@ -323,9 +302,7 @@ def cli(argv: Optional[list[str]] = None) -> int:
     )
     p.add_argument("--sanitize", action="store_true", help="remove illegal characters")
     p.add_argument("--ascii", action="store_true", help="fold unicode to ascii")
-    p.add_argument(
-        "--trailing-only", action="store_true", help="only strip trailing _N/(N)"
-    )
+    p.add_argument("--trailing-only", action="store_true", help="only strip trailing _N/(N)")
     p.add_argument("--no-double-ext-fix", action="store_false", dest="fix_double_ext")
     p.add_argument("--yes", "-y", action="store_true", help="skip confirmation")
     p.add_argument("--log", default=None, help="path to rename log json (enables undo)")

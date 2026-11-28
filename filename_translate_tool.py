@@ -129,9 +129,7 @@ class Translator:
             try:
                 self._cache[stem] = str(self._translator.translate(stem))  # type: ignore[attr-defined]
             except Exception as exc:
-                print(
-                    f"warning: translation failed for {stem!r}: {exc}", file=sys.stderr
-                )
+                print(f"warning: translation failed for {stem!r}: {exc}", file=sys.stderr)
                 self._cache[stem] = stem
         return self._cache[stem]
 
@@ -139,11 +137,7 @@ class Translator:
 def cmd_translate(args: argparse.Namespace) -> int:
     """Translate non-ASCII filenames to the target language."""
     translator: Translator = Translator(args.source_lang, args.target_lang)
-    candidates: list[Path] = [
-        p
-        for p in gather_paths(args.root, args.include_dirs)
-        if not is_ascii_text(p.name)
-    ]
+    candidates: list[Path] = [p for p in gather_paths(args.root, args.include_dirs) if not is_ascii_text(p.name)]
     if not candidates:
         print("No non-English filenames found.")
         return 0
@@ -191,9 +185,7 @@ def cmd_finglish(args: argparse.Namespace) -> int:
     plan: list[tuple[Path, Path]] = []
     for path in gather_paths(args.root, args.include_dirs):
         normalized: str = unicodedata.normalize("NFKD", path.stem)
-        new_stem: str = "_".join(
-            filter(None, persian_to_finglish(normalized).split("_"))
-        )
+        new_stem: str = "_".join(filter(None, persian_to_finglish(normalized).split("_")))
         new_name: str = new_stem + path.suffix
         if new_stem and new_name != path.name:
             plan.append((path, path.with_name(new_name)))
@@ -212,15 +204,9 @@ def build_parser() -> argparse.ArgumentParser:
     tr.add_argument("root", nargs="?", type=Path, default=Path.cwd())
     tr.add_argument("--source-lang", default="auto")
     tr.add_argument("--target-lang", default="en")
-    tr.add_argument(
-        "--space", default=" ", metavar="CHAR", help="Replace spaces with CHAR (e.g. _)"
-    )
-    tr.add_argument(
-        "--include-dirs", action="store_true", help="Also rename directories"
-    )
-    tr.add_argument(
-        "--apply", action="store_true", help="Actually rename (default: dry run)"
-    )
+    tr.add_argument("--space", default=" ", metavar="CHAR", help="Replace spaces with CHAR (e.g. _)")
+    tr.add_argument("--include-dirs", action="store_true", help="Also rename directories")
+    tr.add_argument("--apply", action="store_true", help="Actually rename (default: dry run)")
     tr.set_defaults(handler=cmd_translate)
     fi = sub.add_parser("finglish", help="Persian filenames -> Finglish (local)")
     fi.add_argument("root", nargs="?", type=Path, default=Path.cwd())

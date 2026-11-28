@@ -44,19 +44,17 @@ if TYPE_CHECKING:
 
 PYTHON_SUFFIXES: frozenset[str] = frozenset({".py", ".pyw", ".pyi"})
 ALL_FIXES: frozenset[str] = frozenset({"regex", "escape", "bytes", "is"})
-RE_FUNCS: frozenset[str] = frozenset(
-    {
-        "compile",
-        "match",
-        "search",
-        "fullmatch",
-        "sub",
-        "subn",
-        "split",
-        "findall",
-        "finditer",
-    }
-)
+RE_FUNCS: frozenset[str] = frozenset({
+    "compile",
+    "match",
+    "search",
+    "fullmatch",
+    "sub",
+    "subn",
+    "split",
+    "findall",
+    "finditer",
+})
 PATTERN_NAME_RE = re.compile(r"pattern|regex|regexp|_re$|^re_", re.IGNORECASE)
 LITERAL_RE = re.compile(r"([A-Za-z]*)('''|\"\"\"|'|\")(.*)\2", re.DOTALL)
 IS_OP_RE = re.compile(rb"\bis\s+not\b|\bis\b")
@@ -127,9 +125,7 @@ def splice(src: bytes, edits: Sequence[Edit]) -> bytes:
     return b"".join(parts)
 
 
-def iter_string_tokens(
-    src: bytes, text: str, pos: Positions
-) -> Iterator[tuple[int, int, str, str]]:
+def iter_string_tokens(src: bytes, text: str, pos: Positions) -> Iterator[tuple[int, int, str, str]]:
     fmiddle = getattr(tokenize, "FSTRING_MIDDLE", None)
     for tok in tokenize.generate_tokens(io.StringIO(text).readline):
         if tok.type == tokenize.STRING:
@@ -171,12 +167,7 @@ class _NormalizeIs(ast.NodeTransformer):
     def visit_Compare(self, node: ast.Compare) -> ast.AST:
         self.generic_visit(node)
         node.ops = [
-            ast.Eq()
-            if isinstance(op, ast.Is)
-            else ast.NotEq()
-            if isinstance(op, ast.IsNot)
-            else op
-            for op in node.ops
+            ast.Eq() if isinstance(op, ast.Is) else ast.NotEq() if isinstance(op, ast.IsNot) else op for op in node.ops
         ]
         return node
 
@@ -192,9 +183,7 @@ def regex_constant_spans(tree: ast.AST, pos: Positions) -> set[tuple[int, int]]:
         if isinstance(node, ast.Import):
             re_modules.update(a.asname or a.name for a in node.names if a.name == "re")
         elif isinstance(node, ast.ImportFrom) and node.module == "re":
-            re_funcs.update(
-                a.asname or a.name for a in node.names if a.name in RE_FUNCS
-            )
+            re_funcs.update(a.asname or a.name for a in node.names if a.name in RE_FUNCS)
     candidates: list[ast.expr] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
@@ -206,31 +195,22 @@ def regex_constant_spans(tree: ast.AST, pos: Positions) -> set[tuple[int, int]]:
                 and func.value.id in re_modules
             ) or (isinstance(func, ast.Name) and func.id in re_funcs)
             if is_re_call:
-                arg = (
-                    node.args[0]
-                    if node.args
-                    else next(
-                        (k.value for k in node.keywords if k.arg == "pattern"), None
-                    )
-                )
+                arg = node.args[0] if node.args else next((k.value for k in node.keywords if k.arg == "pattern"), None)
                 if arg is not None:
                     candidates.append(arg)
         elif isinstance(node, (ast.Assign, ast.AnnAssign)):
             targets = node.targets if isinstance(node, ast.Assign) else [node.target]
             if node.value is not None and any(
-                isinstance(t, ast.Name) and PATTERN_NAME_RE.search(t.id)
-                for t in targets
+                isinstance(t, ast.Name) and PATTERN_NAME_RE.search(t.id) for t in targets
             ):
                 candidates.append(node.value)
     spans: set[tuple[int, int]] = set()
     for arg in candidates:
         if isinstance(arg, ast.Constant) and isinstance(arg.value, (str, bytes)):
-            spans.add(
-                (
-                    pos.from_ast(arg.lineno, arg.col_offset),
-                    pos.from_ast(arg.end_lineno, arg.end_col_offset),
-                )
-            )
+            spans.add((
+                pos.from_ast(arg.lineno, arg.col_offset),
+                pos.from_ast(arg.end_lineno, arg.end_col_offset),
+            ))
     return spans
 
 
@@ -281,9 +261,7 @@ def double_invalid_escapes(body: str, valid: frozenset[str]) -> str:
     return "".join(out)
 
 
-def string_edits(
-    src: bytes, text: str, tree: ast.AST, pos: Positions, cfg: Config
-) -> tuple[list[Edit], Counter[str]]:
+def string_edits(src: bytes, text: str, tree: ast.AST, pos: Positions, cfg: Config) -> tuple[list[Edit], Counter[str]]:
     regex_spans = regex_constant_spans(tree, pos) if cfg.enabled("regex") else set()
     edits: list[Edit] = []
     counts: Counter[str] = Counter()
@@ -304,11 +282,7 @@ def string_edits(
                 valid = BYTES_ESCAPES if "b" in lowered else STR_ESCAPES
                 fixed = double_invalid_escapes(body, valid)
                 if fixed != body:
-                    edits.append(
-                        Edit(
-                            start, end, (prefix + quote + fixed + quote).encode("utf-8")
-                        )
-                    )
+                    edits.append(Edit(start, end, (prefix + quote + fixed + quote).encode("utf-8")))
                     counts["escape"] += 1
         elif cfg.enabled("escape") and "\\" in source:
             fixed = double_invalid_escapes(source, STR_ESCAPES)
@@ -332,14 +306,9 @@ def fix_nonascii_bytes(text: str) -> tuple[str, int]:
         if "b" not in prefix.lower() or body.isascii():
             continue
         escaped = "".join(
-            ch
-            if ch.isascii()
-            else "".join(f"\\x{byte:02x}" for byte in ch.encode("utf-8"))
-            for ch in body
+            ch if ch.isascii() else "".join(f"\\x{byte:02x}" for byte in ch.encode("utf-8")) for ch in body
         )
-        edits.append(
-            Edit(start, end, (prefix + quote + escaped + quote).encode("utf-8"))
-        )
+        edits.append(Edit(start, end, (prefix + quote + escaped + quote).encode("utf-8")))
     return splice(src, edits).decode("utf-8"), len(edits)
 
 
@@ -353,9 +322,7 @@ def is_literal(node: ast.expr) -> bool:
     )
 
 
-def is_edits(
-    src: bytes, tree: ast.AST, pos: Positions
-) -> tuple[list[Edit], Counter[str]]:
+def is_edits(src: bytes, tree: ast.AST, pos: Positions) -> tuple[list[Edit], Counter[str]]:
     edits: list[Edit] = []
     counts: Counter[str] = Counter()
     for node in ast.walk(tree):
@@ -363,9 +330,7 @@ def is_edits(
             continue
         left = node.left
         for op, right in zip(node.ops, node.comparators):
-            if isinstance(op, (ast.Is, ast.IsNot)) and (
-                is_literal(left) or is_literal(right)
-            ):
+            if isinstance(op, (ast.Is, ast.IsNot)) and (is_literal(left) or is_literal(right)):
                 seg_start = pos.from_ast(left.end_lineno, left.end_col_offset)
                 seg_end = pos.from_ast(right.lineno, right.col_offset)
                 match = IS_OP_RE.search(src[seg_start:seg_end])
@@ -440,9 +405,7 @@ def process_file(path: Path, cfg: Config) -> FileReport:
         return FileReport(path, error=f"{type(exc).__name__}: {exc}")
     if result.text == original:
         return FileReport(path, warnings=result.warnings)
-    report = FileReport(
-        path, counts=result.counts, changed=True, warnings=result.warnings
-    )
+    report = FileReport(path, counts=result.counts, changed=True, warnings=result.warnings)
     if cfg.show_diff:
         report.diff = "".join(
             difflib.unified_diff(
@@ -497,9 +460,7 @@ def iter_results(files: list[Path], cfg: Config) -> Iterator[FileReport]:
         yield from map(worker, files)
         return
     with pool:
-        yield from pool.imap_unordered(
-            worker, files, chunksize=max(1, len(files) // (MAX_WORKERS * 4))
-        )
+        yield from pool.imap_unordered(worker, files, chunksize=max(1, len(files) // (MAX_WORKERS * 4)))
 
 
 def display(path: Path) -> str:
@@ -532,20 +493,14 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="do not rewrite `is` comparisons with literals",
     )
-    parser.add_argument(
-        "-n", "--dry-run", action="store_true", help="report only, write nothing"
-    )
+    parser.add_argument("-n", "--dry-run", action="store_true", help="report only, write nothing")
     parser.add_argument(
         "--check",
         action="store_true",
         help="report only; exit 1 if any file needs fixes (for CI / pre-commit)",
     )
-    parser.add_argument(
-        "--diff", action="store_true", help="print a unified diff for each changed file"
-    )
-    parser.add_argument(
-        "--backup", action="store_true", help="keep a .bak copy of each changed file"
-    )
+    parser.add_argument("--diff", action="store_true", help="print a unified diff for each changed file")
+    parser.add_argument("--backup", action="store_true", help="keep a .bak copy of each changed file")
     parser.add_argument(
         "-e",
         "--exclude",
@@ -559,9 +514,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     logger.remove()
-    logger.add(
-        sys.stderr, level="INFO", format="<level>{level: <8}</level> | {message}"
-    )
+    logger.add(sys.stderr, level="INFO", format="<level>{level: <8}</level> | {message}")
     args = build_parser().parse_args(argv)
     fixes = frozenset(args.select) if args.select else ALL_FIXES
     if args.no_is:

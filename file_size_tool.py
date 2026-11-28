@@ -93,13 +93,9 @@ def cmd_largest(args: argparse.Namespace) -> int:
 def cmd_above(args: argparse.Namespace) -> int:
     """Print files larger than a threshold."""
     threshold: int = int(args.mb * 1024 * 1024) if args.mb is not None else args.bytes
-    hits: list[tuple[Path, int]] = [
-        (p, s) for p, s in iter_files(args.root) if s > threshold
-    ]
+    hits: list[tuple[Path, int]] = [(p, s) for p, s in iter_files(args.root) if s > threshold]
     for path, size in sorted(hits, key=lambda item: item[1], reverse=True):
-        label: object = (
-            path.relative_to(args.root) if args.root in path.parents else path
-        )
+        label: object = path.relative_to(args.root) if args.root in path.parents else path
         print(f"{label} : {human_size(size)}")
     print(f"# {len(hits)} file(s) above {human_size(threshold)}", file=sys.stderr)
     return 0
@@ -138,11 +134,7 @@ def cmd_entries(args: argparse.Namespace) -> int:
         print(f"{item['name']} : {human_size(int(str(item['size'])))}")
     print(f"\ntotal: {human_size(total)}")
     if args.json is not None:
-        out: Path = (
-            args.json
-            if str(args.json) != "-"
-            else Path(f"{args.root.resolve().name}.json")
-        )
+        out: Path = args.json if str(args.json) != "-" else Path(f"{args.root.resolve().name}.json")
         atomic_write(out, json.dumps(items, indent=2) + "\n", encoding="utf-8")
         print(f"Wrote {out}")
     return 0
@@ -173,30 +165,20 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     lg = sub.add_parser("largest", help="N largest files in a tree")
     lg.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    lg.add_argument(
-        "-n", "--number", type=int, default=11, help="How many (originals: 11 and 10)"
-    )
+    lg.add_argument("-n", "--number", type=int, default=11, help="How many (originals: 11 and 10)")
     lg.set_defaults(handler=cmd_largest)
     ab = sub.add_parser("above", help="Files over a size threshold")
     ab.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    ab.add_argument(
-        "--mb", type=float, default=None, help="Threshold in MiB (original default: 1)"
-    )
-    ab.add_argument(
-        "--bytes", type=int, default=DEFAULT_THRESHOLD, help="Threshold in bytes"
-    )
+    ab.add_argument("--mb", type=float, default=None, help="Threshold in MiB (original default: 1)")
+    ab.add_argument("--bytes", type=int, default=DEFAULT_THRESHOLD, help="Threshold in bytes")
     ab.set_defaults(handler=cmd_above)
     si = sub.add_parser("similar", help="Groups of files with identical sizes")
     si.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    si.add_argument(
-        "--min-bytes", type=int, default=1, help="Ignore tiny files (default: 1)"
-    )
+    si.add_argument("--min-bytes", type=int, default=1, help="Ignore tiny files (default: 1)")
     si.set_defaults(handler=cmd_similar)
     en = sub.add_parser("entries", help="Top-level entries sorted by recursive size")
     en.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    en.add_argument(
-        "--ascending", action="store_true", help="Smallest first (ssize order)"
-    )
+    en.add_argument("--ascending", action="store_true", help="Smallest first (ssize order)")
     en.add_argument(
         "--json",
         nargs="?",

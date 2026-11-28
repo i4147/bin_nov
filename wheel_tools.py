@@ -149,9 +149,7 @@ def cmd_check(args: argparse.Namespace) -> int:
                 offenders = [
                     name
                     for name in names
-                    if "/" not in name
-                    and not name.endswith("/")
-                    and name.endswith(_BAD_ROOT_SUFFIXES)
+                    if "/" not in name and not name.endswith("/") and name.endswith(_BAD_ROOT_SUFFIXES)
                 ]
                 if offenders:
                     moved += 1
@@ -161,9 +159,7 @@ def cmd_check(args: argparse.Namespace) -> int:
                     suspicious.mkdir(parents=True, exist_ok=True)
                     target = suspicious / whl.name
                     if target.exists():
-                        target = (
-                            suspicious / f"{whl.stem}_duplicate_{moved}{whl.suffix}"
-                        )
+                        target = suspicious / f"{whl.stem}_duplicate_{moved}{whl.suffix}"
                     if args.dry_run:
                         print(f"   -> Would move to: {target.relative_to(root)}")
                     else:
@@ -311,9 +307,7 @@ def cmd_prune(args: argparse.Namespace) -> int:
                 if not args.dry_run:
                     whl.unlink()
             elif current_tuple > wheel_tuple:
-                print(
-                    f"Installed version ({current}) is newer than wheel ({version}), deleting {whl.name}"
-                )
+                print(f"Installed version ({current}) is newer than wheel ({version}), deleting {whl.name}")
                 if not args.dry_run:
                     whl.unlink()
         except TypeError:
@@ -337,12 +331,8 @@ def _strip_with_rich(
     total_bytes: int,
 ) -> None:
     console = Console()
-    console.print(
-        f"[bold cyan]Total number of .so files:[/] [bold yellow]{len(targets)}[/]"
-    )
-    console.print(
-        f"[bold cyan]Total size of .so files:[/] [bold yellow]{human_size(total_bytes)}[/]"
-    )
+    console.print(f"[bold cyan]Total number of .so files:[/] [bold yellow]{len(targets)}[/]")
+    console.print(f"[bold cyan]Total size of .so files:[/] [bold yellow]{human_size(total_bytes)}[/]")
     console.print("[bold green]Starting .so stripping process...[/]")
     with Progress(
         TextColumn("[bold blue]{task.description}[/]"),
@@ -355,9 +345,7 @@ def _strip_with_rich(
         for target in targets:
             _strip_file(target, strip_tool)
             progress.update(task, advance=1)
-    console.print(
-        f"[bold green]Done![/] Processed [bold yellow]{len(targets)}[/] .so files."
-    )
+    console.print(f"[bold green]Done![/] Processed [bold yellow]{len(targets)}[/] .so files.")
 
 
 def cmd_strip(args: argparse.Namespace) -> int:
@@ -372,11 +360,7 @@ def cmd_strip(args: argparse.Namespace) -> int:
             print(f"Error: '{root}' is not a directory", file=sys.stderr)
             return 2
         candidates = [p for p in root.rglob("*") if p.is_file()]
-    targets = [
-        p
-        for p in candidates
-        if p.is_file() and (p.suffix == ".so" or _SO_RE.search(p.name))
-    ]
+    targets = [p for p in candidates if p.is_file() and (p.suffix == ".so" or _SO_RE.search(p.name))]
     if not targets:
         print("No .so files found.")
         return 0
@@ -395,9 +379,7 @@ def cmd_strip(args: argparse.Namespace) -> int:
     if not (_HAVE_RICH and not args.plain):
         print(f"New total size of .so files: {human_size(total_after)}")
     else:
-        Console().print(
-            f"[bold cyan]New total size of .so files:[/] [bold yellow]{human_size(total_after)}[/]"
-        )
+        Console().print(f"[bold cyan]New total size of .so files:[/] [bold yellow]{human_size(total_after)}[/]")
     return 0
 
 
@@ -542,9 +524,7 @@ def cmd_size(args: argparse.Namespace) -> int:
             ],
         }
         if errors:
-            payload["errors"] = [
-                {"path": str(whl), "error": err} for whl, err in errors
-            ]
+            payload["errors"] = [{"path": str(whl), "error": err} for whl, err in errors]
         print(json.dumps(payload, indent=2))
         return 0
     print("-" * 40)
@@ -612,18 +592,14 @@ def build_parser() -> argparse.ArgumentParser:
         default="suspicious",
         help="subdirectory to move bad wheels into (default: 'suspicious')",
     )
-    p.add_argument(
-        "--dry-run", action="store_true", help="only report, do not move any files"
-    )
+    p.add_argument("--dry-run", action="store_true", help="only report, do not move any files")
     p.set_defaults(func=cmd_check)
     p = sub.add_parser(
         "entry-points",
         help="find wheels that contain entry_points.txt",
         description="List wheels that declare entry points.",
     )
-    p.add_argument(
-        "directory", nargs="?", default=".", help="directory to scan (default: '.')"
-    )
+    p.add_argument("directory", nargs="?", default=".", help="directory to scan (default: '.')")
     p.add_argument(
         "-v",
         "--verbose",
@@ -661,18 +637,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=".",
         help="directory containing .whl files (default: '.')",
     )
-    p.add_argument(
-        "--dry-run", action="store_true", help="only report, do not delete any files"
-    )
+    p.add_argument("--dry-run", action="store_true", help="only report, do not delete any files")
     p.set_defaults(func=cmd_prune)
     p = sub.add_parser(
         "strip",
         help="strip .so files (requires the 'strip' binary)",
         description="Strip debug symbols from loose .so files.",
     )
-    p.add_argument(
-        "files", nargs="*", help="specific .so files to strip (default: scan -d)"
-    )
+    p.add_argument("files", nargs="*", help="specific .so files to strip (default: scan -d)")
     p.add_argument(
         "-d",
         "--directory",
@@ -701,18 +673,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=".",
         help="directory containing .whl files (default: '.')",
     )
-    p.add_argument(
-        "-m", "--move", action="store_true", help="move invalid wheels into --dest"
-    )
+    p.add_argument("-m", "--move", action="store_true", help="move invalid wheels into --dest")
     p.add_argument(
         "-d",
         "--dest",
         default="invalid_wheels",
         help="destination subdirectory (default: 'invalid_wheels')",
     )
-    p.add_argument(
-        "-r", "--recursive", action="store_true", help="scan subdirectories recursively"
-    )
+    p.add_argument("-r", "--recursive", action="store_true", help="scan subdirectories recursively")
     p.set_defaults(func=cmd_validate)
     p = sub.add_parser(
         "size",
@@ -726,9 +694,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path.cwd(),
         help="directory to scan (default: current directory)",
     )
-    p.add_argument(
-        "-r", "--recursive", action="store_true", help="scan subdirectories recursively"
-    )
+    p.add_argument("-r", "--recursive", action="store_true", help="scan subdirectories recursively")
     p.add_argument("-v", "--verbose", action="store_true", help="show detailed summary")
     p.add_argument("--json", action="store_true", help="output results as JSON")
     p.add_argument(

@@ -117,16 +117,12 @@ class Finder:
             except (OSError, PermissionError):
                 continue
         print(" Done.")
-        candidate_groups = [
-            (size, paths) for size, paths in file_sizes.items() if len(paths) > 1
-        ]
+        candidate_groups = [(size, paths) for size, paths in file_sizes.items() if len(paths) > 1]
         if not candidate_groups:
             self.print_summary()
             return []
         all_candidate_paths = [p for _, paths in candidate_groups for p in paths]
-        path_to_size = {
-            path: size for size, paths in candidate_groups for path in paths
-        }
+        path_to_size = {path: size for size, paths in candidate_groups for path in paths}
         partial_hash_groups: dict[tuple[int, str], list[str]] = defaultdict(list)
         total_candidates = len(all_candidate_paths)
         print(
@@ -135,9 +131,7 @@ class Finder:
             flush=True,
         )
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            futures = [
-                executor.submit(get_partial_hash, path) for path in all_candidate_paths
-            ]
+            futures = [executor.submit(get_partial_hash, path) for path in all_candidate_paths]
             for future in as_completed(futures):
                 filepath, p_hash = future.result()
                 if p_hash:
@@ -145,15 +139,11 @@ class Finder:
                     partial_hash_groups[(size, p_hash)].append(filepath)
         print(" Done.")
         full_hash_queue: list[tuple[int, list[str]]] = [
-            (size, paths)
-            for (size, _), paths in partial_hash_groups.items()
-            if len(paths) > 1
+            (size, paths) for (size, _), paths in partial_hash_groups.items() if len(paths) > 1
         ]
         all_full_candidates = [p for _, paths in full_hash_queue for p in paths]
         if all_full_candidates:
-            full_path_to_size = {
-                path: size for size, paths in full_hash_queue for path in paths
-            }
+            full_path_to_size = {path: size for size, paths in full_hash_queue for path in paths}
             full_hash_groups: dict[str, list[str]] = defaultdict(list)
             total_full = len(all_full_candidates)
             print(
@@ -162,9 +152,7 @@ class Finder:
                 flush=True,
             )
             with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-                futures = [
-                    executor.submit(get_full_hash, path) for path in all_full_candidates
-                ]
+                futures = [executor.submit(get_full_hash, path) for path in all_full_candidates]
                 for future in as_completed(futures):
                     filepath, f_hash = future.result()
                     if f_hash:
@@ -181,12 +169,8 @@ class Finder:
 
     def print_summary(self) -> None:
         print("\n=== Scan Complete ===")
-        print(
-            f"Total files scanned: {self.total_files_count} ({fsz(self.total_files_size)})"
-        )
-        print(
-            f"Duplicates found:    {self.dup_count} file(s) wasting {fsz(self.dup_size)}"
-        )
+        print(f"Total files scanned: {self.total_files_count} ({fsz(self.total_files_size)})")
+        print(f"Duplicates found:    {self.dup_count} file(s) wasting {fsz(self.dup_size)}")
 
     def list_duplicates(self) -> None:
         if not self.same_content:
@@ -221,13 +205,9 @@ class Finder:
                     except OSError as err:
                         print(f"  Failed to delete {target_file}: {err}")
         if dry_run:
-            print(
-                "\n[DRY-RUN COMPLETE] No files were deleted. Pass '-r' or '--remove' to execute removal."
-            )
+            print("\n[DRY-RUN COMPLETE] No files were deleted. Pass '-r' or '--remove' to execute removal.")
         else:
-            print(
-                f"\n[REMOVAL COMPLETE] Successfully deleted {removed_count} duplicate file(s)."
-            )
+            print(f"\n[REMOVAL COMPLETE] Successfully deleted {removed_count} duplicate file(s).")
 
     def run_benchmark(self, candidate_files: list[str]) -> None:
         sample_files = candidate_files
@@ -249,9 +229,7 @@ class Finder:
             print("\n[BENCHMARK] Could not access sample files for benchmarking.")
             return
         print("\n=== BENCHMARK COMPARISON ===")
-        print(
-            f"Testing on {len(valid_files)} file(s) ({fsz(total_bytes)} total data)..."
-        )
+        print(f"Testing on {len(valid_files)} file(s) ({fsz(total_bytes)} total data)...")
         t0 = time.perf_counter()
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             list(executor.map(get_full_hash, valid_files))

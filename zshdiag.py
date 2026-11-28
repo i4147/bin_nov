@@ -105,20 +105,14 @@ def main() -> None:
     print("\nAlias conflicts with PATH executables or custom scripts")
     print("-" * 55)
     conflicts = []
-    custom_names = (
-        {path.stem for path in CUSTOM_DIR.glob("*.zsh")}
-        if CUSTOM_DIR.is_dir()
-        else set()
-    )
+    custom_names = {path.stem for path in CUSTOM_DIR.glob("*.zsh")} if CUSTOM_DIR.is_dir() else set()
     for name, locations in sorted(aliases.items()):
         reasons = []
         if name in binaries:
             reasons.append("executable in PATH: " + ", ".join(map(str, binaries[name])))
         if name in custom_names:
             reasons.append(f"custom script file: {CUSTOM_DIR / (name + '.zsh')}")
-        if shutil.which(name) and not any(
-            reason.startswith("executable in PATH") for reason in reasons
-        ):
+        if shutil.which(name) and not any(reason.startswith("executable in PATH") for reason in reasons):
             reasons.append(f"command resolves to: {shutil.which(name)}")
         if reasons:
             conflicts.append((name, locations, reasons))

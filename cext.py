@@ -222,9 +222,7 @@ class EntityVisitor(ast.NodeVisitor):
                 self.visit_ClassDef(child)
         self._class_stack.pop()
 
-    def _visit_method(
-        self, node: ast.FunctionDef | ast.AsyncFunctionDef, class_name: str
-    ) -> None:
+    def _visit_method(self, node: ast.FunctionDef | ast.AsyncFunctionDef, class_name: str) -> None:
         method_source: str = self._slice(node)
         full_name: str = f"{class_name}_{node.name}"
         imports_for_method: list[str] = detect_needed_imports(method_source)
@@ -310,9 +308,7 @@ def extract_imports_tree_sitter(source: str) -> list[str]:
         return []
 
 
-def parse_python_source(
-    source: str, virtual_path: str
-) -> tuple[list[Entity], list[str]]:
+def parse_python_source(source: str, virtual_path: str) -> tuple[list[Entity], list[str]]:
     try:
         tree: ast.AST = ast.parse(source, filename=virtual_path)
     except SyntaxError as exc:
@@ -349,9 +345,7 @@ def process_python_file(
     path: Path, virtual_path: str | None = None, source_override: str | None = None
 ) -> tuple[list[Entity], list[str]]:
     vpath: str = virtual_path or str(path)
-    source: str | None = (
-        source_override if source_override is not None else read_py_file(path)
-    )
+    source: str | None = source_override if source_override is not None else read_py_file(path)
     if source is None:
         return ([], [])
     if not source.strip():
@@ -443,21 +437,14 @@ def process_archive(archive_path: Path) -> list[tuple[list[Entity], list[str]]]:
 
 def _is_archive(path: Path) -> bool:
     name: str = path.name.lower()
-    return any(
-        name.endswith(ext)
-        for ext in (".whl", ".zip", ".tar.gz", ".tgz", ".tar.zst", ".tar.xz", ".tar")
-    )
+    return any(name.endswith(ext) for ext in (".whl", ".zip", ".tar.gz", ".tgz", ".tar.zst", ".tar.xz", ".tar"))
 
 
 def discover_files(root: Path) -> tuple[list[Path], list[Path]]:
     py_files: list[Path] = []
     archives: list[Path] = []
     for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = [
-            d
-            for d in dirnames
-            if d not in SKIP_DIRS and not Path(dirpath, d).is_symlink()
-        ]
+        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS and not Path(dirpath, d).is_symlink()]
         for fname in filenames:
             fpath: Path = Path(dirpath) / fname
             if fpath.is_symlink():
@@ -591,9 +578,7 @@ def main(argv: list[str] | None = None) -> int:
         help="Root directory to scan (default: current directory)",
     )
     args: argparse.Namespace = parser.parse_args(argv)
-    output_dir: Path = (
-        Path.home() / "tmp" / "output" if args.tmp else Path.cwd() / "output"
-    )
+    output_dir: Path = Path.home() / "tmp" / "output" if args.tmp else Path.cwd() / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     print("Output directory: {}", output_dir)
     root: Path = args.dir.resolve()
@@ -611,9 +596,7 @@ def main(argv: list[str] | None = None) -> int:
     ] + [(_worker_archive, p) for p in archives]
     print("Processing {} file(s) with {} worker(s)…", len(tasks), MAX_WORKERS)
     with mp.Pool(processes=MAX_WORKERS) as pool:
-        async_results: list[
-            tuple[Callable[[Path], tuple[list[Entity], list[str], str]], Path, Any]
-        ] = []
+        async_results: list[tuple[Callable[[Path], tuple[list[Entity], list[str], str]], Path, Any]] = []
         for fn, path in tasks:
             async_results.append((fn, path, pool.apply_async(fn, (path,))))
         for fn, path, result in async_results:

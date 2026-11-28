@@ -32,57 +32,51 @@ BACKUP_SUFFIX: Final[str] = ".bak"
 TEXT_SUFFIXES: Final[frozenset[str]] = frozenset({".txt"})
 MARKDOWN_SUFFIXES: Final[frozenset[str]] = frozenset({".md", ".markdown", ".mdx"})
 SUPPORTED_SUFFIXES: Final[frozenset[str]] = TEXT_SUFFIXES | MARKDOWN_SUFFIXES
-ABBREVIATIONS: Final[frozenset[str]] = frozenset(
-    {
-        "mr.",
-        "mrs.",
-        "ms.",
-        "dr.",
-        "prof.",
-        "sr.",
-        "jr.",
-        "st.",
-        "vs.",
-        "cf.",
-        "fig.",
-        "figs.",
-        "vol.",
-        "inc.",
-        "ltd.",
-        "co.",
-        "corp.",
-        "dept.",
-        "approx.",
-        "al.",
-        "pp.",
-        "eq.",
-        "ref.",
-    }
-)
-SMALL_WORDS: Final[frozenset[str]] = frozenset(
-    {
-        "a",
-        "an",
-        "the",
-        "of",
-        "and",
-        "or",
-        "for",
-        "to",
-        "in",
-        "on",
-        "at",
-        "by",
-        "with",
-        "vs",
-        "as",
-    }
-)
+ABBREVIATIONS: Final[frozenset[str]] = frozenset({
+    "mr.",
+    "mrs.",
+    "ms.",
+    "dr.",
+    "prof.",
+    "sr.",
+    "jr.",
+    "st.",
+    "vs.",
+    "cf.",
+    "fig.",
+    "figs.",
+    "vol.",
+    "inc.",
+    "ltd.",
+    "co.",
+    "corp.",
+    "dept.",
+    "approx.",
+    "al.",
+    "pp.",
+    "eq.",
+    "ref.",
+})
+SMALL_WORDS: Final[frozenset[str]] = frozenset({
+    "a",
+    "an",
+    "the",
+    "of",
+    "and",
+    "or",
+    "for",
+    "to",
+    "in",
+    "on",
+    "at",
+    "by",
+    "with",
+    "vs",
+    "as",
+})
 CLOSERS: Final[str] = "\"'”’)\\]"
 OPENERS: Final[str] = "\"'“‘(\\["
-SENTENCE_END: Final[re.Pattern[str]] = re.compile(
-    rf"([.!?…]+[{CLOSERS}]*)\s+(?=[{OPENERS}]*[A-Z0-9À-ÖØ-Þ])"
-)
+SENTENCE_END: Final[re.Pattern[str]] = re.compile(rf"([.!?…]+[{CLOSERS}]*)\s+(?=[{OPENERS}]*[A-Z0-9À-ÖØ-Þ])")
 LIST_MARKER: Final[re.Pattern[str]] = re.compile(
     r"^(?P<indent>\s*)"
     r"(?P<marker>"
@@ -97,27 +91,17 @@ LIST_MARKER: Final[re.Pattern[str]] = re.compile(
     r")\s+(?P<text>\S.*)$"
 )
 FENCE: Final[re.Pattern[str]] = re.compile(r"^\s*(?:```|~~~)")
-VERBATIM: Final[re.Pattern[str]] = re.compile(
-    r"^\s*(?:\||>)|^\s*([-*_=])(?:\s*\1){2,}\s*$"
-)
+VERBATIM: Final[re.Pattern[str]] = re.compile(r"^\s*(?:\||>)|^\s*([-*_=])(?:\s*\1){2,}\s*$")
 SETEXT_UNDERLINE: Final[re.Pattern[str]] = re.compile(r"^\s*(?:={2,}|-{2,})\s*$")
-MD_HEADING: Final[re.Pattern[str]] = re.compile(
-    r"^\s{0,3}(?P<hashes>#{1,6})\s+(?P<text>\S.*)$"
-)
+MD_HEADING: Final[re.Pattern[str]] = re.compile(r"^\s{0,3}(?P<hashes>#{1,6})\s+(?P<text>\S.*)$")
 NUMBER_PREFIX: Final[re.Pattern[str]] = re.compile(r"^\s*(\d+(?:\.\d+)+)")
-EMPH_DOUBLE: Final[re.Pattern[str]] = re.compile(
-    r"^\s*(\*\*|__)\s*(?P<t>[^*_\s].*?)\s*\1\s*[:.]?\s*$"
-)
-EMPH_SINGLE: Final[re.Pattern[str]] = re.compile(
-    r"^\s*(\*|_)(?=\S)(?P<t>[^*_].*?)(?<=\S)\1\s*[:.]?\s*$"
-)
+EMPH_DOUBLE: Final[re.Pattern[str]] = re.compile(r"^\s*(\*\*|__)\s*(?P<t>[^*_\s].*?)\s*\1\s*[:.]?\s*$")
+EMPH_SINGLE: Final[re.Pattern[str]] = re.compile(r"^\s*(\*|_)(?=\S)(?P<t>[^*_].*?)(?<=\S)\1\s*[:.]?\s*$")
 CHAPTER: Final[re.Pattern[str]] = re.compile(
     r"^\s*(?i:chapter|section|part|appendix|article|book|lesson|unit)"
     r"\s+(?:\d+[\d.]*|[IVXLC]+)\b.*$"
 )
-NUMBERED_HEADING: Final[re.Pattern[str]] = re.compile(
-    r"^\s*\d+(?:\.\d+)+\.?\s+[A-Z].*$"
-)
+NUMBERED_HEADING: Final[re.Pattern[str]] = re.compile(r"^\s*\d+(?:\.\d+)+\.?\s+[A-Z].*$")
 TERMINAL: Final[re.Pattern[str]] = re.compile(rf"[.!?:;…][{CLOSERS}]*$")
 BREAK_PATTERNS: Final[tuple[re.Pattern[str], ...]] = (
     re.compile(r";\s"),
@@ -252,9 +236,7 @@ def find_break(text: str, room: int) -> int | None:
             best: int | None = None
 
             for match in pattern.finditer(text):
-                position = (
-                    match.start() + 1 if index < PUNCTUATION_BREAKS else match.start()
-                )
+                position = match.start() + 1 if index < PUNCTUATION_BREAKS else match.start()
 
                 if position > room:
                     break
@@ -321,11 +303,7 @@ def strong_heading(line: str) -> Heading | None:
 
     for pattern in (EMPH_DOUBLE, EMPH_SINGLE):
         emphasis = pattern.match(line)
-        if (
-            emphasis
-            and emphasis.group(1) not in emphasis["t"]
-            and len(emphasis["t"].split()) <= 12
-        ):
+        if emphasis and emphasis.group(1) not in emphasis["t"] and len(emphasis["t"].split()) <= 12:
             return Heading(2, emphasis["t"].strip().rstrip(":").rstrip(), line)
 
     if len(stripped) <= 80 and CHAPTER.match(stripped):
@@ -353,19 +331,10 @@ def weak_heading(line: str) -> Heading | None:
     words = stripped.split()
     letters = sum(1 for char in stripped if char.isalpha())
 
-    if (
-        letters >= 3
-        and stripped.isupper()
-        and len(words) <= 10
-        and not stripped.endswith((".", ",", ";"))
-    ):
+    if letters >= 3 and stripped.isupper() and len(words) <= 10 and not stripped.endswith((".", ",", ";")):
         return Heading(2, stripped.rstrip(":").rstrip(), line)
 
-    if (
-        stripped.endswith(":")
-        and 1 <= len(words) <= 6
-        and is_title_case([word.rstrip(":") for word in words])
-    ):
+    if stripped.endswith(":") and 1 <= len(words) <= 6 and is_title_case([word.rstrip(":") for word in words]):
         return Heading(3, stripped.rstrip(":"), line)
 
     return None
@@ -445,9 +414,7 @@ class Formatter:
         stripped = line.strip()
 
         if self.item is not None:
-            if len(indent) > len(self.item.indent) or not TERMINAL.search(
-                self.item.parts[-1]
-            ):
+            if len(indent) > len(self.item.indent) or not TERMINAL.search(self.item.parts[-1]):
                 self.item.parts.append(stripped)
                 return
             self.flush_item()
@@ -468,9 +435,7 @@ class Formatter:
         text = normalize(" ".join(self.paragraph))
 
         for sentence in split_sentences(text):
-            self.out.extend(
-                wrap(self.paragraph_indent, sentence, self.paragraph_indent, self.width)
-            )
+            self.out.extend(wrap(self.paragraph_indent, sentence, self.paragraph_indent, self.width))
 
         self.paragraph = []
         self.after_text = True
@@ -537,9 +502,7 @@ def format_text(text: str, width: int, markdown: bool) -> str:
 
         indent = line[: len(line) - len(line.lstrip())]
 
-        if VERBATIM.match(line) or (
-            markdown and prev_blank and indent.startswith(("    ", "\t"))
-        ):
+        if VERBATIM.match(line) or (markdown and prev_blank and indent.startswith(("    ", "\t"))):
             formatter.verbatim(line)
             prev_blank = False
             continue
@@ -671,10 +634,7 @@ def is_excluded(path: Path, root: Path, patterns: Sequence[str]) -> bool:
     except ValueError:
         relative = name
 
-    return any(
-        fnmatch.fnmatch(name, pattern) or fnmatch.fnmatch(relative, pattern)
-        for pattern in patterns
-    )
+    return any(fnmatch.fnmatch(name, pattern) or fnmatch.fnmatch(relative, pattern) for pattern in patterns)
 
 
 def in_junk_dir(entry: Path, root: Path) -> bool:
@@ -701,9 +661,7 @@ def walk_files(root: Path, exclude: Sequence[str]) -> Iterator[Path]:
         yield entry
 
 
-def discover(
-    inputs: Sequence[Path], exclude: Sequence[str]
-) -> tuple[list[Path], list[Path]]:
+def discover(inputs: Sequence[Path], exclude: Sequence[str]) -> tuple[list[Path], list[Path]]:
     found: dict[Path, None] = {}
     missing: list[Path] = []
 
@@ -781,15 +739,8 @@ def summarize(results: Sequence[Result], options: Options, color: bool) -> list[
         counts[result.status] = counts.get(result.status, 0) + 1
 
     noun = "file" if len(results) == 1 else "files"
-    lines = [
-        f"{len(results)} {noun}: "
-        + ", ".join(f"{count} {status}" for status, count in counts.items())
-    ]
-    measured = [
-        result
-        for result in results
-        if result.status in ("changed", "unchanged", "converted")
-    ]
+    lines = [f"{len(results)} {noun}: " + ", ".join(f"{count} {status}" for status, count in counts.items())]
+    measured = [result for result in results if result.status in ("changed", "unchanged", "converted")]
     before = sum(result.before for result in measured)
     after = sum(result.after for result in measured)
     delta = after - before
@@ -894,9 +845,7 @@ def parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
         metavar="GLOB",
         help="skip matching files (repeatable)",
     )
-    parser.add_argument(
-        "-q", "--quiet", action="store_true", help="only print the summary"
-    )
+    parser.add_argument("-q", "--quiet", action="store_true", help="only print the summary")
     parser.add_argument(
         "--color",
         choices=("auto", "always", "never"),
@@ -927,9 +876,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"skipping missing input: {path}", file=sys.stderr)
 
     if not files:
-        print(
-            f"No .txt/.md files found under: {', '.join(str(path) for path in inputs)}"
-        )
+        print(f"No .txt/.md files found under: {', '.join(str(path) for path in inputs)}")
         return 1 if missing else 0
 
     options = Options(
@@ -966,9 +913,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if any(result.status == "error" for result in results):
         return 1
-    if args.check and any(
-        result.status in ("changed", "converted") for result in results
-    ):
+    if args.check and any(result.status in ("changed", "converted") for result in results):
         return 1
 
     return 0

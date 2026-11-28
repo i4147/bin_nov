@@ -63,32 +63,24 @@ def _make_translate(source: str, target: Path, script_path: Path) -> Callable[..
     if mod_file and mod_file == Path(script_path).absolute():
         msg = "'translate' resolves to this script itself (rename the script to avoid shadowing the package)"
         raise BackendError(msg)
-    cls = getattr(translate, "Translator", None) or getattr(
-        translate, "GoogleTranslator", None
-    )
+    cls = getattr(translate, "Translator", None) or getattr(translate, "GoogleTranslator", None)
     if cls is None:
         msg = "'translate' module exposes neither 'Translator' nor 'GoogleTranslator'"
         raise BackendError(msg)
     if cls.__name__ == "Translator":
 
-        def call(
-            text: str, cls: Any = cls, source: str = source, target: Path = target
-        ):
+        def call(text: str, cls: Any = cls, source: str = source, target: Path = target):
             return cls(from_lang=source, to_lang=target).translate(text)
 
     else:
 
-        def call(
-            text: str, cls: Any = cls, source: str = source, target: Path = target
-        ):
+        def call(text: str, cls: Any = cls, source: str = source, target: Path = target):
             return cls(source=source, target=target).translate(text)
 
     return call
 
 
-def _make_deep_translator(
-    source: str, target: Path, _script_path: Path
-) -> Callable[..., Any]:
+def _make_deep_translator(source: str, target: Path, _script_path: Path) -> Callable[..., Any]:
     try:
         from deep_translator import GoogleTranslator
     except ImportError as e:
@@ -106,9 +98,7 @@ def _make_deep_translator(
     return call
 
 
-def _make_googletrans(
-    source: str, target: Path, _script_path: Path
-) -> Callable[..., Any]:
+def _make_googletrans(source: str, target: Path, _script_path: Path) -> Callable[..., Any]:
     try:
         from googletrans import Translator
     except ImportError as e:
@@ -138,9 +128,7 @@ _BACKEND_FACTORIES: dict[str, Any] = {
 
 
 class TranslatorWrapper:
-    def __init__(
-        self, preferred: str, source: str, target: Path, script_path: Path
-    ) -> None:
+    def __init__(self, preferred: str, source: str, target: Path, script_path: Path) -> None:
         self.source = source
         self.target = target
         self.backend_name = None
@@ -160,9 +148,7 @@ class TranslatorWrapper:
                 continue
             self.backend_name = name
             if name != preferred:
-                print(
-                    f"⚠️  Backend '{preferred}' unavailable — falling back to '{name}'."
-                )
+                print(f"⚠️  Backend '{preferred}' unavailable — falling back to '{name}'.")
             logger.info("Using backend '{}'", name)
             return
         print("Error: no usable translation backend found.", file=sys.stderr)
@@ -206,9 +192,7 @@ def append_failed(failed_path: Path, word: str, lock: Any) -> None:
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Translate a word list file line by line to JSON."
-    )
+    parser = argparse.ArgumentParser(description="Translate a word list file line by line to JSON.")
     parser.add_argument(
         "-i",
         "--input",
@@ -226,12 +210,8 @@ def parse_args():
         default="failed.txt",
         help="File collecting words that failed all retries (default: failed.txt)",
     )
-    parser.add_argument(
-        "-s", "--source", default="fr", help="Source language code (default: fr)"
-    )
-    parser.add_argument(
-        "-t", "--target", default="en", help="Target language code (default: en)"
-    )
+    parser.add_argument("-s", "--source", default="fr", help="Source language code (default: fr)")
+    parser.add_argument("-t", "--target", default="en", help="Target language code (default: en)")
     parser.add_argument(
         "-b",
         "--backend",
@@ -337,9 +317,7 @@ def main() -> None:
                 if translation is None:
                     append_failed(failed_path, word, failed_lock)
                     with print_lock:
-                        print(
-                            f"[{count}/{total_pending}] ✗ {word} (failed -> {failed_path})"
-                        )
+                        print(f"[{count}/{total_pending}] ✗ {word} (failed -> {failed_path})")
                 else:
                     results[word] = translation
                     with print_lock:

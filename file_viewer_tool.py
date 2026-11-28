@@ -49,11 +49,7 @@ def highlight_text(text: str, filename: str, language: str | None, theme: str) -
     except ImportError:
         return text
     try:
-        lexer = (
-            get_lexer_by_name(language)
-            if language
-            else get_lexer_for_filename(filename, text)
-        )
+        lexer = get_lexer_by_name(language) if language else get_lexer_for_filename(filename, text)
     except ClassNotFound:
         try:
             lexer = guess_lexer(text)
@@ -79,20 +75,14 @@ def render(name: str, text: str, args: argparse.Namespace, color: bool) -> str:
     highlighted: set[int] = set(args.highlight_line)
     out: list[str] = []
     if not args.plain:
-        out.append(
-            f"{HEADER_COLOR if color else ''}--- {name} ({len(lines)} lines){RESET if color else ''}"
-        )
+        out.append(f"{HEADER_COLOR if color else ''}--- {name} ({len(lines)} lines){RESET if color else ''}")
     for offset, line in enumerate(shown):
         lineno: int = lo + offset
         expanded: str = line.expandtabs(args.tabs)
         if args.plain:
             out.append(expanded)
             continue
-        gutter: str = (
-            f"{NUM_COLOR}{lineno:>{width}}{RESET} | "
-            if color
-            else f"{lineno:>{width}} | "
-        )
+        gutter: str = f"{NUM_COLOR}{lineno:>{width}}{RESET} | " if color else f"{lineno:>{width}} | "
         bg: str = HIGHLIGHT_BG if color and lineno in highlighted else ""
         out.append(f"{gutter}{bg}{expanded}{RESET if bg else ''}")
     return "\n".join(out) + "\n"
@@ -125,21 +115,13 @@ def cmd_view(args: argparse.Namespace) -> int:
             if args.list_themes:
                 print("\n".join(sorted(get_all_styles())))
             if args.list_languages:
-                print(
-                    "\n".join(
-                        sorted(
-                            {alias for lexer in get_all_lexers() for alias in lexer[1]}
-                        )
-                    )
-                )
+                print("\n".join(sorted({alias for lexer in get_all_lexers() for alias in lexer[1]})))
             return 0
         except ImportError:
             print("Pygments not installed: pip install Pygments", file=sys.stderr)
             return 1
     color: bool = args.color == "always" or (
-        args.color == "auto"
-        and sys.stdout.isatty()
-        and os.environ.get("NO_COLOR") is None
+        args.color == "auto" and sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
     )
     chunks: list[str] = []
     status: int = 0
@@ -160,18 +142,14 @@ def cmd_head(args: argparse.Namespace) -> int:
     path: Path = args.file
     if args.bytes is not None:
         try:
-            text: str = path.read_bytes()[: args.bytes].decode(
-                "utf-8", errors="replace"
-            )
+            text: str = path.read_bytes()[: args.bytes].decode("utf-8", errors="replace")
         except OSError as exc:
             print(f"Error: {exc}", file=sys.stderr)
             return 1
         print(text, end="" if text.endswith("\n") else "\n")
         return 0
     try:
-        lines: list[str] = path.read_text(
-            encoding="utf-8", errors="replace"
-        ).splitlines(True)
+        lines: list[str] = path.read_text(encoding="utf-8", errors="replace").splitlines(True)
     except OSError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -196,9 +174,7 @@ def browse_interactive(files: list[Path], preview_lines: int) -> None:
             marker: str = ">" if row == index else " "
             stdscr.addstr(row, 0, f"{marker} {path.name}"[: width - 1])
         if files:
-            head: list[str] = (
-                files[index].read_text(errors="replace").splitlines()[:preview_lines]
-            )
+            head: list[str] = files[index].read_text(errors="replace").splitlines()[:preview_lines]
             top: int = max(0, height - preview_lines - 1)
             stdscr.addstr(top, 0, "-" * min(width - 1, 60))
             for i, line in enumerate(head[: preview_lines - 1]):
@@ -248,18 +224,10 @@ def build_parser() -> argparse.ArgumentParser:
     vw = sub.add_parser("view", help="View files with numbers/highlighting")
     vw.add_argument("files", nargs="*", help="Files to view ('-' = stdin)")
     vw.add_argument("-l", "--language", default=None, help="Pygments lexer override")
-    vw.add_argument(
-        "--theme", default="monokai", help="Pygments style (default: monokai)"
-    )
-    vw.add_argument(
-        "-p", "--plain", action="store_true", help="No numbers/header/highlighting"
-    )
-    vw.add_argument(
-        "-r", "--line-range", default=None, help="e.g. '30:40', '30:', ':40'"
-    )
-    vw.add_argument(
-        "-H", "--highlight-line", action="append", default=[], type=int, metavar="N"
-    )
+    vw.add_argument("--theme", default="monokai", help="Pygments style (default: monokai)")
+    vw.add_argument("-p", "--plain", action="store_true", help="No numbers/header/highlighting")
+    vw.add_argument("-r", "--line-range", default=None, help="e.g. '30:40', '30:', ':40'")
+    vw.add_argument("-H", "--highlight-line", action="append", default=[], type=int, metavar="N")
     vw.add_argument("--paging", choices=("auto", "always", "never"), default="auto")
     vw.add_argument("--color", choices=("auto", "always", "never"), default="auto")
     vw.add_argument("--tabs", type=int, default=4, help="Tab width (default: 4)")
@@ -269,16 +237,12 @@ def build_parser() -> argparse.ArgumentParser:
     hd = sub.add_parser("head", help="Print the start of a file")
     hd.add_argument("file", type=Path)
     hd.add_argument("-n", "--lines", type=int, default=10, help="Lines (default: 10)")
-    hd.add_argument(
-        "-c", "--bytes", type=int, default=None, help="Bytes instead of lines"
-    )
+    hd.add_argument("-c", "--bytes", type=int, default=None, help="Bytes instead of lines")
     hd.set_defaults(handler=cmd_head)
     br = sub.add_parser("browse", help="Page/browse all files in a directory")
     br.add_argument("root", nargs="?", type=Path, default=Path.cwd())
     br.add_argument("-r", "--recursive", action="store_true")
-    br.add_argument(
-        "-i", "--interactive", action="store_true", help="Curses browser (j/k/q)"
-    )
+    br.add_argument("-i", "--interactive", action="store_true", help="Curses browser (j/k/q)")
     br.add_argument(
         "--preview-lines",
         type=int,

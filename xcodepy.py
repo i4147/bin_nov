@@ -56,9 +56,7 @@ def extract_code_blocks(target_dir: Path = Path()) -> None:
         return
     extracted_count = 0
     for md_path in md_files:
-        if md_path.resolve().parent == output_dir and md_path.name.startswith(
-            "extracted_"
-        ):
+        if md_path.resolve().parent == output_dir and md_path.name.startswith("extracted_"):
             continue
         try:
             content = md_path.read_text(encoding="utf-8")
@@ -87,9 +85,7 @@ def extract_code_blocks(target_dir: Path = Path()) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Recursively extract fenced markdown code blocks."
-    )
+    parser = argparse.ArgumentParser(description="Recursively extract fenced markdown code blocks.")
     parser.add_argument(
         "directory",
         nargs="?",

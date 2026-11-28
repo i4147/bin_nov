@@ -34,9 +34,7 @@ console = Console()
 
 
 def build_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Find files/directories with the largest file footprint."
-    )
+    parser = argparse.ArgumentParser(description="Find files/directories with the largest file footprint.")
     parser.add_argument(
         "--dir",
         "-d",
@@ -111,21 +109,15 @@ def scan_directory(
                         files_with_sizes.append((entry_path, entry.stat().st_size))
                 except (PermissionError, OSError) as err:
                     if wordy:
-                        console.print(
-                            f"[yellow]Warning:[/yellow] Cannot stat {entry_path}: {err}"
-                        )
+                        console.print(f"[yellow]Warning:[/yellow] Cannot stat {entry_path}: {err}")
     except (PermissionError, OSError) as err:
         if wordy:
-            console.print(
-                f"[red]Error:[/red] Cannot read directory {target_dir}: {err}"
-            )
+            console.print(f"[red]Error:[/red] Cannot read directory {target_dir}: {err}")
         return
     yield target_dir, subdirs, files_with_sizes
     if max_depth == -1 or current_depth < max_depth:
         for subdir in subdirs:
-            yield from scan_directory(
-                subdir, exclude_paths, wordy, max_depth, current_depth + 1
-            )
+            yield from scan_directory(subdir, exclude_paths, wordy, max_depth, current_depth + 1)
 
 
 def print_results(
@@ -164,23 +156,17 @@ def main() -> None:
     args = build_args()
     root_dir: Path = args.dir.resolve()
     if not root_dir.exists():
-        console.print(
-            f"[red]Error:[/red] Path '[bold]{root_dir}[/bold]' does not exist."
-        )
+        console.print(f"[red]Error:[/red] Path '[bold]{root_dir}[/bold]' does not exist.")
         sys.exit(1)
     exclude_paths: set[Path] = {p.resolve() for p in args.exclude}
     min_heap: list[tuple[int, Path]] = []
     total_scanned_bytes = 0
     start_time = time.perf_counter()
-    with Status(
-        f"[bold green]Scanning {root_dir}...[/bold green]", console=console
-    ) as status:
+    with Status(f"[bold green]Scanning {root_dir}...[/bold green]", console=console) as status:
         for current_dir, _, files in scan_directory(
             root_dir, exclude_paths, wordy=args.wordy, max_depth=args.recur_depth
         ):
-            status.update(
-                f"[bold green]Scanning:[/bold green] [dim]{current_dir}[/dim]"
-            )
+            status.update(f"[bold green]Scanning:[/bold green] [dim]{current_dir}[/dim]")
             if args.mode == "folder":
                 folder_size = sum(size for _, size in files)
                 total_scanned_bytes += folder_size

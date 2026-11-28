@@ -31,9 +31,7 @@ from typing import Optional
 try:
     from fontTools.ttLib import TTFont
 except ImportError:
-    print(
-        "Error: 'fonttools' library is not installed. Install it using: pip install fonttools[woff] brotli"
-    )
+    print("Error: 'fonttools' library is not installed. Install it using: pip install fonttools[woff] brotli")
     sys.exit(1)
 try:
     from concurrent.futures import InterpreterPoolExecutor
@@ -75,9 +73,7 @@ def convert_font(
         font.save(str(output_path))
     except Exception as e:
         if "woff2" in target_format and "brotli" in str(e).lower():
-            print(
-                "[-] Error: WOFF2 conversion requires the 'brotli' package. Install it via: pip install brotli"
-            )
+            print("[-] Error: WOFF2 conversion requires the 'brotli' package. Install it via: pip install brotli")
         else:
             print(f"[-] Error converting {input_path.name}: {e}")
         return
@@ -86,19 +82,13 @@ def convert_font(
     size_diff = new_size - original_size
     percent_change = (size_diff / original_size) * 100 if original_size > 0 else 0
     if size_diff > 0:
-        change_str = (
-            f"increased by {abs(size_diff):,} bytes ({abs(percent_change):.2f}%) 📈"
-        )
+        change_str = f"increased by {abs(size_diff):,} bytes ({abs(percent_change):.2f}%) 📈"
     elif size_diff < 0:
-        change_str = (
-            f"decreased by {abs(size_diff):,} bytes ({abs(percent_change):.2f}%) 📉"
-        )
+        change_str = f"decreased by {abs(size_diff):,} bytes ({abs(percent_change):.2f}%) 📉"
     else:
         change_str = "remained unchanged ⚖️"
     print(f"    [+] Saved successfully to: {output_path}")
-    print(
-        f"    [+] Original Size: {original_size / 1024:.2f} KB | New Size: {new_size / 1024:.2f} KB"
-    )
+    print(f"    [+] Original Size: {original_size / 1024:.2f} KB | New Size: {new_size / 1024:.2f} KB")
     print(f"    [+] Size {change_str}")
     if remove_original and output_path.exists():
         try:
@@ -115,11 +105,7 @@ def _worker_wrapper(args: tuple[Path, str, Optional[Path], bool]) -> None:
 
 def find_fonts_in_current_dir() -> list[Path]:
     current_dir = Path.cwd()
-    found_fonts = [
-        f
-        for f in current_dir.rglob("*")
-        if f.is_file() and f.suffix.lower() in SUPPORTED_EXT
-    ]
+    found_fonts = [f for f in current_dir.rglob("*") if f.is_file() and f.suffix.lower() in SUPPORTED_EXT]
     return found_fonts
 
 
@@ -127,9 +113,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Convert font files between formats using fonttools with multiprocessing / concurrent.futures."
     )
-    parser.add_argument(
-        "input_files", nargs="*", type=Path, help="Path(s) to font file(s) to convert."
-    )
+    parser.add_argument("input_files", nargs="*", type=Path, help="Path(s) to font file(s) to convert.")
     parser.add_argument(
         "--to",
         type=str,
@@ -167,9 +151,7 @@ def main() -> None:
         help="Method/Executor strategy to use with 4 workers. Defaults to 'imap_unordered'.",
     )
     args = parser.parse_args()
-    pool_method = (
-        "apply_async" if args.pool_method == "apply_asybc" else args.pool_method
-    )
+    pool_method = "apply_async" if args.pool_method == "apply_asybc" else args.pool_method
     input_files = args.input_files
     if not input_files:
         print("[*] No input files specified. Scanning current directory recursively...")
@@ -178,9 +160,7 @@ def main() -> None:
             print("[-] No supported font files found in the current directory.")
             sys.exit(0)
     num_workers = 4
-    tasks = [
-        (file_path, args.to, args.output_dir, args.remove) for file_path in input_files
-    ]
+    tasks = [(file_path, args.to, args.output_dir, args.remove) for file_path in input_files]
     print(f"\n=== Font Converter Initialized ===")
     print(f"Target Format: {args.to.upper()}")
     print(f"Files to process: {len(input_files)}")
@@ -214,20 +194,14 @@ def main() -> None:
                     for r in results:
                         r.get()
         elif pool_method == "thread":
-            with concurrent.futures.ThreadPoolExecutor(
-                max_workers=num_workers
-            ) as executor:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=num_workers) as executor:
                 list(executor.map(lambda t: convert_font(*t), tasks))
         elif pool_method == "process":
-            with concurrent.futures.ProcessPoolExecutor(
-                max_workers=num_workers
-            ) as executor:
+            with concurrent.futures.ProcessPoolExecutor(max_workers=num_workers) as executor:
                 list(executor.map(lambda t: convert_font(*t), tasks))
         elif pool_method == "interpreter":
             if InterpreterPoolExecutor is None:
-                print(
-                    "[-] Error: InterpreterPoolExecutor is not available (requires Python 3.14+)."
-                )
+                print("[-] Error: InterpreterPoolExecutor is not available (requires Python 3.14+).")
                 sys.exit(1)
             with InterpreterPoolExecutor(max_workers=num_workers) as executor:
                 list(executor.map(lambda t: convert_font(*t), tasks))

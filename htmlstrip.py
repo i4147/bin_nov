@@ -78,9 +78,7 @@ def _iter_files(
     root: Path,
     extensions: Sequence[str],
 ) -> Iterable[Path]:
-    exts = tuple(
-        e.lower() if e.startswith(".") else "." + e.lower() for e in extensions
-    )
+    exts = tuple(e.lower() if e.startswith(".") else "." + e.lower() for e in extensions)
     for p in root.rglob("*"):
         if p.is_file() and p.suffix.lower() in exts:
             yield p
@@ -120,9 +118,7 @@ def _remove_tag_from_file(path: Path, tag: str) -> bool:
 
 def cmd_tag(args: argparse.Namespace) -> int:
     if not HAS_BS4:
-        LOG.error(
-            "The 'tag' subcommand requires beautifulsoup4 (pip install beautifulsoup4)."
-        )
+        LOG.error("The 'tag' subcommand requires beautifulsoup4 (pip install beautifulsoup4).")
         return 2
     root = Path(args.directory)
     if not root.is_dir():
@@ -168,9 +164,7 @@ def _remove_meta_from_file(path: Path, pattern: str) -> Optional[bool]:
 
 def cmd_meta(args: argparse.Namespace) -> int:
     root = Path(args.directory).resolve()
-    print(
-        f"Starting to remove meta tags from HTML files in '{root}' and its subdirectories...\n"
-    )
+    print(f"Starting to remove meta tags from HTML files in '{root}' and its subdirectories...\n")
     exts = _normalize_exts(args.extensions, DEFAULT_META_EXTS)
     total = 0
     for f in _iter_files(root, exts):
@@ -208,11 +202,7 @@ def cmd_all(args: argparse.Namespace) -> int:
     except OSError as e:
         LOG.error("Cannot read {}: {}", path, e)
         return 1
-    markers = (
-        list(args.preserve_marker)
-        if args.preserve_marker
-        else list(DEFAULT_PRESERVE_MARKERS)
-    )
+    markers = list(args.preserve_marker) if args.preserve_marker else list(DEFAULT_PRESERVE_MARKERS)
     new_source, removed = _strip_all_tags(source, markers)
     for line in removed:
         print(f"-{line}")
@@ -236,13 +226,9 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=__doc__,
     )
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser(
-        "tag", help="Remove a named tag using BeautifulSoup (remove_tag.py)."
-    )
+    p = sub.add_parser("tag", help="Remove a named tag using BeautifulSoup (remove_tag.py).")
     p.add_argument("tagname", help="Tag to remove (e.g. script, style, iframe)")
-    p.add_argument(
-        "directory", nargs="?", default=".", help="Root directory (default: .)"
-    )
+    p.add_argument("directory", nargs="?", default=".", help="Root directory (default: .)")
     p.add_argument(
         "--extensions",
         nargs="*",
@@ -251,9 +237,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.set_defaults(func=cmd_tag)
     p = sub.add_parser("meta", help="Remove <meta ...> tags via regex (rmeta.py).")
-    p.add_argument(
-        "directory", nargs="?", default=".", help="Root directory (default: .)"
-    )
+    p.add_argument("directory", nargs="?", default=".", help="Root directory (default: .)")
     p.add_argument(
         "--pattern",
         default=DEFAULT_META_PATTERN,
@@ -266,9 +250,7 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"File extensions to process (default: {' '.join(DEFAULT_META_EXTS)})",
     )
     p.set_defaults(func=cmd_meta)
-    p = sub.add_parser(
-        "all", help="Strip every <...> tag from one file (strip_tags.py)."
-    )
+    p = sub.add_parser("all", help="Strip every <...> tag from one file (strip_tags.py).")
     p.add_argument("file", help="File to process")
     p.add_argument(
         "-w",
@@ -280,9 +262,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--preserve-marker",
         action="append",
         default=None,
-        help=(
-            "Substring; any line containing it is kept verbatim (repeatable; default: '<:' and '>:')"
-        ),
+        help=("Substring; any line containing it is kept verbatim (repeatable; default: '<:' and '>:')"),
     )
     p.set_defaults(func=cmd_all)
     return parser

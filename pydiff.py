@@ -28,14 +28,10 @@ def file_hash(path: Path) -> str:
 
 
 class StripPythonTransformer(cst.CSTTransformer):
-    def leave_Comment(
-        self, original_node: cst.Comment, updated_node: cst.Comment
-    ) -> cst.RemovalSentinel:
+    def leave_Comment(self, original_node: cst.Comment, updated_node: cst.Comment) -> cst.RemovalSentinel:
         return cst.RemoveFromParent()
 
-    def leave_EmptyLine(
-        self, original_node: cst.EmptyLine, updated_node: cst.EmptyLine
-    ) -> cst.RemovalSentinel:
+    def leave_EmptyLine(self, original_node: cst.EmptyLine, updated_node: cst.EmptyLine) -> cst.RemovalSentinel:
         return cst.RemoveFromParent()
 
     def _is_docstring(self, stmt: cst.BaseStatement) -> bool:
@@ -48,9 +44,7 @@ class StripPythonTransformer(cst.CSTTransformer):
             return False
         return isinstance(expr.value, (cst.SimpleString, cst.ConcatenatedString))
 
-    def _strip_docstring(
-        self, node: cst.FunctionDef | cst.ClassDef
-    ) -> cst.FunctionDef | cst.ClassDef:
+    def _strip_docstring(self, node: cst.FunctionDef | cst.ClassDef) -> cst.FunctionDef | cst.ClassDef:
         body = node.body
         if not isinstance(body, cst.IndentedBlock):
             return node
@@ -62,22 +56,16 @@ class StripPythonTransformer(cst.CSTTransformer):
             new_stmts = (cst.SimpleStatementLine(body=[cst.Pass()]),)
         return node.with_changes(body=body.with_changes(body=new_stmts))
 
-    def leave_Module(
-        self, original_node: cst.Module, updated_node: cst.Module
-    ) -> cst.Module:
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
         body = updated_node.body
         if body and self._is_docstring(body[0]):
             return updated_node.with_changes(body=body[1:])
         return updated_node
 
-    def leave_FunctionDef(
-        self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-    ) -> cst.FunctionDef:
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
         return self._strip_docstring(updated_node)
 
-    def leave_ClassDef(
-        self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-    ) -> cst.ClassDef:
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
         return self._strip_docstring(updated_node)
 
 
@@ -100,9 +88,7 @@ def read_file_task(path: Path, use_mmap: bool, strip: bool) -> tuple[Path, list[
     return path, [line for line in raw_lines if line]
 
 
-def filter_diff_chunk(
-    chunk: list[str], exclude_set: frozenset[str], mode: str
-) -> list[str]:
+def filter_diff_chunk(chunk: list[str], exclude_set: frozenset[str], mode: str) -> list[str]:
     if mode == "only_in_first":
         return [p for p in chunk if p not in exclude_set]
     else:
@@ -152,12 +138,7 @@ def report_diff_lines(
         chunk_size = max(1000, len(lines1) // num_workers)
         chunks = [lines1[i : i + chunk_size] for i in range(0, len(lines1), chunk_size)]
         with ProcessPoolExecutor(max_workers=num_workers) as executor:
-            futures = [
-                executor.submit(
-                    filter_diff_chunk, chunk, frozenset(set2), "only_in_first"
-                )
-                for chunk in chunks
-            ]
+            futures = [executor.submit(filter_diff_chunk, chunk, frozenset(set2), "only_in_first") for chunk in chunks]
             only_in_first: list[str] = []
             for future in as_completed(futures):
                 only_in_first.extend(future.result())
@@ -188,9 +169,7 @@ def report_diff_lines(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        prog="pydiff", description="Diff two files line by line"
-    )
+    parser = argparse.ArgumentParser(prog="pydiff", description="Diff two files line by line")
     parser.add_argument("file1", type=Path)
     parser.add_argument("file2", type=Path)
     parser.add_argument(

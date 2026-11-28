@@ -391,9 +391,7 @@ def _entrypoints_pip_show(_: argparse.Namespace) -> int:
             if "bin/" not in low and "scripts/" not in low:
                 continue
             ext = (str(Path(low).with_suffix("")), Path(low).suffix)[1]
-            if ext in (".py", "") and not any(
-                s in low for s in ("__pycache__", ".dist-info", ".egg-info", ".pth")
-            ):
+            if ext in (".py", "") and not any(s in low for s in ("__pycache__", ".dist-info", ".egg-info", ".pth")):
                 has_bin = True
                 break
         if has_bin:
@@ -481,23 +479,13 @@ def cmd_entrypoints(args: argparse.Namespace) -> int:
     print(f"Non-pure packages, no entry_points:  {len(nonpure_noep)}")
     print(f"Pure packages, with entry_points:    {len(pure_ep)}")
     print(f"Non-pure packages, with entry_points:{len(nonpure_ep)}")
-    print(
-        f"Grand total:                         {len(pure_noep) + len(nonpure_noep) + len(pure_ep) + len(nonpure_ep)}"
-    )
+    print(f"Grand total:                         {len(pure_noep) + len(nonpure_noep) + len(pure_ep) + len(nonpure_ep)}")
     if args.write_files:
-        atomic_write(
-            Path("noep_pure.txt"), "\n".join(sorted(pure_noep)), encoding="utf-8"
-        )
-        atomic_write(
-            Path("noep_nopure.txt"), "\n".join(sorted(nonpure_noep)), encoding="utf-8"
-        )
+        atomic_write(Path("noep_pure.txt"), "\n".join(sorted(pure_noep)), encoding="utf-8")
+        atomic_write(Path("noep_nopure.txt"), "\n".join(sorted(nonpure_noep)), encoding="utf-8")
         atomic_write(Path("ep_pure.txt"), "\n".join(sorted(pure_ep)), encoding="utf-8")
-        atomic_write(
-            Path("ep_nopure.txt"), "\n".join(sorted(nonpure_ep)), encoding="utf-8"
-        )
-        print(
-            "Wrote classification files: noep_pure.txt, noep_nopure.txt, ep_pure.txt, ep_nopure.txt"
-        )
+        atomic_write(Path("ep_nopure.txt"), "\n".join(sorted(nonpure_ep)), encoding="utf-8")
+        print("Wrote classification files: noep_pure.txt, noep_nopure.txt, ep_pure.txt, ep_nopure.txt")
     return 0
 
 
@@ -510,32 +498,24 @@ def cmd_binary(args: argparse.Namespace) -> int:
             name = dist.metadata.get("Name")
             if not name:
                 continue
-            is_bin = any(
-                str(f).lower().endswith(BINARY_EXTS) for f in (dist.files or [])
-            )
+            is_bin = any(str(f).lower().endswith(BINARY_EXTS) for f in (dist.files or []))
             (nonpure if is_bin else pure).add(name)
         except Exception:
             continue
     pure_sorted = sorted(pure, key=str.lower)
     nonpure_sorted = sorted(nonpure, key=str.lower)
     if args.split:
-        atomic_write(
-            Path(args.pure_output), "\n".join(pure_sorted) + "\n", encoding="utf-8"
-        )
+        atomic_write(Path(args.pure_output), "\n".join(pure_sorted) + "\n", encoding="utf-8")
         atomic_write(
             Path(args.nonpure_output),
             "\n".join(nonpure_sorted) + "\n",
             encoding="utf-8",
         )
         print(f"Wrote {len(pure_sorted):4d} pure packages  → {args.pure_output}")
-        print(
-            f"Wrote {len(nonpure_sorted):4d} non-pure packages → {args.nonpure_output}"
-        )
+        print(f"Wrote {len(nonpure_sorted):4d} non-pure packages → {args.nonpure_output}")
         return 0
     if args.output:
-        atomic_write(
-            Path(args.output), "\n".join(nonpure_sorted) + "\n", encoding="utf-8"
-        )
+        atomic_write(Path(args.output), "\n".join(nonpure_sorted) + "\n", encoding="utf-8")
     print(f"Binary (non-pure) packages: {len(nonpure_sorted)}")
     for n in nonpure_sorted:
         print(f"  {n}")
@@ -673,9 +653,7 @@ def cmd_zpkg_list(args: argparse.Namespace) -> int:
                 continue
             if name in seen:
                 continue
-            is_binary = any(
-                f.suffix in (".so", ".pyd", ".dylib") for f in (dist.files or [])
-            )
+            is_binary = any(f.suffix in (".so", ".pyd", ".dylib") for f in (dist.files or []))
             if is_binary:
                 continue
             tl = dpath_p / "top_level.txt"
@@ -694,11 +672,7 @@ def cmd_zpkg_list(args: argparse.Namespace) -> int:
         except Exception:
             continue
     results.sort(key=str.lower)
-    out = (
-        Path(args.output).expanduser().resolve()
-        if args.output
-        else Path.home() / "list.txt"
-    )
+    out = Path(args.output).expanduser().resolve() if args.output else Path.home() / "list.txt"
     atomic_write(out, "\n".join(results) + "\n", encoding="utf-8")
     print(f"Saved {len(results)} package names to {out}")
     return 0
@@ -746,10 +720,7 @@ def cmd_git_urls(args: argparse.Namespace) -> int:
                 continue
             label, sep, url = line.partition(",")
             if sep:
-                if any(
-                    k in label.strip().lower()
-                    for k in ("source", "repo", "code", "git", "homepage")
-                ):
+                if any(k in label.strip().lower() for k in ("source", "repo", "code", "git", "homepage")):
                     candidates.insert(0, url.strip())
                 else:
                     candidates.append(url.strip())
@@ -764,11 +735,7 @@ def cmd_git_urls(args: argparse.Namespace) -> int:
         result[name] = url
     print()
     with_url = sum(1 for v in result.values() if v)
-    out = (
-        Path(args.output).expanduser().resolve()
-        if args.output
-        else Path.home() / "pkg_git_urls.json"
-    )
+    out = Path(args.output).expanduser().resolve() if args.output else Path.home() / "pkg_git_urls.json"
     atomic_write(
         out,
         json.dumps(
@@ -798,9 +765,7 @@ def cmd_save_deb(args: argparse.Namespace) -> int:
             check=True,
         )
     except FileNotFoundError:
-        print(
-            "dpkg-query not found. Are you on a Debian-based system?", file=sys.stderr
-        )
+        print("dpkg-query not found. Are you on a Debian-based system?", file=sys.stderr)
         return 1
     except subprocess.CalledProcessError as e:
         print(e.stderr.strip(), file=sys.stderr)
@@ -837,9 +802,7 @@ def cmd_save_keys(args: argparse.Namespace) -> int:
             )
             continue
         if "pkgname" not in item:
-            print(
-                f"Warning: item at index {i} lacks 'pkgname', skipping", file=sys.stderr
-            )
+            print(f"Warning: item at index {i} lacks 'pkgname', skipping", file=sys.stderr)
             continue
         keys.append(item["pkgname"])
     out = Path(args.output).expanduser().resolve()
@@ -889,9 +852,7 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=__doc__,
     )
     sub = p.add_subparsers(dest="cmd", required=True)
-    sp = sub.add_parser(
-        "duplicates", help="Packages in both system and user site-packages."
-    )
+    sp = sub.add_parser("duplicates", help="Packages in both system and user site-packages.")
     sp.add_argument(
         "--method",
         choices=("dist-info", "metadata"),
@@ -899,18 +860,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Detection strategy (default: dist-info).",
     )
     sp.set_defaults(func=cmd_duplicates)
-    sp = sub.add_parser(
-        "multi-version", help="Packages with more than one installed version."
-    )
+    sp = sub.add_parser("multi-version", help="Packages with more than one installed version.")
     sp.set_defaults(func=cmd_multi_version)
-    sp = sub.add_parser(
-        "missing-scripts", help="Check that console-script shims exist in bin/."
-    )
+    sp = sub.add_parser("missing-scripts", help="Check that console-script shims exist in bin/.")
     sp.add_argument("--report", metavar="FILE", help="Optional path to write a report.")
     sp.set_defaults(func=cmd_missing_scripts)
-    sp = sub.add_parser(
-        "entrypoints", help="Analyze entry_points.txt / console-script presence."
-    )
+    sp = sub.add_parser("entrypoints", help="Analyze entry_points.txt / console-script presence.")
     sp.add_argument(
         "--mode",
         required=True,
@@ -942,9 +897,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Write pure.txt + notpure.txt instead of printing.",
     )
-    sp.add_argument(
-        "-o", "--output", metavar="FILE", help="Write non-pure package list to FILE."
-    )
+    sp.add_argument("-o", "--output", metavar="FILE", help="Write non-pure package list to FILE.")
     sp.add_argument(
         "--pure-output",
         default="pure.txt",
@@ -958,9 +911,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.set_defaults(func=cmd_binary)
     sp = sub.add_parser("orphans", help="Detect unowned files in system site-packages.")
     sp.add_argument("-v", "--verbose", action="store_true", help="Show file sizes.")
-    sp.add_argument(
-        "-e", "--export", action="store_true", help="Write results as JSON."
-    )
+    sp.add_argument("-e", "--export", action="store_true", help="Write results as JSON.")
     sp.add_argument(
         "-o",
         "--output",
@@ -982,17 +933,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write package names (one per line) to FILE.",
     )
     sp.set_defaults(func=cmd_small)
-    sp = sub.add_parser(
-        "zpkg-list", help="List pure single-top-level user-site packages."
-    )
+    sp = sub.add_parser("zpkg-list", help="List pure single-top-level user-site packages.")
     sp.add_argument("-o", "--output", help="Output file (default: ~/list.txt).")
     sp.set_defaults(func=cmd_zpkg_list)
-    sp = sub.add_parser(
-        "git-urls", help="Extract git repository URLs for installed packages."
-    )
-    sp.add_argument(
-        "-o", "--output", help="Output JSON file (default: ~/pkg_git_urls.json)."
-    )
+    sp = sub.add_parser("git-urls", help="Extract git repository URLs for installed packages.")
+    sp.add_argument("-o", "--output", help="Output JSON file (default: ~/pkg_git_urls.json).")
     sp.set_defaults(func=cmd_git_urls)
     sp = sub.add_parser("save-deb", help="Dump installed dpkg binary packages.")
     sp.add_argument(
@@ -1004,13 +949,9 @@ def build_parser() -> argparse.ArgumentParser:
     sp.set_defaults(func=cmd_save_deb)
     sp = sub.add_parser("save-keys", help="Extract 'pkgname' values from a JSON file.")
     sp.add_argument("input", help="Path to the input JSON file.")
-    sp.add_argument(
-        "-o", "--output", default="keys.txt", help="Output file (default: keys.txt)."
-    )
+    sp.add_argument("-o", "--output", default="keys.txt", help="Output file (default: keys.txt).")
     sp.set_defaults(func=cmd_save_keys)
-    sp = sub.add_parser(
-        "rename-node", help="Rename node_modules .../package dirs safely."
-    )
+    sp = sub.add_parser("rename-node", help="Rename node_modules .../package dirs safely.")
     sp.add_argument("--root", help="Root directory to scan (default: cwd).")
     sp.add_argument(
         "--dry-run",

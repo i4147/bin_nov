@@ -33,59 +33,57 @@ from typing import Optional, Sequence
 from dh import MAX_WORKERS, SKIP_DIRS
 
 
-DEFAULT_EXT: frozenset[str] = frozenset(
-    {
-        ".txt",
-        ".csv",
-        ".tsv",
-        ".log",
-        ".md",
-        ".rst",
-        ".py",
-        ".js",
-        ".jsx",
-        ".ts",
-        ".tsx",
-        ".vue",
-        ".html",
-        ".css",
-        ".json",
-        ".xml",
-        ".yaml",
-        ".yml",
-        ".ini",
-        ".cfg",
-        ".conf",
-        ".toml",
-        ".env",
-        ".properties",
-        ".sh",
-        ".bash",
-        ".bat",
-        ".ps1",
-        ".java",
-        ".cpp",
-        ".c",
-        ".h",
-        ".hpp",
-        ".cs",
-        ".go",
-        ".rs",
-        ".rb",
-        ".php",
-        ".pl",
-        ".r",
-        ".sql",
-        ".swift",
-        ".kt",
-        ".scala",
-        ".lua",
-        ".tex",
-        ".bib",
-        ".gitignore",
-        ".dockerfile",
-    }
-)
+DEFAULT_EXT: frozenset[str] = frozenset({
+    ".txt",
+    ".csv",
+    ".tsv",
+    ".log",
+    ".md",
+    ".rst",
+    ".py",
+    ".js",
+    ".jsx",
+    ".ts",
+    ".tsx",
+    ".vue",
+    ".html",
+    ".css",
+    ".json",
+    ".xml",
+    ".yaml",
+    ".yml",
+    ".ini",
+    ".cfg",
+    ".conf",
+    ".toml",
+    ".env",
+    ".properties",
+    ".sh",
+    ".bash",
+    ".bat",
+    ".ps1",
+    ".java",
+    ".cpp",
+    ".c",
+    ".h",
+    ".hpp",
+    ".cs",
+    ".go",
+    ".rs",
+    ".rb",
+    ".php",
+    ".pl",
+    ".r",
+    ".sql",
+    ".swift",
+    ".kt",
+    ".scala",
+    ".lua",
+    ".tex",
+    ".bib",
+    ".gitignore",
+    ".dockerfile",
+})
 DEFAULT_MAX_BYTES: int = 10 * 1024 * 1024
 DEFAULT_MIN_CONFIDENCE: float = 0.5
 SAMPLE_CHARS: int = 10_000
@@ -411,9 +409,7 @@ def _write_text_report(output_path: Path, report: dict) -> None:
                 if findings:
                     fh.write(f"  Non-English lines: {len(findings)}\n")
                     for line in findings:
-                        fh.write(
-                            f"    L{line['line_num']} [{line['lang']}] ({line['confidence']:.3f})\n"
-                        )
+                        fh.write(f"    L{line['line_num']} [{line['lang']}] ({line['confidence']:.3f})\n")
                         fh.write(f"      {line['text']}\n")
                 fh.write("\n")
         errors = report["errors"]
@@ -534,10 +530,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     files = _discover_files(args.paths, extensions, exclude_dirs)
     print(f"Found {len(files)} candidate files.", file=sys.stderr)
     max_bytes = args.max_size_mb * 1024 * 1024
-    tasks = [
-        (str(f), args.backend, args.detailed, args.min_confidence, max_bytes)
-        for f in files
-    ]
+    tasks = [(str(f), args.backend, args.detailed, args.min_confidence, max_bytes) for f in files]
     results: list[FileResult] = []
     errors: list[FileResult] = []
     if tasks:

@@ -245,18 +245,14 @@ def process_skimage(src: Path, dst: Path, quality: int, to_ext: str) -> bool:
 
 def process_pillow(src: Path, dst: Path, quality: int, to_ext: str) -> bool:
     with Image.open(src) as img:
-        if img.mode in ("RGBA", "LA") or (
-            img.mode == "P" and "transparency" in img.info
-        ):
+        if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
             if to_ext in (".png", ".webp", ".gif", ".tiff", ".tif"):
                 final = img.convert("RGBA") if img.mode != "RGBA" else img
             else:
                 background = Image.new("RGB", img.size, (255, 255, 255))
                 if img.mode == "P":
                     img = img.convert("RGBA")
-                background.paste(
-                    img, mask=img.split()[-1] if img.mode in ("RGBA", "LA") else None
-                )
+                background.paste(img, mask=img.split()[-1] if img.mode in ("RGBA", "LA") else None)
                 final = background
         elif to_ext in (".jpg", ".jpeg") and img.mode != "RGB":
             final = img.convert("RGB")
@@ -480,11 +476,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     default_exts = [".webp", ".bmp", ".png", ".tiff", ".tif", ".jpeg", ".jpg", ".gif"]
     if args.ext:
         default_exts.extend(args.ext)
-    exts = list(
-        dict.fromkeys(
-            e.lower() if e.startswith(".") else f".{e.lower()}" for e in default_exts
-        )
-    )
+    exts = list(dict.fromkeys(e.lower() if e.startswith(".") else f".{e.lower()}" for e in default_exts))
     search_paths = args.paths or [Path.cwd()]
     files = collect_images(search_paths, exts, args.recursive)
     files = [f for f in files if f.suffix.lower() != to_ext or args.force]
@@ -494,9 +486,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.dry_run:
         for f in files:
             print(f)
-        print(
-            f"\n{len(files)} file(s) would be processed → {to_ext} (backend={backend})"
-        )
+        print(f"\n{len(files)} file(s) would be processed → {to_ext} (backend={backend})")
         return 0
     cwd = Path.cwd()
     size_before = get_dir_size(cwd) if not args.paths else 0
@@ -539,9 +529,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         for msg, _, _ in results:
             if msg.startswith("error:"):
                 print(msg, file=sys.stderr)
-    print(
-        f"backend={backend}  to={to_ext}  processed={ok}  errors={err}  skipped={skip}"
-    )
+    print(f"backend={backend}  to={to_ext}  processed={ok}  errors={err}  skipped={skip}")
     if total_saved:
         print(f"space change: {human_size(total_saved)}")
     if not args.paths:

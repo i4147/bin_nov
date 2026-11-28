@@ -147,9 +147,7 @@ class _PPDeepHasher:
         return self._h.hexdigest()
 
 
-def hash_file(
-    path: Path, algorithm: str = "xxhash", chunk_size: int = BIG_CHUNK_SIZE
-) -> Optional[str]:
+def hash_file(path: Path, algorithm: str = "xxhash", chunk_size: int = BIG_CHUNK_SIZE) -> Optional[str]:
     if algorithm == "ppdeep" and _HAS_PPDEEP:
         try:
             return ppdeep.hash_from_file(str(path))
@@ -340,9 +338,7 @@ def cmd_report(args: argparse.Namespace) -> int:
             except ValueError:
                 rel = p
             print(f"  • {rel}")
-    print(
-        f"\nTotal recoverable space: {wasted:,} bytes ({wasted / 1024 / 1024:.2f} MB)"
-    )
+    print(f"\nTotal recoverable space: {wasted:,} bytes ({wasted / 1024 / 1024:.2f} MB)")
     if args.json:
         out = {h: [str(p) for p in group] for h, group in groups.items()}
         try:
@@ -497,13 +493,11 @@ def cmd_symlink(args: argparse.Namespace) -> int:
             except OSError as e:
                 warn(f"could not symlink {p}: {e}")
                 continue
-            operations.append(
-                {
-                    "symlink": str(p),
-                    "target": str(target_resolved),
-                    "size": size,
-                }
-            )
+            operations.append({
+                "symlink": str(p),
+                "target": str(target_resolved),
+                "size": size,
+            })
         stash_map[str(stashed_path)] = {
             "hash": h,
             "originals": [str(p) for p in group],
@@ -562,9 +556,7 @@ def cmd_restore(args: argparse.Namespace) -> int:
         for stash_path in stash_map:
             with contextlib.suppress(OSError):
                 Path(stash_path).unlink()
-        backup = manifest_path.with_suffix(
-            manifest_path.suffix + f".restored.{int(time.time())}"
-        )
+        backup = manifest_path.with_suffix(manifest_path.suffix + f".restored.{int(time.time())}")
         try:
             manifest_path.rename(backup)
             info(f"manifest renamed to {backup}")
@@ -575,9 +567,7 @@ def cmd_restore(args: argparse.Namespace) -> int:
 
 
 def _add_scan_args(p: argparse.ArgumentParser, *, recursive_default: bool) -> None:
-    p.add_argument(
-        "-d", "--directory", default=".", help="Directory to scan (default: .)"
-    )
+    p.add_argument("-d", "--directory", default=".", help="Directory to scan (default: .)")
     p.add_argument(
         "-r",
         "--recursive",
@@ -609,9 +599,7 @@ def _add_scan_args(p: argparse.ArgumentParser, *, recursive_default: bool) -> No
         default=BIG_CHUNK_SIZE,
         help=f"Read size in bytes (default: {BIG_CHUNK_SIZE})",
     )
-    p.add_argument(
-        "--follow-symlinks", action="store_true", help="Follow symlinks when scanning"
-    )
+    p.add_argument("--follow-symlinks", action="store_true", help="Follow symlinks when scanning")
     p.add_argument(
         "--quick-hash",
         action="store_true",
@@ -645,9 +633,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     p = sub.add_parser("report", help="Show duplicate groups (no changes)")
     _add_scan_args(p, recursive_default=True)
-    p.add_argument(
-        "--json", metavar="PATH", help="Export the found groups to a JSON file"
-    )
+    p.add_argument("--json", metavar="PATH", help="Export the found groups to a JSON file")
     p.set_defaults(func=cmd_report)
     p = sub.add_parser("delete", help="Delete duplicates, keep one per group")
     _add_scan_args(p, recursive_default=True)
@@ -676,9 +662,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Always unlink (never use gio trash)",
     )
     p.set_defaults(func=cmd_delete)
-    p = sub.add_parser(
-        "symlink", help="Move master copies to a stash and symlink the rest"
-    )
+    p = sub.add_parser("symlink", help="Move master copies to a stash and symlink the rest")
     _add_scan_args(p, recursive_default=True)
     p.add_argument(
         "--dry-run",

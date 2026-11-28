@@ -120,9 +120,7 @@ class _StackParser(HTMLParser):
 
     def handle_endtag(self, tag: str) -> None:
         if tag in VOID_ELEMENTS:
-            self.errors.append(
-                f"{self._pos()}: closing </{tag}> for void element; removed"
-            )
+            self.errors.append(f"{self._pos()}: closing </{tag}> for void element; removed")
             return
         match = None
         for i in range(len(self.stack) - 1, -1, -1):
@@ -265,9 +263,7 @@ def process_file(path: Path, backend_fn: Callable[..., Any]) -> str:
         return "error"
     balance_errors = check_tags(raw)
     if balance_errors:
-        logger.warning(
-            f"{path}: {len(balance_errors)} unbalanced tag(s) detected in source"
-        )
+        logger.warning(f"{path}: {len(balance_errors)} unbalanced tag(s) detected in source")
         for err in balance_errors:
             logger.warning(f"{path}: [balance] {err}")
     else:
@@ -310,9 +306,7 @@ def main() -> None:
     counts = {"ok": 0, "fixed": 0, "error": 0}
     for f in files:
         counts[process_file(f, backend_fn)] += 1
-    logger.info(
-        f"Summary -> OK: {counts['ok']}, Fixed: {counts['fixed']}, Errors: {counts['error']}"
-    )
+    logger.info(f"Summary -> OK: {counts['ok']}, Fixed: {counts['fixed']}, Errors: {counts['error']}")
 
 
 if __name__ == "__main__":

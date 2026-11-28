@@ -67,9 +67,7 @@ def deskew(image: np.ndarray) -> np.ndarray:
             if not binary.any():
                 return image
             edges = filters.sobel(binary.astype(np.float32))
-            lines = transform.probabilistic_hough_line(
-                edges, threshold=10, line_length=50, line_gap=5
-            )
+            lines = transform.probabilistic_hough_line(edges, threshold=10, line_length=50, line_gap=5)
             angles: list[float] = []
             for (x0, y0), (x1, y1) in lines:
                 if x1 == x0:
@@ -236,17 +234,13 @@ def get_image_files() -> list[Path]:
 def process() -> None:
     if HAS_CV2:
         if HAS_SKIMAGE:
-            logger.info(
-                "Backend: OpenCV (scikit-image available as per-image fallback)"
-            )
+            logger.info("Backend: OpenCV (scikit-image available as per-image fallback)")
         else:
             logger.info("Backend: OpenCV")
     elif HAS_SKIMAGE:
         logger.warning("OpenCV not found; using scikit-image backend")
     else:
-        logger.warning(
-            "OpenCV and scikit-image not found; using Pillow-only fallback (limited accuracy)"
-        )
+        logger.warning("OpenCV and scikit-image not found; using Pillow-only fallback (limited accuracy)")
     image_files = get_image_files()
     total_images = len(image_files)
     if total_images == 0:
@@ -261,10 +255,7 @@ def process() -> None:
     total_after = 0
     pool = multiprocessing.Pool(processes=POOL_SIZE)
     try:
-        async_results = [
-            (path, pool.apply_async(process_single_image, (path,)))
-            for path in image_files
-        ]
+        async_results = [(path, pool.apply_async(process_single_image, (path,))) for path in image_files]
         for path, async_result in async_results:
             try:
                 result = async_result.get()
@@ -277,16 +268,12 @@ def process() -> None:
                     error_count += 1
                     status = "❌"
                 relative = path.relative_to(BASE_DIR)
-                print(
-                    f"{status} [{processed_count + error_count}/{total_images}] {relative}"
-                )
+                print(f"{status} [{processed_count + error_count}/{total_images}] {relative}")
                 if result.get("error"):
                     logger.warning(f"   ⚠️ Error: {result['error']}")
             except Exception as e:
                 error_count += 1
-                logger.error(
-                    f"❌ [{processed_count + error_count}/{total_images}] {path.name}: {e}"
-                )
+                logger.error(f"❌ [{processed_count + error_count}/{total_images}] {path.name}: {e}")
     finally:
         pool.close()
         pool.join()
@@ -296,9 +283,7 @@ def process() -> None:
     print(f"   ❌ Errors: {error_count} images")
     print(f"   📁 Total images: {total_images}")
     if processed_count > 0:
-        size_reduction = (
-            (total_before - total_after) / total_before * 100 if total_before > 0 else 0
-        )
+        size_reduction = (total_before - total_after) / total_before * 100 if total_before > 0 else 0
         print(f"   📦 Total size before: {total_before / (1024 * 1024):.2f} MB")
         print(f"   📦 Total size after: {total_after / (1024 * 1024):.2f} MB")
         print(f"   📉 Size reduction: {size_reduction:.1f}%")

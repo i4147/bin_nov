@@ -58,9 +58,7 @@ PY_SUFFIXES: Final[frozenset[str]] = frozenset({".py", ".pyw", ".pyi"})
 PoolMethod = Literal["map", "imap", "imap_unordered", "apply", "apply_async", "starmap"]
 POOL_METHODS: Final[tuple[str, ...]] = get_args(PoolMethod)
 _PRESERVED_COMMENT: Final[re.Pattern[str]] = re.compile(r"#\s*(?:type|fmt):")
-_UTF8_COMPATIBLE: Final[frozenset[str]] = frozenset(
-    {"utf-8", "utf-8-sig", "ascii", "us-ascii"}
-)
+_UTF8_COMPATIBLE: Final[frozenset[str]] = frozenset({"utf-8", "utf-8-sig", "ascii", "us-ascii"})
 
 
 class Status(enum.StrEnum):
@@ -174,18 +172,12 @@ class StripCommentsAndDocstrings(cst.CSTTransformer):
         if comment is None or _is_preserved(comment.value):
             return updated_node
         self.comments_removed += 1
-        return updated_node.with_changes(
-            comment=None, whitespace=cst.SimpleWhitespace("")
-        )
+        return updated_node.with_changes(comment=None, whitespace=cst.SimpleWhitespace(""))
 
-    def leave_FunctionDef(
-        self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
-    ) -> cst.FunctionDef:
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
         return updated_node.with_changes(body=self._strip_docstring(updated_node.body))
 
-    def leave_ClassDef(
-        self, original_node: cst.ClassDef, updated_node: cst.ClassDef
-    ) -> cst.ClassDef:
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
         return updated_node.with_changes(body=self._strip_docstring(updated_node.body))
 
     def _strip_docstring(self, body: cst.BaseSuite) -> cst.BaseSuite:
@@ -249,9 +241,7 @@ def _decode_source(raw: bytes, fallback: str | None) -> tuple[str, str, bytes]:
 
 
 def strip_source(source: str) -> tuple[str, int, int]:
-    module = cst.parse_module(
-        source, config=cst.PartialParserConfig(python_version=TARGET_PYTHON)
-    )
+    module = cst.parse_module(source, config=cst.PartialParserConfig(python_version=TARGET_PYTHON))
     transformer = StripCommentsAndDocstrings(has_shebang=source.startswith("#!"))
     new_module = module.visit(transformer)
     return new_module.code, transformer.comments_removed, transformer.docstrings_removed
@@ -289,13 +279,9 @@ def _process_file(path: Path, options: Options) -> FileResult:
     try:
         new_source, n_comments, n_docstrings = strip_source(source)
     except cst.ParserSyntaxError:
-        return FileResult(
-            path, Status.SKIPPED, message=f"not valid Python {TARGET_PYTHON} source"
-        )
+        return FileResult(path, Status.SKIPPED, message=f"not valid Python {TARGET_PYTHON} source")
     if new_source == source:
-        return FileResult(
-            path, Status.UNCHANGED, bytes_before=len(raw), bytes_after=len(raw)
-        )
+        return FileResult(path, Status.UNCHANGED, bytes_before=len(raw), bytes_after=len(raw))
     try:
         ast.parse(new_source, filename=str(path), feature_version=TARGET_VERSION)
     except (SyntaxError, ValueError, RecursionError) as exc:
@@ -318,9 +304,7 @@ def _process_file(path: Path, options: Options) -> FileResult:
     if options.dry_run:
         return changed
     if not os.access(path, os.W_OK):
-        return FileResult(
-            path, Status.FAILED, message="file is not writable (permission denied)"
-        )
+        return FileResult(path, Status.FAILED, message="file is not writable (permission denied)")
     try:
         if options.backup:
             _make_backup(path)
@@ -334,9 +318,7 @@ def process_file(path: Path, options: Options) -> FileResult:
     try:
         return _process_file(path, options)
     except Exception as exc:
-        return FileResult(
-            path, Status.FAILED, message=f"unexpected {type(exc).__name__}: {exc}"
-        )
+        return FileResult(path, Status.FAILED, message=f"unexpected {type(exc).__name__}: {exc}")
 
 
 def _init_worker() -> None:
@@ -356,9 +338,7 @@ def _log_walk_error(error: OSError) -> None:
     logger.warning("Cannot traverse {}: {}", error.filename, error.strerror or error)
 
 
-def iter_python_files(
-    targets: Iterable[Path], excludes: frozenset[str]
-) -> Iterator[Path]:
+def iter_python_files(targets: Iterable[Path], excludes: frozenset[str]) -> Iterator[Path]:
     seen: set[Path] = set()
     for target in targets:
         resolved = target.resolve()
@@ -368,32 +348,25 @@ def iter_python_files(
                 yield resolved
             continue
         for root, dirnames, filenames in resolved.walk(on_error=_log_walk_error):
-            dirnames[:] = sorted(
-                d for d in dirnames if d not in excludes and not d.endswith(".egg-info")
-            )
+            dirnames[:] = sorted(d for d in dirnames if d not in excludes and not d.endswith(".egg-info"))
             for name in sorted(filenames):
                 candidate = root / name
                 if candidate.is_symlink():
                     continue
                 if (
-                    candidate.suffix in PY_SUFFIXES
-                    or (not candidate.suffix and _looks_like_python_script(candidate))
+                    candidate.suffix in PY_SUFFIXES or (not candidate.suffix and _looks_like_python_script(candidate))
                 ) and candidate not in seen:
                     seen.add(candidate)
                     yield candidate
 
 
-def iter_results(
-    pool: Pool, method: PoolMethod, paths: Iterable[Path], options: Options
-) -> Iterator[FileResult]:
+def iter_results(pool: Pool, method: PoolMethod, paths: Iterable[Path], options: Options) -> Iterator[FileResult]:
     worker = functools.partial(process_file, options=options)
     match method:
         case "map":
             yield from pool.map(worker, list(paths), chunksize=CHUNKSIZE)
         case "starmap":
-            yield from pool.starmap(
-                process_file, [(path, options) for path in paths], chunksize=CHUNKSIZE
-            )
+            yield from pool.starmap(process_file, [(path, options) for path in paths], chunksize=CHUNKSIZE)
         case "imap":
             yield from pool.imap(worker, paths, chunksize=CHUNKSIZE)
         case "imap_unordered":
@@ -430,15 +403,9 @@ def report_result(result: FileResult, *, stats: bool, options: Options) -> None:
             logger.error("Failed {}: {}", result.path, result.message)
 
 
-def print_summary(
-    summary: Summary, *, options: Options, interrupted: bool = False
-) -> None:
+def print_summary(summary: Summary, *, options: Options, interrupted: bool = False) -> None:
     verb = "would be saved" if options.dry_run else "saved"
-    pct = (
-        (summary.bytes_saved / summary.bytes_processed * 100)
-        if summary.bytes_processed
-        else 0.0
-    )
+    pct = (summary.bytes_saved / summary.bytes_processed * 100) if summary.bytes_processed else 0.0
     print()
     if interrupted:
         print("Interrupted - partial results:")
@@ -447,12 +414,8 @@ def print_summary(
         f"{summary.unchanged} unchanged, {summary.skipped} skipped, "
         f"{summary.failed} failed, {summary.missing} missing"
     )
-    print(
-        f"Removed: {summary.comments:,} comments and {summary.docstrings:,} docstrings"
-    )
-    print(
-        f"Total space {verb}: {summary.bytes_saved:,} bytes ({pct:.1f}% of {summary.bytes_processed:,})"
-    )
+    print(f"Removed: {summary.comments:,} comments and {summary.docstrings:,} docstrings")
+    print(f"Total space {verb}: {summary.bytes_saved:,} bytes ({pct:.1f}% of {summary.bytes_processed:,})")
 
 
 def _codec_name(value: str) -> str:
@@ -494,9 +457,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="show what would change without writing anything",
     )
-    parser.add_argument(
-        "--diff", action="store_true", help="print a unified diff of every change"
-    )
+    parser.add_argument("--diff", action="store_true", help="print a unified diff of every change")
     parser.add_argument(
         "--backup",
         action="store_true",
@@ -564,9 +525,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             pool.join()
     except KeyboardInterrupt:
         interrupted = True
-        logger.warning(
-            "Interrupted; files are written atomically so none are corrupted"
-        )
+        logger.warning("Interrupted; files are written atomically so none are corrupted")
     if summary.scanned == 0 and not interrupted:
         logger.warning("No Python files found")
     print_summary(summary, options=options, interrupted=interrupted)

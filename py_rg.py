@@ -507,11 +507,7 @@ def _process_lines(
                 piece = line[s:e]
                 if replace is not None and regex is not None:
                     m = next(
-                        (
-                            mm
-                            for mm in regex.finditer(line)
-                            if mm.start() == s and mm.end() == e
-                        ),
+                        (mm for mm in regex.finditer(line) if mm.start() == s and mm.end() == e),
                         None,
                     )
                     if m is not None:
@@ -896,12 +892,8 @@ def build_argparser() -> argparse.ArgumentParser:
         action="store_true",
         help="List files that would be searched, then exit",
     )
-    p.add_argument(
-        "--stats", action="store_true", help="Print a summary to stderr at the end"
-    )
-    p.add_argument(
-        "--no-messages", action="store_true", help="Suppress per-file error reporting"
-    )
+    p.add_argument("--stats", action="store_true", help="Print a summary to stderr at the end")
+    p.add_argument("--no-messages", action="store_true", help="Suppress per-file error reporting")
     p.add_argument(
         "paths",
         nargs="*",

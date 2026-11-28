@@ -21,27 +21,25 @@ from loguru import logger
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
-EXCLUDED_SUFFIXES: Final[frozenset[str]] = frozenset(
-    {
-        ".py",
-        ".h",
-        ".c",
-        ".js",
-        ".ts",
-        ".hpp",
-        ".cpp",
-        ".pyx",
-        ".jsx",
-        ".lua",
-        ".tsx",
-        ".pl",
-        ".am",
-        ".pm",
-        ".syntax",
-        ".so",
-        ".rmeta",
-    }
-)
+EXCLUDED_SUFFIXES: Final[frozenset[str]] = frozenset({
+    ".py",
+    ".h",
+    ".c",
+    ".js",
+    ".ts",
+    ".hpp",
+    ".cpp",
+    ".pyx",
+    ".jsx",
+    ".lua",
+    ".tsx",
+    ".pl",
+    ".am",
+    ".pm",
+    ".syntax",
+    ".so",
+    ".rmeta",
+})
 SHELL_SHEBANG_TOKENS: Final[tuple[str, ...]] = (
     "bash",
     "sh",
@@ -51,15 +49,11 @@ SHELL_SHEBANG_TOKENS: Final[tuple[str, ...]] = (
     "ash",
     "shell",
 )
-FUNCTION_RE: Final[re.Pattern[str]] = re.compile(
-    r"^\s*(?:function\s+)?(\w[\w\-]*)\s*(?:\(\))?\s*\{"
-)
+FUNCTION_RE: Final[re.Pattern[str]] = re.compile(r"^\s*(?:function\s+)?(\w[\w\-]*)\s*(?:\(\))?\s*\{")
 UNSAFE_NAME_RE: Final[re.Pattern[str]] = re.compile(r"[^\w\-]")
 DEFAULT_MAX_FILE_SIZE: Final[int] = 1_000_000
 DEFAULT_OUTPUT_DIR: Final[Path] = Path("extracted_functions")
-IS_TERMUX: Final[bool] = (
-    "TERMUX_VERSION" in os.environ or "com.termux" in os.environ.get("PREFIX", "")
-)
+IS_TERMUX: Final[bool] = "TERMUX_VERSION" in os.environ or "com.termux" in os.environ.get("PREFIX", "")
 
 
 class _LoggerProtocol(Protocol):
@@ -193,9 +187,7 @@ def collect_scripts(
             log.warning("{} does not exist, skipping...", p)
             continue
         if p.is_file():
-            if is_shell_script(
-                p, include_extensionless=include_extensionless, max_size=max_size
-            ):
+            if is_shell_script(p, include_extensionless=include_extensionless, max_size=max_size):
                 r = p.resolve()
                 if r not in seen:
                     seen.add(r)
@@ -314,19 +306,14 @@ def _process_one(
     return path, written
 
 
-def _process_scripts(
-    scripts: list[Path], args: argparse.Namespace, log: _LoggerProtocol
-) -> int:
+def _process_scripts(scripts: list[Path], args: argparse.Namespace, log: _LoggerProtocol) -> int:
     use_extension = not args.no_extension
     add_header = not args.no_header
     chmod_files = not args.no_chmod
     total = 0
     if args.parallel and len(scripts) > 1:
         print(f"Processing files in parallel with {MAX_WORKERS} workers...")
-        tasks = [
-            (p, args.output, use_extension, add_header, chmod_files, args.verbose)
-            for p in scripts
-        ]
+        tasks = [(p, args.output, use_extension, add_header, chmod_files, args.verbose) for p in scripts]
         with Pool(processes=MAX_WORKERS) as pool:
             for path, written in pool.imap_unordered(_process_one, tasks):
                 total += len(written)
@@ -335,9 +322,7 @@ def _process_scripts(
     else:
         print("Processing files sequentially...")
         for p in sorted(scripts):
-            _, written = _process_one(
-                (p, args.output, use_extension, add_header, chmod_files, args.verbose)
-            )
+            _, written = _process_one((p, args.output, use_extension, add_header, chmod_files, args.verbose))
             total += len(written)
             if args.verbose or written:
                 print(f"  {p}: extracted {len(written)} function(s)")
@@ -375,9 +360,7 @@ def run(args: argparse.Namespace) -> int:
     try:
         args.output.mkdir(parents=True, exist_ok=True)
     except PermissionError:
-        log.error(
-            "Cannot create output directory '{}'. Check permissions.", args.output
-        )
+        log.error("Cannot create output directory '{}'. Check permissions.", args.output)
         return 1
     total = _process_scripts(scripts, args, log)
     print(f"\nDone! Extracted {total} function(s) to '{args.output.absolute()}'")

@@ -87,9 +87,7 @@ def _load_gitignore_spec() -> Any:
     if not gi.exists():
         return None
     try:
-        return pathspec.PathSpec.from_lines(
-            "gitwildmatch", gi.read_text(encoding="utf-8").splitlines()
-        )
+        return pathspec.PathSpec.from_lines("gitwildmatch", gi.read_text(encoding="utf-8").splitlines())
     except Exception as exc:
         logger.warning(f"failed to load .gitignore: {exc}")
         return None
@@ -207,9 +205,7 @@ def discover_files(
                 if entry.is_dir():
                     if not recursive or entry.name in skip_dirs:
                         continue
-                    if _excluded(entry, exclude_globs) or gitignore_hit(
-                        entry, is_dir=True
-                    ):
+                    if _excluded(entry, exclude_globs) or gitignore_hit(entry, is_dir=True):
                         continue
                     stack.append(entry)
                 else:
@@ -358,9 +354,7 @@ def process_file(job: Job) -> Result:
     return result
 
 
-def _row(
-    i: int, total: int, res: Result, term_width: int, relative: bool, color: bool
-) -> str:
+def _row(i: int, total: int, res: Result, term_width: int, relative: bool, color: bool) -> str:
     idx = f"[{i}/{total}]"
     if relative:
         try:
@@ -403,9 +397,7 @@ def _log_failure(res: Result) -> None:
         logger.error(f"{res['path']}: {res['error']}")
 
 
-def _run_jobs(
-    jobs: list[Job], workers: int, timeout: float | None, emit: Emit
-) -> list[Result | None]:
+def _run_jobs(jobs: list[Job], workers: int, timeout: float | None, emit: Emit) -> list[Result | None]:
     results: list[Result | None] = [None] * len(jobs)
 
     if workers > 1:
@@ -460,9 +452,7 @@ def _run_jobs(
     return results
 
 
-def _handle_stdin(
-    args: argparse.Namespace, backends: list[str], opts: dict[str, Any]
-) -> int:
+def _handle_stdin(args: argparse.Namespace, backends: list[str], opts: dict[str, Any]) -> int:
     src = sys.stdin.read()
     newline = "\r\n" if "\r\n" in src else "\n"
     try:
@@ -527,9 +517,7 @@ def _build_parser() -> argparse.ArgumentParser:
     g.add_argument("--line-length", type=int, default=DEFAULT_LINE_LENGTH)
     g.add_argument("--target-version", default=DEFAULT_TARGET)
     g.add_argument("--isort-profile", default=None)
-    g.add_argument(
-        "--autoflake-remove-all", action=argparse.BooleanOptionalAction, default=True
-    )
+    g.add_argument("--autoflake-remove-all", action=argparse.BooleanOptionalAction, default=True)
 
     g = p.add_argument_group("discovery")
     g.add_argument("-r", "--recursive", action="store_true")
@@ -602,9 +590,7 @@ def main() -> int:
 
     opts: dict[str, Any] = {
         "line_length": args.line_length,
-        "target_versions": [
-            v.strip() for v in args.target_version.split(",") if v.strip()
-        ],
+        "target_versions": [v.strip() for v in args.target_version.split(",") if v.strip()],
         "isort_profile": args.isort_profile,
         "autoflake_remove_all": args.autoflake_remove_all,
         "strip_bom": args.strip_bom,
@@ -616,9 +602,7 @@ def main() -> int:
     roots = [Path(x) for x in args.paths] if args.paths else [Path.cwd()]
     exclude_globs = [g.strip() for g in args.exclude.split(",") if g.strip()]
     include_exts: tuple[str, ...] = tuple(
-        e.strip() if e.strip().startswith(".") else "." + e.strip()
-        for e in args.include_ext.split(",")
-        if e.strip()
+        e.strip() if e.strip().startswith(".") else "." + e.strip() for e in args.include_ext.split(",") if e.strip()
     )
     skip_dirs = set() if args.no_skip_dirs else SKIP_DIRS
     max_size = parse_size(args.max_size)
@@ -627,9 +611,7 @@ def main() -> int:
     if args.respect_gitignore:
         gitignore_spec = _load_gitignore_spec()
         if gitignore_spec is None:
-            logger.warning(
-                "--respect-gitignore ignored (install 'pathspec' and add .gitignore)"
-            )
+            logger.warning("--respect-gitignore ignored (install 'pathspec' and add .gitignore)")
 
     files = discover_files(
         roots,
@@ -735,15 +717,13 @@ def main() -> int:
         s = _summarize(results)
         print()
         print(
-            " | ".join(
-                [
-                    f"{s['total']} file{'s' if s['total'] != 1 else ''}",
-                    f"{s['changed']} changed",
-                    f"{s['unchanged']} unchanged",
-                    f"{s['errors']} error{'s' if s['errors'] != 1 else ''}",
-                    f"{s['delta_bytes']:+d} bytes",
-                ]
-            )
+            " | ".join([
+                f"{s['total']} file{'s' if s['total'] != 1 else ''}",
+                f"{s['changed']} changed",
+                f"{s['unchanged']} unchanged",
+                f"{s['errors']} error{'s' if s['errors'] != 1 else ''}",
+                f"{s['delta_bytes']:+d} bytes",
+            ])
         )
 
     if any(r["error"] for r in results):

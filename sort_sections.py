@@ -69,15 +69,13 @@ def parse_file(path: str):
         if m:
             indent, key, rest = m.groups()
             value, comment = split_value_comment(rest)
-            current["items"].append(
-                {
-                    "key": key,
-                    "value": value,
-                    "comment": comment,
-                    "leading": pending,
-                    "indent": indent,
-                }
-            )
+            current["items"].append({
+                "key": key,
+                "value": value,
+                "comment": comment,
+                "leading": pending,
+                "indent": indent,
+            })
             pending = []
             continue
         pending.append(line)
@@ -93,9 +91,7 @@ def parse_file(path: str):
 # --------------------------------------------------------------------------
 def ask_section_action(section: str, num_conflicts: str) -> str:
     print()
-    print(
-        f"Section [{section}] appears multiple times with {num_conflicts} conflicting key(s)."
-    )
+    print(f"Section [{section}] appears multiple times with {num_conflicts} conflicting key(s).")
     print("  (m) Merge   - resolve conflicts per key")
     print("  (r) Rename  - keep this whole section under a new name")
     while True:
@@ -147,10 +143,7 @@ def merge_sections(sections: Iterable[Any]):
             sec = secs[idx]
             merged_map = {it["key"]: it for it in merged["items"]}
             conflicts = [
-                it
-                for it in sec["items"]
-                if it["key"] in merged_map
-                and merged_map[it["key"]]["value"] != it["value"]
+                it for it in sec["items"] if it["key"] in merged_map and merged_map[it["key"]]["value"] != it["value"]
             ]
 
             if conflicts:
@@ -163,14 +156,12 @@ def merge_sections(sections: Iterable[Any]):
                         new_name = f"{base}_{n}"
                         n += 1
                     used_names.add(new_name)
-                    extras.append(
-                        {
-                            "name": new_name,
-                            "items": list(sec["items"]),
-                            "comments": sec["comments"],
-                            "trailing": sec.get("trailing", ""),
-                        }
-                    )
+                    extras.append({
+                        "name": new_name,
+                        "items": list(sec["items"]),
+                        "comments": sec["comments"],
+                        "trailing": sec.get("trailing", ""),
+                    })
                     continue
 
             for it in sec["items"]:

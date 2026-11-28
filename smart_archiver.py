@@ -105,9 +105,7 @@ def compress_brotli_standard(data: bytes, level: int) -> bytes:
     return brotli.compress(data, quality=level)
 
 
-def compress_brotli_streaming(
-    data: bytes, level: int, chunk_size: int = 512 * 1024
-) -> bytes:
+def compress_brotli_streaming(data: bytes, level: int, chunk_size: int = 512 * 1024) -> bytes:
     compressor = brotli.Compressor(quality=level)
     result_parts: list[bytes] = []
     for i in range(0, len(data), chunk_size):
@@ -274,14 +272,8 @@ def compress_multiple_files(
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         futures: dict[Any, str | Path] = {}
         for path in paths:
-            output_path = (
-                Path(output_dir) / (Path(path).name + ".compressed")
-                if output_dir
-                else None
-            )
-            future = executor.submit(
-                compress_single_file, path, output_path, remove_original, verbose
-            )
+            output_path = Path(output_dir) / (Path(path).name + ".compressed") if output_dir else None
+            future = executor.submit(compress_single_file, path, output_path, remove_original, verbose)
             futures[future] = path
         for future in as_completed(futures):
             result = future.result()
@@ -305,13 +297,7 @@ def create_tar_archive(
     if output_path is None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_path = f"{source_dir.name}_{timestamp}.tar"
-    tar_path = Path(
-        str(output_path)
-        .replace(".gz", "")
-        .replace(".xz", "")
-        .replace(".zst", "")
-        .replace(".br", "")
-    )
+    tar_path = Path(str(output_path).replace(".gz", "").replace(".xz", "").replace(".zst", "").replace(".br", ""))
     if compression not in {"none", "auto"}:
         tar_path = tar_path.with_suffix("")
     print(f"Creating archive from {source_dir}...")
@@ -351,9 +337,7 @@ def create_tar_archive(
         compressed_size = len(compressed_data)
         ratio = compressed_size / total_size * 100
         print(f"\n✓ Archive created: {final_path}")
-        print(
-            f"  Size: {compressed_size / 1024 / 1024:.2f} MB ({ratio:.1f}% of original)"
-        )
+        print(f"  Size: {compressed_size / 1024 / 1024:.2f} MB ({ratio:.1f}% of original)")
         print(f"  Time: {elapsed:.2f}s")
         print(f"  Algorithm: {algo.upper()} level {level}")
         return final_path, {
@@ -455,15 +439,9 @@ Examples:
     compress_parser = subparsers.add_parser("compress", help="Compress files")
     compress_parser.add_argument("files", nargs="+", help="Files to compress")
     compress_parser.add_argument("-o", "--output-dir", help="Output directory")
-    compress_parser.add_argument(
-        "-p", "--parallel", action="store_true", help="Enable parallel compression"
-    )
-    compress_parser.add_argument(
-        "--remove", action="store_true", help="Remove original files after compression"
-    )
-    compress_parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Verbose output"
-    )
+    compress_parser.add_argument("-p", "--parallel", action="store_true", help="Enable parallel compression")
+    compress_parser.add_argument("--remove", action="store_true", help="Remove original files after compression")
+    compress_parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     archive_parser = subparsers.add_parser("archive", help="Create compressed archive")
     archive_parser.add_argument("directory", help="Directory to archive")
     archive_parser.add_argument("-o", "--output", help="Output file path")
@@ -474,31 +452,21 @@ Examples:
         choices=["auto", "zstd", "brotli", "lz4", "lzma", "gzip", "bz2", "none"],
         help="Compression algorithm (default: auto)",
     )
-    archive_parser.add_argument(
-        "-l", "--level", type=int, help="Compression level (algorithm-specific)"
-    )
+    archive_parser.add_argument("-l", "--level", type=int, help="Compression level (algorithm-specific)")
     archive_parser.add_argument(
         "--parallel",
         action="store_true",
         help="Use parallel processing for file addition",
     )
-    archive_parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Verbose output"
-    )
+    archive_parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     decompress_parser = subparsers.add_parser("decompress", help="Decompress files")
     decompress_parser.add_argument("files", nargs="+", help="Files to decompress")
     decompress_parser.add_argument("-o", "--output-dir", help="Output directory")
-    decompress_parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Verbose output"
-    )
-    benchmark_parser = subparsers.add_parser(
-        "benchmark", help="Benchmark different algorithms"
-    )
+    decompress_parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
+    benchmark_parser = subparsers.add_parser("benchmark", help="Benchmark different algorithms")
     benchmark_parser.add_argument("input", help="Input file or directory")
     benchmark_parser.add_argument("-o", "--output", help="Output JSON file for results")
-    benchmark_parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Verbose output"
-    )
+    benchmark_parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     args = parser.parse_args()
     if not args.command:
         parser.print_help()
@@ -520,24 +488,16 @@ Examples:
             )
             successful = sum(1 for r in results if r["success"])
             failed = len(results) - successful
-            total_original = sum(
-                r.get("original_size", 0) for r in results if r["success"]
-            )
-            total_compressed = sum(
-                r.get("compressed_size", 0) for r in results if r["success"]
-            )
+            total_original = sum(r.get("original_size", 0) for r in results if r["success"])
+            total_compressed = sum(r.get("compressed_size", 0) for r in results if r["success"])
             print(f"\n{'=' * 40}")
             print("COMPRESSION SUMMARY")
             print(f"  Successful: {successful}/{len(results)} files")
             if failed:
                 logger.warning(f"  Failed: {failed} files")
             if successful:
-                print(
-                    f"  Total size: {total_original / 1024 / 1024:.2f} MB → {total_compressed / 1024 / 1024:.2f} MB"
-                )
-                print(
-                    f"  Overall ratio: {total_compressed / total_original * 100:.1f}%"
-                )
+                print(f"  Total size: {total_original / 1024 / 1024:.2f} MB → {total_compressed / 1024 / 1024:.2f} MB")
+                print(f"  Overall ratio: {total_compressed / total_original * 100:.1f}%")
         else:
             for path in files:
                 compress_single_file(path, args.output_dir, args.remove, args.verbose)
@@ -569,11 +529,7 @@ Examples:
                 if args.output:
                     serializable = {}
                     for name, info in results.items():
-                        serializable[name] = {
-                            k: v
-                            for k, v in info.items()
-                            if isinstance(v, (int, float, str))
-                        }
+                        serializable[name] = {k: v for k, v in info.items() if isinstance(v, (int, float, str))}
                     with open(args.output, "w") as f:
                         json.dump(serializable, f, indent=2)
                     print(f"\nResults saved to {args.output}")

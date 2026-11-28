@@ -82,9 +82,7 @@ class Result:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=(
-            "Convert SQL INSERT dump files to streaming newline-delimited JSON using eight worker processes."
-        )
+        description=("Convert SQL INSERT dump files to streaming newline-delimited JSON using eight worker processes.")
     )
     parser.add_argument(
         "inputs",
@@ -96,9 +94,7 @@ def parse_args() -> argparse.Namespace:
         "-o",
         "--output-dir",
         type=Path,
-        help=(
-            "Directory for generated .jsonl files. By default, output is written beside each source SQL file."
-        ),
+        help=("Directory for generated .jsonl files. By default, output is written beside each source SQL file."),
     )
     parser.add_argument(
         "--overwrite",
@@ -202,11 +198,7 @@ def parse_columns(column_group: str | None) -> list[str] | None:
     if column_group is None:
         return None
     content = column_group.strip()[1:-1]
-    columns = [
-        normalize_identifier(column)
-        for column in split_top_level(content)
-        if column.strip()
-    ]
+    columns = [normalize_identifier(column) for column in split_top_level(content) if column.strip()]
     return columns or None
 
 
@@ -334,12 +326,7 @@ def rows_from_statement(statement: str) -> Iterator[dict[str, Any]]:
             }
         else:
             row = {"_table": table}
-            row.update(
-                {
-                    column: values[index] if index < len(values) else None
-                    for index, column in enumerate(columns)
-                }
-            )
+            row.update({column: values[index] if index < len(values) else None for index, column in enumerate(columns)})
             if len(values) > len(columns):
                 row["_extra_values"] = values[len(columns) :]
         yield row
@@ -377,9 +364,7 @@ def convert_file(job: Job, encoding: str, strict: bool) -> Result:
                     except (ValueError, TypeError) as exc:
                         if strict:
                             raise
-                        logger.warning(
-                            "Skipping malformed INSERT in {}: {}", source, exc
-                        )
+                        logger.warning("Skipping malformed INSERT in {}: {}", source, exc)
                 output.flush()
                 os.fsync(output.fileno())
             temp_path.replace(destination)

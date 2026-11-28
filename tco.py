@@ -104,9 +104,7 @@ def chunk_lines(lines: list[str], max_chars: int = CHUNK_SIZE) -> list[list[str]
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Translate a text file between languages."
-    )
+    parser = argparse.ArgumentParser(description="Translate a text file between languages.")
     parser.add_argument("input", help="Path to the input file (UTF-8).")
     parser.add_argument(
         "output",
@@ -149,9 +147,7 @@ def run_chunked(
     target: str,
 ) -> int:
     if chunk_size > MAX_CHARS:
-        print(
-            f"  ! --chunk-size capped at {MAX_CHARS} (backend limit)", file=sys.stderr
-        )
+        print(f"  ! --chunk-size capped at {MAX_CHARS} (backend limit)", file=sys.stderr)
         chunk_size = MAX_CHARS
     prog_path = progress_path(out_path)
     start_chunk = 0
@@ -160,9 +156,7 @@ def run_chunked(
             start_chunk = int(prog_path.read_text(encoding="utf-8").strip() or "0")
             print(f"↻ Resuming from chunk {start_chunk} (progress file found)")
         except ValueError:
-            print(
-                "  ! Progress file unreadable, starting from scratch", file=sys.stderr
-            )
+            print("  ! Progress file unreadable, starting from scratch", file=sys.stderr)
             start_chunk = 0
     with in_path.open("r", encoding="utf-8") as f:
         src_lines = [ln.rstrip("\n") for ln in f]
@@ -221,9 +215,7 @@ def load_pairs(json_path: Path, src_key: str, tgt_key: str) -> list[dict[str, st
                 return []
             return data
     except (json.JSONDecodeError, OSError) as err:
-        print(
-            f"  ! Could not read existing JSON ({err}), starting fresh", file=sys.stderr
-        )
+        print(f"  ! Could not read existing JSON ({err}), starting fresh", file=sys.stderr)
     return []
 
 
@@ -273,18 +265,12 @@ def run_line_mode(
                 )
                 return 2
             if len(pieces) > 1:
-                print(
-                    f"  · piece {p_idx + 1}/{len(pieces)} ({len(piece)} chars) translated"
-                )
+                print(f"  · piece {p_idx + 1}/{len(pieces)} ({len(piece)} chars) translated")
             time.sleep(SLEEP_BETWEEN)
         translated_full = " ".join(p.strip() for p in translated_pieces).strip()
         pairs.append({source: raw, target: translated_full})
         preview_src = raw if len(raw) <= 120 else raw[:117] + "…"
-        preview_tgt = (
-            translated_full
-            if len(translated_full) <= 120
-            else translated_full[:117] + "…"
-        )
+        preview_tgt = translated_full if len(translated_full) <= 120 else translated_full[:117] + "…"
         print(f"[{idx + 1}/{total}]")
         print(f"  {source}: {preview_src}")
         print(f"  {target}: {preview_tgt}")

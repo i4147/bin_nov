@@ -17,9 +17,7 @@ from PIL import Image, ImageDraw, ImageOps
 
 
 # Braille bit positions, indexed by [row][column] within each 2x4 cell.
-BRAILLE_BITS: tuple[
-    tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int]
-] = (
+BRAILLE_BITS: tuple[tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int]] = (
     (0, 3),
     (1, 4),
     (2, 5),
@@ -48,9 +46,7 @@ def threshold_int(value: int) -> int:
     return number
 
 
-def convert(
-    image_path: Path, columns: int, scale: float, invert: Any, threshold: float
-) -> tuple[str,]:
+def convert(image_path: Path, columns: int, scale: float, invert: Any, threshold: float) -> tuple[str,]:
     with Image.open(image_path) as source:
         # Correct phone-camera orientation, and put transparent pixels on white.
         source = ImageOps.exif_transpose(source).convert("RGBA")
@@ -70,9 +66,7 @@ def convert(
     else:
         dots = gray.point(lambda value: 255 if value >= threshold else 0, mode="1")
 
-    canvas = Image.new(
-        "RGB", (columns * CELL_WIDTH * scale, rows * CELL_HEIGHT * scale), "white"
-    )
+    canvas = Image.new("RGB", (columns * CELL_WIDTH * scale, rows * CELL_HEIGHT * scale), "white")
     draw = ImageDraw.Draw(canvas)
     pixels = dots.load()
     lines = []
@@ -99,12 +93,8 @@ def convert(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("image", type=Path, help="input image")
-    parser.add_argument(
-        "-o", "--output", type=Path, help="output PNG (default: INPUT_braille.png)"
-    )
-    parser.add_argument(
-        "--text", type=Path, help="also save Braille text to a UTF-8 file"
-    )
+    parser.add_argument("-o", "--output", type=Path, help="output PNG (default: INPUT_braille.png)")
+    parser.add_argument("--text", type=Path, help="also save Braille text to a UTF-8 file")
     parser.add_argument(
         "-w",
         "--width",
@@ -112,9 +102,7 @@ def main() -> None:
         default=64,
         help="width in Braille characters (default: 64)",
     )
-    parser.add_argument(
-        "--scale", type=positive_int, default=2, help="PNG pixel scale (default: 2)"
-    )
+    parser.add_argument("--scale", type=positive_int, default=2, help="PNG pixel scale (default: 2)")
     parser.add_argument(
         "--invert",
         action="store_true",
@@ -135,9 +123,7 @@ def main() -> None:
     if args.text and args.text.resolve() in (args.image.resolve(), output.resolve()):
         parser.error("text output must be different from the input and PNG output")
     try:
-        text, png = convert(
-            args.image, args.width, args.scale, args.invert, args.threshold
-        )
+        text, png = convert(args.image, args.width, args.scale, args.invert, args.threshold)
         png.save(output, format="PNG")
         if args.text:
             atomic_write(args.text, text, encoding="utf-8")

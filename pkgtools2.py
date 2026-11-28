@@ -67,24 +67,22 @@ from loguru import logger
 
 
 DEFAULT_CHUNK_SIZE: int = 8192
-DEFAULT_DEB_EXCLUDES = frozenset(
-    {
-        "llvm",
-        "clang",
-        "libllvm",
-        "libclang",
-        "rust",
-        "cargo",
-        "lld",
-        "lldb",
-        "compiler-rt",
-        "libc++",
-        "libc++abi",
-        "rust-stdlib",
-        "rust-analyzer",
-        "cargo-c",
-    }
-)
+DEFAULT_DEB_EXCLUDES = frozenset({
+    "llvm",
+    "clang",
+    "libllvm",
+    "libclang",
+    "rust",
+    "cargo",
+    "lld",
+    "lldb",
+    "compiler-rt",
+    "libc++",
+    "libc++abi",
+    "rust-stdlib",
+    "rust-analyzer",
+    "cargo-c",
+})
 
 
 def run_cmd(
@@ -190,9 +188,7 @@ def cmd_check_system_bin(args: argparse.Namespace) -> int:
                         moved.append((path.name, dest.name))
                         print(f"  📦 Moved: {path.name} -> {dest.name}")
                     else:
-                        print(
-                            f"  ⚠️  Hash matches but filename differs: {path.name} (system: {system_name})"
-                        )
+                        print(f"  ⚠️  Hash matches but filename differs: {path.name} (system: {system_name})")
         except (PermissionError, OSError) as exc:
             print(f"  ⚠️  Error with {path.name}: {exc}")
             continue
@@ -250,16 +246,13 @@ def is_doc_path(path_str: str, mode: str) -> bool:
                 return True
         text = str(path_str)
         return any(
-            f"/{item}/" in text or text.endswith(f"/{item}")
-            for item in ("share/man", "share/info", "share/doc")
+            f"/{item}/" in text or text.endswith(f"/{item}") for item in ("share/man", "share/info", "share/doc")
         )
     msg = f"Unknown filter mode: {mode}"
     raise ValueError(msg)
 
 
-def check_package_missing_full(
-    pkg: str, filter_mode: str, timeout: float
-) -> dict[str, Any]:
+def check_package_missing_full(pkg: str, filter_mode: str, timeout: float) -> dict[str, Any]:
     try:
         result = run_cmd(["dpkg", "-L", pkg], timeout=timeout, check=False)
     except subprocess.TimeoutExpired:
@@ -317,10 +310,7 @@ def cmd_missing_files(args: argparse.Namespace) -> int:
     results: list[dict[str, Any]] = []
     with ProcessPoolExecutor(max_workers=workers) as executor:
         future_to_pkg = {
-            executor.submit(
-                check_package_missing_full, pkg, args.filter_mode, args.timeout
-            ): pkg
-            for pkg in packages
+            executor.submit(check_package_missing_full, pkg, args.filter_mode, args.timeout): pkg for pkg in packages
         }
         for index, future in enumerate(as_completed(future_to_pkg), 1):
             try:
@@ -441,9 +431,7 @@ def parse_dpkg_status(status_text: str) -> dict[str, dict[str, list[str]]]:
 def cmd_orphan_libs_debian(args: argparse.Namespace) -> int:
     status_path = Path(args.status_file)
     if not status_path.exists():
-        msg = (
-            f"Missing {status_path}. This script expects a Debian-style dpkg database."
-        )
+        msg = f"Missing {status_path}. This script expects a Debian-style dpkg database."
         raise SystemExit(msg)
     packages = parse_dpkg_status(status_path.read_text(errors="replace"))
     providers: dict[str, set[str]] = {}
@@ -456,11 +444,7 @@ def cmd_orphan_libs_debian(args: argparse.Namespace) -> int:
         for dep in info["depends"]:
             for provider in providers.get(dep, []):
                 reverse_deps.setdefault(provider, set()).add(pkg)
-    orphans = sorted(
-        pkg
-        for pkg in packages
-        if pkg.startswith(args.lib_prefix) and not reverse_deps.get(pkg)
-    )
+    orphans = sorted(pkg for pkg in packages if pkg.startswith(args.lib_prefix) and not reverse_deps.get(pkg))
     print("Orphan-ish libraries (no installed package depends on them):")
     for pkg in orphans:
         print(pkg)
@@ -476,9 +460,7 @@ def load_keep_file(path: Path) -> set[str]:
 
 def save_keep_file(path: Path, keep: Iterable[str]) -> None:
     ensure_parent(path)
-    atomic_write(
-        path, "\n".join(sorted(keep)) + ("\n" if keep else ""), encoding="utf-8"
-    )
+    atomic_write(path, "\n".join(sorted(keep)) + ("\n" if keep else ""), encoding="utf-8")
 
 
 def termux_get_installed(pkg_cmd: str) -> set[str]:
@@ -511,9 +493,7 @@ def analyze_termux_orphans(pkg_cmd: str, keep_file: Path) -> tuple[list[str], se
         for dep in termux_get_deps(pkg, pkg_cmd):
             if dep in installed:
                 depended.add(dep)
-    orphans = sorted(
-        pkg for pkg in installed if pkg not in depended and pkg not in keep
-    )
+    orphans = sorted(pkg for pkg in installed if pkg not in depended and pkg not in keep)
     return orphans, keep
 
 
@@ -642,7 +622,9 @@ def cmd_make_deb(args: argparse.Namespace) -> int:
         import apt
         from loguru import logger
     except ImportError:
-        msg = "make-deb requires python-apt and loguru. Install with `apt install python3-apt` and `pip install loguru`."
+        msg = (
+            "make-deb requires python-apt and loguru. Install with `apt install python3-apt` and `pip install loguru`."
+        )
         raise SystemExit(msg)
     out_dir = Path(args.output_dir).expanduser()
     log_path = Path(args.log).expanduser()
@@ -655,14 +637,8 @@ def cmd_make_deb(args: argparse.Namespace) -> int:
         level="INFO",
         format="{time:YYYY-MM-DD HH:mm:ss} - {level} - {message}",
     )
-    exact_excludes = {
-        item.strip().lower() for item in args.exclude_exact.split(",") if item.strip()
-    }
-    substring_excludes = [
-        item.strip().lower()
-        for item in args.exclude_substrings.split(",")
-        if item.strip()
-    ]
+    exact_excludes = {item.strip().lower() for item in args.exclude_exact.split(",") if item.strip()}
+    substring_excludes = [item.strip().lower() for item in args.exclude_substrings.split(",") if item.strip()]
 
     def excluded(name: str) -> bool:
         lowered = name.lower()
@@ -676,9 +652,7 @@ def cmd_make_deb(args: argparse.Namespace) -> int:
     else:
         print("Getting list of all installed packages...")
         cache = apt.Cache()
-        packages = sorted(
-            pkg.name for pkg in cache if pkg.is_installed and not excluded(pkg.name)
-        )
+        packages = sorted(pkg.name for pkg in cache if pkg.is_installed and not excluded(pkg.name))
         print(f"Found {len(packages)} installed packages (after exclusions)")
     if not packages:
         logger.error("No packages to process")
@@ -720,9 +694,7 @@ def cmd_suggest_removals(args: argparse.Namespace) -> int:
     if not history_path.exists():
         history_lines: list[str] = []
     else:
-        history_lines = history_path.read_text(
-            encoding="utf-8", errors="replace"
-        ).splitlines()
+        history_lines = history_path.read_text(encoding="utf-8", errors="replace").splitlines()
     used_packages: set[str] = set()
     for line in history_lines:
         for pkg, _ in package_sizes:
@@ -739,15 +711,9 @@ def cmd_suggest_removals(args: argparse.Namespace) -> int:
         "autoconf",
         "automake",
     }
-    candidates = [
-        (pkg, size)
-        for pkg, size in package_sizes
-        if pkg not in used_packages and pkg not in build_essential
-    ]
+    candidates = [(pkg, size) for pkg, size in package_sizes if pkg not in used_packages and pkg not in build_essential]
     candidates.sort(key=lambda item: item[1], reverse=True)
-    filter_substrings = [
-        item.strip() for item in args.filter_substrings.split(",") if item.strip()
-    ]
+    filter_substrings = [item.strip() for item in args.filter_substrings.split(",") if item.strip()]
     print("Top unused packages (sorted by size):")
     shown = 0
     for pkg, size in candidates:
@@ -767,9 +733,7 @@ def cmd_save_deb_names(args: argparse.Namespace) -> int:
             check=True,
         )
     except FileNotFoundError:
-        print(
-            "Error: dpkg-query command not found. Are you running this script on a Debian-based system?"
-        )
+        print("Error: dpkg-query command not found. Are you running this script on a Debian-based system?")
         return 1
     except subprocess.CalledProcessError as exc:
         print(f"Error: Failed to retrieve installed packages. {exc}")
@@ -854,14 +818,10 @@ def cmd_show_big_packages(args: argparse.Namespace) -> int:
                 )
     print("\n✅ Processing complete!                    \n")
     print("-" * 40)
-    print(
-        f"\n📊 RESULTS: Found {len(large_packages)} packages larger than {args.threshold_mb}MB"
-    )
+    print(f"\n📊 RESULTS: Found {len(large_packages)} packages larger than {args.threshold_mb}MB")
     print("-" * 40)
     if large_packages:
-        sorted_large = sorted(
-            large_packages.items(), key=lambda item: item[1], reverse=True
-        )
+        sorted_large = sorted(large_packages.items(), key=lambda item: item[1], reverse=True)
         total_size = 0
         print(f"{'PACKAGE NAME':<40} {'DOWNLOAD SIZE':>15}")
         print("-" * 40)
@@ -880,9 +840,7 @@ def cmd_show_big_packages(args: argparse.Namespace) -> int:
     print("\n📈 Statistics:")
     print(f"   Total packages checked: {len(package_names)}")
     print(f"   Packages with size info: {len(package_names) - no_size}")
-    print(
-        f"   Packages below threshold: {len(package_names) - len(large_packages) - no_size}"
-    )
+    print(f"   Packages below threshold: {len(package_names) - len(large_packages) - no_size}")
     print(f"   Packages with no size info: {no_size}")
     payload = {
         "metadata": {
@@ -898,17 +856,11 @@ def cmd_show_big_packages(args: argparse.Namespace) -> int:
         save_large = args.save_large or f"packages_above_{args.threshold_mb:g}mb.json"
         if _save_package_json(save_large, payload):
             print(f"\n💾 Results saved to: {save_large}")
-            print(
-                f"   Format: {{'package_name': size_in_bytes}} for packages > {args.threshold_mb}MB"
-            )
+            print(f"   Format: {{'package_name': size_in_bytes}} for packages > {args.threshold_mb}MB")
     interactive = not args.non_interactive and sys.stdin.isatty()
     save_all_path = args.save_all
     if save_all_path or (
-        interactive
-        and input(
-            "\n💾 Save ALL packages (including smaller ones) to JSON? (y/n): "
-        ).lower()
-        == "y"
+        interactive and input("\n💾 Save ALL packages (including smaller ones) to JSON? (y/n): ").lower() == "y"
     ):
         all_payload = dict(payload)
         all_payload["all_packages"] = all_packages
@@ -917,11 +869,7 @@ def cmd_show_big_packages(args: argparse.Namespace) -> int:
             print(f"✅ All packages saved to: {all_path}")
             print("   Format: {'package_name': size_in_bytes} for ALL packages")
     simple_path = args.save_simple
-    if simple_path or (
-        interactive
-        and input("\n💾 Save simple JSON (just {package: size})? (y/n): ").lower()
-        == "y"
-    ):
+    if simple_path or (interactive and input("\n💾 Save simple JSON (just {package: size})? (y/n): ").lower() == "y"):
         simple_path = simple_path or f"packages_sizes_{args.threshold_mb:g}mb.json"
         try:
             output_path = Path(simple_path)
@@ -957,9 +905,7 @@ def cmd_sort_csv(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Merged Debian/Termux package and system-bin toolkit."
-    )
+    parser = argparse.ArgumentParser(description="Merged Debian/Termux package and system-bin toolkit.")
     subparsers = parser.add_subparsers(dest="command", required=True)
     p = subparsers.add_parser(
         "check-system-bin",

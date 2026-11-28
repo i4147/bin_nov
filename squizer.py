@@ -126,9 +126,7 @@ class StdlibImportStripper(ast.NodeTransformer):
         if top in STDLIB_MODULES or top in STDLIB_KEEP:
             for alias in node.names:
                 if alias.asname:
-                    self.removed.append(
-                        f"from {node.module} import {alias.name} as {alias.asname}"
-                    )
+                    self.removed.append(f"from {node.module} import {alias.name} as {alias.asname}")
                 else:
                     self.removed.append(f"from {node.module} import {alias.name}")
             return None
@@ -241,23 +239,21 @@ _UNARY_OPS: dict[type[ast.unaryop], Callable[[object], object]] = {
     ast.Invert: operator.invert,
     ast.Not: operator.not_,
 }
-_AUG_OPS: frozenset[type[ast.operator]] = frozenset(
-    [
-        ast.Add,
-        ast.Sub,
-        ast.Mult,
-        ast.Div,
-        ast.FloorDiv,
-        ast.Mod,
-        ast.Pow,
-        ast.LShift,
-        ast.RShift,
-        ast.BitOr,
-        ast.BitXor,
-        ast.BitAnd,
-        ast.MatMult,
-    ]
-)
+_AUG_OPS: frozenset[type[ast.operator]] = frozenset([
+    ast.Add,
+    ast.Sub,
+    ast.Mult,
+    ast.Div,
+    ast.FloorDiv,
+    ast.Mod,
+    ast.Pow,
+    ast.LShift,
+    ast.RShift,
+    ast.BitOr,
+    ast.BitXor,
+    ast.BitAnd,
+    ast.MatMult,
+])
 _TERMINATORS: tuple[type[ast.stmt], ...] = (
     ast.Return,
     ast.Raise,
@@ -275,11 +271,7 @@ class PeepholeOptimizer(ast.NodeTransformer):
         super().generic_visit(node)
         for field in ("body", "orelse", "finalbody"):
             stmts = getattr(node, field, None)
-            if (
-                isinstance(stmts, list)
-                and stmts
-                and all(isinstance(s, ast.stmt) for s in stmts)
-            ):
+            if isinstance(stmts, list) and stmts and all(isinstance(s, ast.stmt) for s in stmts):
                 setattr(node, field, self._optimize_stmts(stmts))
         return node
 
@@ -299,12 +291,7 @@ class PeepholeOptimizer(ast.NodeTransformer):
             live.append(s)
         flattened: list[ast.stmt] = []
         for s in live:
-            if (
-                isinstance(s, ast.If)
-                and s.orelse
-                and s.body
-                and isinstance(s.body[-1], _TERMINATORS)
-            ):
+            if isinstance(s, ast.If) and s.orelse and s.body and isinstance(s.body[-1], _TERMINATORS):
                 flattened.append(ast.If(test=s.test, body=s.body, orelse=[]))
                 flattened.extend(s.orelse)
             else:
@@ -336,9 +323,7 @@ class PeepholeOptimizer(ast.NodeTransformer):
                     i += 2
                     continue
                 if _is_const(then_v, False) and _is_const(else_v, True):
-                    out.append(
-                        ast.Return(value=ast.UnaryOp(op=ast.Not(), operand=s.test))
-                    )
+                    out.append(ast.Return(value=ast.UnaryOp(op=ast.Not(), operand=s.test)))
                     i += 2
                     continue
             out.append(s)
@@ -356,21 +341,14 @@ class PeepholeOptimizer(ast.NodeTransformer):
             and type(node.value.op) in _AUG_OPS
         ):
             return ast.copy_location(
-                ast.AugAssign(
-                    target=node.targets[0], op=node.value.op, value=node.value.right
-                ),
+                ast.AugAssign(target=node.targets[0], op=node.value.op, value=node.value.right),
                 node,
             )
         return node
 
     def visit_If(self, node: ast.If) -> ast.AST:
         self.generic_visit(node)
-        if (
-            not node.orelse
-            and len(node.body) == 1
-            and isinstance(node.body[0], ast.If)
-            and not node.body[0].orelse
-        ):
+        if not node.orelse and len(node.body) == 1 and isinstance(node.body[0], ast.If) and not node.body[0].orelse:
             inner = node.body[0]
             return ast.copy_location(
                 ast.If(
@@ -395,18 +373,12 @@ class PeepholeOptimizer(ast.NodeTransformer):
 
     def visit_BinOp(self, node: ast.BinOp) -> ast.AST:
         self.generic_visit(node)
-        if not (
-            isinstance(node.left, ast.Constant) and isinstance(node.right, ast.Constant)
-        ):
+        if not (isinstance(node.left, ast.Constant) and isinstance(node.right, ast.Constant)):
             return node
         op_fn = _BIN_OPS.get(type(node.op))
         if op_fn is None:
             return node
-        if (
-            isinstance(node.op, (ast.Pow, ast.LShift))
-            and isinstance(node.right.value, int)
-            and node.right.value > 64
-        ):
+        if isinstance(node.op, (ast.Pow, ast.LShift)) and isinstance(node.right.value, int) and node.right.value > 64:
             return node
         try:
             result = op_fn(node.left.value, node.right.value)
@@ -463,11 +435,7 @@ def join_simple_lines(text: str) -> str:
         indent = _leading_ws(line)
         group = [line.strip()]
         j = i + 1
-        while (
-            j < len(lines)
-            and _is_simple_line(lines[j])
-            and _leading_ws(lines[j]) == indent
-        ):
+        while j < len(lines) and _is_simple_line(lines[j]) and _leading_ws(lines[j]) == indent:
             group.append(lines[j].strip())
             j += 1
         if len(group) > 1:
@@ -478,9 +446,7 @@ def join_simple_lines(text: str) -> str:
     return "\n".join(out)
 
 
-_STUB_HEADER: str = (
-    "import base64 as _b,zlib as _z\nexec(_z.decompress(_b.b85decode(_p)))\n"
-)
+_STUB_HEADER: str = "import base64 as _b,zlib as _z\nexec(_z.decompress(_b.b85decode(_p)))\n"
 
 
 def wrap_payload(source: str, *, level: int = 9) -> str:

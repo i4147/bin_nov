@@ -60,11 +60,7 @@ def extract_module_docstring(path: Path) -> str | None:
 
 def strip_trailing_livedoc(doc: str) -> str:
     lines: list[str] = doc.rstrip().splitlines()
-    if (
-        len(lines) >= 2
-        and lines[-2].strip() == "---"
-        and LIVEDOC_RE.match(lines[-1].strip())
-    ):
+    if len(lines) >= 2 and lines[-2].strip() == "---" and LIVEDOC_RE.match(lines[-1].strip()):
         lines = lines[:-2]
     return "\n".join(lines).rstrip()
 
@@ -117,9 +113,7 @@ def remove_module_docstring(path: Path) -> bool:
         return False
     first: ast.stmt = tree.body[0]
     if not (
-        isinstance(first, ast.Expr)
-        and isinstance(first.value, ast.Constant)
-        and isinstance(first.value.value, str)
+        isinstance(first, ast.Expr) and isinstance(first.value, ast.Constant) and isinstance(first.value.value, str)
     ):
         return False
     lines: list[str] = source.splitlines(keepends=True)
@@ -168,9 +162,9 @@ def process(
         return
     json_entries: dict[Path, dict[str, str]] = {}
     with cf.InterpreterPoolExecutor(max_workers=workers) as ex:
-        futures: dict[
-            cf.Future[tuple[Path, Path | None, dict[str, str] | None, bool]], Path
-        ] = {ex.submit(process_one, f, out_dir, remove): f for f in files}
+        futures: dict[cf.Future[tuple[Path, Path | None, dict[str, str] | None, bool]], Path] = {
+            ex.submit(process_one, f, out_dir, remove): f for f in files
+        }
         for fut in cf.as_completed(futures):
             py_file: Path = futures[fut]
             try:

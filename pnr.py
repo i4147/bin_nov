@@ -49,9 +49,7 @@ def remove_string_from_names(
         if (item.is_file() or item.is_dir()) and string_to_remove in item.name:
             new_name: str = item.name.replace(string_to_remove, "")
             if not new_name.strip():
-                typer.echo(
-                    f"Warning: Removing '{string_to_remove}' would make name empty for '{item.name}'"
-                )
+                typer.echo(f"Warning: Removing '{string_to_remove}' would make name empty for '{item.name}'")
                 continue
 
             new_path: Path = current_path / new_name
@@ -70,9 +68,7 @@ def remove_string_from_names(
                     typer.echo(f"Error renaming '{item.name}': {e}")
 
         if recursive and item.is_dir():
-            renamed_count += remove_string_from_names(
-                string_to_remove, dry_run, recursive, item
-            )
+            renamed_count += remove_string_from_names(string_to_remove, dry_run, recursive, item)
 
     return renamed_count
 
@@ -101,9 +97,7 @@ def replace_string_in_names(
         if (item.is_file() or item.is_dir()) and str1 in item.name:
             new_name: str = item.name.replace(str1, str2)
             if not new_name.strip():
-                typer.echo(
-                    f"Warning: Replacing '{str1}' with '{str2}' would make name empty for '{item.name}'"
-                )
+                typer.echo(f"Warning: Replacing '{str1}' with '{str2}' would make name empty for '{item.name}'")
                 continue
 
             new_path: Path = current_path / new_name
@@ -122,9 +116,7 @@ def replace_string_in_names(
                     typer.echo(f"Error renaming '{item.name}': {e}")
 
         if recursive and item.is_dir():
-            renamed_count += replace_string_in_names(
-                str1, str2, dry_run, recursive, item
-            )
+            renamed_count += replace_string_in_names(str1, str2, dry_run, recursive, item)
 
     return renamed_count
 
@@ -140,9 +132,7 @@ def rename_by_template(
 
     renamed_count: int = 0
     try:
-        files: list[Path] = [
-            f for f in current_path.iterdir() if f.is_file() and (not should_skip(f))
-        ]
+        files: list[Path] = [f for f in current_path.iterdir() if f.is_file() and (not should_skip(f))]
         script_name: str = Path(__file__).name
         files = [f for f in files if f.name != script_name]
 
@@ -185,9 +175,7 @@ def rename_by_template(
         try:
             for item in current_path.iterdir():
                 if item.is_dir() and (not should_skip(item)):
-                    renamed_count += rename_by_template(
-                        template, dry_run, recursive, item
-                    )
+                    renamed_count += rename_by_template(template, dry_run, recursive, item)
         except PermissionError:
             typer.echo(f"Permission denied accessing subdirectory in {current_path}")
 
@@ -228,9 +216,7 @@ def _normalize_leading_dashes(argv: list[str]) -> list[str]:
     return fixed
 
 
-@app.command(
-    epilog='Examples:\n  python pnr.py -r "old_string"\n  python pnr.py -r "-master" --dry-run'
-)
+@app.command(epilog='Examples:\n  python pnr.py -r "old_string"\n  python pnr.py -r "-master" --dry-run')
 def main(
     remove: Annotated[
         Optional[str],

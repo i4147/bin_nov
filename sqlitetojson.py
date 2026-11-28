@@ -126,28 +126,20 @@ def list_tables(
     """Return table (and optionally view) names, alphabetically sorted."""
     kinds = ["table"] + (["view"] if include_views else [])
     placeholders = ",".join("?" * len(kinds))
-    query = (
-        f"SELECT name FROM sqlite_master WHERE type IN ({placeholders}) ORDER BY name"
-    )
+    query = f"SELECT name FROM sqlite_master WHERE type IN ({placeholders}) ORDER BY name"
     names = [row[0] for row in conn.execute(query, kinds)]
     if not include_internal:
         names = [n for n in names if not n.lower().startswith(INTERNAL_PREFIX)]
     return names
 
 
-def select_tables(
-    available: list[str], include: list[str], exclude: list[str]
-) -> list[str]:
+def select_tables(available: list[str], include: list[str], exclude: list[str]) -> list[str]:
     """Apply --tables / --exclude-tables to the list of available tables."""
     if include:
         wanted = set(include)
         missing = sorted(wanted - set(available))
         if missing:
-            raise ExportError(
-                "unknown table(s): "
-                + ", ".join(missing)
-                + " (use --include-views to export views)"
-            )
+            raise ExportError("unknown table(s): " + ", ".join(missing) + " (use --include-views to export views)")
         selected = [t for t in available if t in wanted]
     else:
         selected = list(available)
@@ -158,9 +150,7 @@ def select_tables(
 
 def table_schema(conn: sqlite3.Connection, table: str) -> dict[str, Any]:
     """Return column metadata plus the original CREATE statement for *table*."""
-    row = conn.execute(
-        "SELECT sql FROM sqlite_master WHERE name = ?", (table,)
-    ).fetchone()
+    row = conn.execute("SELECT sql FROM sqlite_master WHERE name = ?", (table,)).fetchone()
     columns = [
         {
             "name": cid_name[1],
@@ -405,12 +395,8 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="print the table names that would be exported, then exit",
     )
-    parser.add_argument(
-        "-q", "--quiet", action="store_true", help="suppress non-error messages"
-    )
-    parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {__version__}"
-    )
+    parser.add_argument("-q", "--quiet", action="store_true", help="suppress non-error messages")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     return parser
 
 
@@ -441,11 +427,7 @@ def _run(args: argparse.Namespace) -> int:
             _split_names(args.tables),
             _split_names(args.exclude_tables),
         )
-        schema = (
-            {name: table_schema(conn, name) for name in selected}
-            if args.include_schema
-            else None
-        )
+        schema = {name: table_schema(conn, name) for name in selected} if args.include_schema else None
         tables: Iterator[TableStream] = (
             (
                 name,

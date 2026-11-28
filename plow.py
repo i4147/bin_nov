@@ -146,9 +146,7 @@ def main(
     line_numbers: Annotated[bool, "Render line numbers in code blocks"] = True,
     highlight: Annotated[bool, "Enable syntax highlighting for code blocks"] = True,
     code_only: Annotated[bool, "Only print fenced code blocks"] = False,
-    default_language: Annotated[
-        str, "Fallback language for un-tagged code fences"
-    ] = "python",
+    default_language: Annotated[str, "Fallback language for un-tagged code fences"] = "python",
     width: Annotated[int | None, "Console width override"] = None,
     color: Annotated[bool, "Enable color output"] = True,
     hyperlinks: Annotated[bool, "Enable terminal hyperlinks"] = True,
@@ -156,9 +154,7 @@ def main(
     tab_size: Annotated[int, "Tab expansion width"] = 4,
     strip: Annotated[bool, "Render plain text (no markdown styling)"] = False,
     output: Annotated[Path | None, "Write rendered output to file"] = None,
-    list_syntax_themes: Annotated[
-        bool, "List available Pygments themes and exit"
-    ] = False,
+    list_syntax_themes: Annotated[bool, "List available Pygments themes and exit"] = False,
     verbose: Annotated[bool, "Verbose logging to stderr"] = False,
 ) -> None:
     if verbose:
@@ -223,9 +219,7 @@ def main(
                 highlight=False,
             )
             _render(capture, content, **render_kwargs)
-            proc = subprocess.Popen(
-                shlex.split(pager_cmd), stdin=subprocess.PIPE, text=True
-            )
+            proc = subprocess.Popen(shlex.split(pager_cmd), stdin=subprocess.PIPE, text=True)
             proc.communicate(buf.getvalue())
         else:
             _render(console, content, **render_kwargs)

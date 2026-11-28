@@ -159,9 +159,7 @@ def _ascii_fallback(text: str) -> str:
     if unidecode:
         return unidecode(text)
     decomposed = unicodedata.normalize("NFKD", text)
-    return "".join(
-        c if c.isascii() else "_" for c in decomposed if not unicodedata.combining(c)
-    )
+    return "".join(c if c.isascii() else "_" for c in decomposed if not unicodedata.combining(c))
 
 
 def _clean(name: str, original: str) -> str:
@@ -215,13 +213,9 @@ def unique_target(path: Path, claimed: set) -> Path:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Transliterate non-ASCII file/dir names in place."
-    )
+    parser = argparse.ArgumentParser(description="Transliterate non-ASCII file/dir names in place.")
     parser.add_argument("root", nargs="?", default=".", type=Path)
-    parser.add_argument(
-        "-n", "--dry-run", action="store_true", help="show renames without doing them"
-    )
+    parser.add_argument("-n", "--dry-run", action="store_true", help="show renames without doing them")
     args = parser.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(errors="backslashreplace")
@@ -239,11 +233,7 @@ def main() -> int:
     if not root.is_dir():
         print(f"error: not a directory: {root}", file=sys.stderr)
         return 1
-    entries = [
-        p
-        for p in root.rglob("*")
-        if not SKIP_DIRS.intersection(p.relative_to(root).parts)
-    ]
+    entries = [p for p in root.rglob("*") if not SKIP_DIRS.intersection(p.relative_to(root).parts)]
     entries.sort(key=lambda p: len(p.parts), reverse=True)
     claimed: set = set()
     renamed = failed = 0

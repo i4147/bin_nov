@@ -29,9 +29,7 @@ import sys
 
 
 class FunctionInfo:
-    def __init__(
-        self, name: str, body: str, lineno: int, node: ast.FunctionDef
-    ) -> None:
+    def __init__(self, name: str, body: str, lineno: int, node: ast.FunctionDef) -> None:
         self.name = name
         self.body = self._normalize_body(body)
         self.original_body = body
@@ -59,9 +57,7 @@ class DuplicateFunctionFinder(ast.NodeVisitor):
         body_end = node.body[-1].end_lineno
         body_lines = self.source_lines[body_start:body_end]
         body_code = "\n".join(body_lines)
-        func_info = FunctionInfo(
-            name=node.name, body=body_code, lineno=node.lineno, node=node
-        )
+        func_info = FunctionInfo(name=node.name, body=body_code, lineno=node.lineno, node=node)
         self.functions.append(func_info)
         self.generic_visit(node)
 
@@ -100,9 +96,7 @@ class DuplicateFunctionRemover:
         start_line, end_line = self._get_function_lines(func_info)
         return "\n".join(self.lines[start_line - 1 : end_line])
 
-    def remove_duplicates(
-        self, groups: dict[str, list[FunctionInfo]], keep_choice: dict[str, int]
-    ) -> bool:
+    def remove_duplicates(self, groups: dict[str, list[FunctionInfo]], keep_choice: dict[str, int]) -> bool:
         with open(self.path, encoding="utf-8") as f:
             self.content = f.read()
             self.lines = self.content.splitlines()
@@ -177,9 +171,7 @@ def get_user_choices(groups: dict[str, list[FunctionInfo]]) -> dict[str, int]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Find and optionally remove duplicate functions in Python files"
-    )
+    parser = argparse.ArgumentParser(description="Find and optionally remove duplicate functions in Python files")
     parser.add_argument("file", help="Python file to analyze")
     parser.add_argument(
         "-r",

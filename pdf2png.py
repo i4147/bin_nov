@@ -50,9 +50,7 @@ def pdf_to_png(pdf_path: Path, output_dir: Path | None = None, dpi: str = 200) -
         print("pdftoppm failed:", file=sys.stderr)
         print(result.stderr, file=sys.stderr)
         sys.exit(1)
-    generated = sorted(
-        f for f in os.listdir(output_dir) if f.startswith(f"{base_name}_page-")
-    )
+    generated = sorted(f for f in os.listdir(output_dir) if f.startswith(f"{base_name}_page-"))
     for f in generated:
         num_part = f.rsplit("-", 1)[-1].split(".")[0]
         try:

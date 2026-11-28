@@ -33,9 +33,7 @@ BASIC_STRING_RE = re.compile(r'"(?:[^"\\\n]|\\.)*"')
 LITERAL_STRING_RE = re.compile(r"'[^'\n]*'")
 ML_BASIC_STOP_RE = re.compile(r'[\\"]')
 ML_LITERAL_STOP_RE = re.compile(r"'")
-DATETIME_SPACE_RE = re.compile(
-    r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:[Zz]|[+-]\d{2}:\d{2})?"
-)
+DATETIME_SPACE_RE = re.compile(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:[Zz]|[+-]\d{2}:\d{2})?")
 ATOM_RE = re.compile(r"[^\s,\]\[{}#\"']+")
 
 
@@ -193,9 +191,7 @@ class Parser:
         if s.startswith(quote * 3, start):
             end = self.scan_multiline(start, quote)
         else:
-            match = (BASIC_STRING_RE if quote == '"' else LITERAL_STRING_RE).match(
-                s, start
-            )
+            match = (BASIC_STRING_RE if quote == '"' else LITERAL_STRING_RE).match(s, start)
             if match is None:
                 self.error("unterminated string")
             end = match.end()
@@ -361,18 +357,14 @@ class Printer:
             out.extend(Line("") for _ in range(min(blanks, ALLOWED_BLANK_LINES)))
         return out
 
-    def value(
-        self, value: Value, depth: int, col: int, tail: int, expand: bool
-    ) -> list[Line]:
+    def value(self, value: Value, depth: int, col: int, tail: int, expand: bool) -> list[Line]:
         if isinstance(value, Scalar):
             return [Line(value.raw)]
         if isinstance(value, Array):
             return self.array(value, depth, col, tail, expand)
         return self.inline(value, depth)
 
-    def array(
-        self, arr: Array, depth: int, col: int, tail: int, expand: bool
-    ) -> list[Line]:
+    def array(self, arr: Array, depth: int, col: int, tail: int, expand: bool) -> list[Line]:
         flat = flat_text(arr)
         if flat is not None and (not expand or col + len(flat) + tail <= COLUMN_WIDTH):
             return [Line(flat)]
@@ -437,9 +429,7 @@ def align_comments(lines: list[Line]) -> list[str]:
             i += 1
             continue
         j = i
-        while (
-            j < n and lines[j].comment is not None and lines[j].scope == lines[i].scope
-        ):
+        while j < n and lines[j].comment is not None and lines[j].scope == lines[i].scope:
             j += 1
         width = max(last_physical_width(line.text) for line in lines[i:j])
         for line in lines[i:j]:
@@ -557,9 +547,7 @@ def _process_file(path_str: str, check: bool) -> Result:
     except OSError as exc:
         return Result(path_str, "error", f"write error: {exc}")
     if (after.st_mtime_ns, after.st_size) != (before.st_mtime_ns, before.st_size):
-        return Result(
-            path_str, "error", "file changed while processing; left untouched"
-        )
+        return Result(path_str, "error", "file changed while processing; left untouched")
     try:
         atomic_write(path, new_bytes, before.st_mode & 0o7777)
     except OSError as exc:
@@ -571,9 +559,7 @@ def process_file(path_str: str, check: bool) -> Result:
     try:
         return _process_file(path_str, check)
     except Exception as exc:
-        return Result(
-            path_str, "error", f"unexpected error: {type(exc).__name__}: {exc}"
-        )
+        return Result(path_str, "error", f"unexpected error: {type(exc).__name__}: {exc}")
 
 
 def walk_toml(root: str) -> Iterator[str]:
@@ -593,9 +579,7 @@ def walk_toml(root: str) -> Iterator[str]:
                 if entry.is_dir(follow_symlinks=False):
                     if entry.name not in SKIP_DIRS:
                         stack.append(entry.path)
-                elif entry.name.lower().endswith(".toml") and entry.is_file(
-                    follow_symlinks=False
-                ):
+                elif entry.name.lower().endswith(".toml") and entry.is_file(follow_symlinks=False):
                     yield entry.path
             except OSError as exc:
                 print(f"warning: cannot inspect {entry.path}: {exc}", file=sys.stderr)
@@ -613,11 +597,7 @@ def collect_files(paths: Sequence[Path]) -> list[str]:
             print(f"warning: skipping non-existent path: {given}", file=sys.stderr)
             continue
         for candidate in candidates:
-            key = (
-                str(Path(candidate)).lower()
-                if os.name == "nt"
-                else str(Path(candidate))
-            )
+            key = str(Path(candidate)).lower() if os.name == "nt" else str(Path(candidate))
             if key not in seen:
                 seen.add(key)
                 found.append(candidate)
@@ -646,17 +626,13 @@ def build_arg_parser() -> argparse.ArgumentParser:
         prog="tomlfmt",
         description="Format TOML files in place (taplo-style). Default: current directory, recursively.",
     )
-    parser.add_argument(
-        "paths", nargs="*", type=Path, metavar="PATH", help="files and/or directories"
-    )
+    parser.add_argument("paths", nargs="*", type=Path, metavar="PATH", help="files and/or directories")
     parser.add_argument(
         "--check",
         action="store_true",
         help="do not write; exit 3 if any file would change",
     )
-    parser.add_argument(
-        "-q", "--quiet", action="store_true", help="print only errors and the summary"
-    )
+    parser.add_argument("-q", "--quiet", action="store_true", help="print only errors and the summary")
     return parser
 
 

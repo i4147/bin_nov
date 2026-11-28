@@ -375,9 +375,7 @@ class FileProcessor:
             for old_ref, new_ref in replacements:
                 modified_content = modified_content.replace(old_ref, new_ref)
             self._write_file_atomic(path, modified_content)
-            print(
-                f"Processed {path.name}: extracted={extracted_count}, replaced={len(replacements)}"
-            )
+            print(f"Processed {path.name}: extracted={extracted_count}, replaced={len(replacements)}")
             return ProcessingResult(
                 path=path,
                 success=True,
@@ -431,9 +429,7 @@ class FileDiscovery:
                     if path.suffix.lower() in SUPPORTED_EXT:
                         discovered.append(path)
                 else:
-                    futures.append(
-                        executor.submit(FileDiscovery._discover_in_directory, path)
-                    )
+                    futures.append(executor.submit(FileDiscovery._discover_in_directory, path))
             for future in futures:
                 try:
                     discovered.extend(future.result())
@@ -523,9 +519,7 @@ class Base64AssetExtractor:
                     print(f"  - {result.path}: {result.error}")
         if self.results:
             print("\nDetailed results:")
-            for result in sorted(
-                self.results, key=lambda r: r.extracted_count, reverse=True
-            ):
+            for result in sorted(self.results, key=lambda r: r.extracted_count, reverse=True):
                 if result.extracted_count > 0 or result.replaced_count > 0:
                     print(
                         f"  {result.path.name:40} "
@@ -543,14 +537,8 @@ class Base64AssetExtractor:
                     if cat_dir.exists():
                         count = sum(1 for _ in cat_dir.iterdir() if _.is_file())
                         if count > 0:
-                            size = sum(
-                                _.stat().st_size
-                                for _ in cat_dir.iterdir()
-                                if _.is_file()
-                            )
-                            print(
-                                f"  {category:8}: {count:4} files ({size / 1024:.1f} KB)"
-                            )
+                            size = sum(_.stat().st_size for _ in cat_dir.iterdir() if _.is_file())
+                            print(f"  {category:8}: {count:4} files ({size / 1024:.1f} KB)")
 
 
 def main() -> None:

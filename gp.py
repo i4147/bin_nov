@@ -148,9 +148,7 @@ class SubprocessBackend:
 
     def list_relevant_files(self) -> list[str]:
         tracked = self._run("ls-files", "-z").stdout.split("\0")
-        untracked = self._run(
-            "ls-files", "--others", "--exclude-standard", "-z"
-        ).stdout.split("\0")
+        untracked = self._run("ls-files", "--others", "--exclude-standard", "-z").stdout.split("\0")
         files = [p for p in tracked + untracked if p]
         return files
 
@@ -404,9 +402,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "--backend",
         choices=AVAILABLE_BACKENDS,
         default="subprocess",
-        help=(
-            f"Git access backend to use. Available: {', '.join(AVAILABLE_BACKENDS)} (default: subprocess)"
-        ),
+        help=(f"Git access backend to use. Available: {', '.join(AVAILABLE_BACKENDS)} (default: subprocess)"),
     )
     parser.add_argument(
         "-r",
@@ -489,9 +485,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if branch is not None and branch != "main":
         print(f"WARNING: You are on branch '{branch}', not 'main'.")
         if not args.yes and not args.dry_run:
-            if not confirm(
-                "Continue with commit & push on this branch?", default=False
-            ):
+            if not confirm("Continue with commit & push on this branch?", default=False):
                 print("Aborted by user.")
                 return 1
         elif args.dry_run:
@@ -517,10 +511,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"[dry-run] would stage all changes")
         print(f"[dry-run] would commit with message   : {message!r}")
         if not args.no_push:
-            print(
-                f"[dry-run] would push to {args.remote}"
-                + (f" (force-with-lease)" if args.force_with_lease else "")
-            )
+            print(f"[dry-run] would push to {args.remote}" + (f" (force-with-lease)" if args.force_with_lease else ""))
         else:
             print("[dry-run] --no-push specified; would not push")
         return 0

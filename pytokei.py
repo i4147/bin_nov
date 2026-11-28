@@ -142,9 +142,7 @@ def _add(
 def analyze(root: Path, excludes: set[str]) -> dict[str, Any]:
     stats: dict[str, Any] = {
         "total": {"code": 0, "comments": 0, "blank": 0},
-        "languages": {
-            lang: {"code": 0, "comments": 0, "blank": 0} for lang in LANGUAGE_EXT
-        },
+        "languages": {lang: {"code": 0, "comments": 0, "blank": 0} for lang in LANGUAGE_EXT},
     }
     for path in root.rglob("*"):
         if not path.is_file():

@@ -59,9 +59,7 @@ def run_clipboard(cmd: str, stdin_text: str | None) -> subprocess.CompletedProce
     """Run a clipboard command, exiting helpfully when it is missing."""
     argv: list[str] = shlex.split(cmd)
     try:
-        return subprocess.run(
-            argv, input=stdin_text, capture_output=True, text=True, check=True
-        )
+        return subprocess.run(argv, input=stdin_text, capture_output=True, text=True, check=True)
     except FileNotFoundError:
         msg = f"Clipboard command not found: {argv[0]} (Termux: install termux-api; desktop: use --get-cmd/--set-cmd)"
         raise SystemExit(msg) from None
@@ -70,9 +68,7 @@ def run_clipboard(cmd: str, stdin_text: str | None) -> subprocess.CompletedProce
         raise SystemExit(msg) from None
 
 
-def select_lines(
-    lines: list[str], start: int | None, end: int | None, wanted: list[int] | None
-) -> str:
+def select_lines(lines: list[str], start: int | None, end: int | None, wanted: list[int] | None) -> str:
     """Pick 1-based lines by explicit list or by inclusive range."""
     total: int = len(lines)
     if wanted:
@@ -95,9 +91,7 @@ def cmd_copy(args: argparse.Namespace) -> int:
     if not args.path.is_file():
         print(f"Error: file not found: {args.path}", file=sys.stderr)
         return 1
-    lines: list[str] = args.path.read_text(
-        encoding="utf-8", errors="replace"
-    ).splitlines(keepends=True)
+    lines: list[str] = args.path.read_text(encoding="utf-8", errors="replace").splitlines(keepends=True)
     wanted: list[int] | None = parse_line_list(args.lines) if args.lines else None
     content: str = select_lines(lines, args.start, args.end, wanted)
     if not content:
@@ -147,11 +141,7 @@ def detect_language(filename: str, content: str) -> str:
 
 def with_shebang(content: str, language: str, prefix: str) -> str:
     """Return *content* with its shebang replaced by the right one."""
-    shebang: str = (
-        SHEBANGS[language].replace(SHEBANG_PREFIX, prefix)
-        if language != "rust"
-        else SHEBANGS[language]
-    )
+    shebang: str = SHEBANGS[language].replace(SHEBANG_PREFIX, prefix) if language != "rust" else SHEBANGS[language]
     lines: list[str] = content.splitlines()
     while lines and lines[0].startswith("#!"):
         lines.pop(0)
@@ -173,9 +163,7 @@ def cmd_paste(args: argparse.Namespace) -> int:
     """Write the clipboard to a new (script) file."""
     output: Path = Path(args.filename)
     script_dirs: set[Path] = set(DEFAULT_SCRIPT_DIRS)
-    is_script_dir: bool = (
-        Path.cwd() in script_dirs or Path.cwd().name == "bin" or args.script
-    )
+    is_script_dir: bool = Path.cwd() in script_dirs or Path.cwd().name == "bin" or args.script
     if args.archive and output.exists():
         args.archive_dir.mkdir(parents=True, exist_ok=True)
         dest: Path = unique_path(args.archive_dir / output.name)
@@ -208,12 +196,8 @@ def cmd_to_list(args: argparse.Namespace) -> int:
     if not args.path.is_file():
         print(f"Error: file not found: {args.path}", file=sys.stderr)
         return 1
-    lines: list[str] = [
-        line.strip() for line in args.path.read_text(encoding="utf-8").splitlines()
-    ]
-    items: list[str] = [
-        f"'{line}'" if '"' in line else f'"{line}"' for line in lines if line
-    ]
+    lines: list[str] = [line.strip() for line in args.path.read_text(encoding="utf-8").splitlines()]
+    items: list[str] = [f"'{line}'" if '"' in line else f'"{line}"' for line in lines if line]
     formatted: str = "{" + ", ".join(items) + "}"
     if not args.no_write:
         atomic_write(args.path, formatted, encoding="utf-8")
@@ -224,43 +208,29 @@ def cmd_to_list(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line parser."""
-    parser = argparse.ArgumentParser(
-        description="Clipboard helpers (Termux by default)."
-    )
-    parser.add_argument(
-        "--get-cmd", default=DEFAULT_GET_CMD, help="Clipboard read command"
-    )
-    parser.add_argument(
-        "--set-cmd", default=DEFAULT_SET_CMD, help="Clipboard write command"
-    )
+    parser = argparse.ArgumentParser(description="Clipboard helpers (Termux by default).")
+    parser.add_argument("--get-cmd", default=DEFAULT_GET_CMD, help="Clipboard read command")
+    parser.add_argument("--set-cmd", default=DEFAULT_SET_CMD, help="Clipboard write command")
     sub = parser.add_subparsers(dest="command", required=True)
 
     cp = sub.add_parser("copy", help="Copy a file / line range to the clipboard")
     cp.add_argument("path", type=Path)
-    cp.add_argument(
-        "start", nargs="?", type=int, default=None, help="First line (1-based)"
-    )
-    cp.add_argument(
-        "end", nargs="?", type=int, default=None, help="Last line (1-based)"
-    )
+    cp.add_argument("start", nargs="?", type=int, default=None, help="First line (1-based)")
+    cp.add_argument("end", nargs="?", type=int, default=None, help="Last line (1-based)")
     cp.add_argument("--lines", default="", help='Explicit 1-based lines, e.g. "1,5,9"')
     cp.add_argument("--stdout", action="store_true", help="Print instead of copying")
     cp.set_defaults(handler=cmd_copy)
 
     pa = sub.add_parser("paste", help="Write the clipboard to a new script file")
     pa.add_argument("filename", help="Output filename, e.g. myscript.py")
-    pa.add_argument(
-        "-a", "--archive", action="store_true", help="Archive an existing file first"
-    )
+    pa.add_argument("-a", "--archive", action="store_true", help="Archive an existing file first")
     pa.add_argument("--archive-dir", type=Path, default=DEFAULT_ARCHIVE_DIR)
     pa.add_argument(
         "--script",
         action="store_true",
         help="Force script mode (shebang+chmod+symlink)",
     )
-    pa.add_argument(
-        "--no-symlink", action="store_true", help="Skip the extension-less symlink"
-    )
+    pa.add_argument("--no-symlink", action="store_true", help="Skip the extension-less symlink")
     pa.add_argument(
         "--shebang-prefix",
         default=SHEBANG_PREFIX,
@@ -270,9 +240,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     tl = sub.add_parser("to-list", help='Turn file lines into {"a", "b"} and copy')
     tl.add_argument("path", type=Path)
-    tl.add_argument(
-        "--no-write", action="store_true", help="Do not rewrite the input file"
-    )
+    tl.add_argument("--no-write", action="store_true", help="Do not rewrite the input file")
     tl.set_defaults(handler=cmd_to_list)
     return parser
 

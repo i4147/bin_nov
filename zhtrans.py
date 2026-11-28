@@ -213,9 +213,7 @@ def cmd_chunked(args: argparse.Namespace) -> int:
         return 0
     chinese_lines = [ln for ln in lines if has_chinese(ln)]
     non_chinese = [ln for ln in lines if not has_chinese(ln)]
-    print(
-        f"Loaded {len(lines)} lines: {len(chinese_lines)} with Chinese, {len(non_chinese)} already English/skipped"
-    )
+    print(f"Loaded {len(lines)} lines: {len(chinese_lines)} with Chinese, {len(non_chinese)} already English/skipped")
     if not chinese_lines:
         print(f"No Chinese lines to translate in {input_path.name}")
         return 0
@@ -223,10 +221,7 @@ def cmd_chunked(args: argparse.Namespace) -> int:
     print(
         f"Created {len(chunks)} chunks from {len(chinese_lines)} Chinese lines (max {args.chunk_size} chars per chunk)"
     )
-    tasks = [
-        (chunk, args.retries, args.retry_delay, args.source, args.target)
-        for chunk in chunks
-    ]
+    tasks = [(chunk, args.retries, args.retry_delay, args.source, args.target) for chunk in chunks]
     translations: dict = {}
     with Pool(processes=MAX_WORKERS) as pool:
         results = [pool.apply_async(_worker_chunked_chunk, (t,)) for t in tasks]
@@ -281,18 +276,13 @@ def cmd_line(args: argparse.Namespace) -> int:
         return 0
     chinese_lines = [ln for ln in lines if has_chinese(ln)]
     non_chinese = [ln for ln in lines if not has_chinese(ln)]
-    print(
-        f"Loaded {len(lines)} lines: {len(chinese_lines)} with Chinese, {len(non_chinese)} already English/skipped"
-    )
+    print(f"Loaded {len(lines)} lines: {len(chinese_lines)} with Chinese, {len(non_chinese)} already English/skipped")
     if not chinese_lines:
         print(f"No Chinese lines to translate in {input_path.name}")
         return 0
     print(f"Starting translation with {MAX_WORKERS} workers...")
     translations: dict = {}
-    tasks = [
-        (ln, args.retries, args.retry_delay, args.source, args.target)
-        for ln in chinese_lines
-    ]
+    tasks = [(ln, args.retries, args.retry_delay, args.source, args.target) for ln in chinese_lines]
     with Pool(processes=MAX_WORKERS) as pool:
         results = [pool.apply_async(_worker_single_line, (t,)) for t in tasks]
         for original, async_res in zip(chinese_lines, results):
@@ -346,9 +336,7 @@ def cmd_walk(args: argparse.Namespace) -> int:
     if not files:
         print("No files to process.")
         return 0
-    print(
-        f"Found {len(files)} files. Using {MAX_WORKERS} workers (Threshold: {args.threshold * 100:.0f}%)"
-    )
+    print(f"Found {len(files)} files. Using {MAX_WORKERS} workers (Threshold: {args.threshold * 100:.0f}%)")
     tasks = [
         (
             str(p),
@@ -379,21 +367,14 @@ def cmd_walk(args: argparse.Namespace) -> int:
     return 0
 
 
-def _translate_long_text(
-    text: str, translator: GoogleTranslator, chunk_size: int
-) -> str:
+def _translate_long_text(text: str, translator: GoogleTranslator, chunk_size: int) -> str:
     if not text:
         return ""
-    parts = [
-        translator.translate(text[i : i + chunk_size]) or ""
-        for i in range(0, len(text), chunk_size)
-    ]
+    parts = [translator.translate(text[i : i + chunk_size]) or "" for i in range(0, len(text), chunk_size)]
     return "".join(parts)
 
 
-def _translate_python_source(
-    text: str, translator: GoogleTranslator, chunk_size: int
-) -> str:
+def _translate_python_source(text: str, translator: GoogleTranslator, chunk_size: int) -> str:
     lines = text.splitlines(keepends=True)
     out: list[str] = []
     in_doc = False
@@ -455,9 +436,7 @@ def cmd_whole(args: argparse.Namespace) -> int:
     else:
         translated = _translate_long_text(text, translator, args.chunk_size)
     output_path = (
-        Path(args.output)
-        if args.output
-        else input_path.with_name(f"{input_path.stem}_eng{input_path.suffix}")
+        Path(args.output) if args.output else input_path.with_name(f"{input_path.stem}_eng{input_path.suffix}")
     )
     atomic_write(output_path, translated, encoding="utf-8")
     print(f"Translated ({source_lang} -> {args.target}): {output_path}")
@@ -491,9 +470,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=5000,
         help="Max characters per chunk (default: 5000).",
     )
-    p.add_argument(
-        "--retries", type=int, default=3, help="Retry attempts per chunk (default: 3)."
-    )
+    p.add_argument("--retries", type=int, default=3, help="Retry attempts per chunk (default: 3).")
     p.add_argument(
         "--retry-delay",
         type=float,
@@ -508,9 +485,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="In-place translate one line per API call (was transchin.py).",
     )
     p.add_argument("input_file", help="File to translate in place.")
-    p.add_argument(
-        "--retries", type=int, default=3, help="Retry attempts per line (default: 3)."
-    )
+    p.add_argument("--retries", type=int, default=3, help="Retry attempts per line (default: 3).")
     p.add_argument(
         "--retry-delay",
         type=float,
@@ -546,9 +521,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=0.3,
         help="Minimum CJK ratio for a line to be translated (default: 0.3).",
     )
-    p.add_argument(
-        "--retries", type=int, default=3, help="Retry attempts per line (default: 3)."
-    )
+    p.add_argument("--retries", type=int, default=3, help="Retry attempts per line (default: 3).")
     p.add_argument(
         "--retry-delay",
         type=float,
@@ -581,9 +554,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=4500,
         help="Characters per translation call (default: 4500).",
     )
-    p.add_argument(
-        "--output", default=None, help="Output path (default: <stem>_eng<suffix>)."
-    )
+    p.add_argument("--output", default=None, help="Output path (default: <stem>_eng<suffix>).")
     p.add_argument(
         "--code-mode",
         choices=("auto", "on", "off"),

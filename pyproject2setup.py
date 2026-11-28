@@ -104,11 +104,7 @@ def _poetry_specifier(spec: str) -> str:
     if "||" in spec:
         msg = f"OR constraint {spec!r} cannot be expressed in PEP 508"
         raise ValueError(msg)
-    clauses = [
-        _poetry_clause(part.strip())
-        for part in spec.split(",")
-        if part.strip() not in ("", "*")
-    ]
+    clauses = [_poetry_clause(part.strip()) for part in spec.split(",") if part.strip() not in ("", "*")]
     return ",".join(clauses)
 
 
@@ -165,23 +161,11 @@ def _poetry_project(data: dict[str, Any]) -> dict[str, Any]:
     if python_spec:
         project["requires-python"] = _poetry_specifier(python_spec)
 
-    optional = {
-        name
-        for name, spec in deps.items()
-        if isinstance(spec, dict) and spec.get("optional")
-    }
-    project["dependencies"] = [
-        _poetry_requirement(name, spec)
-        for name, spec in deps.items()
-        if name not in optional
-    ]
+    optional = {name for name, spec in deps.items() if isinstance(spec, dict) and spec.get("optional")}
+    project["dependencies"] = [_poetry_requirement(name, spec) for name, spec in deps.items() if name not in optional]
 
     extras = {
-        extra: [
-            _poetry_requirement(name, deps[name])
-            for name in members
-            if name in optional
-        ]
+        extra: [_poetry_requirement(name, deps[name]) for name in members if name in optional]
         for extra, members in poetry.get("extras", {}).items()
     }
     if extras:
@@ -215,13 +199,7 @@ def detect_where(data: dict[str, Any], root: Path) -> str:
     if poetry_pkgs and "from" in poetry_pkgs[0]:
         return poetry_pkgs[0]["from"]
 
-    hatch_pkgs = (
-        tool.get("hatch", {})
-        .get("build", {})
-        .get("targets", {})
-        .get("wheel", {})
-        .get("packages", [])
-    )
+    hatch_pkgs = tool.get("hatch", {}).get("build", {}).get("targets", {}).get("wheel", {}).get("packages", [])
     if hatch_pkgs:
         return Path(hatch_pkgs[0]).parent.as_posix()
 
@@ -234,9 +212,7 @@ def detect_where(data: dict[str, Any], root: Path) -> str:
 # ---------------------------------------------------------------------------
 # setup.py generation
 # ---------------------------------------------------------------------------
-def readme_metadata(
-    project: dict[str, Any], root: Path
-) -> tuple[str | None, str | None]:
+def readme_metadata(project: dict[str, Any], root: Path) -> tuple[str | None, str | None]:
     readme = project.get("readme")
     if readme is None:
         return None, None
@@ -257,9 +233,7 @@ def readme_metadata(
     raise ValueError(msg)
 
 
-def make_setup_kwargs(
-    project: dict[str, Any], root: Path, where: str
-) -> dict[str, Any]:
+def make_setup_kwargs(project: dict[str, Any], root: Path, where: str) -> dict[str, Any]:
     # Standard PEP 621 fields mapped to setuptools setup() arguments.
     field_map = {
         "name": "name",
@@ -342,9 +316,7 @@ class _PackagesRewriter(cst.CSTTransformer):
         super().__init__()
         self._replacement = replacement
 
-    def leave_DictElement(
-        self, original_node: cst.DictElement, updated_node: cst.DictElement
-    ) -> cst.DictElement:
+    def leave_DictElement(self, original_node: cst.DictElement, updated_node: cst.DictElement) -> cst.DictElement:
         key = updated_node.key
         if isinstance(key, cst.SimpleString) and key.evaluated_value == "packages":
             return updated_node.with_changes(value=self._replacement)
@@ -357,9 +329,7 @@ def render_setup(kwargs: dict[str, Any], where: str) -> str:
         "from setuptools import find_packages, setup\n\n"
         f"setup(**{pprint.pformat(kwargs, sort_dicts=False, width=88)})\n"
     )
-    module = cst.parse_module(source).visit(
-        _PackagesRewriter(cst.parse_expression(call))
-    )
+    module = cst.parse_module(source).visit(_PackagesRewriter(cst.parse_expression(call)))
     return module.code
 
 
@@ -401,9 +371,7 @@ def _worker(path_str: str) -> tuple[str, int]:
 
 
 def main(argv: list[str]) -> int:
-    targets = [str(Path(arg).resolve()) for arg in argv] or [
-        str(Path("pyproject.toml").resolve())
-    ]
+    targets = [str(Path(arg).resolve()) for arg in argv] or [str(Path("pyproject.toml").resolve())]
     failures = 0
     with mp.Pool(processes=POOL_WORKERS) as pool:
         for path_str, code in pool.imap_unordered(_worker, targets):

@@ -54,21 +54,17 @@ SECTION_HEADERS: tuple[str, ...] = (
 
 # File suffixes treated as text files when --text-mode is enabled.
 # Extensionless files are always eligible in text mode; dot-prefixed files are skipped.
-TEXT_EXTENSIONS: frozenset[str] = frozenset(
-    {
-        ".txt",
-        ".text",
-        ".rst",
-        ".md",
-        ".markdown",
-        ".doc",
-    }
-)
+TEXT_EXTENSIONS: frozenset[str] = frozenset({
+    ".txt",
+    ".text",
+    ".rst",
+    ".md",
+    ".markdown",
+    ".doc",
+})
 
 _HEADER_RE: re.Pattern[str] = re.compile(
-    r"(?<![\w-])("
-    + "|".join(re.escape(h) for h in sorted(SECTION_HEADERS, key=len, reverse=True))
-    + r"):(?=\s|$)"
+    r"(?<![\w-])(" + "|".join(re.escape(h) for h in sorted(SECTION_HEADERS, key=len, reverse=True)) + r"):(?=\s|$)"
 )
 
 # Splits a flattened section body before every "``name``" item that starts a new entry.
@@ -95,9 +91,7 @@ def _collapse(text: str) -> str:
 
 def _split_sentences(text: str) -> list[str]:
     """Split collapsed text into sentences, one per list element."""
-    return [
-        sentence for sentence in _SENTENCE_BOUNDARY_RE.split(text.strip()) if sentence
-    ]
+    return [sentence for sentence in _SENTENCE_BOUNDARY_RE.split(text.strip()) if sentence]
 
 
 def _indent_sentences(text: str, indent: str) -> str:
@@ -124,9 +118,7 @@ def _split_sections(raw: str) -> tuple[str, list[tuple[str, str]]]:
     """Split a raw docstring into its introduction and (header, body) pairs."""
     parts: list[str] = _HEADER_RE.split(raw)
     intro: str = parts[0]
-    sections: list[tuple[str, str]] = [
-        (parts[i], parts[i + 1]) for i in range(1, len(parts), 2)
-    ]
+    sections: list[tuple[str, str]] = [(parts[i], parts[i + 1]) for i in range(1, len(parts), 2)]
     return intro, sections
 
 
@@ -191,9 +183,7 @@ def _is_already_formatted(raw: str) -> bool:
 class ModuleDocstringTransformer(cst.CSTTransformer):
     """Rewrite a Python module's leading docstring using LibCST."""
 
-    def leave_Module(
-        self, original_node: cst.Module, updated_node: cst.Module
-    ) -> cst.Module:
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
         if not updated_node.body:
             return updated_node
 
@@ -202,9 +192,7 @@ class ModuleDocstringTransformer(cst.CSTTransformer):
             return updated_node
 
         expr: cst.BaseSmallStatement = first.body[0]
-        if not isinstance(expr, cst.Expr) or not isinstance(
-            expr.value, cst.SimpleString
-        ):
+        if not isinstance(expr, cst.Expr) or not isinstance(expr.value, cst.SimpleString):
             return updated_node
 
         raw: object = expr.value.evaluated_value
@@ -235,9 +223,7 @@ def _format_text_content(source: str) -> str:
 def build_file_filter(args: argparse.Namespace) -> FileFilter:
     """Construct a FileFilter from parsed CLI arguments."""
     extra_exts: frozenset[str] = normalize_extensions(args.ext)
-    extra_dirs: frozenset[str] = frozenset(
-        d.strip() for d in args.exclude_dir if d.strip()
-    )
+    extra_dirs: frozenset[str] = frozenset(d.strip() for d in args.exclude_dir if d.strip())
     excluded_dirs: frozenset[str] = SKIP_DIRS | extra_dirs
 
     if args.text_mode:

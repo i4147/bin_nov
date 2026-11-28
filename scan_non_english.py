@@ -56,10 +56,7 @@ def detect_scripts(text: str) -> set[str]:
         code = ord(char)
         if _in_ranges(code, ARABIC_PERSIAN_RANGES):
             found.add("Arabic/Persian")
-        if (
-            HIRAGANA_RANGE[0] <= code <= HIRAGANA_RANGE[1]
-            or KATAKANA_RANGE[0] <= code <= KATAKANA_RANGE[1]
-        ):
+        if HIRAGANA_RANGE[0] <= code <= HIRAGANA_RANGE[1] or KATAKANA_RANGE[0] <= code <= KATAKANA_RANGE[1]:
             found.add("Japanese")
         if _in_ranges(code, HANGUL_RANGES):
             found.add("Korean")
@@ -125,9 +122,7 @@ def main() -> None:
     root = Path.cwd()
     report: list[dict] = []
 
-    print(
-        f"Scanning {root} … (skipping symlinks, .git and binary files; looking inside archives)\n"
-    )
+    print(f"Scanning {root} … (skipping symlinks, .git and binary files; looking inside archives)\n")
 
     # read-only: we only report, never rewrite archives
     opts = WalkOptions(writable=False)

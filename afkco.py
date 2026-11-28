@@ -84,9 +84,7 @@ class ImportVisitor(ast.NodeVisitor):
         self._type_checking_depth = 0
 
     def visit_If(self, node: ast.AST) -> None:
-        type_checking = (
-            isinstance(node.test, ast.Name) and node.test.id == "TYPE_CHECKING"
-        )
+        type_checking = isinstance(node.test, ast.Name) and node.test.id == "TYPE_CHECKING"
         type_checking = type_checking or (
             isinstance(node.test, ast.Attribute)
             and isinstance(node.test.value, ast.Name)
@@ -138,11 +136,7 @@ class ImportVisitor(ast.NodeVisitor):
 
     def visit_Assign(self, node: ast.AST) -> None:
         for target in node.targets:
-            if (
-                isinstance(target, ast.Name)
-                and target.id == "__all__"
-                and isinstance(node.value, ast.List)
-            ):
+            if isinstance(target, ast.Name) and target.id == "__all__" and isinstance(node.value, ast.List):
                 for elt in node.value.elts:
                     if isinstance(elt, ast.Constant) and isinstance(elt.value, str):
                         self.all_export.add(elt.value)
@@ -233,9 +227,7 @@ def process_py_file(path: Path) -> FileReport:
     except Exception as e:
         return FileReport(str(path_obj), error=f"Read error: {e}")
     unused, error = analyze_imports(source, str(path_obj))
-    return FileReport(
-        path=str(path_obj), unused_imports=unused, error=error, file_size=file_size
-    )
+    return FileReport(path=str(path_obj), unused_imports=unused, error=error, file_size=file_size)
 
 
 def extract_py_files_from_wheel(wheel_path: Path):
@@ -270,12 +262,8 @@ def extract_py_files_from_tar_zst(archive_path: Path):
                             try:
                                 f_obj = tar.extractfile(member)
                                 if f_obj:
-                                    content = f_obj.read().decode(
-                                        "utf-8", errors="replace"
-                                    )
-                                    virtual_path = (
-                                        f"{Path(archive_path).name}::{member.name}"
-                                    )
+                                    content = f_obj.read().decode("utf-8", errors="replace")
+                                    virtual_path = f"{Path(archive_path).name}::{member.name}"
                                     result[virtual_path] = content
                             except Exception:
                                 pass
@@ -287,12 +275,8 @@ def extract_py_files_from_tar_zst(archive_path: Path):
                             try:
                                 f_obj = tar.extractfile(member)
                                 if f_obj:
-                                    content = f_obj.read().decode(
-                                        "utf-8", errors="replace"
-                                    )
-                                    virtual_path = (
-                                        f"{Path(archive_path).name}::{member.name}"
-                                    )
+                                    content = f_obj.read().decode("utf-8", errors="replace")
+                                    virtual_path = f"{Path(archive_path).name}::{member.name}"
                                     result[virtual_path] = content
                             except Exception:
                                 pass
@@ -322,9 +306,7 @@ def _process_archive_worker(args: list[Any]):
     return process_archive_member(virtual_path, source)
 
 
-def discover_files(
-    paths: list[Path], exclude_patterns: Iterable[Any]
-) -> tuple[list[Any], list[Any]]:
+def discover_files(paths: list[Path], exclude_patterns: Iterable[Any]) -> tuple[list[Any], list[Any]]:
     py_files = []
     archive_members = []
     exclude_regexes = [re.compile(p) for p in exclude_patterns]
@@ -389,9 +371,7 @@ def remove_unused_imports(source: str, unused: Iterable[Any]):
             tree = ast.parse(stripped)
         except SyntaxError:
             return (source, False)
-        if len(tree.body) != 1 or not isinstance(
-            tree.body[0], (ast.Import, ast.ImportFrom)
-        ):
+        if len(tree.body) != 1 or not isinstance(tree.body[0], (ast.Import, ast.ImportFrom)):
             return (source, False)
         new_line = _reconstruct_import_line(tree.body[0], unused_names, line)
         if new_line is None:
@@ -406,9 +386,7 @@ def remove_unused_imports(source: str, unused: Iterable[Any]):
     return (result, True)
 
 
-def _reconstruct_import_line(
-    node: ast.AST, unused_names: Any, original_line: Any
-) -> str | None:
+def _reconstruct_import_line(node: ast.AST, unused_names: Any, original_line: Any) -> str | None:
     if isinstance(node, ast.Import):
         names_to_keep = []
         for alias in node.names:
@@ -500,9 +478,7 @@ def print_report(
                     print(f"  {Colors.GREEN}fixed{Colors.RESET} {report.path}")
                     fixed_count += 1
                 else:
-                    print(
-                        f"  {Colors.RED}SKIP{Colors.RESET} autofix on {report.path} — {error}"
-                    )
+                    print(f"  {Colors.RED}SKIP{Colors.RESET} autofix on {report.path} — {error}")
                     skipped_count += 1
             elif autofix and dry_run:
                 print(f"  [dry-run] would fix {report.path}")
@@ -526,9 +502,7 @@ def main() -> int:
         default=["."],
         help="File or directory paths to analyze (default: current directory)",
     )
-    parser.add_argument(
-        "-a", "--autofix", action="store_true", help="Remove unused imports in-place"
-    )
+    parser.add_argument("-a", "--autofix", action="store_true", help="Remove unused imports in-place")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -546,9 +520,7 @@ def main() -> int:
         default=[],
         help="Regex pattern to exclude files (repeatable)",
     )
-    parser.add_argument(
-        "--no-color", action="store_true", help="Disable ANSI color codes"
-    )
+    parser.add_argument("--no-color", action="store_true", help="Disable ANSI color codes")
     args = parser.parse_args()
     if args.dry_run:
         args.autofix = True
@@ -558,9 +530,7 @@ def main() -> int:
         return 1
     if args.verbose:
         print(f"Scanning {len(args.paths)} path(s) with {MAX_WORKERS} worker(s) …\n")
-        print(
-            f"  {len(py_files)} .py file(s), {len(archive_members)} archive member(s) queued.\n"
-        )
+        print(f"  {len(py_files)} .py file(s), {len(archive_members)} archive member(s) queued.\n")
     reports = []
     with Pool(processes=MAX_WORKERS) as pool:
         if py_files:

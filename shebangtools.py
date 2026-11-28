@@ -175,10 +175,7 @@ def _looks_like_python(path: Path) -> bool:
 
 def _iter_python_files(root: Path) -> Iterator[Path]:
     for path in root.rglob("*"):
-        if (
-            any(part.startswith(".") and part != "." for part in path.parts)
-            and ".git" in path.parts
-        ):
+        if any(part.startswith(".") and part != "." for part in path.parts) and ".git" in path.parts:
             continue
         if path.is_symlink():
             continue
@@ -275,9 +272,7 @@ def _worker_fix_sh(path_str: str, shebang: str) -> str:
     return f"{path.name} updated"
 
 
-def _worker_fix_python(
-    path_str: str, shebang: str, cv2_shebang: str
-) -> tuple[str, bool, Optional[str], str]:
+def _worker_fix_python(path_str: str, shebang: str, cv2_shebang: str) -> tuple[str, bool, Optional[str], str]:
     path = Path(path_str)
     if path.is_symlink():
         return (path_str, False, "Symlink skipped", "skipped")
@@ -356,10 +351,7 @@ def _worker_add_python(path_str: str, shebang: str) -> str:
                 if len(lines) > 1 and lines[1].strip():
                     lines.insert(1, "\n")
             else:
-                has_code = any(
-                    l.strip().startswith(("import ", "from ", "def ", "class "))
-                    for l in lines
-                )
+                has_code = any(l.strip().startswith(("import ", "from ", "def ", "class ")) for l in lines)
                 if has_code:
                     lines.insert(0, shebang + "\n")
                     lines.insert(1, "\n")
@@ -386,9 +378,7 @@ def _convert_to_cloud(path_str: str) -> tuple[str, bool, Optional[str]]:
     first = lines[0]
     if first not in _TERMUX_PY_SHEBANGS:
         return (path_str, False, "Not a Termux shebang")
-    new_line = (
-        "#!/usr/bin/env python3" if "python3" in first else "#!/usr/bin/env python"
-    )
+    new_line = "#!/usr/bin/env python3" if "python3" in first else "#!/usr/bin/env python"
     lines[0] = new_line
     atomic_write(path, "\n".join(lines), encoding="utf-8")
     return (path_str, True, None)
@@ -424,9 +414,7 @@ def _cmd_fix_sh(args: argparse.Namespace) -> int:
         print("No .sh files found.")
         return 0
     with ProcessPoolExecutor(max_workers=MAX_WORKERS) as ex:
-        for msg in ex.map(
-            _worker_fix_sh, [str(f) for f in files], [args.shebang] * len(files)
-        ):
+        for msg in ex.map(_worker_fix_sh, [str(f) for f in files], [args.shebang] * len(files)):
             if msg:
                 print(msg)
     return 0
@@ -481,10 +469,7 @@ def _cmd_fix(args: argparse.Namespace) -> int:
     unchanged = 0
     errors: list[tuple[str, str]] = []
     with ProcessPoolExecutor(max_workers=MAX_WORKERS) as ex:
-        futures = [
-            ex.submit(_worker_fix_python, str(f), args.shebang, args.cv2_shebang)
-            for f in files
-        ]
+        futures = [ex.submit(_worker_fix_python, str(f), args.shebang, args.cv2_shebang) for f in files]
         for fut in futures:
             path_str, changed, reason, status = fut.result()
             if reason:
@@ -586,9 +571,7 @@ def _cmd_add(args: argparse.Namespace) -> int:
         print("No files found.")
         return 0
     with ProcessPoolExecutor(max_workers=MAX_WORKERS) as ex:
-        for msg in ex.map(
-            _worker_add_python, [str(f) for f in files], [args.shebang] * len(files)
-        ):
+        for msg in ex.map(_worker_add_python, [str(f) for f in files], [args.shebang] * len(files)):
             if msg:
                 print(msg)
     return 0

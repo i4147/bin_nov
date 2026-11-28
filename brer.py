@@ -54,9 +54,7 @@ def _compress_bytes(data: bytes, quality: int, lgwin: int) -> bytes:
     return brotli.compress(data, quality=quality, lgwin=lgwin, mode=brotli.MODE_GENERIC)
 
 
-def _stream_compress(
-    src: Path, dst: Path, buffer_size: int, quality: int, lgwin: int
-) -> bool:
+def _stream_compress(src: Path, dst: Path, buffer_size: int, quality: int, lgwin: int) -> bool:
     try:
         comp = brotli.Compressor(quality=quality, lgwin=lgwin)
         with open(src, "rb") as f_in, open(dst, "wb") as f_out:
@@ -155,9 +153,7 @@ def _untar(tar_path: Path, dest: Path) -> bool:
 def _compress_to(src: Path, dst: Path, args: list[Any]) -> bool:
     size = src.stat().st_size
     if args.chunk_threshold > 0 and size >= args.chunk_threshold:
-        return _chunked_compress(
-            src, dst, size, args.chunk_size, args.quality, args.lgwin, MAX_WORKERS
-        )
+        return _chunked_compress(src, dst, size, args.chunk_size, args.quality, args.lgwin, MAX_WORKERS)
     return _stream_compress(src, dst, args.buffer_size, args.quality, args.lgwin)
 
 
@@ -174,9 +170,7 @@ def _finish_compress(src: Path, dst: Path, args: list[Any], label: str) -> bool:
     if dst_size < src_size:
         src.unlink()
         saved = (src_size - dst_size) / src_size * 100 if src_size else 0.0
-        print(
-            f"  ✓ {label}: {saved:.1f}% saved ({human_size(src_size)} -> {human_size(dst_size)})"
-        )
+        print(f"  ✓ {label}: {saved:.1f}% saved ({human_size(src_size)} -> {human_size(dst_size)})")
         return True
     print(f"  ✗ {label}: no space saved, keeping original")
     dst.unlink()
@@ -217,9 +211,7 @@ def compress_dir(src_dir: Path, args: list[Any]) -> bool:
     tmp_tar.unlink()
     shutil.rmtree(src_dir)
     saved = (src_size - dst_size) / src_size * 100 if src_size else 0.0
-    print(
-        f"  ✓ {src_dir.name}: {saved:.1f}% saved ({human_size(src_size)} -> {human_size(dst_size)})"
-    )
+    print(f"  ✓ {src_dir.name}: {saved:.1f}% saved ({human_size(src_size)} -> {human_size(dst_size)})")
     return True
 
 
@@ -254,16 +246,10 @@ def decompress_tar_br(src: Path, args: list[Any]) -> bool:
 
 
 def _iter_dirs(root: Path) -> list[Path]:
-    return [
-        p
-        for p in root.iterdir()
-        if p.is_dir() and not p.is_symlink() and not p.name.startswith(".")
-    ]
+    return [p for p in root.iterdir() if p.is_dir() and not p.is_symlink() and not p.name.startswith(".")]
 
 
-def _iter_files(
-    root: Path, self_name: str, skip_ext: Sequence[str], min_size: int
-) -> list[Path]:
+def _iter_files(root: Path, self_name: str, skip_ext: Sequence[str], min_size: int) -> list[Path]:
     out: list[Path] = []
     for p in root.iterdir():
         if not p.is_file() or p.is_symlink():
@@ -285,9 +271,7 @@ def _iter_archives(root: Path) -> list[Path]:
     return [
         p
         for p in root.rglob("*")
-        if p.is_file()
-        and not p.is_symlink()
-        and (p.name.endswith(".tar.br") or p.suffix == ".br")
+        if p.is_file() and not p.is_symlink() and (p.name.endswith(".tar.br") or p.suffix == ".br")
     ]
 
 
@@ -301,9 +285,7 @@ def cmd_compress(args: list[Any]) -> int:
         logger.warning("No files or subdirectories found to compress.")
         return 0
     print(f"Found {len(dirs)} subdirs and {len(files)} files to compress.")
-    print(
-        f"Starting parallel compression (quality={args.quality}, lgwin={args.lgwin}, workers={MAX_WORKERS})..."
-    )
+    print(f"Starting parallel compression (quality={args.quality}, lgwin={args.lgwin}, workers={MAX_WORKERS})...")
     Executor = ThreadPoolExecutor if args.executor == "thread" else ProcessPoolExecutor
     with Executor(max_workers=MAX_WORKERS) as ex:
         futures = [ex.submit(compress_dir, d, args) for d in dirs]
@@ -325,9 +307,7 @@ def cmd_decompress(args: list[Any]) -> int:
         return 0
     tar_brs = [p for p in archives if p.name.endswith(".tar.br")]
     brs = [p for p in archives if not p.name.endswith(".tar.br")]
-    print(
-        f"Found {len(tar_brs)} .tar.br archives and {len(brs)} .br files to decompress."
-    )
+    print(f"Found {len(tar_brs)} .tar.br archives and {len(brs)} .br files to decompress.")
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
         futures = [ex.submit(decompress_tar_br, p, args) for p in tar_brs]
         futures += [ex.submit(decompress_br, p, args) for p in brs]
@@ -348,12 +328,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command")
     sub.required = True
     c = sub.add_parser("compress", help="Compress files (.br) and dirs (.tar.br)")
-    c.add_argument(
-        "-q", "--quality", type=int, default=11, help="Brotli quality 0-11. Default 11."
-    )
-    c.add_argument(
-        "--lgwin", type=int, default=24, help="Brotli window bits 10-24. Default 24."
-    )
+    c.add_argument("-q", "--quality", type=int, default=11, help="Brotli quality 0-11. Default 11.")
+    c.add_argument("--lgwin", type=int, default=24, help="Brotli window bits 10-24. Default 24.")
     c.add_argument(
         "--buffer-size",
         type=int,

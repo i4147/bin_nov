@@ -27,13 +27,9 @@ def migrate() -> None:
             os.chdir("..")
             continue
         subprocess.run(["git", "add", "."], capture_output=True)
-        status = subprocess.run(
-            ["git", "status", "--porcelain"], capture_output=True, text=True
-        )
+        status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
         if status.stdout.strip():
-            subprocess.run(
-                ["git", "commit", "-m", "migration sync"], capture_output=True
-            )
+            subprocess.run(["git", "commit", "-m", "migration sync"], capture_output=True)
         subprocess.run(
             ["gh", "repo", "create", f"{NEW_USER}/{repo}", "--private"],
             capture_output=True,

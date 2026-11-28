@@ -43,9 +43,7 @@ class SaveToDisk:
         return True
 
     def get(self, url: str, headers: dict[str, str], timeout: int) -> bool:
-        resume_byte_pos: int = (
-            self._temp_path.stat().st_size if self._temp_path.exists() else 0
-        )
+        resume_byte_pos: int = self._temp_path.stat().st_size if self._temp_path.exists() else 0
         headers["Range"] = "bytes=%d-" % resume_byte_pos
         response: Response = get(url, headers=headers, stream=True, timeout=timeout)
         if response.status_code not in (200, 206):
@@ -68,9 +66,7 @@ def _get_url_data(
     for i in range(wait, tries):
         try:
             sleep(i)
-            result = get_function(
-                url, headers={"User-agent": "Chrome"}, timeout=timeout
-            )
+            result = get_function(url, headers={"User-agent": "Chrome"}, timeout=timeout)
             if result:
                 return result
         except ConnectionError as e:

@@ -347,9 +347,7 @@ def scan_project(
         dirnames[:] = [
             d
             for d in dirnames
-            if d not in ignores
-            and not d.endswith(".egg-info")
-            and (not d.startswith(".") or ignore_set is None)
+            if d not in ignores and not d.endswith(".egg-info") and (not d.startswith(".") or ignore_set is None)
         ]
         for fname in filenames:
             full = Path(dirpath).joinpath(fname)
@@ -358,18 +356,10 @@ def scan_project(
                 if fname.endswith((".py", ".pyw")):
                     with open(full, "r", encoding=encoding, errors="ignore") as fh:
                         content = fh.read()
-                    found = (
-                        parse_imports_ast(content)
-                        if use_ast
-                        else list(parse_imports_lines(content.splitlines()))
-                    )
+                    found = parse_imports_ast(content) if use_ast else list(parse_imports_lines(content.splitlines()))
                 elif fname.endswith(".ipynb") and scan_notebooks:
                     content = read_notebook(full, encoding=encoding)
-                    found = (
-                        parse_imports_ast(content)
-                        if use_ast
-                        else list(parse_imports_lines(content.splitlines()))
-                    )
+                    found = parse_imports_ast(content) if use_ast else list(parse_imports_lines(content.splitlines()))
                 else:
                     continue
             except (OSError, json.JSONDecodeError):
@@ -421,11 +411,7 @@ def detect_local_modules(root: str) -> set[str]:
     root_abs = Path(root).resolve()
     for dirpath, dirnames, filenames in os.walk(root_abs):
         dirnames[:] = [
-            d
-            for d in dirnames
-            if d not in SKIP_DIRS
-            and not d.endswith(".egg-info")
-            and not d.startswith(".")
+            d for d in dirnames if d not in SKIP_DIRS and not d.endswith(".egg-info") and not d.startswith(".")
         ]
         if "__init__.py" in filenames:
             local.add(_norm(Path(dirpath).name))
@@ -515,9 +501,7 @@ def resolve_from_pypi(
     results: list[dict[str, Optional[str]]] = []
     opener = urllib.request.build_opener()
     if proxy:
-        opener = urllib.request.build_opener(
-            urllib.request.ProxyHandler({"http": proxy, "https": proxy})
-        )
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy, "https": proxy}))
     for name in names:
         url = f"{server}{name}/json"
         try:
@@ -571,9 +555,7 @@ def show_diff(req_file: str, resolved: list[dict[str, Optional[str]]]) -> None:
     existing = {r["name"] for r in parse_requirements_file(req_file)}
     imported = {r["name"] for r in resolved}
     diff = existing - imported
-    print(
-        f"[i] The following modules are in {req_file} but do not seem to be imported: {','.join(diff)}"
-    )
+    print(f"[i] The following modules are in {req_file} but do not seem to be imported: {','.join(diff)}")
 
 
 def clean_file(req_file: str, resolved: list[dict[str, Optional[str]]]) -> None:
@@ -658,9 +640,7 @@ def run_offline(args: argparse.Namespace) -> int:
             unknown.append(name)
     print(f"[i] Skipped {len(skip_std)} stdlib modules")
     if args.detect_local:
-        print(
-            f"[i] Skipped {len(skip_local)} local modules:{','.join(sorted(skip_local)) or '-'}"
-        )
+        print(f"[i] Skipped {len(skip_local)} local modules:{','.join(sorted(skip_local)) or '-'}")
     print(f"[i] Skipped {len(skip_inst)} already-installed modules")
     if unknown:
         label = "unknown" if args.detect_local else "local/unknown"
@@ -721,12 +701,7 @@ def run_online(args: argparse.Namespace) -> int:
     else:
         delim = "=="
     out_path = args.savepath or Path(path).joinpath("requirements.txt")
-    if (
-        not args.print_only
-        and not args.savepath
-        and not args.force
-        and Path(out_path).exists()
-    ):
+    if not args.print_only and not args.savepath and not args.force and Path(out_path).exists():
         print("[!] requirements.txt already exists, use --force to overwrite it")
         return 1
     if args.print_only:
@@ -749,18 +724,14 @@ def build_parser() -> argparse.ArgumentParser:
         "offline",
         help="use a local PyPI package list (no network); mirrors imp1/imp2",
     )
-    off.add_argument(
-        "-p", "--path", default=None, help="project directory (default: current dir)"
-    )
+    off.add_argument("-p", "--path", default=None, help="project directory (default: current dir)")
     off.add_argument(
         "-l",
         "--pypi-list",
         default="/sdcard/data/pip.txt",
         help="path to the offline PyPI package list",
     )
-    off.add_argument(
-        "--pip-cmd", default="pip3", help="pip executable used for `pip freeze`"
-    )
+    off.add_argument("--pip-cmd", default="pip3", help="pip executable used for `pip freeze`")
     off.add_argument(
         "--detect-local",
         action="store_true",
@@ -786,21 +757,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="resolve via PyPI JSON API; mirrors pipreqs/pr2",
     )
     on.add_argument("-p", "--path", default=None)
-    on.add_argument(
-        "--savepath", default=None, help="path for the generated requirements file"
-    )
+    on.add_argument("--savepath", default=None, help="path for the generated requirements file")
     on.add_argument(
         "--print",
         dest="print_only",
         action="store_true",
         help="print requirements to stdout instead of writing",
     )
-    on.add_argument(
-        "--force", action="store_true", help="overwrite existing requirements.txt"
-    )
-    on.add_argument(
-        "--use-local", action="store_true", help="use local installation metadata only"
-    )
+    on.add_argument("--force", action="store_true", help="overwrite existing requirements.txt")
+    on.add_argument("--use-local", action="store_true", help="use local installation metadata only")
     on.add_argument(
         "--pypi-server",
         default="https://pypi.python.org/pypi/",
@@ -813,9 +778,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="version scheme: compat '~=', gt '>=', no-pin ''",
     )
-    on.add_argument(
-        "--diff", default=None, help="show entries in FILE not imported by the project"
-    )
+    on.add_argument("--diff", default=None, help="show entries in FILE not imported by the project")
     on.add_argument("--clean", default=None, help="remove unused entries from FILE")
     on.add_argument("--encoding", default="utf-8")
     on.add_argument("--ignore", action="append", default=[])

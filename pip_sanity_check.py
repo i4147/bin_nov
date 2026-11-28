@@ -26,9 +26,7 @@ RESET: str = "\033[0m"
 def sanity_check_packages() -> None:
     print(f"Python Version: {sys.version.split()[0]}")
     print("Starting system site-packages sanity check in Termux...\n")
-    installed_dists = sorted(
-        importlib.metadata.distributions(), key=lambda d: d.name.lower()
-    )
+    installed_dists = sorted(importlib.metadata.distributions(), key=lambda d: d.name.lower())
     healthy_packages = []
     problematic_packages = []
     for dist in installed_dists:
@@ -38,9 +36,7 @@ def sanity_check_packages() -> None:
         try:
             top_level_text = dist.read_text("top_level.txt")
             if top_level_text:
-                top_levels = [
-                    line.strip() for line in top_level_text.splitlines() if line.strip()
-                ]
+                top_levels = [line.strip() for line in top_level_text.splitlines() if line.strip()]
                 print(f"{pkg_name}: {top_levels}")
         except Exception:
             pass
@@ -67,9 +63,7 @@ def sanity_check_packages() -> None:
             healthy_packages.append(f"{pkg_name}=={version}")
             print(f"{GREEN}[\u2713] {pkg_name}   {version}{RESET}")
         else:
-            problematic_packages.append(
-                {"name": pkg_name, "version": version, "error": error_details}
-            )
+            problematic_packages.append({"name": pkg_name, "version": version, "error": error_details})
             print(f"{YELLOW}[\u2717]  {pkg_name}{RESET}")
     print("\n" + "=" * 50)
     print("Sanity Check Complete:")
@@ -83,10 +77,7 @@ def sanity_check_packages() -> None:
     if problematic_packages:
         with open("problematic_packages.log", "w", encoding="utf-8") as f:
             f.write("Package,Version,Error\n")
-            f.writelines(
-                f"{item['name']},{item['version']},{item['error']}\n"
-                for item in problematic_packages
-            )
+            f.writelines(f"{item['name']},{item['version']},{item['error']}\n" for item in problematic_packages)
         print("Saved problematic packages to 'problematic_packages.log'")
 
 

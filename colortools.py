@@ -376,9 +376,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     p = sub.add_parser("hex2rgb", help="Convert a hex color to RGB.")
     p.add_argument("hex")
     p.add_argument("--format", choices=["tuple", "dict"], default="dict")
-    p.add_argument(
-        "--allow-short", action="store_true", help="Allow 3-digit #abc form."
-    )
+    p.add_argument("--allow-short", action="store_true", help="Allow 3-digit #abc form.")
     p.set_defaults(func=cmd_hex2rgb)
     p = sub.add_parser("showcolor", help="Print random ANSI color blocks.")
     p.add_argument(

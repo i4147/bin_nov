@@ -42,27 +42,23 @@ from loguru import logger
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-FELO_CLI: Path = Path(
-    environ.get("FELO_CLI", "/data/data/com.termux/files/home/bashbin/felo-sa.mjs")
-)
+FELO_CLI: Path = Path(environ.get("FELO_CLI", "/data/data/com.termux/files/home/bashbin/felo-sa.mjs"))
 TIMEOUT: int = int(environ.get("FELO_TIMEOUT", "300"))
 MAX_SIZE: int = 80 * 1024
 MAX_ARG_BYTES: int = 120_000
 DEFAULT_LOG: str = "felo-docstrings.log"
-IGNORED_NAMES: frozenset[str] = frozenset(
-    {
-        "__init__.py",
-        "__main__.py",
-        "setup.py",
-        "main.py",
-        "test.py",
-        "conf.py",
-        "const.p",
-        "constants.py",
-        "tests.py",
-        "conftest.py",
-    }
-)
+IGNORED_NAMES: frozenset[str] = frozenset({
+    "__init__.py",
+    "__main__.py",
+    "setup.py",
+    "main.py",
+    "test.py",
+    "conf.py",
+    "const.p",
+    "constants.py",
+    "tests.py",
+    "conftest.py",
+})
 PROMPT_HEAD: str = (
     "You are an expert software requirements writer. Analyze the Python code provided between the "
     "<python_code> tags and write a clear, high-level prompt or specification that can be given to an "
@@ -84,15 +80,9 @@ PREAMBLE_RE: re.Pattern[str] = re.compile(
     r"^(?:sure[,!.]?|certainly[,!.]?|here(?:'s| is)[^\n]*|of course[,!.]?)\s*\n",
     re.IGNORECASE,
 )
-LIVEDOC_RE: re.Pattern[str] = re.compile(
-    r"^\s*LiveDoc\s*:.*$", re.MULTILINE | re.IGNORECASE
-)
-RECEIVED_RE: re.Pattern[str] = re.compile(
-    r"^\s*Received\s*:", re.MULTILINE | re.IGNORECASE
-)
-AGENT_LINE_RE: re.Pattern[str] = re.compile(
-    r"^\s*(?:SuperAgent|felo|feli)\b.*$", re.MULTILINE | re.IGNORECASE
-)
+LIVEDOC_RE: re.Pattern[str] = re.compile(r"^\s*LiveDoc\s*:.*$", re.MULTILINE | re.IGNORECASE)
+RECEIVED_RE: re.Pattern[str] = re.compile(r"^\s*Received\s*:", re.MULTILINE | re.IGNORECASE)
+AGENT_LINE_RE: re.Pattern[str] = re.compile(r"^\s*(?:SuperAgent|felo|feli)\b.*$", re.MULTILINE | re.IGNORECASE)
 LEADING_BLANK_RE: re.Pattern[str] = re.compile(r"^\s*\n+")
 SENTENCE_RE: re.Pattern[str] = re.compile(r"(?<=[.!?])\s+")
 BLANK_RUN_RE: re.Pattern[str] = re.compile(r"\n{3,}")
@@ -172,9 +162,7 @@ class Simplifier(ast.NodeTransformer):
         ]
         return self.generic_visit(node)
 
-    def simplify_function(
-        self, node: ast.FunctionDef | ast.AsyncFunctionDef
-    ) -> ast.AST:
+    def simplify_function(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> ast.AST:
         node.body = drop_docstring(node.body) or [ast.Pass()]
         node.returns = None
         node.type_params = []
@@ -203,9 +191,7 @@ class Simplifier(ast.NodeTransformer):
 
     def visit_AnnAssign(self, node: ast.AnnAssign) -> ast.AST:
         if node.value is not None:
-            return ast.copy_location(
-                ast.Assign(targets=[node.target], value=node.value), node
-            )
+            return ast.copy_location(ast.Assign(targets=[node.target], value=node.value), node)
         return ast.copy_location(ast.Pass(), node)
 
 
@@ -246,9 +232,7 @@ def clean_response(raw: str) -> tuple[str, str]:
     if not text:
         return "", "empty after cleaning"
     if "\n" not in text:
-        text = "\n".join(
-            part.strip() for part in SENTENCE_RE.split(text) if part.strip()
-        )
+        text = "\n".join(part.strip() for part in SENTENCE_RE.split(text) if part.strip())
     text = BLANK_RUN_RE.sub("\n\n", text)
     if STARTER_RE.match(text) is None:
         head = text[:300].lower()
@@ -285,13 +269,7 @@ def has_docstring_prefix(body: str) -> bool:
 
 def remove_docstring_prefix(body: str) -> str:
     stripped = body.lstrip()
-    delimiter = (
-        '"""'
-        if stripped.startswith('"""')
-        else "'''"
-        if stripped.startswith("'''")
-        else ""
-    )
+    delimiter = '"""' if stripped.startswith('"""') else "'''" if stripped.startswith("'''") else ""
     if not delimiter:
         return body
     end = stripped.find(delimiter, len(delimiter))
@@ -333,9 +311,7 @@ async def run_felo(prompt: str, label: str) -> FeloOutput:
         returncode=proc.returncode if proc.returncode is not None else -1,
         seconds=time.perf_counter() - started,
     )
-    logger.debug(
-        "[{}] felo exit code {} after {:.1f}s", label, result.returncode, result.seconds
-    )
+    logger.debug("[{}] felo exit code {} after {:.1f}s", label, result.returncode, result.seconds)
     log_block(label, "felo raw stdout", result.stdout)
     log_block(label, "felo raw stderr", result.stderr)
     if result.returncode != 0:
@@ -383,9 +359,7 @@ async def process_one(
             response = await run_felo(build_prompt(source, label), label)
             logger.info(response)
         except FileNotFoundError:
-            logger.critical(
-                "[{}] node executable not found in PATH, aborting run", label
-            )
+            logger.critical("[{}] node executable not found in PATH, aborting run", label)
             abort.set()
             stats["errors"] += 1
             return
@@ -422,9 +396,7 @@ async def guarded(
         await process_one(path, opts, gate, stats, abort)
     except Exception as exc:
         stats["errors"] += 1
-        logger.opt(exception=exc).error(
-            "[{}] unexpected failure: {}: {}", path.name, type(exc).__name__, exc
-        )
+        logger.opt(exception=exc).error("[{}] unexpected failure: {}: {}", path.name, type(exc).__name__, exc)
 
 
 def collect_files(targets: Sequence[str], pattern: str) -> list[Path]:
@@ -437,9 +409,7 @@ def collect_files(targets: Sequence[str], pattern: str) -> list[Path]:
         elif root.is_dir():
             for current, directories, files in root.walk():
                 directories[:] = [name for name in directories if name not in SKIP_DIRS]
-                candidates.extend(
-                    current / name for name in files if fnmatch.fnmatch(name, pattern)
-                )
+                candidates.extend(current / name for name in files if fnmatch.fnmatch(name, pattern))
         else:
             logger.warning("Path not found: {}", target)
     unique = {path.resolve() for path in candidates}
@@ -471,9 +441,7 @@ def print_summary(stats: Counter[str]) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "paths",
         nargs="*",
@@ -492,9 +460,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Glob pattern used when expanding directories (default: *.py).",
     )
     parser.add_argument("--delay", type=float, default=0.0)
-    parser.add_argument(
-        "-j", "--concurrency", type=int, default=4, help="Number of concurrent workers."
-    )
+    parser.add_argument("-j", "--concurrency", type=int, default=4, help="Number of concurrent workers.")
     parser.add_argument(
         "-v",
         "--verbose",

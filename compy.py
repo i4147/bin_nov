@@ -128,23 +128,14 @@ def is_stdlib_import(module_name: str | None) -> bool:
 
 
 def is_docstring_expr(node: ast.stmt) -> bool:
-    return (
-        isinstance(node, ast.Expr)
-        and isinstance(node.value, ast.Constant)
-        and isinstance(node.value.value, str)
-    )
+    return isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str)
 
 
 def is_terminating_statement(node: ast.stmt) -> bool:
     if isinstance(node, (ast.Return, ast.Raise, ast.Break, ast.Continue)):
         return True
     if isinstance(node, ast.If):
-        return (
-            bool(node.body)
-            and bool(node.orelse)
-            and block_terminates(node.body)
-            and block_terminates(node.orelse)
-        )
+        return bool(node.body) and bool(node.orelse) and block_terminates(node.body) and block_terminates(node.orelse)
     if isinstance(node, ast.Try):
         branches = [node.body, *[handler.body for handler in node.handlers]]
         if node.orelse:
@@ -358,11 +349,7 @@ class Simplifier(ast.NodeTransformer):
         for statement in statements:
             if terminated:
                 continue
-            if (
-                isinstance(statement, ast.If)
-                and statement.orelse
-                and block_terminates(statement.body)
-            ):
+            if isinstance(statement, ast.If) and statement.orelse and block_terminates(statement.body):
                 else_body = statement.orelse
                 statement.orelse = []
                 output.append(statement)
@@ -735,11 +722,7 @@ def process_file(path_string: str) -> tuple[str, str, str | None]:
 
 
 def format_output(results: list[tuple[str, str, str | None]]) -> str:
-    successful = [
-        (name, content)
-        for name, content, error in results
-        if error is None and content.strip()
-    ]
+    successful = [(name, content) for name, content, error in results if error is None and content.strip()]
     if not successful:
         return ""
     multiple_files = len(successful) > 1
@@ -785,11 +768,7 @@ def main() -> int:
     if output:
         output += "\n"
         output += COMPRESSION_NOTE + "\n"
-    single_py_file = (
-        len(args.inputs) == 1
-        and Path(args.inputs[0]).is_file()
-        and Path(args.inputs[0]).suffix == ".py"
-    )
+    single_py_file = len(args.inputs) == 1 and Path(args.inputs[0]).is_file() and Path(args.inputs[0]).suffix == ".py"
     if not single_py_file:
         atomic_write(OUTPUT_FILE, output, encoding="utf-8")
     if len(output) < 2**20:

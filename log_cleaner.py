@@ -20,9 +20,7 @@ from dh import atomic_write
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-ANSI_RE: re.Pattern[str] = re.compile(
-    r"\x1b(?:\[[0-9;]*[A-Za-z]|\][^\x07]*\x07|[()][AB012])"
-)
+ANSI_RE: re.Pattern[str] = re.compile(r"\x1b(?:\[[0-9;]*[A-Za-z]|\][^\x07]*\x07|[()][AB012])")
 CONTROL_RE: re.Pattern[str] = re.compile(r"[\x01-\x08\x0b\x0c\x0e-\x1f\x7f]")
 LITERAL_PATTERNS: tuple[str, ...] = (
     r"\^\[",
@@ -68,9 +66,7 @@ def clean_log_file(job: tuple[Path, bool]) -> tuple[Path, bool]:
     path, dry_run = job
     try:
         original: str = path.read_text(encoding="utf-8", errors="ignore")
-        updated: str = "".join(
-            clean_literal_line(ln) for ln in original.splitlines(keepends=True)
-        )
+        updated: str = "".join(clean_literal_line(ln) for ln in original.splitlines(keepends=True))
         if updated != original and not dry_run:
             atomic_write(path, updated, encoding="utf-8")
         return path, updated != original
@@ -96,9 +92,7 @@ def cmd_transcript(args: argparse.Namespace) -> int:
 
 def cmd_logs(args: argparse.Namespace) -> int:
     """Literal-clean every ``*.log`` under a root."""
-    files: list[Path] = (
-        sorted(args.root.rglob("*.log")) if args.root.is_dir() else [args.root]
-    )
+    files: list[Path] = sorted(args.root.rglob("*.log")) if args.root.is_dir() else [args.root]
     if not files:
         print("No .log files found.")
         return 0
@@ -107,11 +101,7 @@ def cmd_logs(args: argparse.Namespace) -> int:
     with ProcessPoolExecutor(max_workers=max(1, args.workers)) as pool:
         for path, did_change in pool.map(clean_log_file, jobs):
             changed += 1 if did_change else 0
-            print(
-                f"{'would clean' if args.dry_run else 'cleaned'}: {path}"
-                if did_change
-                else f"ok: {path}"
-            )
+            print(f"{'would clean' if args.dry_run else 'cleaned'}: {path}" if did_change else f"ok: {path}")
     print(f"Done: {changed}/{len(files)} file(s) changed.")
     return 0
 
@@ -134,18 +124,14 @@ def cmd_history(args: argparse.Namespace) -> int:
     if not target.is_file():
         print(f"{target} does not exist.")
         return 0
-    lines: list[str] = target.read_text(encoding="utf-8", errors="ignore").splitlines(
-        keepends=True
-    )
+    lines: list[str] = target.read_text(encoding="utf-8", errors="ignore").splitlines(keepends=True)
     print(f"history length: {len(lines)}")
     drops: list[str] = list(args.drop) + ([] if args.keep_cd_printf else [DEFAULT_DROP])
     kept: list[str] = [ln for ln in lines if not any(token in ln for token in drops)]
     unique: list[str] = dedup_preserving(kept)
     removed: int = len(lines) - len(unique)
     if args.dry_run:
-        print(
-            f"Would remove {removed} line(s) ({len(lines) - len(kept)} junk, rest duplicates)."
-        )
+        print(f"Would remove {removed} line(s) ({len(lines) - len(kept)} junk, rest duplicates).")
         return 0
     if args.backup:
         shutil.copy2(target, target.with_suffix(target.suffix + ".bak"))
@@ -173,9 +159,7 @@ def cmd_mc_import(args: argparse.Namespace) -> int:
     unique: list[str] = dedup_preserving([cmd + "\n" for cmd in commands if cmd])
     existing: set[str] = set()
     if args.dest.is_file() and not args.allow_dupes:
-        existing = {
-            ln.rstrip("\n") for ln in args.dest.read_text(errors="ignore").splitlines()
-        }
+        existing = {ln.rstrip("\n") for ln in args.dest.read_text(errors="ignore").splitlines()}
     fresh: list[str] = [ln for ln in unique if ln.rstrip("\n") not in existing]
     if args.dry_run:
         print("".join(fresh), end="")
@@ -250,9 +234,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     tr = sub.add_parser("transcript", help="Strip real ANSI escapes from a transcript")
     tr.add_argument("files", nargs="+", type=Path)
-    tr.add_argument(
-        "-o", "--output", type=Path, default=None, help="Output (single file)"
-    )
+    tr.add_argument("-o", "--output", type=Path, default=None, help="Output (single file)")
     tr.add_argument("--stdout", action="store_true")
     tr.set_defaults(handler=cmd_transcript)
     lo = sub.add_parser("logs", help="Strip literal escape text from *.log files")

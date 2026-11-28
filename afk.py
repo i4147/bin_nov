@@ -48,9 +48,7 @@ MAX_FILE_BYTES: int = 8 * 1024 * 1024
 LINE_LIMIT: int = 88
 ZSTD_HINT: str = "zstandard support is unavailable (pip install zstandard)"
 TRY_NODES: tuple[type, ...] = tuple(
-    node_type
-    for node_type in (ast.Try, getattr(ast, "TryStar", None))
-    if node_type is not None
+    node_type for node_type in (ast.Try, getattr(ast, "TryStar", None)) if node_type is not None
 )
 ImportNode = ast.Import | ast.ImportFrom
 EPILOG: str = """
@@ -235,9 +233,7 @@ def inside_try(node: ast.AST, parents: dict[int, ast.AST]) -> bool:
     return False
 
 
-def containing_list(
-    node: ast.AST, parents: dict[int, ast.AST]
-) -> list[ast.stmt] | None:
+def containing_list(node: ast.AST, parents: dict[int, ast.AST]) -> list[ast.stmt] | None:
     parent = parents.get(id(node))
     if parent is None:
         return None
@@ -299,9 +295,7 @@ def statement_span(lines: list[str], node: ImportNode) -> tuple[str, str, bool]:
     return indent, tail, fixable
 
 
-def render_import(
-    node: ImportNode, kept: list[ast.alias], indent: str, newline: str
-) -> str:
+def render_import(node: ImportNode, kept: list[ast.alias], indent: str, newline: str) -> str:
     parts = [a.name + (f" as {a.asname}" if a.asname else "") for a in kept]
     if isinstance(node, ast.Import):
         return indent + "import " + ", ".join(parts)
@@ -335,20 +329,14 @@ def analyze_source(source: str) -> tuple[list[UnusedImport], str | None, int]:
             if is_unused(node, alias, used):
                 grouped.setdefault(id(node), (node, []))[1].append(alias)
     spans = {key: statement_span(lines, node) for key, (node, _) in grouped.items()}
-    full = {
-        key
-        for key, (node, aliases) in grouped.items()
-        if spans[key][2] and len(aliases) == len(node.names)
-    }
+    full = {key for key, (node, aliases) in grouped.items() if spans[key][2] and len(aliases) == len(node.names)}
     unused: list[UnusedImport] = []
     edits: list[tuple[int, int, list[str]]] = []
     removable = 0
     for key, (node, aliases) in grouped.items():
         indent, tail, fixable = spans[key]
         for alias in aliases:
-            unused.append(
-                UnusedImport(node.lineno, alias_display(node, alias), fixable)
-            )
+            unused.append(UnusedImport(node.lineno, alias_display(node, alias), fixable))
         if not fixable:
             continue
         removable += len(aliases)
@@ -521,18 +509,14 @@ def iter_directory(root: Path, patterns: Sequence[str]) -> Iterator[SourceItem]:
     for current, dirs, files in os.walk(root):
         base = Path(current)
         relative_dir = base.relative_to(root)
-        dirs[:] = sorted(
-            d for d in dirs if not matches_any((relative_dir / d).as_posix(), patterns)
-        )
+        dirs[:] = sorted(d for d in dirs if not matches_any((relative_dir / d).as_posix(), patterns))
         for name in sorted(files):
             if not name.endswith(".py"):
                 continue
             if matches_any((relative_dir / name).as_posix(), patterns):
                 continue
             path = base / name
-            yield SourceItem(
-                display=str(path), path=path, is_init=name == "__init__.py"
-            )
+            yield SourceItem(display=str(path), path=path, is_init=name == "__init__.py")
 
 
 def iter_zip(path: Path, patterns: Sequence[str]) -> Iterator[SourceItem]:
@@ -563,9 +547,7 @@ def iter_zip(path: Path, patterns: Sequence[str]) -> Iterator[SourceItem]:
             )
 
 
-def iter_tar_members(
-    tar: tarfile.TarFile, label: str, patterns: Sequence[str]
-) -> Iterator[SourceItem]:
+def iter_tar_members(tar: tarfile.TarFile, label: str, patterns: Sequence[str]) -> Iterator[SourceItem]:
     for member in tar:
         if not member.isfile() or not member.name.endswith(".py"):
             continue
@@ -643,23 +625,17 @@ def discover(target: Path, patterns: Sequence[str]) -> Iterator[SourceItem]:
     elif kind == "py-compressed":
         yield from iter_single_compressed(target)
     else:
-        yield SourceItem(
-            display=str(target), path=target, is_init=target.name == "__init__.py"
-        )
+        yield SourceItem(display=str(target), path=target, is_init=target.name == "__init__.py")
 
 
-def run_analysis(
-    items: list[SourceItem], include_init: bool, workers: int
-) -> Iterator[FileResult]:
+def run_analysis(items: list[SourceItem], include_init: bool, workers: int) -> Iterator[FileResult]:
     if workers <= 1 or len(items) < 2:
         for item in items:
             yield process_item(item, include_init)
         return
     chunk = max(1, len(items) // (workers * 4))
     with ProcessPoolExecutor(max_workers=workers) as pool:
-        yield from pool.map(
-            process_item, items, itertools.repeat(include_init), chunksize=chunk
-        )
+        yield from pool.map(process_item, items, itertools.repeat(include_init), chunksize=chunk)
 
 
 def format_diff(diff: str, style: Style) -> str:
@@ -678,9 +654,7 @@ def format_diff(diff: str, style: Style) -> str:
     return "\n".join(rendered)
 
 
-def print_file_report(
-    result: FileResult, style: Style, show_diff: bool, out: IO[str]
-) -> None:
+def print_file_report(result: FileResult, style: Style, show_diff: bool, out: IO[str]) -> None:
     count_label = style.dim(f"({len(result.unused)} unused)")
     print(f"{style.bold(result.display)} {count_label}", file=out)
     for item in result.unused:

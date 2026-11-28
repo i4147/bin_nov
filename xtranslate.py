@@ -145,9 +145,7 @@ def iter_files(
                 continue
             if any(part in SKIP_DIRS for part in f.parts):
                 continue
-            if skip_hidden and any(
-                part.startswith(".") for part in f.relative_to(p).parts
-            ):
+            if skip_hidden and any(part.startswith(".") for part in f.relative_to(p).parts):
                 continue
             if ext_set and f.suffix.lower() not in ext_set:
                 continue
@@ -184,9 +182,7 @@ class Translator:
                 if attempt < self.retries - 1:
                     time.sleep(self.delay * (attempt + 1))
         if last_exc is not None:
-            log.debug(
-                "Translation failed after {} attempts: {}", self.retries, last_exc
-            )
+            log.debug("Translation failed after {} attempts: {}", self.retries, last_exc)
         return text
 
 
@@ -222,9 +218,7 @@ def _inline_process_one(path: Path, opts: dict[str, Any]) -> str:
         return f"✗ {path}: {exc}"
     if not opts.get("force") and not has_non_ascii(text):
         return f"~ {path.name} (already English)"
-    translator = Translator(
-        opts["source"], opts["target"], opts["retries"], opts["delay"]
-    )
+    translator = Translator(opts["source"], opts["target"], opts["retries"], opts["delay"])
     lines = text.splitlines(keepends=True)
     changed = 0
     out: list[str] = []
@@ -251,17 +245,13 @@ def _marked_process_one(path: Path, opts: dict[str, Any]) -> str:
         text = path.read_text(encoding="utf-8", errors="ignore")
     except OSError as exc:
         return f"✗ {path}: {exc}"
-    translator = Translator(
-        opts["source"], opts["target"], opts["retries"], opts["delay"]
-    )
+    translator = Translator(opts["source"], opts["target"], opts["retries"], opts["delay"])
     lines = text.splitlines(keepends=True)
     out: list[str] = []
     changed = 0
     for line in lines:
         stripped = line.rstrip("\n")
-        if not stripped.strip() or looks_english(
-            stripped, opts["detect"], opts["threshold"]
-        ):
+        if not stripped.strip() or looks_english(stripped, opts["detect"], opts["threshold"]):
             out.append(line)
             continue
         translated = translator.translate(stripped.strip())
@@ -380,9 +370,7 @@ def mode_copy(args: argparse.Namespace) -> int:
             continue
         chunks = list(chunk_by_size(text, args.chunk_size))
         print(f"→ {path.name}: {len(chunks)} chunks")
-        tasks = [
-            (c, args.source, args.target, args.retries, args.delay) for c in chunks
-        ]
+        tasks = [(c, args.source, args.target, args.retries, args.delay) for c in chunks]
         results = _run_workers(_chunk_worker, tasks, MAX_WORKERS)
         result_text = "".join(results)
         if args.check_python_syntax and path.suffix == ".py":
@@ -428,28 +416,22 @@ def mode_json(args: argparse.Namespace) -> int:
             continue
         chunks = chunk_with_lines(text, args.chunk_size)
         print(f"→ {path.name}: {len(chunks)} chunks")
-        tasks = [
-            (c[2], args.source, args.target, args.retries, args.delay) for c in chunks
-        ]
+        tasks = [(c[2], args.source, args.target, args.retries, args.delay) for c in chunks]
         results = _run_workers(_chunk_worker, tasks, MAX_WORKERS)
         records = []
         for (start, end, original), translated in zip(chunks, results):
-            records.append(
-                {
-                    "chunk_id": f"{start}_{end}",
-                    "start_line": start,
-                    "end_line": end,
-                    "translated": translated,
-                    "skipped": translated == original,
-                }
-            )
+            records.append({
+                "chunk_id": f"{start}_{end}",
+                "start_line": start,
+                "end_line": end,
+                "translated": translated,
+                "skipped": translated == original,
+            })
         out_path = path.with_suffix(".json")
         if args.dry_run:
             print(f"[dry-run] would write {out_path}")
             continue
-        atomic_write(
-            out_path, json.dumps({"lines": records}, ensure_ascii=False, indent=2)
-        )
+        atomic_write(out_path, json.dumps({"lines": records}, ensure_ascii=False, indent=2))
         print(f"✓ wrote {out_path}")
     return 0
 
@@ -530,9 +512,7 @@ def mode_segment(args: argparse.Namespace) -> int:
     return 0
 
 
-def _segment_one(
-    path: Path, args: argparse.Namespace, pattern: re.Pattern[str]
-) -> None:
+def _segment_one(path: Path, args: argparse.Namespace, pattern: re.Pattern[str]) -> None:
     try:
         text = path.read_text(encoding="utf-8")
     except OSError as exc:
@@ -553,15 +533,9 @@ def _segment_one(
             progress = json.loads(progress_path.read_text(encoding="utf-8"))
         except Exception:
             progress = {}
-    pending = [
-        t
-        for t in tasks
-        if str(t[0]) not in progress or f"{t[1]},{t[2]}" not in progress[str(t[0])]
-    ]
+    pending = [t for t in tasks if str(t[0]) not in progress or f"{t[1]},{t[2]}" not in progress[str(t[0])]]
     print(f"→ {path.name}: {len(pending)}/{len(tasks)} segments to translate")
-    chunk_tasks = [
-        (t[3], args.source, args.target, args.retries, args.delay) for t in pending
-    ]
+    chunk_tasks = [(t[3], args.source, args.target, args.retries, args.delay) for t in pending]
     results = _run_workers(_chunk_worker, chunk_tasks, MAX_WORKERS) if pending else []
     for (line_idx, s, e, _), tr in zip(pending, results):
         progress.setdefault(str(line_idx), {})[f"{s},{e}"] = tr
@@ -649,37 +623,25 @@ def _resume_one(path: Path, args: argparse.Namespace) -> None:
     if not lines:
         print(f"~ {path.name}: empty")
         return
-    out_path = (
-        Path(args.output)
-        if args.output
-        else path.with_suffix(path.suffix + ".translated.txt")
-    )
+    out_path = Path(args.output) if args.output else path.with_suffix(path.suffix + ".translated.txt")
     meta_path = Path(args.meta) if args.meta else Path(str(out_path) + ".meta.json")
     batch_size = max(1, args.batch_size)
     indexed = list(enumerate(lines))
     batches = [indexed[i : i + batch_size] for i in range(0, len(indexed), batch_size)]
     tasks = [(args.source, args.target, b, args.retries, args.delay) for b in batches]
     translations: dict[int, str] = {}
-    print(
-        f"→ {path.name}: {len(lines)} lines / {len(batches)} batches (workers={MAX_WORKERS}) -> {out_path}"
-    )
+    print(f"→ {path.name}: {len(lines)} lines / {len(batches)} batches (workers={MAX_WORKERS}) -> {out_path}")
     pool = mp.Pool(processes=MAX_WORKERS) if MAX_WORKERS > 1 else None
     last_save = time.time()
     try:
         for i, task in enumerate(tasks):
             if _shutdown:
                 break
-            results = (
-                pool.apply(_resume_translate_batch, (task,))
-                if pool
-                else _resume_translate_batch(task)
-            )
+            results = pool.apply(_resume_translate_batch, (task,)) if pool else _resume_translate_batch(task)
             translations.update(dict(results))
             now = time.time()
             if now - last_save >= args.save_interval or i == len(tasks) - 1:
-                _resume_flush(
-                    out_path, meta_path, path, lines, translations, complete=False
-                )
+                _resume_flush(out_path, meta_path, path, lines, translations, complete=False)
                 done = len(translations)
                 print(f"   saved {done}/{len(lines)} lines")
                 last_save = now
@@ -721,9 +683,7 @@ def _add_common(p: argparse.ArgumentParser) -> None:
         default=None,
         help="Files or directories (default: current directory).",
     )
-    p.add_argument(
-        "-s", "--source", default="auto", help="Source language code (default: auto)."
-    )
+    p.add_argument("-s", "--source", default="auto", help="Source language code (default: auto).")
     p.add_argument(
         "-t",
         "--target",
@@ -766,9 +726,7 @@ def _add_common(p: argparse.ArgumentParser) -> None:
         action="store_true",
         help="Show what would be done without writing.",
     )
-    p.add_argument(
-        "--no-skip-hidden", action="store_true", help="Do not skip hidden files / dirs."
-    )
+    p.add_argument("--no-skip-hidden", action="store_true", help="Do not skip hidden files / dirs.")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -781,9 +739,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="mode", required=True)
     p_inline = sub.add_parser("inline", help="Line-by-line in-place translation.")
     _add_common(p_inline)
-    p_inline.add_argument(
-        "--force", action="store_true", help="Translate even files that look English."
-    )
+    p_inline.add_argument("--force", action="store_true", help="Translate even files that look English.")
     p_inline.add_argument(
         "--use-file-api",
         action="store_true",
@@ -803,9 +759,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="_eng",
         help="Suffix before the extension (default: _eng).",
     )
-    p_copy.add_argument(
-        "--output-prefix", default="", help="Prefix before the filename stem."
-    )
+    p_copy.add_argument("--output-prefix", default="", help="Prefix before the filename stem.")
     p_copy.add_argument(
         "--output-dir",
         default=None,
@@ -816,9 +770,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Run ast.parse on translated .py before writing.",
     )
-    p_copy.add_argument(
-        "--force", action="store_true", help="Translate even files that look English."
-    )
+    p_copy.add_argument("--force", action="store_true", help="Translate even files that look English.")
     p_copy.set_defaults(func=mode_copy)
     p_json = sub.add_parser("json", help="Chunked translation to a JSON file.")
     _add_common(p_json)
@@ -872,12 +824,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Output file (default: <name>.translated.txt).",
     )
-    p_res.add_argument(
-        "--meta", default=None, help="Meta JSON path (default: <output>.meta.json)."
-    )
-    p_res.add_argument(
-        "--batch-size", type=int, default=100, help="Lines per batch (default: 100)."
-    )
+    p_res.add_argument("--meta", default=None, help="Meta JSON path (default: <output>.meta.json).")
+    p_res.add_argument("--batch-size", type=int, default=100, help="Lines per batch (default: 100).")
     p_res.add_argument(
         "--save-interval",
         type=float,

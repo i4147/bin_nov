@@ -71,9 +71,7 @@ def kind_of(p: Path) -> str:
 
 def _run(cmd: str, timeout: float, label: str):
     try:
-        proc = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=timeout, check=False
-        )
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False)
     except subprocess.TimeoutExpired:
         return None, "", "", f"{label} timed out after {timeout:g}s"
     except FileNotFoundError:
@@ -163,9 +161,7 @@ def optimize_jpg(path: Path, before: int, opts: dict, dry_run: bool) -> Result:
             shutil.rmtree(tmpdir, ignore_errors=True)
     tmp_path: Path | None = None
     try:
-        with tempfile.NamedTemporaryFile(
-            suffix=path.suffix, dir=path.parent, delete=False
-        ) as tmp:
+        with tempfile.NamedTemporaryFile(suffix=path.suffix, dir=path.parent, delete=False) as tmp:
             tmp_path = Path(tmp.name)
         shutil.copy2(path, tmp_path)
         cmd = [opts["jpegoptim"], f"-m{q}", "--strip-all", *flags, "-o", str(tmp_path)]
@@ -193,9 +189,7 @@ def optimize_jpg(path: Path, before: int, opts: dict, dry_run: bool) -> Result:
             shutil.copymode(path, tmp_path)
             os.replace(tmp_path, path)
         except OSError as e:
-            return Result(
-                path, before, after, "error", "jpg", f"failed to replace: {e}", out, err
-            )
+            return Result(path, before, after, "error", "jpg", f"failed to replace: {e}", out, err)
         tmp_path = None
         return Result(path, before, after, "optimized", "jpg", "", out, err)
     finally:
@@ -207,9 +201,7 @@ def optimize_jpg(path: Path, before: int, opts: dict, dry_run: bool) -> Result:
 def optimize_png(path: Path, before: int, opts: dict, dry_run: bool) -> Result:
     tmp_out: Path | None = None
     try:
-        with tempfile.NamedTemporaryFile(
-            suffix=path.suffix, dir=path.parent, delete=False
-        ) as tmp:
+        with tempfile.NamedTemporaryFile(suffix=path.suffix, dir=path.parent, delete=False) as tmp:
             tmp_out = Path(tmp.name)
         cmd = [
             opts["pngquant"],
@@ -271,9 +263,7 @@ def optimize_png(path: Path, before: int, opts: dict, dry_run: bool) -> Result:
 def optimize_svg(path: Path, before: int, opts: dict, dry_run: bool) -> Result:
     tmp_out: Path | None = None
     try:
-        with tempfile.NamedTemporaryFile(
-            suffix=path.suffix, dir=path.parent, delete=False
-        ) as tmp:
+        with tempfile.NamedTemporaryFile(suffix=path.suffix, dir=path.parent, delete=False) as tmp:
             tmp_out = Path(tmp.name)
         cmd = [opts["svgo"]]
         if not opts["verbose"]:
@@ -369,12 +359,8 @@ def main() -> int:
     ap.add_argument("--jpegoptim", default="jpegoptim", metavar="PATH")
     ap.add_argument("--jpegoptim-arg", action="append", default=[], metavar="ARG")
     ap.add_argument("--png-quality", default="65-80")
-    ap.add_argument(
-        "--speed", type=int, choices=range(1, 12), default=None, metavar="1-11"
-    )
-    ap.add_argument(
-        "--posterize", type=int, choices=range(5), default=None, metavar="0-4"
-    )
+    ap.add_argument("--speed", type=int, choices=range(1, 12), default=None, metavar="1-11")
+    ap.add_argument("--posterize", type=int, choices=range(5), default=None, metavar="0-4")
     ap.add_argument("--pngquant", default="pngquant", metavar="PATH")
     ap.add_argument("--pngquant-arg", action="append", default=[], metavar="ARG")
     ap.add_argument("--svg-precision", type=int, default=None)
@@ -385,9 +371,7 @@ def main() -> int:
     ap.add_argument("--svgo-arg", action="append", default=[], metavar="ARG")
     args = ap.parse_args()
     if args.progressive and args.normal:
-        print(
-            "error: --progressive and --normal are mutually exclusive", file=sys.stderr
-        )
+        print("error: --progressive and --normal are mutually exclusive", file=sys.stderr)
         return 2
     root = Path(args.root).resolve()
     files = list(walker(root, recursive=not args.no_recursive, exts=ALL_EXTS))
@@ -464,12 +448,8 @@ def main() -> int:
                 print(f"{r.path.name} {DIM}error: {r.detail}{RESET}", file=sys.stderr)
     print("-" * 60)
     label = "Would free" if args.dry_run else "Space freed"
-    print(
-        f"Optimized: {counts['optimized']} | Unchanged: {counts['unchanged']} | Errors: {counts['error']}"
-    )
-    print(
-        f"{label}: {GREEN}{total_saved:,} bytes{RESET} ({total_saved / 1024 / 1024:.2f} MiB)"
-    )
+    print(f"Optimized: {counts['optimized']} | Unchanged: {counts['unchanged']} | Errors: {counts['error']}")
+    print(f"{label}: {GREEN}{total_saved:,} bytes{RESET} ({total_saved / 1024 / 1024:.2f} MiB)")
     for k in ("jpg", "png", "svg"):
         if k in by_kind:
             print(f"  {k}: {GREEN}{by_kind[k]:,} bytes{RESET}")

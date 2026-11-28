@@ -48,8 +48,7 @@ def get_text_files(root: Path) -> list[Path]:
     return [
         p
         for p in root.rglob("*")
-        if p.is_file()
-        and p.suffix.lower() in {".txt", ".md", ".py", ".json", ".csv", ".html", ".xml"}
+        if p.is_file() and p.suffix.lower() in {".txt", ".md", ".py", ".json", ".csv", ".html", ".xml"}
     ]
 
 
@@ -78,9 +77,7 @@ def main() -> None:
     with progress_bar as p:
         task = p.add_task("Processing files", total=len(files))
         with ProcessPoolExecutor() as executor:
-            futures = {
-                executor.submit(FileProcessor().process_file, f): f for f in files
-            }
+            futures = {executor.submit(FileProcessor().process_file, f): f for f in files}
             for future in as_completed(futures):
                 word_set = future.result()
                 all_words.update(word_set)

@@ -66,9 +66,7 @@ def redirect_logging_to_file(path: Path) -> None:
 def fmt_size(n: int, si: bool = False) -> str:
     base = 1000.0 if si else 1024.0
     units = (
-        ("  B", " kB", " MB", " GB", " TB", " PB", " EB")
-        if si
-        else ("  B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB")
+        ("  B", " kB", " MB", " GB", " TB", " PB", " EB") if si else ("  B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB")
     )
     f = float(n)
     for u in units:
@@ -144,9 +142,7 @@ def scan_subtree(
             return node
         counter["dirs"] += 1
         if one_filesystem and st.st_dev != root_dev:
-            log.debug(
-                "skipping {}: other filesystem (dev={} != {})", p, st.st_dev, root_dev
-            )
+            log.debug("skipping {}: other filesystem (dev={} != {})", p, st.st_dev, root_dev)
             node["c"] = []
             return node
         try:
@@ -549,13 +545,7 @@ class Browser:
                 (
                     attr
                     if sel
-                    else (
-                        curses.color_pair(4)
-                        if n.err
-                        else curses.color_pair(2)
-                        if n.is_dir
-                        else curses.A_NORMAL
-                    )
+                    else (curses.color_pair(4) if n.err else curses.color_pair(2) if n.is_dir else curses.A_NORMAL)
                 ),
             )
         foot = (
@@ -817,9 +807,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="show apparent size instead of disk usage",
     )
-    ap.add_argument(
-        "--si", action="store_true", help="use powers of 1000 instead of 1024"
-    )
+    ap.add_argument("--si", action="store_true", help="use powers of 1000 instead of 1024")
     ap.add_argument(
         "-v",
         "--verbose",
@@ -842,22 +830,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         metavar="N",
         help="with --no-ui: show the N largest entries",
     )
-    ap.add_argument(
-        "-V", "--version", action="version", version=f"{PROGNAME} {__version__}"
-    )
+    ap.add_argument("-V", "--version", action="version", version=f"{PROGNAME} {__version__}")
     return ap.parse_args(argv)
 
 
 def print_summary(root: Node, top: int, apparent: bool, si: bool) -> None:
     val = (lambda n: n.size) if apparent else (lambda n: n.dsize)
     print(f"\n=== {root.path} ===")
-    print(
-        f"total {'apparent' if apparent else 'disk'} usage: {fmt_size(val(root), si).strip()}"
-    )
+    print(f"total {'apparent' if apparent else 'disk'} usage: {fmt_size(val(root), si).strip()}")
     print(f"items: {fmt_count(root.items)}\n")
-    biggest = sorted(
-        (n for n in root.iter_all() if n is not root), key=val, reverse=True
-    )[:top]
+    biggest = sorted((n for n in root.iter_all() if n is not root), key=val, reverse=True)[:top]
     for n in biggest:
         print(f"{fmt_size(val(n), si):>12}  {'d' if n.is_dir else '-'}  {n.path}")
 

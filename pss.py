@@ -110,19 +110,14 @@ def search_database(
 
     con: sqlite3.Connection = sqlite3.connect(str(db_path))
     try:
-        nonzero_clause: str = (
-            " AND (monthly_dl != 0 OR all_time_dl != 0)" if nonzero_only else ""
-        )
+        nonzero_clause: str = " AND (monthly_dl != 0 OR all_time_dl != 0)" if nonzero_only else ""
 
         # For ordinary ASCII substrings, FTS5's trigram index can accelerate
         # LIKE searches when the pattern contains at least three characters.
         # '%' and '_' are LIKE wildcards, so use literal Python matching for
         # those inputs rather than accidentally treating them as wildcards.
         can_use_trigram_like: bool = (
-            len(keyword) >= TRIGRAM_MIN
-            and keyword.isascii()
-            and "%" not in keyword
-            and "_" not in keyword
+            len(keyword) >= TRIGRAM_MIN and keyword.isascii() and "%" not in keyword and "_" not in keyword
         )
 
         if can_use_trigram_like:
@@ -136,9 +131,7 @@ def search_database(
                 """,
                 (f"%{keyword}%", limit),
             )
-            return [
-                (str(row[0]), int(row[1]), int(row[2])) for row in cursor.fetchall()
-            ]
+            return [(str(row[0]), int(row[1]), int(row[2])) for row in cursor.fetchall()]
 
         # Short, non-ASCII, or wildcard-containing terms use literal matching.
         # These cases may scan the table, but still return the correct results.
@@ -280,7 +273,9 @@ def main() -> int:
         )
     else:
         if not db_path.is_file():
-            msg = f"Index not found: {db_path}. Run with -u to create it, or use --json-only to search pip.json directly."
+            msg = (
+                f"Index not found: {db_path}. Run with -u to create it, or use --json-only to search pip.json directly."
+            )
             raise SystemExit(msg)
         results = search_database(
             db_path,

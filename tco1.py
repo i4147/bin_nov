@@ -114,9 +114,7 @@ def _mapped_language(backend: str, language: str) -> str:
     return _LANG_MAP.get(backend, {}).get(language.casefold(), language)
 
 
-def _make_deep_translator(
-    source: str, target: str, script_path: str
-) -> TranslationFunction:
+def _make_deep_translator(source: str, target: str, script_path: str) -> TranslationFunction:
     del script_path
     try:
         from deep_translator import GoogleTranslator
@@ -169,9 +167,7 @@ def _make_deepl(source: str, target: str, script_path: str) -> TranslationFuncti
     return translate
 
 
-def _make_libretranslate_remote(
-    source: str, target: str, script_path: str
-) -> TranslationFunction:
+def _make_libretranslate_remote(source: str, target: str, script_path: str) -> TranslationFunction:
     del script_path
     api_url = os.environ.get("LIBRETRANSLATE_URL")
     if not api_url:
@@ -228,9 +224,7 @@ def _make_translate(source: str, target: str, script_path: str) -> TranslationFu
     return translate_text
 
 
-def _make_googletrans(
-    source: str, target: str, script_path: str
-) -> TranslationFunction:
+def _make_googletrans(source: str, target: str, script_path: str) -> TranslationFunction:
     del script_path
     try:
         from googletrans import Translator
@@ -251,9 +245,7 @@ def _make_googletrans(
     return translate
 
 
-def _make_pygoogletranslation(
-    source: str, target: str, script_path: str
-) -> TranslationFunction:
+def _make_pygoogletranslation(source: str, target: str, script_path: str) -> TranslationFunction:
     del script_path
     try:
         from pygoogletranslation import Translator
@@ -274,18 +266,14 @@ def _make_pygoogletranslation(
     return translate
 
 
-def _make_translators_bing(
-    source: str, target: str, script_path: str
-) -> TranslationFunction:
+def _make_translators_bing(source: str, target: str, script_path: str) -> TranslationFunction:
     del script_path
     try:
         import translators
     except Exception as exc:
         msg = "install it with: pip install translators; pkg install nodejs"
         raise BackendError(msg) from exc
-    logger.warning(
-        "translators_bing uses a JavaScript subprocess per request; throughput will be low on Termux"
-    )
+    logger.warning("translators_bing uses a JavaScript subprocess per request; throughput will be low on Termux")
     lock = threading.Lock()
 
     def translate(text: str) -> str:
@@ -312,9 +300,7 @@ def _make_boto3(source: str, target: str, script_path: str) -> TranslationFuncti
     except Exception as exc:
         msg = "install it with: pip install boto3"
         raise BackendError(msg) from exc
-    region = os.environ.get("AWS_REGION") or os.environ.get(
-        "AWS_DEFAULT_REGION", "us-east-1"
-    )
+    region = os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
     mapped_source = _mapped_language("boto3", source)
     mapped_target = _mapped_language("boto3", target)
 
@@ -484,9 +470,7 @@ def _backend_chain(preferred: str) -> list[str]:
     return [preferred] + [name for name in _DEFAULT_CHAIN if name != preferred]
 
 
-def _select_backend(
-    preferred: str, source: str, target: str, script_path: str
-) -> tuple[str, TranslationFunction]:
+def _select_backend(preferred: str, source: str, target: str, script_path: str) -> tuple[str, TranslationFunction]:
     if preferred in _FORBIDDEN_BACKENDS:
         msg = (
             f"backend '{preferred}' is unavailable on Termux armv8l: "
@@ -505,17 +489,13 @@ def _select_backend(
             logger.warning("backend 'deepl' skipped: DEEPL_API_KEY is not set")
             continue
         if name == "libretranslate_remote" and not os.environ.get("LIBRETRANSLATE_URL"):
-            logger.warning(
-                "backend 'libretranslate_remote' skipped: LIBRETRANSLATE_URL is not set"
-            )
+            logger.warning("backend 'libretranslate_remote' skipped: LIBRETRANSLATE_URL is not set")
             continue
         try:
             factory = _BACKEND_FACTORIES[name]
             translator = factory(source, target, script_path)
             if index:
-                print(
-                    f"⚠️  Backend '{chain[index - 1]}' unavailable — falling back to '{name}'."
-                )
+                print(f"⚠️  Backend '{chain[index - 1]}' unavailable — falling back to '{name}'.")
             logger.info("selected backend: {}", name)
             return name, translator
         except Exception as exc:
@@ -540,9 +520,7 @@ def _load_existing(path: Path) -> "OrderedDict[str, str]":
         raise BackendError(msg) from exc
 
 
-def _read_pending(
-    input_path: Path, existing: dict[str, str], continue_job: bool
-) -> tuple[list[str], int]:
+def _read_pending(input_path: Path, existing: dict[str, str], continue_job: bool) -> tuple[list[str], int]:
     if not input_path.is_file():
         msg = f"input file does not exist: {input_path}"
         raise BackendError(msg)
@@ -608,9 +586,7 @@ def _translate_one(
     return word, None
 
 
-def _print_progress(
-    number: int, total: int, word: str, translation: Optional[str]
-) -> None:
+def _print_progress(number: int, total: int, word: str, translation: Optional[str]) -> None:
     with _console_lock:
         if translation is None:
             print(f"[{number}/{total}] ✗ {word} (failed -> failed.txt)")
@@ -619,9 +595,7 @@ def _print_progress(
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Translate a word-list file into a JSON mapping on Termux."
-    )
+    parser = argparse.ArgumentParser(description="Translate a word-list file into a JSON mapping on Termux.")
     parser.add_argument("-i", "--input", default="words.txt")
     parser.add_argument("-o", "--output", default="words.json")
     parser.add_argument("--failed", default="failed.txt")
@@ -689,9 +663,7 @@ def main() -> int:
             script_path,
         )
         with _console_lock:
-            print(
-                f"Using backend '{backend_name}'. {len(pending)} words pending out of {total}."
-            )
+            print(f"Using backend '{backend_name}'. {len(pending)} words pending out of {total}.")
         if not pending:
             with _results_lock:
                 atomic_write(output_path, results)

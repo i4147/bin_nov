@@ -37,9 +37,7 @@ from loguru import logger
 
 
 ANDROID_RE = re.compile(r"/([^/]+)-(\d+\.\d+\.\d+)-py3-none-android_24_([^/]+)\.whl")
-LINUX_RE = re.compile(
-    r"/([^/]+)-(\d+\.\d+\.\d+(?:\.\d+)?)-cp\d+-cp\d+-linux_([^/]+)\.whl"
-)
+LINUX_RE = re.compile(r"/([^/]+)-(\d+\.\d+\.\d+(?:\.\d+)?)-cp\d+-cp\d+-linux_([^/]+)\.whl")
 PY_RE = re.compile(r"python3\.(\d+)")
 METADATA_RE = re.compile(r"^(.+?)-(\d[\d._]*[a-zA-Z]*[\d]*)$")
 NORMALIZE_RE = re.compile(r"[-_.]+")
@@ -104,9 +102,7 @@ def parse_wheel_or_metadata(name: str) -> Optional[tuple[str, str]]:
     ver_parts: list[str] = []
     in_ver = False
     for i, part in enumerate(parts):
-        if not in_ver and (
-            re.match(r"^\d", part) or part.lower() in ("v", "ver", "version")
-        ):
+        if not in_ver and (re.match(r"^\d", part) or part.lower() in ("v", "ver", "version")):
             in_ver = True
             ver_parts.append(part)
         elif not in_ver:
@@ -191,15 +187,9 @@ def extensions_for_type(file_type: str) -> tuple[str, ...]:
     return (".whl", ".metadata")
 
 
-def find_files(
-    directory: Path, extensions: Sequence[str], recursive: bool
-) -> list[Path]:
+def find_files(directory: Path, extensions: Sequence[str], recursive: bool) -> list[Path]:
     iterator = directory.rglob("*") if recursive else directory.glob("*")
-    return [
-        p
-        for p in iterator
-        if p.is_file() and any(p.name.endswith(ext) for ext in extensions)
-    ]
+    return [p for p in iterator if p.is_file() and any(p.name.endswith(ext) for ext in extensions)]
 
 
 def process_clean_file(path: Path) -> Optional[tuple[str, str, Path]]:
@@ -217,9 +207,7 @@ def process_clean_file(path: Path) -> Optional[tuple[str, str, Path]]:
     return None
 
 
-def process_clean_files(
-    files: list[Path], workers: int
-) -> dict[str, list[tuple[str, Path]]]:
+def process_clean_files(files: list[Path], workers: int) -> dict[str, list[tuple[str, Path]]]:
     if workers <= 1:
         results = [process_clean_file(f) for f in files]
     else:
@@ -233,9 +221,7 @@ def process_clean_files(
     return dict(package_map)
 
 
-def process_metadata_files(
-    files: list[Path], workers: int
-) -> dict[str, list[tuple[str, Path]]]:
+def process_metadata_files(files: list[Path], workers: int) -> dict[str, list[tuple[str, Path]]]:
     if workers <= 1:
         results = [parse_metadata_filename(f) for f in files]
     else:
@@ -248,9 +234,7 @@ def process_metadata_files(
     return dict(package_map)
 
 
-def process_metadata_batches(
-    files: list[Path], workers: int, batch_size: int
-) -> dict[str, list[tuple[str, Path]]]:
+def process_metadata_batches(files: list[Path], workers: int, batch_size: int) -> dict[str, list[tuple[str, Path]]]:
     batches = [files[i : i + batch_size] for i in range(0, len(files), batch_size)]
     all_map: dict[str, list[tuple[str, Path]]] = defaultdict(list)
     for batch in batches:
@@ -316,16 +300,12 @@ def cmd_urls(args: argparse.Namespace) -> int:
     if args.input:
         p = Path(args.input)
         if p.exists():
-            lines = [
-                line.strip() for line in p.read_text().splitlines() if line.strip()
-            ]
+            lines = [line.strip() for line in p.read_text().splitlines() if line.strip()]
         else:
             lines = [args.input]
     else:
         lines = [line.strip() for line in sys.stdin if line.strip()]
-    groups: dict[tuple[str, str], dict[str, tuple[tuple[int, ...], str]]] = defaultdict(
-        dict
-    )
+    groups: dict[tuple[str, str], dict[str, tuple[tuple[int, ...], str]]] = defaultdict(dict)
     for url in lines:
         rec = parse_url(url)
         if not rec:
@@ -347,15 +327,13 @@ def cmd_urls(args: argparse.Namespace) -> int:
             print(f"   Arch: {arch}")
             print(f"   Version: {ver_str}")
             print(f"   URL: {url}")
-            results.append(
-                {
-                    "package": pkg,
-                    "python_version": py,
-                    "arch": arch,
-                    "version": ver_str,
-                    "url": url,
-                }
-            )
+            results.append({
+                "package": pkg,
+                "python_version": py,
+                "arch": arch,
+                "version": ver_str,
+                "url": url,
+            })
     print("\n" + "=" * 40)
     print(f"SUMMARY: Found {len(results)} ARMv7 wheel(s)")
     print("-" * 40)
@@ -394,9 +372,7 @@ def cmd_clean(args: argparse.Namespace) -> int:
         return 0
     package_map = process_clean_files(files, MAX_WORKERS)
     total_versions = sum(len(v) for v in package_map.values())
-    print(
-        f"\nFound {len(package_map)} package(s) with {total_versions} total version(s):"
-    )
+    print(f"\nFound {len(package_map)} package(s) with {total_versions} total version(s):")
     if args.verbose:
         for pkg, versions in package_map.items():
             print(f"\n  {pkg}: {len(versions)} version(s)")
@@ -407,9 +383,7 @@ def cmd_clean(args: argparse.Namespace) -> int:
             print(f"  {pkg}: {len(versions)} version(s)")
     print("\n" + "=" * 40)
     backup_dir = Path(args.backup_dir) if args.backup_dir else None
-    deleted, kept = remove_old_versions(
-        package_map, args.dry_run, backup_dir, args.verbose
-    )
+    deleted, kept = remove_old_versions(package_map, args.dry_run, backup_dir, args.verbose)
     print("\n" + "=" * 40)
     if deleted == 0:
         print("No files to delete. All packages have only one version.")
@@ -441,9 +415,7 @@ def cmd_metadata(args: argparse.Namespace) -> int:
     backup_dir = Path(args.backup_dir) if args.backup_dir else None
     if backup_dir and not args.dry_run:
         backup_dir.mkdir(parents=True, exist_ok=True)
-    deleted, kept = remove_old_versions(
-        package_map, args.dry_run, backup_dir, args.verbose
-    )
+    deleted, kept = remove_old_versions(package_map, args.dry_run, backup_dir, args.verbose)
     print("=" * 40)
     print("Summary:")
     print(f"  Total metadata files: {len(files)}")
@@ -453,25 +425,19 @@ def cmd_metadata(args: argparse.Namespace) -> int:
         if args.dry_run:
             print("This was a dry run. Use without --dry-run to actually delete files.")
         else:
-            print(
-                f"Cleanup complete. Deleted/moved {deleted} file(s), kept {kept} file(s)."
-            )
+            print(f"Cleanup complete. Deleted/moved {deleted} file(s), kept {kept} file(s).")
     else:
         print("No duplicate versions found. All packages have single versions.")
     return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Unified package/version cleanup and ARMv7 wheel URL filtering tool."
-    )
+    parser = argparse.ArgumentParser(description="Unified package/version cleanup and ARMv7 wheel URL filtering tool.")
     sub = parser.add_subparsers(dest="command", required=True)
     p_urls = sub.add_parser("urls", help="Filter latest ARMv7 wheels from URL list")
     p_urls.add_argument("input", nargs="?", default=None, help="Input file or URL")
     p_urls.add_argument("--output", "-o", help="Output file to save URLs")
-    p_urls.add_argument(
-        "--download", action="store_true", help="Generate download script"
-    )
+    p_urls.add_argument("--download", action="store_true", help="Generate download script")
     p_urls.add_argument(
         "--arm-keywords",
         nargs="+",
@@ -489,24 +455,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p_clean.add_argument("--dry-run", action="store_true", help="Simulate deletion")
     p_clean.add_argument("--dir", default=".", help="Directory to scan")
-    p_clean.add_argument(
-        "--verbose", action="store_true", help="Show detailed information"
-    )
+    p_clean.add_argument("--verbose", action="store_true", help="Show detailed information")
     p_clean.add_argument("--recursive", action="store_true", help="Scan recursively")
     p_clean.add_argument("--backup-dir", help="Move old files to backup directory")
     p_clean.set_defaults(func=cmd_clean)
-    p_meta = sub.add_parser(
-        "metadata", help="Keep latest .metadata files in a directory"
-    )
+    p_meta = sub.add_parser("metadata", help="Keep latest .metadata files in a directory")
     p_meta.add_argument("directory", nargs="?", default=".", help="Directory to scan")
     p_meta.add_argument("--dry-run", action="store_true", help="Simulate deletion")
     p_meta.add_argument("--backup-dir", help="Move old files to backup directory")
-    p_meta.add_argument(
-        "--batch-size", type=int, default=DEFAULT_BATCH_SIZE, help="Batch size"
-    )
-    p_meta.add_argument(
-        "--verbose", action="store_true", help="Show detailed information"
-    )
+    p_meta.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE, help="Batch size")
+    p_meta.add_argument("--verbose", action="store_true", help="Show detailed information")
     p_meta.set_defaults(func=cmd_metadata)
     return parser
 

@@ -94,23 +94,17 @@ def get_translator_func(backend_name: str):
         elif backend_name == "translators":
             import translators as ts
 
-            return lambda text: ts.translate_text(
-                text, translator="google", to_language="en"
-            )
+            return lambda text: ts.translate_text(text, translator="google", to_language="en")
         else:
             msg = f"Unknown backend: {backend_name}"
             raise ValueError(msg)
     except ImportError:
         print(f"Error: Required package for backend '{backend_name}' is missing.")
-        print(
-            f"Please install it (e.g., `pip install {backend_name.replace('_', '-')}`)"
-        )
+        print(f"Please install it (e.g., `pip install {backend_name.replace('_', '-')}`)")
         sys.exit(1)
 
 
-def safe_translate(
-    text: str, translate_func: Callable[..., Any], retries: int = 3
-) -> str:
+def safe_translate(text: str, translate_func: Callable[..., Any], retries: int = 3) -> str:
     if not text.strip():
         return text
     for attempt in range(retries):
@@ -129,8 +123,7 @@ def batch_translate(items: list[Any], translate_func: Any) -> None:
         batch_results = [None] * len(batch)
         with ThreadPoolExecutor(max_workers=batch_size) as executor:
             futures = {
-                executor.submit(safe_translate, item["content"], translate_func): idx
-                for idx, item in enumerate(batch)
+                executor.submit(safe_translate, item["content"], translate_func): idx for idx, item in enumerate(batch)
             }
             for future in as_completed(futures):
                 idx = futures[future]
@@ -175,29 +168,25 @@ def process_file(filepath: Path, translate_func: Any) -> bool:
         if tok.type == tokenize.COMMENT:
             m = COMMENT_RE.match(tok.string)
             if m:
-                items.append(
-                    {
-                        "tok": tok,
-                        "type": "comment",
-                        "prefix": m.group(1),
-                        "space": m.group(2),
-                        "content": m.group(3),
-                        "quote": "",
-                    }
-                )
+                items.append({
+                    "tok": tok,
+                    "type": "comment",
+                    "prefix": m.group(1),
+                    "space": m.group(2),
+                    "content": m.group(3),
+                    "quote": "",
+                })
         elif tok.type == tokenize.STRING and tok.start[0] in finder.target_lines:
             m = STRING_RE.match(tok.string)
             if m:
-                items.append(
-                    {
-                        "tok": tok,
-                        "type": "string",
-                        "prefix": m.group(1),
-                        "space": "",
-                        "quote": m.group(2),
-                        "content": m.group(3),
-                    }
-                )
+                items.append({
+                    "tok": tok,
+                    "type": "string",
+                    "prefix": m.group(1),
+                    "space": "",
+                    "quote": m.group(2),
+                    "content": m.group(3),
+                })
     if not items:
         return True
     batch_translate(items, translate_func)
@@ -210,15 +199,13 @@ def process_file(filepath: Path, translate_func: Any) -> bool:
                 new_text = f"{item['prefix']}{item['space']}{trans}"
             else:
                 new_text = f"{item['prefix']}{item['quote']}{trans}{item['quote']}"
-            replacements.append(
-                (
-                    item["tok"].start[0],
-                    item["tok"].start[1],
-                    item["tok"].end[0],
-                    item["tok"].end[1],
-                    new_text,
-                )
-            )
+            replacements.append((
+                item["tok"].start[0],
+                item["tok"].start[1],
+                item["tok"].end[0],
+                item["tok"].end[1],
+                new_text,
+            ))
     if not replacements:
         return True
     new_source = apply_replacements(source_code, replacements)
@@ -244,9 +231,7 @@ def save_state(state: Any) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="In-place Python Comment, Docstring, and Print Statement Translator"
-    )
+    parser = argparse.ArgumentParser(description="In-place Python Comment, Docstring, and Print Statement Translator")
     parser.add_argument(
         "inputs",
         nargs="*",

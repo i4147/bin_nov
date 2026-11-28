@@ -16,57 +16,51 @@ from dh import SKIP_DIRS, atomic_write
 
 
 SIZE_THRESHOLD: int = 1 << 20
-_SKIP_IN_LOOKAHEAD: frozenset[int] = frozenset(
-    {
-        tokenize.NL,
-        tokenize.INDENT,
-        tokenize.DEDENT,
-        tokenize.COMMENT,
-        tokenize.ENCODING,
-    }
-)
-_NON_PRINT_NAME_KEYWORDS: frozenset[str] = frozenset(
-    {
-        "and",
-        "or",
-        "not",
-        "in",
-        "is",
-        "if",
-        "else",
-        "elif",
-        "for",
-        "while",
-        "return",
-        "yield",
-        "lambda",
-        "assert",
-        "raise",
-        "try",
-        "except",
-        "finally",
-        "with",
-        "as",
-        "class",
-        "def",
-        "from",
-        "import",
-        "pass",
-        "break",
-        "continue",
-        "del",
-        "global",
-        "nonlocal",
-        "await",
-        "async",
-        "True",
-        "False",
-        "None",
-    }
-)
-_RICH_PRINT_RE: re.Pattern[str] = re.compile(
-    r"^\s*from\s+rich\s+import\s+print\b", re.MULTILINE
-)
+_SKIP_IN_LOOKAHEAD: frozenset[int] = frozenset({
+    tokenize.NL,
+    tokenize.INDENT,
+    tokenize.DEDENT,
+    tokenize.COMMENT,
+    tokenize.ENCODING,
+})
+_NON_PRINT_NAME_KEYWORDS: frozenset[str] = frozenset({
+    "and",
+    "or",
+    "not",
+    "in",
+    "is",
+    "if",
+    "else",
+    "elif",
+    "for",
+    "while",
+    "return",
+    "yield",
+    "lambda",
+    "assert",
+    "raise",
+    "try",
+    "except",
+    "finally",
+    "with",
+    "as",
+    "class",
+    "def",
+    "from",
+    "import",
+    "pass",
+    "break",
+    "continue",
+    "del",
+    "global",
+    "nonlocal",
+    "await",
+    "async",
+    "True",
+    "False",
+    "None",
+})
+_RICH_PRINT_RE: re.Pattern[str] = re.compile(r"^\s*from\s+rich\s+import\s+print\b", re.MULTILINE)
 _AUTOFIX_RE: re.Pattern[str] = re.compile(r"([ \t]*)print(?:[ \t]+(.*?))?(\r?\n)?$")
 
 
@@ -185,12 +179,8 @@ def process_file(path: Path, autofix: bool = False) -> str | None:
 def main() -> None:
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Detect and fix Python 2 print statements"
-    )
-    parser.add_argument(
-        "path", nargs="?", default=".", help="Path to file or directory to scan"
-    )
+    parser = argparse.ArgumentParser(description="Detect and fix Python 2 print statements")
+    parser.add_argument("path", nargs="?", default=".", help="Path to file or directory to scan")
     parser.add_argument(
         "-a",
         "--autofix",

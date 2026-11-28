@@ -75,19 +75,17 @@ def remove_old_ssh_keys() -> None:
 
 def generate_new_ssh_key() -> None:
     SSH_DIR.mkdir(mode=0o700, exist_ok=True)
-    run(
-        [
-            "ssh-keygen",
-            "-t",
-            "ed25519",
-            "-C",
-            NEW_EMAIL,
-            "-f",
-            str(SSH_KEY_PATH),
-            "-N",
-            "",
-        ]
-    )
+    run([
+        "ssh-keygen",
+        "-t",
+        "ed25519",
+        "-C",
+        NEW_EMAIL,
+        "-f",
+        str(SSH_KEY_PATH),
+        "-N",
+        "",
+    ])
     os.chmod(SSH_KEY_PATH, 0o600)
     os.chmod(f"{SSH_KEY_PATH}.pub", 0o644)
 
@@ -170,9 +168,7 @@ def update_git_remotes_in_repos() -> None:
                     check=False,
                 ).stdout
                 if OLD_USERNAME in remotes:
-                    remote_names = {
-                        line.split()[0] for line in remotes.splitlines() if line
-                    }
+                    remote_names = {line.split()[0] for line in remotes.splitlines() if line}
                     for remote in remote_names:
                         url_result = run(
                             ["git", "-C", repo_path, "remote", "get-url", remote],
@@ -234,9 +230,7 @@ def clear_git_credential() -> None:
             check=False,
         )
     with contextlib.suppress(Exception):
-        run(
-            ["git", "config", "--global", "--remove-section", "credential"], check=False
-        )
+        run(["git", "config", "--global", "--remove-section", "credential"], check=False)
     for helper in ("store", "cache"):
         with contextlib.suppress(Exception):
             run(["git", "credential-" + helper, "erase"], check=False, input_text="\n")

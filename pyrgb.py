@@ -171,9 +171,7 @@ def render_page(
             idx += 1
         out.append("  ".join(cells).rstrip())
     out.append("")
-    out.append(
-        "\033[2m[PgUp/PgDn] page  [↑/↓] page  [g] first  [G] last  [q] quit\033[0m"
-    )
+    out.append("\033[2m[PgUp/PgDn] page  [↑/↓] page  [g] first  [G] last  [q] quit\033[0m")
     sys.stdout.write("\n".join(out) + "\n")
     sys.stdout.flush()
 
@@ -215,9 +213,7 @@ def run_demo(step: int) -> None:
     cols, page_size = compute_layout()
     total_pages = (total + page_size - 1) // page_size
     if total_pages > 1000:
-        print(
-            f"--step {step} → {total:,} colors, {total_pages:,} pages.", file=sys.stderr
-        )
+        print(f"--step {step} → {total:,} colors, {total_pages:,} pages.", file=sys.stderr)
         print("That's a lot to page through. Try --step 17 instead.", file=sys.stderr)
         print("Continue anyway? [y/N] ", end="", file=sys.stderr, flush=True)
         try:

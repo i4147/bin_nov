@@ -38,9 +38,7 @@ def rename_svg_font(path_obj: Path) -> None:
         return
     sanitized_font_id = re.sub(r'[<>:"/\\|?*]', "_", font_id)
     if sanitized_font_id != font_id:
-        print(
-            f"Warning: Sanitized font ID for '{font_id}' in '{path_obj.name}' to '{sanitized_font_id}'."
-        )
+        print(f"Warning: Sanitized font ID for '{font_id}' in '{path_obj.name}' to '{sanitized_font_id}'.")
         font_id = sanitized_font_id
     new_name_obj = path_obj.with_name(font_id + ".svg")
     if new_name_obj == path_obj:
@@ -50,9 +48,7 @@ def rename_svg_font(path_obj: Path) -> None:
         path_obj.rename(new_name_obj)
         print(f"Renamed '{path_obj.name}' to '{new_name_obj.name}'")
     except FileExistsError:
-        print(
-            f"Error renaming '{path_obj.name}' to '{new_name_obj.name}': Target file already exists."
-        )
+        print(f"Error renaming '{path_obj.name}' to '{new_name_obj.name}': Target file already exists.")
     except Exception as e:
         print(f"Error renaming '{path_obj.name}': {e}")
 
@@ -67,9 +63,7 @@ if __name__ == "__main__":
         elif input_path.is_file() and input_path.suffix.lower() == ".svg":
             rename_svg_font(input_path)
         else:
-            print(
-                f"Error: Invalid path provided. Must be an SVG file or a directory. Path: {input_path}"
-            )
+            print(f"Error: Invalid path provided. Must be an SVG file or a directory. Path: {input_path}")
             sys.exit(1)
     else:
         cwd = Path()

@@ -18,7 +18,7 @@ import threading
 import time
 from typing import Any, Callable, Sequence
 
-from dh import MAX_WORKERS
+from dh import MAX_WORKERS, contains_asian
 from googletrans import Translator
 from loguru import logger
 
@@ -33,18 +33,7 @@ interrupted: bool = False
 def signal_handler(signum: int, frame: Any) -> None:
     global interrupted
     interrupted = True
-    logger.warning(
-        "Received interrupt signal. Saving progress and exiting gracefully..."
-    )
-
-
-def contains_cyrillic(text: str) -> bool:
-    return bool(
-        re.search(
-            r"[\u0400-\u04FF\u0500-\u052F\u2DE0-\u2DFF\uA640-\uA69F\u1C80-\u1C8F]",
-            text,
-        )
-    )
+    logger.warning("Received interrupt signal. Saving progress and exiting gracefully...")
 
 
 def create_chunks(lines: list[str], max_chunk_size: int) -> list[list[str]]:
@@ -82,9 +71,7 @@ class TranslationCache:
     def __init__(self, db_path: Path) -> None:
         self.db_path: Path = db_path.expanduser()
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        self.conn: sqlite3.Connection = sqlite3.connect(
-            str(self.db_path), check_same_thread=False
-        )
+        self.conn: sqlite3.Connection = sqlite3.connect(str(self.db_path), check_same_thread=False)
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS translations (
                 id INTEGER PRIMARY KEY,
@@ -99,9 +86,7 @@ class TranslationCache:
         self.conn.commit()
         self.lock: threading.Lock = threading.Lock()
 
-    def get_many(
-        self, texts: Sequence[str], source_lang: str, target_lang: str
-    ) -> dict[str, str]:
+    def get_many(self, texts: Sequence[str], source_lang: str, target_lang: str) -> dict[str, str]:
         found: dict[str, str] = {}
 
         with self.lock:
@@ -118,16 +103,13 @@ class TranslationCache:
 
         return found
 
-    def set_many(
-        self, translations: dict[str, str], source_lang: str, target_lang: str
-    ) -> None:
+    def set_many(self, translations: dict[str, str], source_lang: str, target_lang: str) -> None:
         if not translations:
             return
 
         with self.lock:
             data: list[tuple[str, str, str, str]] = [
-                (source, source_lang, target_lang, target)
-                for source, target in translations.items()
+                (source, source_lang, target_lang, target) for source, target in translations.items()
             ]
             self.conn.executemany(
                 """
@@ -144,13 +126,8 @@ class TranslationCache:
 
     def stats(self) -> dict[str, Any]:
         with self.lock:
-            total: int = int(
-                self.conn.execute("SELECT COUNT(*) FROM translations").fetchone()[0]
-                or 0
-            )
-            last: str | None = self.conn.execute(
-                "SELECT MAX(updated_at) FROM translations"
-            ).fetchone()[0]
+            total: int = int(self.conn.execute("SELECT COUNT(*) FROM translations").fetchone()[0] or 0)
+            last: str | None = self.conn.execute("SELECT MAX(updated_at) FROM translations").fetchone()[0]
             pairs: list[tuple[str, str, int]] = self.conn.execute("""
                 SELECT source_lang, target_lang, COUNT(*) AS cnt
                 FROM translations
@@ -162,10 +139,7 @@ class TranslationCache:
             return {
                 "total_entries": total,
                 "last_updated": last,
-                "pairs": [
-                    {"source": source, "target": target, "count": count}
-                    for source, target, count in pairs
-                ],
+                "pairs": [{"source": source, "target": target, "count": count} for source, target, count in pairs],
             }
 
     def close(self) -> None:
@@ -186,15 +160,9 @@ def translate_text(text: str, source_lang: str, target_lang: str) -> str | None:
                 if translator is None:
                     translator = Translator()
 
-                translated = translator.translate(
-                    text, src=source_lang, dest=target_lang
-                )
+                translated = translator.translate(text, src=source_lang, dest=target_lang)
 
-                if (
-                    translated is None
-                    or not isinstance(translated.text, str)
-                    or not translated.text
-                ):
+                if translated is None or not isinstance(translated.text, str) or not translated.text:
                     msg: str = "Translator returned an empty result"
                     raise ValueError(msg)
 
@@ -236,9 +204,7 @@ def translate_text(text: str, source_lang: str, target_lang: str) -> str | None:
                 logger.debug("Could not close translator client: {}", exc)
 
 
-def translate_chunk_factory(
-    source_lang: str, target_lang: str
-) -> Callable[[list[str]], tuple[list[str], str | None]]:
+def translate_chunk_factory(source_lang: str, target_lang: str) -> Callable[[list[str]], tuple[list[str], str | None]]:
     def translate_chunk(
         chunk: list[str],
     ) -> tuple[list[str], str | None]:
@@ -253,9 +219,7 @@ def save_json(
     json_path: Path,
 ) -> None:
     try:
-        translations: dict[str, str] = {
-            line: results.get(line, line) for line in all_lines
-        }
+        translations: dict[str, str] = {line: results.get(line, line) for line in all_lines}
 
         with json_path.open("w", encoding="utf-8") as file:
             json.dump(translations, file, ensure_ascii=False, indent=2)
@@ -279,12 +243,8 @@ def main() -> int | None:
         )
     )
     parser.add_argument("-i", "--input", help="Input text file (one phrase per line)")
-    parser.add_argument(
-        "-s", "--source", default="ru", help="Source language code (default: ru)"
-    )
-    parser.add_argument(
-        "-t", "--target", default="en", help="Target language code (default: en)"
-    )
+    parser.add_argument("-s", "--source", default="ru", help="Source language code (default: ru)")
+    parser.add_argument("-t", "--target", default="en", help="Target language code (default: en)")
     parser.add_argument(
         "--db",
         default="~/.translate/translate.db",
@@ -313,9 +273,7 @@ def main() -> int | None:
         parser.error("-i/--input is required unless --cache-stats is used")
 
     if MAX_WORKERS < 1 or args.max_chunk_size < 1 or args.save_interval < 1:
-        parser.error(
-            "--max-workers, --max-chunk-size, and --save-interval must be positive"
-        )
+        parser.error("--max-workers, --max-chunk-size, and --save-interval must be positive")
 
     db_path: Path = Path(args.db).expanduser()
     cache: TranslationCache = TranslationCache(db_path)
@@ -346,9 +304,7 @@ def main() -> int | None:
 
         try:
             with input_path.open(encoding="utf-8") as file:
-                all_lines: list[str] = [
-                    line.rstrip("\n") for line in file if line.strip()
-                ]
+                all_lines: list[str] = [line.rstrip("\n") for line in file if line.strip()]
         except OSError as exc:
             logger.error("Error reading input file: {}", exc)
             return 1
@@ -360,10 +316,8 @@ def main() -> int | None:
         source_lang: str = args.source
         target_lang: str = args.target
 
-        if source_lang.lower().startswith("ru"):
-            to_translate_raw: list[str] = [
-                line for line in all_lines if contains_cyrillic(line)
-            ]
+        if source_lang.lower().startswith(("ru", "ja", "fa", "ko", "zh", "auto")):
+            to_translate_raw: list[str] = [line for line in all_lines if contains_asian(line)]
         else:
             to_translate_raw = list(all_lines)
 
@@ -385,14 +339,10 @@ def main() -> int | None:
             len(to_translate_raw),
         )
 
-        results: dict[str, str] = cache.get_many(
-            to_translate_unique, source_lang, target_lang
-        )
+        results: dict[str, str] = cache.get_many(to_translate_unique, source_lang, target_lang)
         logger.info("Cache hit: {}/{}", len(results), len(to_translate_unique))
 
-        remaining: list[str] = [
-            line for line in to_translate_unique if line not in results
-        ]
+        remaining: list[str] = [line for line in to_translate_unique if line not in results]
 
         json_path: Path = input_path.with_name(f"{input_path.stem}_{target_lang}.json")
 
@@ -421,30 +371,23 @@ def main() -> int | None:
                 while not stop_saving.wait(args.save_interval):
                     save()
 
-            save_thread: threading.Thread = threading.Thread(
-                target=periodic_save, daemon=True
-            )
+            save_thread: threading.Thread = threading.Thread(target=periodic_save, daemon=True)
             save_thread.start()
 
             try:
-                translate_chunk: Callable[[list[str]], tuple[list[str], str | None]] = (
-                    translate_chunk_factory(source_lang, target_lang)
+                translate_chunk: Callable[[list[str]], tuple[list[str], str | None]] = translate_chunk_factory(
+                    source_lang, target_lang
                 )
 
                 with ThreadPoolExecutor(max_workers=num_workers) as executor:
                     future_to_chunk: dict[Any, list[str]] = {
-                        executor.submit(translate_chunk, chunk): chunk
-                        for chunk in chunks
+                        executor.submit(translate_chunk, chunk): chunk for chunk in chunks
                     }
                     total: int = len(future_to_chunk)
 
-                    for completed, future in enumerate(
-                        as_completed(future_to_chunk), 1
-                    ):
+                    for completed, future in enumerate(as_completed(future_to_chunk), 1):
                         if interrupted:
-                            logger.info(
-                                "Interrupted. Waiting for running tasks to complete..."
-                            )
+                            logger.info("Interrupted. Waiting for running tasks to complete...")
 
                             for pending_future in future_to_chunk:
                                 pending_future.cancel()
@@ -458,18 +401,12 @@ def main() -> int | None:
                             translated_text: str | None
                             original_lines, translated_text = future.result()
 
-                            translated_lines: list[str] = (
-                                translated_text.splitlines() if translated_text else []
-                            )
+                            translated_lines: list[str] = translated_text.splitlines() if translated_text else []
 
                             translations: dict[str, str] = {}
 
-                            if translated_text and len(translated_lines) == len(
-                                original_lines
-                            ):
-                                translations = dict(
-                                    zip(original_lines, translated_lines)
-                                )
+                            if translated_text and len(translated_lines) == len(original_lines):
+                                translations = dict(zip(original_lines, translated_lines))
                             else:
                                 if translated_text:
                                     logger.warning(
@@ -480,17 +417,13 @@ def main() -> int | None:
                                         len(translated_lines),
                                     )
                                 else:
-                                    logger.warning(
-                                        "Chunk translation failed; falling back to per-line translation"
-                                    )
+                                    logger.warning("Chunk translation failed; falling back to per-line translation")
 
                                 for line in original_lines:
                                     if interrupted:
                                         break
 
-                                    text: str | None = translate_text(
-                                        line, source_lang, target_lang
-                                    )
+                                    text: str | None = translate_text(line, source_lang, target_lang)
 
                                     if text is not None:
                                         translations[line] = text
@@ -537,14 +470,10 @@ def main() -> int | None:
         save()
 
         if interrupted:
-            logger.warning(
-                "Process was interrupted. Progress has been saved; rerun to resume."
-            )
+            logger.warning("Process was interrupted. Progress has been saved; rerun to resume.")
             return 130
 
-        translated_count: int = sum(
-            1 for line in all_lines if line in results and results[line] != line
-        )
+        translated_count: int = sum(1 for line in all_lines if line in results and results[line] != line)
         logger.info(
             "Translation complete: {}/{} lines changed",
             translated_count,

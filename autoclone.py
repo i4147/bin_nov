@@ -50,18 +50,12 @@ def load_size_cache():
         try:
             with open(cache_file) as f:
                 cache_data = json.load(f)
-                cache_date = datetime.fromisoformat(
-                    cache_data.get("_cache_date", "2000-01-01")
-                )
+                cache_date = datetime.fromisoformat(cache_data.get("_cache_date", "2000-01-01"))
                 if datetime.now() - cache_date < timedelta(days=CACHE_EXPIRY_DAYS):
-                    print(
-                        f"📂 Loaded cache from {SIZE_CACHE_FILE} ({len(cache_data) - 1} repos)"
-                    )
+                    print(f"📂 Loaded cache from {SIZE_CACHE_FILE} ({len(cache_data) - 1} repos)")
                     return cache_data
                 else:
-                    print(
-                        f"⏰ Cache expired (older than {CACHE_EXPIRY_DAYS} days), refreshing..."
-                    )
+                    print(f"⏰ Cache expired (older than {CACHE_EXPIRY_DAYS} days), refreshing...")
                     return {}
         except (json.JSONDecodeError, KeyError, ValueError) as e:
             print(f"⚠️  Error reading cache file: {e}")
@@ -85,9 +79,7 @@ def get_repo_size(repo: Path, token: str | None = None, cache_data: Any = None):
         cached_size = cache_data[repo].get("size_mb")
         cached_date = cache_data[repo].get("fetched_at", "")
         if cached_size is not None:
-            print(
-                f"  📦 Using cached size: {cached_size:.2f} MB (fetched: {cached_date})"
-            )
+            print(f"  📦 Using cached size: {cached_size:.2f} MB (fetched: {cached_date})")
             return cached_size
     api_url = f"https://api.github.com/repos/{repo}"
     headers = {}
@@ -152,11 +144,7 @@ def clone_repo(repo: Path) -> bool:
 def display_cached_stats(cache_data: dict[str, Any]) -> None:
     if not cache_data or len(cache_data) <= 1:
         return
-    repos = {
-        k: v
-        for k, v in cache_data.items()
-        if k not in ["_cache_date", "_cache_version"]
-    }
+    repos = {k: v for k, v in cache_data.items() if k not in ["_cache_date", "_cache_version"]}
     if not repos:
         return
     sizes = [v["size_mb"] for v in repos.values() if "size_mb" in v]

@@ -137,9 +137,7 @@ class TreeNode:
         return "{}. {}".format(".".join(self.path_to_root()), self.title)
 
 
-_SUMMARY_RE = re.compile(
-    r"^(?P<indent> *)- \[(?P<title>[^\]]+)\]\((?P<src>[^)]+)\)", re.MULTILINE
-)
+_SUMMARY_RE = re.compile(r"^(?P<indent> *)- \[(?P<title>[^\]]+)\]\((?P<src>[^)]+)\)", re.MULTILINE)
 
 
 def parse_summary(text: str) -> TreeNode:
@@ -198,9 +196,7 @@ def check_titles(base_dir: Path, node: TreeNode, sync: bool) -> bool:
     return matched
 
 
-def add_outline(
-    html_root: Any, reader: pypdf.PdfReader, writer: pypdf.PdfWriter, node: TreeNode
-) -> None:
+def add_outline(html_root: Any, reader: pypdf.PdfReader, writer: pypdf.PdfWriter, node: TreeNode) -> None:
     if not node.is_root():
         element_id = _outline_id(node)
         try:
@@ -226,13 +222,9 @@ def add_outline(
             )
         parent_item = node.parent.outline_item if node.parent else None
         if fit is not None:
-            node.outline_item = writer.add_outline_item(
-                str(node), page_num, parent_item, fit=fit
-            )
+            node.outline_item = writer.add_outline_item(str(node), page_num, parent_item, fit=fit)
         else:
-            node.outline_item = writer.add_outline_item(
-                str(node), page_num, parent_item
-            )
+            node.outline_item = writer.add_outline_item(str(node), page_num, parent_item)
     for child in node.children:
         add_outline(html_root, reader, writer, child)
 
@@ -307,9 +299,7 @@ def cmd_merge(args: argparse.Namespace) -> int:
     return 0
 
 
-def _convert_one_pdf(
-    pdf_path: Path, out_root: Path, dpi: int, threads: int, poppler_path: Optional[str]
-) -> bool:
+def _convert_one_pdf(pdf_path: Path, out_root: Path, dpi: int, threads: int, poppler_path: Optional[str]) -> bool:
     from pdf2image import convert_from_path
 
     try:
@@ -328,9 +318,7 @@ def _convert_one_pdf(
             out = target / f"{pdf_path.stem}_page_{i + 1}.jpg"
             img.save(out, "JPEG")
             count += 1
-        print(
-            f"Successfully converted '{pdf_path.name}' to {count} JPG files in '{target}'."
-        )
+        print(f"Successfully converted '{pdf_path.name}' to {count} JPG files in '{target}'.")
         return True
     except Exception as e:
         print(f"Error converting '{pdf_path.name}': {e}")
@@ -498,9 +486,7 @@ def _shrink_gs_screen(pdf: Path) -> None:
 def _shrink_gs_mobile(pdf: Path) -> None:
     gs = find_ghostscript()
     if not gs:
-        print(
-            "[ERROR] Ghostscript ('gs' or 'gswin64c') is not installed or not in your PATH."
-        )
+        print("[ERROR] Ghostscript ('gs' or 'gswin64c') is not installed or not in your PATH.")
         return
     before = pdf.stat().st_size
     print(f"Original size: {human_size(before)}")
@@ -566,9 +552,7 @@ def _shrink_dispatch(path_str: str, engine: str) -> None:
 
 
 def cmd_shrink(args: argparse.Namespace) -> int:
-    files = (
-        collect_pdfs(args.inputs) if args.inputs else collect_pdfs([str(Path.cwd())])
-    )
+    files = collect_pdfs(args.inputs) if args.inputs else collect_pdfs([str(Path.cwd())])
     if not files:
         print("No PDF files found.")
         return 1
@@ -584,11 +568,7 @@ def cmd_shrink(args: argparse.Namespace) -> int:
         return 0
     before = total_size(Path.cwd())
     with ProcessPoolExecutor(max_workers=MAX_WORKERS) as ex:
-        list(
-            ex.map(
-                _shrink_dispatch, [str(f) for f in files], [args.engine] * len(files)
-            )
-        )
+        list(ex.map(_shrink_dispatch, [str(f) for f in files], [args.engine] * len(files)))
     freed = before - total_size(Path.cwd())
     if freed > 0:
         print(f"space freed: {human_size(freed)}")
@@ -672,13 +652,9 @@ def cmd_split_page(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="merged.py", description="Unified PDF toolkit."
-    )
+    parser = argparse.ArgumentParser(prog="merged.py", description="Unified PDF toolkit.")
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser(
-        "outline", help="Add outline to a PDF using a mdBook SUMMARY.md."
-    )
+    p = sub.add_parser("outline", help="Add outline to a PDF using a mdBook SUMMARY.md.")
     p.add_argument("--html_path", default="print.html")
     p.add_argument("--pdf_path", default="output.pdf")
     p.add_argument("--summary_path", default="src/SUMMARY.md")
@@ -716,9 +692,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--engine", choices=sorted(_SHRINK_ENGINES.keys()), required=True)
     p.add_argument("inputs", nargs="*")
     p.set_defaults(func=cmd_shrink)
-    p = sub.add_parser(
-        "split-size", help="Split PDFs into chunks no larger than --max-mb."
-    )
+    p = sub.add_parser("split-size", help="Split PDFs into chunks no larger than --max-mb.")
     p.add_argument("--max-mb", type=int, default=5)
     p.add_argument("--output", default="output")
     p.add_argument("inputs", nargs="*")

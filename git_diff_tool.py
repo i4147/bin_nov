@@ -106,30 +106,22 @@ def file_stats(repo: Path, older: str, newer: str) -> list[dict[str, object]]:
         parts = line.split("\t")
         status: str = parts[0]
         path: str = parts[-1]
-        old_path: str | None = (
-            parts[1] if status.startswith(("R", "C")) and len(parts) == 3 else None
-        )
+        old_path: str | None = parts[1] if status.startswith(("R", "C")) and len(parts) == 3 else None
         ins, dele = numstat.get(path, (None, None))
-        files.append(
-            {
-                "status": status,
-                "path": path,
-                "old_path": old_path,
-                "insertions": ins,
-                "deletions": dele,
-            }
-        )
+        files.append({
+            "status": status,
+            "path": path,
+            "old_path": old_path,
+            "insertions": ins,
+            "deletions": dele,
+        })
     return files
 
 
 def cmd_diff(args: argparse.Namespace) -> int:
     repo: Path = args.repo
     try:
-        older, newer = (
-            (args.older, args.newer)
-            if args.older and args.newer
-            else last_two_commits(repo)
-        )
+        older, newer = (args.older, args.newer) if args.older and args.newer else last_two_commits(repo)
         report: dict[str, object] = {
             "repo": str(repo.resolve()),
             "from_commit": commit_meta(repo, older),
@@ -160,9 +152,7 @@ def repo_status(repo: Path) -> dict[str, object]:
     branch: str = (try_git(repo, "rev-parse", "--abbrev-ref", "HEAD") or "?").strip()
     porcelain: str = try_git(repo, "status", "--porcelain") or ""
     changed: list[str] = [line for line in porcelain.splitlines() if line.strip()]
-    ahead_behind: str = (
-        try_git(repo, "rev-list", "--left-right", "--count", "HEAD...@{upstream}") or ""
-    ).strip()
+    ahead_behind: str = (try_git(repo, "rev-list", "--left-right", "--count", "HEAD...@{upstream}") or "").strip()
     last: str = (try_git(repo, "log", "-1", "--format=%h %s") or "").strip()
     return {
         "repo": str(repo),
@@ -188,17 +178,13 @@ def cmd_status(args: argparse.Namespace) -> int:
         shown += 1
         state: str = f"dirty ({info['changed']} changed)" if info["dirty"] else "clean"
         up: str = f" upstream:{info['upstream']}" if info["upstream"] else ""
-        print(
-            f"{info['repo']} [{info['branch']}] {state}{up} last: {info['last_commit']}"
-        )
+        print(f"{info['repo']} [{info['branch']}] {state}{up} last: {info['last_commit']}")
     print(f"# {shown}/{len(results)} repo(s) shown", file=sys.stderr)
     return 0
 
 
 def cmd_added_files(args: argparse.Namespace) -> int:
-    out: str | None = try_git(
-        args.repo, "log", "--diff-filter=A", "--name-only", "--pretty=format:COMMIT %h"
-    )
+    out: str | None = try_git(args.repo, "log", "--diff-filter=A", "--name-only", "--pretty=format:COMMIT %h")
     if out is None:
         print("Error: not a git repository (or empty).", file=sys.stderr)
         return 1
@@ -223,9 +209,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     df = sub.add_parser("diff", help="JSON report between two commits")
     df.add_argument("repo", nargs="?", type=Path, default=Path.cwd())
-    df.add_argument(
-        "older", nargs="?", default=None, help="Older ref (default: HEAD~1)"
-    )
+    df.add_argument("older", nargs="?", default=None, help="Older ref (default: HEAD~1)")
     df.add_argument("newer", nargs="?", default=None, help="Newer ref (default: HEAD)")
     df.add_argument(
         "-o",
@@ -240,9 +224,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=True,
         help="Include full patch (default)",
     )
-    df.add_argument(
-        "--no-patch", dest="patch", action="store_false", help="Skip the patch text"
-    )
+    df.add_argument("--no-patch", dest="patch", action="store_false", help="Skip the patch text")
     df.set_defaults(handler=cmd_diff)
     st = sub.add_parser("status", help="Status of every repo under a root")
     st.add_argument("root", nargs="?", type=Path, default=Path.cwd())

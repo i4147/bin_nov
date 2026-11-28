@@ -23,9 +23,7 @@ def get_site_packages_dirs() -> set[Path]:
     return paths
 
 
-def is_editable_install(
-    dist: importlib.metadata.Distribution, dist_path: Path, site_dirs: set[Path]
-) -> bool:
+def is_editable_install(dist: importlib.metadata.Distribution, dist_path: Path, site_dirs: set[Path]) -> bool:
     """Determines if a package is an editable installation."""
     # Check if the code path lives outside of standard site-packages directories
     if not any(dist_path.is_relative_to(s_dir) for s_dir in site_dirs):
@@ -82,9 +80,7 @@ def main() -> None:
         # 1. Evaluate Segment: Editable Layouts
         if is_editable_install(dist, dist_path, site_dirs):
             # Attempt to output as an installable pip local path requirement if editable path is known
-            segments["editable"].append(
-                f"-e {dist_path.parent}  # {pkg_name}=={pkg_version}"
-            )
+            segments["editable"].append(f"-e {dist_path.parent}  # {pkg_name}=={pkg_version}")
 
         # 2. Evaluate Segment: Pure Python Wheels
         elif is_pure_package(dist):

@@ -57,9 +57,7 @@ class HTMLMinifier:
         if node.text and self.collapse_whitespace:
             node.text = self._collapse_whitespace(node.text)
         if self.remove_empty_attributes and node.attrib:
-            attrs_to_remove = [
-                k for k, v in node.attrib.items() if not v or v.isspace()
-            ]
+            attrs_to_remove = [k for k, v in node.attrib.items() if not v or v.isspace()]
             for attr in attrs_to_remove:
                 del node.attrib[attr]
         for child in list(node):
@@ -90,9 +88,7 @@ class HTMLMinifier:
             css = re.sub(r";\s*}", "}", css)
             return f"<style>{css.strip()}</style>"
 
-        return re.sub(
-            r"<style[^>]*>(.*?)</style>", minify_css, html_str, flags=re.DOTALL
-        )
+        return re.sub(r"<style[^>]*>(.*?)</style>", minify_css, html_str, flags=re.DOTALL)
 
     def _minify_script_tags(self, html_str: str) -> str:
         def minify_js(match: re.Match[str]) -> str:
@@ -102,9 +98,7 @@ class HTMLMinifier:
             js = re.sub(r"\s+", " ", js)
             return f"<script>{js.strip()}</script>"
 
-        return re.sub(
-            r"<script[^>]*>(.*?)</script>", minify_js, html_str, flags=re.DOTALL
-        )
+        return re.sub(r"<script[^>]*>(.*?)</script>", minify_js, html_str, flags=re.DOTALL)
 
 
 def minify(

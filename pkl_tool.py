@@ -101,11 +101,7 @@ def cmd_to_json(args: argparse.Namespace) -> int:
         if args.stdout:
             print(text, end="")
         else:
-            dest: Path = (
-                args.output
-                if args.output and len(args.files) == 1
-                else path.with_suffix(".json")
-            )
+            dest: Path = args.output if args.output and len(args.files) == 1 else path.with_suffix(".json")
             atomic_write(dest, text, encoding="utf-8")
             print(f"{path} -> {dest}")
     return 0
@@ -155,15 +151,11 @@ def cmd_to_raw(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Pickle -> JSON / inspect / raw (trusted files only!)."
-    )
+    parser = argparse.ArgumentParser(description="Pickle -> JSON / inspect / raw (trusted files only!).")
     sub = parser.add_subparsers(dest="command", required=True)
     tj = sub.add_parser("to-json", help="Convert .pkl to .json")
     tj.add_argument("files", nargs="+", type=Path)
-    tj.add_argument(
-        "-o", "--output", type=Path, default=None, help="Single-file output"
-    )
+    tj.add_argument("-o", "--output", type=Path, default=None, help="Single-file output")
     tj.add_argument("--indent", type=int, default=2)
     tj.add_argument("--stdout", action="store_true")
     tj.set_defaults(handler=cmd_to_json)
@@ -173,12 +165,8 @@ def build_parser() -> argparse.ArgumentParser:
     ins.set_defaults(handler=cmd_inspect)
     raw = sub.add_parser("to-raw", help="Write a bytes payload verbatim")
     raw.add_argument("file", type=Path)
-    raw.add_argument(
-        "-o", "--output", type=Path, default=None, help="Default: <name>.raw"
-    )
-    raw.add_argument(
-        "--force-repr", action="store_true", help="Non-bytes: write repr() as text"
-    )
+    raw.add_argument("-o", "--output", type=Path, default=None, help="Default: <name>.raw")
+    raw.add_argument("--force-repr", action="store_true", help="Non-bytes: write repr() as text")
     raw.set_defaults(handler=cmd_to_raw)
     return parser
 

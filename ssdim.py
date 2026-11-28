@@ -90,9 +90,7 @@ def copy_groups(groups: Iterable[Any], output_dir: Path = "output") -> None:
                 print(f"Failed to copy {f}: {e}")
 
 
-def write_report(
-    groups: Iterable[Any], furmat: str = "json", output_dir: Path = "output"
-) -> None:
+def write_report(groups: Iterable[Any], furmat: str = "json", output_dir: Path = "output") -> None:
     Path(output_dir).mkdir(exist_ok=True, parents=True)
     if furmat == "csv":
         report_file = Path(output_dir).joinpath("similar_report.csv")
@@ -150,9 +148,7 @@ def write_matrix(
         if USE_TABULATE:
             colored_table = []
             for row in table[1:]:
-                colored_row = [row[0]] + [
-                    colorize_score(cell, threshold) for cell in row[1:]
-                ]
+                colored_row = [row[0]] + [colorize_score(cell, threshold) for cell in row[1:]]
                 colored_table.append(colored_row)
             print(tabulate(colored_table, headers=table[0], tablefmt="grid"))
         else:
@@ -160,9 +156,7 @@ def write_matrix(
             print(header)
             print("-" * len(header))
             for row in table[1:]:
-                formatted = [row[0]] + [
-                    colorize_score(cell, threshold) for cell in row[1:]
-                ]
+                formatted = [row[0]] + [colorize_score(cell, threshold) for cell in row[1:]]
                 print(" | ".join(str(x) if x else "." for x in formatted))
 
 

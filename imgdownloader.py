@@ -66,15 +66,9 @@ def validSize(size: int):
 
 
 def getParams(sysArgs: Any):
-    parser = argparse.ArgumentParser(
-        description="Get arguments for searching and downloading Google images"
-    )
-    parser.add_argument(
-        "-q", "--query", help="Query to search for", type=str, required=True, nargs="+"
-    )
-    parser.add_argument(
-        "-l", "--limit", help="Max images to download (default: 3)", type=int, default=3
-    )
+    parser = argparse.ArgumentParser(description="Get arguments for searching and downloading Google images")
+    parser.add_argument("-q", "--query", help="Query to search for", type=str, required=True, nargs="+")
+    parser.add_argument("-l", "--limit", help="Max images to download (default: 3)", type=int, default=3)
     parser.add_argument(
         "-o",
         "--outputDir",
@@ -104,12 +98,8 @@ def getParams(sysArgs: Any):
         type=int,
         default=4,
     )
-    parser.add_argument(
-        "-epq", "--exactQuery", help="Words that must be included", type=str, default=""
-    )
-    parser.add_argument(
-        "-oq", "--optionalQuery", help="Words that are optional", type=str, default=""
-    )
+    parser.add_argument("-epq", "--exactQuery", help="Words that must be included", type=str, default="")
+    parser.add_argument("-oq", "--optionalQuery", help="Words that are optional", type=str, default="")
     parser.add_argument(
         "-eq",
         "--exceptQuery",
@@ -199,9 +189,7 @@ def getParams(sysArgs: Any):
         type=str,
         choices=["jpg", "gif", "png", "bmp", "svg", "webp", "ico", "raw"],
     )
-    parser.add_argument(
-        "-s", "--site", help="Specific site or domain to search", type=str, default=""
-    )
+    parser.add_argument("-s", "--site", help="Specific site or domain to search", type=str, default="")
     parser.add_argument(
         "-ss",
         "--SafeSearch",
@@ -351,20 +339,12 @@ def getImageUrls(params: dict[str, Any], url: str):
             for thumbnail in thumbnails[resultsIndex:resultsNo]:
                 try:
                     thumbnail.click()
-                    images = driver.find_elements(
-                        By.CSS_SELECTOR, "img.n3VNCb, img.iR330, img.r48fl"
-                    )
+                    images = driver.find_elements(By.CSS_SELECTOR, "img.n3VNCb, img.iR330, img.r48fl")
                     for image in images:
                         imgSource = image.get_attribute("src")
-                        if (
-                            imgSource
-                            and imgSource.startswith("http")
-                            and imgSource not in imageUrls
-                        ):
+                        if imgSource and imgSource.startswith("http") and imgSource not in imageUrls:
                             imageUrls.append(imgSource)
-                            print(
-                                f"Collected URL ({len(imageUrls)}/{maxImages}): {imgSource[:60]}..."
-                            )
+                            print(f"Collected URL ({len(imageUrls)}/{maxImages}): {imgSource[:60]}...")
                             if len(imageUrls) >= maxImages:
                                 break
                     if len(imageUrls) >= maxImages:
@@ -378,9 +358,7 @@ def getImageUrls(params: dict[str, Any], url: str):
     return imageUrls
 
 
-def download_with_requests(
-    url: str, timeout: int = 10, headers: Any = None
-) -> tuple[str,]:
+def download_with_requests(url: str, timeout: int = 10, headers: Any = None) -> tuple[str,]:
     if requests is None:
         msg = "The 'requests' library is not installed (`pip install requests`)."
         raise ImportError(msg)
@@ -390,9 +368,7 @@ def download_with_requests(
     return resp.content, content_type
 
 
-def download_with_httpx(
-    url: str, timeout: int = 10, headers: Any = None
-) -> tuple[str,]:
+def download_with_httpx(url: str, timeout: int = 10, headers: Any = None) -> tuple[str,]:
     if httpx is None:
         msg = "The 'httpx' library is not installed (`pip install httpx`)."
         raise ImportError(msg)
@@ -403,9 +379,7 @@ def download_with_httpx(
         return resp.content, content_type
 
 
-def download_with_pycurl(
-    url: str, timeout: int = 10, headers: dict[str, Any] | None = None
-) -> tuple[str,]:
+def download_with_pycurl(url: str, timeout: int = 10, headers: dict[str, Any] | None = None) -> tuple[str,]:
     if pycurl is None:
         msg = "The 'pycurl' library is not installed (`pip install pycurl`)."
         raise ImportError(msg)
@@ -451,9 +425,7 @@ def get_extension_from_content_type(content_type: str, default: str = ".jpg") ->
     return default
 
 
-def single_download_worker(
-    index: dict[str, Any], url: str, backend: Any, output_dir: Path, headers: Any
-) -> bool:
+def single_download_worker(index: dict[str, Any], url: str, backend: Any, output_dir: Path, headers: Any) -> bool:
     backend = backend.lower()
     try:
         if backend == "requests":
@@ -482,9 +454,7 @@ def downloadImages(params: dict[str, Any], imageUrls: Iterable[Any]) -> None:
     picDir = params["outputDir"]
     thread_count = params.get("threads", 4)
     os.makedirs(picDir, exist_ok=True)
-    print(
-        f"\nDownloading {len(imageUrls)} images using backend '{backend}' into '{picDir}'..."
-    )
+    print(f"\nDownloading {len(imageUrls)} images using backend '{backend}' into '{picDir}'...")
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -494,9 +464,7 @@ def downloadImages(params: dict[str, Any], imageUrls: Iterable[Any]) -> None:
     success_count = 0
     with ThreadPoolExecutor(max_workers=thread_count) as executor:
         futures = [
-            executor.submit(
-                single_download_worker, idx + 1, url, backend, picDir, headers
-            )
+            executor.submit(single_download_worker, idx + 1, url, backend, picDir, headers)
             for idx, url in enumerate(imageUrls)
         ]
         for future in as_completed(futures):

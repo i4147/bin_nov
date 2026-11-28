@@ -51,10 +51,7 @@ def walk_files(roots: Iterable[Path]) -> Iterator[Path]:
             continue
         for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
             dirnames[:] = [
-                d
-                for d in dirnames
-                if d not in SKIP_DIRS
-                and not Path(Path(dirpath).joinpath(d)).is_symlink()
+                d for d in dirnames if d not in SKIP_DIRS and not Path(Path(dirpath).joinpath(d)).is_symlink()
             ]
             for name in filenames:
                 p = Path(dirpath) / name
@@ -123,9 +120,7 @@ def find_duplicates(
     log(f"{len(partial_tasks)} candidate(s) share a size; partial-hashing...")
     partial_groups: dict[tuple[int, str], list[Path]] = defaultdict(list)
     with mp.Pool(processes=workers) as pool:
-        for path, digest, _read, err in pool.imap_unordered(
-            _hash_worker, partial_tasks, chunksize=32
-        ):
+        for path, digest, _read, err in pool.imap_unordered(_hash_worker, partial_tasks, chunksize=32):
             if err:
                 log(f"WARN: {path}: {err}")
                 continue
@@ -139,9 +134,7 @@ def find_duplicates(
     log(f"{len(full_tasks)} candidate(s) share a partial hash; full-hashing...")
     full_groups: dict[tuple[int, str], list[Path]] = defaultdict(list)
     with mp.Pool(processes=workers) as pool:
-        for path, digest, size, err in pool.imap_unordered(
-            _hash_worker, full_tasks, chunksize=1
-        ):
+        for path, digest, size, err in pool.imap_unordered(_hash_worker, full_tasks, chunksize=1):
             if err:
                 log(f"WARN: {path}: {err}")
                 continue
@@ -175,9 +168,7 @@ def main(argv: list[str] | None = None) -> int:
         default=1,
         help="Ignore files smaller than this many bytes (default: 1)",
     )
-    ap.add_argument(
-        "-q", "--quiet", action="store_true", help="Suppress progress messages"
-    )
+    ap.add_argument("-q", "--quiet", action="store_true", help="Suppress progress messages")
     args = ap.parse_args(argv)
     if not args.paths:
         args.paths = [Path()]
@@ -237,9 +228,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.apply:
         print(f"Removed {removed} file(s), reclaimed {fsz(reclaimed)}.")
     else:
-        print(
-            f"Dry run complete. Re-run with -a/--apply to delete {total_redundant} file(s)."
-        )
+        print(f"Dry run complete. Re-run with -a/--apply to delete {total_redundant} file(s).")
     return 0
 
 

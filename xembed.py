@@ -72,18 +72,16 @@ SIGNATURES: Final[tuple[tuple[bytes, str], ...]] = (
     (b"\x00\x01\x00\x00", ".ttf"),
     (b"\x00\x00\x01\x00", ".ico"),
 )
-TEXT_ASSET_SUFFIXES: Final[frozenset[str]] = frozenset(
-    {
-        ".css",
-        ".svg",
-        ".js",
-        ".json",
-        ".html",
-        ".htm",
-        ".txt",
-        ".xml",
-    }
-)
+TEXT_ASSET_SUFFIXES: Final[frozenset[str]] = frozenset({
+    ".css",
+    ".svg",
+    ".js",
+    ".json",
+    ".html",
+    ".htm",
+    ".txt",
+    ".xml",
+})
 DEFAULT_SUFFIXES: Final[tuple[str, ...]] = (".html", ".css", ".svg", ".js", ".json")
 
 
@@ -184,10 +182,7 @@ def iter_sources(opts: Options) -> Iterator[Path]:
     for dirpath, dirnames, filenames in os.walk(root, topdown=True, followlinks=False):
         current = Path(dirpath)
         dirnames[:] = sorted(
-            d
-            for d in dirnames
-            if not should_skip_dir(d, opts.exclude)
-            and (current / d).resolve() != assets_resolved
+            d for d in dirnames if not should_skip_dir(d, opts.exclude) and (current / d).resolve() != assets_resolved
         )
         for name in sorted(filenames):
             path = current / name
@@ -308,9 +303,7 @@ def run_until_clean(opts: Options, stats: Stats) -> None:
                 if resolved in seen:
                     continue
                 seen.add(resolved)
-                is_asset = (
-                    opts.assets in resolved.parents or resolved.parent == opts.assets
-                )
+                is_asset = opts.assets in resolved.parents or resolved.parent == opts.assets
                 created = process_file(path, opts, stats, is_asset=is_asset)
                 new_assets.extend(created)
         else:
@@ -321,13 +314,8 @@ def run_until_clean(opts: Options, stats: Stats) -> None:
                     if resolved in seen:
                         continue
                     seen.add(resolved)
-                    is_asset = (
-                        opts.assets in resolved.parents
-                        or resolved.parent == opts.assets
-                    )
-                    fut = pool.submit(
-                        process_file, path, opts, stats, is_asset=is_asset
-                    )
+                    is_asset = opts.assets in resolved.parents or resolved.parent == opts.assets
+                    fut = pool.submit(process_file, path, opts, stats, is_asset=is_asset)
                     futures[fut] = path
                 for fut in concurrent.futures.as_completed(futures):
                     try:
@@ -362,9 +350,7 @@ def write_manifest(opts: Options, stats: Stats) -> None:
                 merged = raw
         except (json.JSONDecodeError, OSError) as exc:
             if opts.verbose:
-                print(
-                    f"warning: could not read existing manifest: {exc}", file=sys.stderr
-                )
+                print(f"warning: could not read existing manifest: {exc}", file=sys.stderr)
     for name, entry in stats.manifest.items():
         current = asdict(entry)
         previous = merged.get(name)
@@ -470,10 +456,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     opts = Options(
         root=root,
         assets=assets,
-        suffixes=frozenset(
-            s if s.startswith(".") else f".{s}"
-            for s in (x.lower() for x in args.suffixes)
-        ),
+        suffixes=frozenset(s if s.startswith(".") else f".{s}" for s in (x.lower() for x in args.suffixes)),
         exclude=frozenset(args.exclude),
         min_size=max(0, args.min_size),
         replace=args.replace,

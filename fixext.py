@@ -123,18 +123,14 @@ def colored(
 MIME_TO_EXT: Final[dict[str, list[str]]] = {
     "application/pdf": [".pdf"],
     "application/msword": [".doc"],
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
-        ".docx"
-    ],
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
     "application/vnd.oasis.opendocument.text": [".odt"],
     "application/vnd.oasis.opendocument.presentation": [".odp"],
     "application/vnd.oasis.opendocument.spreadsheet": [".ods"],
     "application/vnd.ms-excel": [".xls"],
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
     "application/vnd.ms-powerpoint": [".ppt"],
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation": [
-        ".pptx"
-    ],
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": [".pptx"],
     "application/rtf": [".rtf"],
     "application/x-abiword": [".abw"],
     "application/x-krita": [".kra"],
@@ -436,15 +432,11 @@ def get_file_mime(path: Path) -> MimeResult:
         exit_code: int
         stdout: str
         stderr: str
-        exit_code, stdout, stderr = runcmd(
-            ["file", "--brief", "--mime-type", str(path)], timeout=5
-        )
+        exit_code, stdout, stderr = runcmd(["file", "--brief", "--mime-type", str(path)], timeout=5)
         if exit_code == 127:
             return MimeResult(None, "file command not found")
         if exit_code != 0:
-            return MimeResult(
-                None, stderr or f"file command failed with code {exit_code}"
-            )
+            return MimeResult(None, stderr or f"file command failed with code {exit_code}")
         mime_type: str = stdout.strip()
         if mime_type:
             return MimeResult(mime_type)
@@ -473,9 +465,7 @@ def detect_mismatch(base_dir: Path, path: Path) -> MismatchResult | None:
         return MismatchResult(
             path=path,
             current_ext=current_ext,
-            detected_mime=(
-                "text/x-shellscript" if shebang_ext == ".sh" else "text/x-python"
-            ),
+            detected_mime=("text/x-shellscript" if shebang_ext == ".sh" else "text/x-python"),
             expected_exts=[shebang_ext],
             new_path=unique_path(new_path),
         )
@@ -531,9 +521,7 @@ def scan_directory(directory: str) -> list[MismatchResult]:
     results: list[MismatchResult] = []
     tasks: list[tuple[Path, Path]] = [(base_dir, f) for f in files]
     with Pool(processes=MAX_WORKERS) as pool:
-        async_results: list[Any] = [
-            pool.apply_async(process_file_worker, (task,)) for task in tasks
-        ]
+        async_results: list[Any] = [pool.apply_async(process_file_worker, (task,)) for task in tasks]
         completed: int = 0
         for ar in async_results:
             completed += 1
@@ -562,13 +550,9 @@ def print_results(mismatches: list[MismatchResult], confirm: bool = False) -> in
         except ValueError:
             rel_path = result.path
         new_name: str = result.new_path.name if result.new_path else "<unknown>"
-        print(
-            f"  {colored(str(rel_path), fg=Color.CYAN)} → {colored(new_name, fg=Color.GREEN)}"
-        )
+        print(f"  {colored(str(rel_path), fg=Color.CYAN)} → {colored(new_name, fg=Color.GREEN)}")
         print(f"    MIME: {colored(result.detected_mime, fg=Color.LIGHT_CYAN)}")
-        print(
-            f"    Expected ext: {colored(result.expected_exts[0], fg=Color.LIGHT_GREEN)}"
-        )
+        print(f"    Expected ext: {colored(result.expected_exts[0], fg=Color.LIGHT_GREEN)}")
         if result.new_path is None:
             logger.error("    ✗ No target path computed")
             print()
@@ -622,9 +606,7 @@ def main() -> int:
         Color.disable()
     else:
         Color.enable()
-    cprint = lambda text, fg=None, bg=None, attrs=None: print(
-        colored(text, fg, bg, attrs)
-    )
+    cprint = lambda text, fg=None, bg=None, attrs=None: print(colored(text, fg, bg, attrs))
     cprint("╔══════════════════════════════════════════╗", fg=Color.CYAN)
     cprint("║  File Extension Mismatch Fixer            ║", fg=Color.CYAN)
     cprint("╚══════════════════════════════════════════╝", fg=Color.CYAN)

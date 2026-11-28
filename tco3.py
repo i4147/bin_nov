@@ -410,11 +410,7 @@ def load_results(path: Path, continue_mode: bool) -> dict[str, str]:
         if not isinstance(payload, dict):
             msg = "output JSON must contain an object"
             raise ValueError(msg)
-        return {
-            str(key): str(value)
-            for key, value in payload.items()
-            if isinstance(value, str)
-        }
+        return {str(key): str(value) for key, value in payload.items() if isinstance(value, str)}
     except Exception as exc:
         logger.error("Could not load existing output {}: {}", path, exc)
         return {}
@@ -565,11 +561,7 @@ def run(args: argparse.Namespace) -> int:
         args.source,
         args.target,
     )
-    pending: list[tuple[int, str]] = [
-        (index, chunk)
-        for index, chunk in enumerate(chunks)
-        if str(index) not in results
-    ]
+    pending: list[tuple[int, str]] = [(index, chunk) for index, chunk in enumerate(chunks) if str(index) not in results]
     logger.info(
         "Backend={}, chunks={}, already translated={}, pending={}",
         backend_name,

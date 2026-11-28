@@ -233,9 +233,7 @@ def _worker_file_to_dict(path: Path) -> tuple[Path, dict[str, str]]:
                     mapping[line] = res or ""
                 except Exception as exc:
                     mapping[line] = f"TRANSLATION_ERROR: {exc}"
-                    logger.warning(
-                        f"  ⚠️  Error translating line {i + 1} in {path.name}: {exc}"
-                    )
+                    logger.warning(f"  ⚠️  Error translating line {i + 1} in {path.name}: {exc}")
         else:
             mapping = dict(zip(src_lines, out_lines))
         print(f"✅ Translated: {path.name} ({len(mapping)} words)")
@@ -294,9 +292,7 @@ def _translate_file_to_target(
     if len(content) <= chunk_size:
         print(f"[INFO] Content fits in single request ({len(content)} chars)")
         print("[INFO] Translating...")
-        return translate_with_retry(
-            content, source=source, target=target, retries=retries
-        )
+        return translate_with_retry(content, source=source, target=target, retries=retries)
     chunks = chunk_by_markers(content, chunk_size)
     total = len(chunks)
     print(f"[INFO] Content split into {total} chunks")
@@ -307,11 +303,7 @@ def _translate_file_to_target(
         for i, chunk in enumerate(chunks):
             print(f"\n[INFO] Translating chunk {i + 1}/{total} ({len(chunk)} chars)...")
             try:
-                results.append(
-                    translate_with_retry(
-                        chunk, source=source, target=target, retries=retries
-                    )
-                )
+                results.append(translate_with_retry(chunk, source=source, target=target, retries=retries))
             except Exception as exc:
                 print(f"[ERROR] Failed to translate chunk {i + 1}: {exc}")
                 results.append(chunk)
@@ -393,9 +385,7 @@ def _inplace_translate_one(
     chunks = chunk_by_regex(content, chunk_size)
     translated_chunks: list[str] = []
     with Pool(processes=workers) as pool:
-        async_results = [
-            pool.apply_async(_worker_chunk_to_en, ((c, sleep),)) for c in chunks
-        ]
+        async_results = [pool.apply_async(_worker_chunk_to_en, ((c, sleep),)) for c in chunks]
         for ar in async_results:
             translated_chunks.append(ar.get())
     new_content = "".join(translated_chunks)
@@ -519,9 +509,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="en",
         help="Suffix for the output file (default: en).",
     )
-    p.add_argument(
-        "--encoding", default="utf-8", help="Input encoding (default: utf-8)."
-    )
+    p.add_argument("--encoding", default="utf-8", help="Input encoding (default: utf-8).")
     p.set_defaults(func=cmd_lines_to_en)
     p = sub.add_parser(
         "inplace-to-en",
@@ -574,9 +562,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=".",
         help="Directory containing the .txt files (default: current dir).",
     )
-    p.add_argument(
-        "--glob", default="*.txt", help="Glob pattern for input files (default: *.txt)."
-    )
+    p.add_argument("--glob", default="*.txt", help="Glob pattern for input files (default: *.txt).")
     p.add_argument(
         "--out-dir",
         default="./translations",

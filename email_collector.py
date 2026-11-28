@@ -79,9 +79,7 @@ class CrawlerDb:
             return False
         args = [{"url": str(url)}]
         if emails is not None:
-            args = [
-                {"url": str(url), "has_crawled": True, "emails": str(",".join(emails))}
-            ]
+            args = [{"url": str(url), "has_crawled": True, "emails": str(",".join(emails))}]
         result = self.connection.execute(self.website_table.insert(), args)
         self.connection.commit()
         return bool(result)
@@ -89,11 +87,7 @@ class CrawlerDb:
     def dequeue(self):
         if not self.connected:
             return False
-        s = (
-            select([self.website_table])
-            .limit(1)
-            .where(self.website_table.c.has_crawled == False)
-        )
+        s = select([self.website_table]).limit(1).where(self.website_table.c.has_crawled == False)
         res = self.connection.execute(s)
         result = res.fetchall()
         res.close()
@@ -105,7 +99,8 @@ class CrawlerDb:
         if not self.connected:
             return False
         stmt = (
-            self.website_table.update()
+            self.website_table
+            .update()
             .where(self.website_table.c.id == website.id)
             .values(has_crawled=True, emails=new_emails)
         )
@@ -141,9 +136,7 @@ class CrawlerDb:
                 continue
             url = urllib.parse.urlparse(result.url)
             hostname = url.hostname.split(".")
-            hostname = ".".join(
-                (len(hostname[-2]) < 4 and hostname[-3:]) or hostname[-2:]
-            )
+            hostname = ".".join((len(hostname[-2]) < 4 and hostname[-3:]) or hostname[-2:])
             domain_set.add(hostname)
         return domain_set
 
@@ -245,12 +238,7 @@ def crawl(keywords: str) -> None:
     logger.info("-" * 40)
     for page_index in range(0, MAX_SEARCH_RESULTS, 10):
         query = {"q": keywords}
-        url = (
-            "http://www.google.com/search?"
-            + urllib.parse.urlencode(query)
-            + "&start="
-            + str(page_index)
-        )
+        url = "http://www.google.com/search?" + urllib.parse.urlencode(query) + "&start=" + str(page_index)
         data = retrieve_html(url)
         for u in google_url_regex.findall(data or ""):
             db.enqueue(str(u))

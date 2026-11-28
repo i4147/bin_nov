@@ -35,9 +35,7 @@ def diff_bytecode_of_files(filename_a: Any, filename_b: Any):
     return diff_bytecode(source_a, source_b, filename_a, filename_b)
 
 
-def diff_bytecode(
-    source_a: Any, source_b: Any, filename_a: str = "", filename_b: str = ""
-) -> str:
+def diff_bytecode(source_a: Any, source_b: Any, filename_a: str = "", filename_b: str = "") -> str:
     if dump_ast(source_a, filename_a) == dump_ast(source_b, filename_b):
         return ""
     bytecode_a = disassemble(source_a, filename_a)
@@ -84,9 +82,7 @@ def tree(code: Any) -> dict[str, list[Any]]:
     return dictionary
 
 
-def open_with_encoding(
-    filename: str, encoding: str | None = None, mode: str = "r"
-) -> TextIO:
+def open_with_encoding(filename: str, encoding: str | None = None, mode: str = "r") -> TextIO:
     if not encoding:
         encoding = detect_encoding(filename)
     import io
@@ -123,9 +119,7 @@ def main(argv: list[Any], standard_out: TextIO, standard_error: TextIO) -> None:
         if diff:
             standard_out.write(diff + "\n")
     except SyntaxError as exception:
-        standard_error.write(
-            "{0}:{1} invalid syntax\n".format(exception.filename, exception.lineno)
-        )
+        standard_error.write("{0}:{1} invalid syntax\n".format(exception.filename, exception.lineno))
         standard_error.write(str(exception.text))
         standard_error.write((exception.offset * " ")[:-1] + "^\n")
 

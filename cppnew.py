@@ -42,10 +42,7 @@ def cppnew(*args: Any) -> int:
     atomic_write(file, TEMPLATE)
     print(f"Created {file} with basic C++ template")
     editor = (
-        subprocess.run(
-            ["sh", "-c", 'printf %s "$EDITOR"'], capture_output=True, text=True
-        ).stdout.strip()
-        or "nano"
+        subprocess.run(["sh", "-c", 'printf %s "$EDITOR"'], capture_output=True, text=True).stdout.strip() or "nano"
     )
     try:
         return subprocess.run([editor, str(file)]).returncode

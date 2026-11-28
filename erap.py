@@ -96,9 +96,7 @@ def _process_append(target: Path, tools: list[str]) -> str:
         key, value = _run_tool(name, APPEND_TOOLS[name], target)
         results[key] = value
     ty_out = (results.get("ty") or "").lower()
-    skip = (tools == ["ty"] and "all checks passed" in ty_out) or (
-        _DH_IMPORT_PATTERN in ty_out
-    )
+    skip = (tools == ["ty"] and "all checks passed" in ty_out) or (_DH_IMPORT_PATTERN in ty_out)
     if skip:
         return f"✓ Skipped (ty:all checks passed):{target}"
     _append_outputs(target, results)
@@ -168,17 +166,11 @@ def _cmd_report(args: argparse.Namespace) -> int:
     out_dir = Path(args.output) if args.output else cwd / DEFAULT_REPORT_DIR
     out_dir.mkdir(exist_ok=True)
     self_name = Path(__file__).name
-    files = sorted(
-        f
-        for f in cwd.iterdir()
-        if f.is_file() and f.suffix == ".py" and f.name != self_name
-    )
+    files = sorted(f for f in cwd.iterdir() if f.is_file() and f.suffix == ".py" and f.name != self_name)
     if not files:
         print("No .py files found in current directory.")
         return 0
-    print(
-        f"Found {len(files)} Python file(s). Generating reports in '{out_dir.name}/'...\n"
-    )
+    print(f"Found {len(files)} Python file(s). Generating reports in '{out_dir.name}/'...\n")
     for f in files:
         _process_report(f, out_dir)
     print("\nCompleted analysis for all files.")

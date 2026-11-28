@@ -57,19 +57,17 @@ def git_clone2(*args: Any) -> int:
         target = f"{repo}.git"
     print(f"🔍 Default branch: {branch}")
     print(f"📦 Cloning only '{branch}' (with submodules) from {url} into {target} ...")
-    rc = subprocess.run(
-        [
-            "git",
-            "clone",
-            "--single-branch",
-            "--branch",
-            branch,
-            "--bare",
-            "--recurse-submodules",
-            url,
-            target,
-        ]
-    ).returncode
+    rc = subprocess.run([
+        "git",
+        "clone",
+        "--single-branch",
+        "--branch",
+        branch,
+        "--bare",
+        "--recurse-submodules",
+        url,
+        target,
+    ]).returncode
     if rc != 0:
         return rc
     target_path = Path(target)

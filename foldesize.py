@@ -12,9 +12,7 @@ import sys
 
 
 SKIP: set[str] = {".git", ".gitignore"}
-RANGE_RE = re.compile(
-    r"^(empty(_\d+)?|\d+(?:\.\d+)?[a-z]+-\d+(?:\.\d+)?[a-z]+(_\d+)?)$"
-)
+RANGE_RE = re.compile(r"^(empty(_\d+)?|\d+(?:\.\d+)?[a-z]+-\d+(?:\.\d+)?[a-z]+(_\d+)?)$")
 
 
 def get_size(path: Path) -> int:
@@ -81,9 +79,7 @@ def main() -> None:
 
     cwd = Path.cwd()
     items: list[tuple[str, int]] = [
-        (p.name, get_size(p))
-        for p in cwd.iterdir()
-        if p.name not in SKIP and not RANGE_RE.match(p.name)
+        (p.name, get_size(p)) for p in cwd.iterdir() if p.name not in SKIP and not RANGE_RE.match(p.name)
     ]
 
     if not items:
@@ -98,12 +94,7 @@ def main() -> None:
         chunk_idx = idx if m <= n else idx * n // m
         chunks[chunk_idx].append(item)
 
-    labels = make_unique(
-        [
-            chunk_label([s for _, s in chunk], first=(i == 0))
-            for i, chunk in enumerate(chunks)
-        ]
-    )
+    labels = make_unique([chunk_label([s for _, s in chunk], first=(i == 0)) for i, chunk in enumerate(chunks)])
 
     for label in labels:
         (cwd / label).mkdir(exist_ok=True)

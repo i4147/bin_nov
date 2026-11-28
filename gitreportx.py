@@ -319,9 +319,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "--backend",
         choices=AVAILABLE_BACKENDS,
         default="subprocess",
-        help=(
-            f"Git access backend to use. Available: {', '.join(AVAILABLE_BACKENDS)} (default: subprocess)"
-        ),
+        help=(f"Git access backend to use. Available: {', '.join(AVAILABLE_BACKENDS)} (default: subprocess)"),
     )
     parser.add_argument(
         "--only-with-changes",

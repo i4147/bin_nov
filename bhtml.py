@@ -164,10 +164,7 @@ def main() -> int:
         logger.critical("--jobs must be >= 1 (got {})", MAX_WORKERS)
         return 2
     suffixes: frozenset[str] = (
-        frozenset(
-            s.lower() if s.startswith(".") else f".{s.lower()}"
-            for s in (args.ext or DEFAULT_SUFFIXES)
-        )
+        frozenset(s.lower() if s.startswith(".") else f".{s.lower()}" for s in (args.ext or DEFAULT_SUFFIXES))
         if args.ext
         else frozenset(DEFAULT_SUFFIXES)
     )

@@ -77,9 +77,7 @@ def main(argv: list[str]) -> int:
         encoding="utf-8",
     )
 
-    print(
-        f"removed {len(removed)} installed package(s), kept {len(remaining)} / {len(original)} line(s)"
-    )
+    print(f"removed {len(removed)} installed package(s), kept {len(remaining)} / {len(original)} line(s)")
     if removed:
         print("removed:", ", ".join(removed))
     return 0

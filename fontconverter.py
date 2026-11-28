@@ -239,9 +239,7 @@ def cmd_otf2ttf(args: argparse.Namespace) -> int:
         st = res["status"]
         if st == "success":
             summary["success"] += 1
-            print(
-                f"  ✓ Converted: {res['ttf']} (original {'kept' if args.keep_source else 'removed'})"
-            )
+            print(f"  ✓ Converted: {res['ttf']} (original {'kept' if args.keep_source else 'removed'})")
         elif st == "skipped_exists":
             summary["skipped_exists"] += 1
             print(f"  ⚠ Skipped: {res['ttf']} (already exists)")
@@ -298,9 +296,7 @@ def cmd_otf2ttf_fontforge(args: argparse.Namespace) -> int:
         print(f"Processing: {src}")
         status, msg = _otf2ttf_fontforge_worker(src, args.keep_source)
         if status == "success":
-            print(
-                f"  ✓ Converted: {msg} (original {'kept' if args.keep_source else 'removed'})"
-            )
+            print(f"  ✓ Converted: {msg} (original {'kept' if args.keep_source else 'removed'})")
             summary["success"] += 1
         elif status == "skipped":
             print(f"  ⚠ Skipped: {msg} (already exists)")
@@ -309,9 +305,7 @@ def cmd_otf2ttf_fontforge(args: argparse.Namespace) -> int:
             print(f"  ✗ Failed: {msg}")
             summary["error"] += 1
     print(f"\n{'=' * 40}")
-    print(
-        f"Summary: {summary['success']} converted, {summary['skipped']} skipped, {summary['error']} failed"
-    )
+    print(f"Summary: {summary['success']} converted, {summary['skipped']} skipped, {summary['error']} failed")
     return 0 if summary["error"] == 0 else 1
 
 
@@ -404,12 +398,8 @@ def build_parser() -> argparse.ArgumentParser:
         "convert",
         help="Convert TTF/OTF/WOFF/WOFF2 fonts to another container flavour.",
     )
-    p_convert.add_argument(
-        "paths", nargs="*", help="Font files or directories (default: scan cwd)"
-    )
-    p_convert.add_argument(
-        "--to", required=True, choices=["ttf", "woff", "woff2"], help="Target format"
-    )
+    p_convert.add_argument("paths", nargs="*", help="Font files or directories (default: scan cwd)")
+    p_convert.add_argument("--to", required=True, choices=["ttf", "woff", "woff2"], help="Target format")
     p_convert.add_argument(
         "-r",
         "--rm",
@@ -421,9 +411,7 @@ def build_parser() -> argparse.ArgumentParser:
         "otf2ttf",
         help="Convert OTF to TTF using fontTools (pure Python).",
     )
-    p_otf2ttf.add_argument(
-        "paths", nargs="*", help="OTF files or directories (default: scan cwd)"
-    )
+    p_otf2ttf.add_argument("paths", nargs="*", help="OTF files or directories (default: scan cwd)")
     p_otf2ttf.add_argument(
         "-k",
         "--keep-source",
@@ -435,9 +423,7 @@ def build_parser() -> argparse.ArgumentParser:
         "otf2ttf-fontforge",
         help="Convert OTF to TTF using FontForge Python bindings.",
     )
-    p_otf2ttf_ff.add_argument(
-        "paths", nargs="*", help="OTF files or directories (default: scan cwd)"
-    )
+    p_otf2ttf_ff.add_argument("paths", nargs="*", help="OTF files or directories (default: scan cwd)")
     p_otf2ttf_ff.add_argument(
         "-k",
         "--keep-source",
@@ -449,9 +435,7 @@ def build_parser() -> argparse.ArgumentParser:
         "tottf",
         help="Convert SVG/WOFF/EOT/OTF/TTC to TTF using FontForge CLI.",
     )
-    p_tottf.add_argument(
-        "paths", nargs="*", help="Font files or directories (default: scan cwd)"
-    )
+    p_tottf.add_argument("paths", nargs="*", help="Font files or directories (default: scan cwd)")
     p_tottf.add_argument(
         "-r",
         "--remove-source",
@@ -463,9 +447,7 @@ def build_parser() -> argparse.ArgumentParser:
         "woff22ttf",
         help="Decompress WOFF2 to TTF using fontTools.",
     )
-    p_woff22.add_argument(
-        "paths", nargs="*", help="WOFF2 files or directories (default: scan cwd)"
-    )
+    p_woff22.add_argument("paths", nargs="*", help="WOFF2 files or directories (default: scan cwd)")
     p_woff22.add_argument(
         "-k",
         "--keep-source",

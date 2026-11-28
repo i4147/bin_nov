@@ -138,28 +138,24 @@ def main() -> int:
         key = normalize(import_name)
         real = stdlib_lookup.get(key)
         if real is not None:
-            conflicts.append(
-                {
-                    "type": "stdlib",
-                    "path": str(path),
-                    "filename": path.name,
-                    "import_name": import_name,
-                    "shadows": real,
-                    "kind": kind,
-                }
-            )
+            conflicts.append({
+                "type": "stdlib",
+                "path": str(path),
+                "filename": path.name,
+                "import_name": import_name,
+                "shadows": real,
+                "kind": kind,
+            })
             continue
         if key in pypi:
-            conflicts.append(
-                {
-                    "type": "pypi",
-                    "path": str(path),
-                    "filename": path.name,
-                    "import_name": import_name,
-                    "shadows": import_name,
-                    "kind": kind,
-                }
-            )
+            conflicts.append({
+                "type": "pypi",
+                "path": str(path),
+                "filename": path.name,
+                "import_name": import_name,
+                "shadows": import_name,
+                "kind": kind,
+            })
     renamed = 0
     if args.autofix:
         for c in conflicts:

@@ -45,9 +45,7 @@ def install_wheels(wheels: list[Path]) -> bool:
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Install wheel files without dependencies and remove them afterwards."
-    )
+    parser = argparse.ArgumentParser(description="Install wheel files without dependencies and remove them afterwards.")
     parser.add_argument(
         "targets",
         nargs="+",

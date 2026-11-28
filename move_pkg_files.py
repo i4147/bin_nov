@@ -27,15 +27,13 @@ ENTRY_POINTS_FILENAME: Final[str] = "entry_points.txt"
 DIST_INFO_SUFFIX: Final[str] = ".dist-info"
 PYC_SUFFIXES: Final[tuple[str, ...]] = (".pyc", ".pyo")
 IGNORED_RECORD_NAMES: Final[frozenset[str]] = frozenset({"RECORD.jws"})
-DIST_INFO_ALLOWED_FILES: Final[frozenset[str]] = frozenset(
-    {
-        "METADATA",
-        "RECORD",
-        "top_level.txt",
-        "entry_points.txt",
-        "WHEEL",
-    }
-)
+DIST_INFO_ALLOWED_FILES: Final[frozenset[str]] = frozenset({
+    "METADATA",
+    "RECORD",
+    "top_level.txt",
+    "entry_points.txt",
+    "WHEEL",
+})
 MISSING_FILES_REPORT: Final[Path] = Path("missing-files.txt")
 ALL_KEYWORD: Final[str] = "all"
 
@@ -112,9 +110,7 @@ def select_packages(
         has_wildcard = any(char in pattern for char in "*?[]")
         if has_wildcard:
             matches = [
-                package
-                for package in packages
-                if fnmatch.fnmatchcase(package.canonical_name, normalized_pattern)
+                package for package in packages if fnmatch.fnmatchcase(package.canonical_name, normalized_pattern)
             ]
             if matches:
                 for package in matches:
@@ -124,11 +120,7 @@ def select_packages(
             suggestions[pattern] = []
             continue
 
-        exact = [
-            package
-            for package in packages
-            if package.canonical_name == normalized_pattern
-        ]
+        exact = [package for package in packages if package.canonical_name == normalized_pattern]
         if exact:
             selected[exact[0].canonical_name] = exact[0]
             continue
@@ -160,9 +152,7 @@ def read_record(record_file: Path, site_packages: Path) -> Iterator[tuple[Path, 
             if not source.is_absolute():
                 source = site_packages / source
             try:
-                relative_path = source.resolve(strict=False).relative_to(
-                    site_packages.resolve(strict=False)
-                )
+                relative_path = source.resolve(strict=False).relative_to(site_packages.resolve(strict=False))
             except ValueError:
                 logger.warning(
                     "RECORD path is outside site-packages; preserving basename only: {}",
@@ -175,17 +165,11 @@ def read_record(record_file: Path, site_packages: Path) -> Iterator[tuple[Path, 
 def should_skip(relative_path: Path) -> bool:
     if relative_path.suffix.lower() in PYC_SUFFIXES:
         return True
-    return bool(
-        relative_path.name in IGNORED_RECORD_NAMES
-        and relative_path.parent.suffix == DIST_INFO_SUFFIX
-    )
+    return bool(relative_path.name in IGNORED_RECORD_NAMES and relative_path.parent.suffix == DIST_INFO_SUFFIX)
 
 
 def is_unlisted_dist_info_file(relative_path: Path) -> bool:
-    return (
-        relative_path.parent.suffix == DIST_INFO_SUFFIX
-        and relative_path.name not in DIST_INFO_ALLOWED_FILES
-    )
+    return relative_path.parent.suffix == DIST_INFO_SUFFIX and relative_path.name not in DIST_INFO_ALLOWED_FILES
 
 
 def report_missing_file(source: Path) -> None:
@@ -201,9 +185,7 @@ def unique_destination(destination: Path) -> Path:
         return destination
     counter = 1
     while True:
-        candidate = destination.with_name(
-            f"{destination.stem}_{counter}{destination.suffix}"
-        )
+        candidate = destination.with_name(f"{destination.stem}_{counter}{destination.suffix}")
         if not candidate.exists():
             return candidate
         counter += 1
@@ -211,9 +193,7 @@ def unique_destination(destination: Path) -> Path:
 
 def remove_empty_directories(directories: Iterable[Path], *, dry_run: bool) -> int:
     removed = 0
-    for directory in sorted(
-        directories, key=lambda path: len(path.parts), reverse=True
-    ):
+    for directory in sorted(directories, key=lambda path: len(path.parts), reverse=True):
         try:
             if not directory.is_dir():
                 continue
@@ -420,9 +400,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--site-packages",
         type=Path,
         default=Path.cwd(),
-        help=(
-            "Site-packages directory containing the packages. Defaults to the current working directory."
-        ),
+        help=("Site-packages directory containing the packages. Defaults to the current working directory."),
     )
     parser.add_argument(
         "-v",
@@ -443,9 +421,7 @@ def configure_logging(verbose: bool, log_file: Path | None) -> None:
     logger.add(
         sys.stderr,
         level="DEBUG" if verbose else "INFO",
-        format=(
-            "<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>"
-        ),
+        format=("<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>"),
     )
     if log_file is not None:
         log_file = log_file.expanduser()
@@ -501,9 +477,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 1
 
     if args.entry_points:
-        filtered: list[PackageInfo] = [
-            package for package in selected_packages if package.has_entry_points
-        ]
+        filtered: list[PackageInfo] = [package for package in selected_packages if package.has_entry_points]
         excluded = len(selected_packages) - len(filtered)
         if excluded:
             logger.info("Excluded {} package(s) without entry points.", excluded)

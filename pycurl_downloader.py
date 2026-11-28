@@ -31,9 +31,7 @@ def filename_from_url(url: str) -> str:
     path = unquote(parsed.path)
     name = Path(path).name or "index"
     if parsed.query:
-        safe_query = "".join(
-            c if c.isalnum() or c in "-_." else "_" for c in parsed.query
-        )
+        safe_query = "".join(c if c.isalnum() or c in "-_." else "_" for c in parsed.query)
         name = f"{name}_{safe_query}"
     name = "".join(c if c.isalnum() or c in "-_." else "_" for c in name)
     return name or "index"
@@ -126,9 +124,7 @@ def main() -> None:
     if not urls:
         print("No URLs found in input file.")
         sys.exit(0)
-    print(
-        f"Downloading {len(urls)} URLs with {MAX_WORKERS} workers (timeout {TIMEOUT}s each)..."
-    )
+    print(f"Downloading {len(urls)} URLs with {MAX_WORKERS} workers (timeout {TIMEOUT}s each)...")
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     original_order = {}
     for i, u in enumerate(urls):
@@ -137,9 +133,7 @@ def main() -> None:
     processed_ok: set[str] = set()
     try:
         with mp.Pool(processes=MAX_WORKERS, initializer=worker_init) as pool:
-            async_results = [
-                (url, pool.apply_async(download_one, (url,))) for url in urls
-            ]
+            async_results = [(url, pool.apply_async(download_one, (url,))) for url in urls]
             total = len(async_results)
             done = 0
             for url, ar in async_results:

@@ -91,11 +91,7 @@ def process_notebooks(paths: list[Path]) -> None:
             path, success, message = async_res.get()
             results.append((path, success, message))
             status: str = "✓" if success else "✗"
-            relative_path: Path = (
-                path.relative_to(Path.cwd())
-                if path.is_relative_to(Path.cwd())
-                else path
-            )
+            relative_path: Path = path.relative_to(Path.cwd()) if path.is_relative_to(Path.cwd()) else path
             print(f"{status} {relative_path}: {message}")
     successful: int = sum(1 for _, success, _ in results if success)
     failed: int = len(results) - successful

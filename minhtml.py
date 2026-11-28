@@ -48,9 +48,7 @@ except ImportError:
         _HAS_TRANSLIT = False
         _translit = None
 
-JobTuple: TypeAlias = tuple[
-    str, bool, str, tuple[str, ...], float, bool, str | None, bool, bool
-]
+JobTuple: TypeAlias = tuple[str, bool, str, tuple[str, ...], float, bool, str | None, bool, bool]
 ResultTuple: TypeAlias = tuple[str, int, int, str | None, str | None, float]
 
 DEFAULT_BASE_ARGS: tuple[str, ...] = (
@@ -190,9 +188,7 @@ def _plan_renames(
 ) -> dict[Path, Path]:
     if not slugify:
         return {f: f for f in files}
-    plans: dict[Path, Path] = {
-        f: _slugify_path(f, lowercase, transliterate) for f in files
-    }
+    plans: dict[Path, Path] = {f: _slugify_path(f, lowercase, transliterate) for f in files}
     groups: dict[tuple[Path, str], list[Path]] = defaultdict(list)
     for f, t in plans.items():
         groups[(f.parent, t.name)].append(f)
@@ -221,9 +217,7 @@ def _worker(job: Job) -> Result:
         orig: int = 0,
         new: int = 0,
     ) -> Result:
-        return Result(
-            str(path), orig, new, err, skip, (time.perf_counter() - t0) * 1000.0
-        )
+        return Result(str(path), orig, new, err, skip, (time.perf_counter() - t0) * 1000.0)
 
     try:
         if path.is_symlink():
@@ -235,9 +229,7 @@ def _worker(job: Job) -> Result:
             return done(skip="empty", orig=orig_size, new=orig_size)
 
         mtime_before = st.st_mtime_ns
-        fd, tmp_name = tempfile.mkstemp(
-            prefix=".minhtml-", suffix=".tmp", dir=str(path.parent)
-        )
+        fd, tmp_name = tempfile.mkstemp(prefix=".minhtml-", suffix=".tmp", dir=str(path.parent))
         os.close(fd)
         tmp_file: Path | None = Path(tmp_name)
         try:
@@ -255,9 +247,7 @@ def _worker(job: Job) -> Result:
                     check=False,
                 )
             except subprocess.TimeoutExpired:
-                return done(
-                    err=f"timeout after {job.timeout:g}s", orig=orig_size, new=orig_size
-                )
+                return done(err=f"timeout after {job.timeout:g}s", orig=orig_size, new=orig_size)
 
             if proc.returncode != 0:
                 err = proc.stderr.decode("utf-8", "replace").strip()[:400]
@@ -292,9 +282,7 @@ def _worker(job: Job) -> Result:
                 try:
                     shutil.copy2(path, backup)
                 except OSError as e:
-                    return done(
-                        err=f"backup failed: {e}", orig=orig_size, new=orig_size
-                    )
+                    return done(err=f"backup failed: {e}", orig=orig_size, new=orig_size)
 
             if job.fsync:
                 with open(tmp_file, "rb") as f:
@@ -413,9 +401,7 @@ def _collect(args: argparse.Namespace, cutoff: float | None) -> tuple[list[Path]
                     max_orig = max(max_orig, st.st_size)
             elif entry.is_dir():
                 base = entry.resolve()
-                for dirpath, dirnames, filenames in os.walk(
-                    base, followlinks=args.follow_symlinks
-                ):
+                for dirpath, dirnames, filenames in os.walk(base, followlinks=args.follow_symlinks):
                     dirnames[:] = [d for d in dirnames if d not in exclude_dirs]
                     dp = Path(dirpath)
                     for fn in filenames:
@@ -512,11 +498,7 @@ def _format_result(
 
 
 def _print_top(results: list[Result], n: int, use_color: bool) -> None:
-    changed = [
-        r
-        for r in results
-        if r.error is None and r.skip_reason is None and r.new < r.original
-    ]
+    changed = [r for r in results if r.error is None and r.skip_reason is None and r.new < r.original]
     if not changed:
         return
     changed.sort(key=lambda r: r.original - r.new, reverse=True)
@@ -529,9 +511,7 @@ def _print_top(results: list[Result], n: int, use_color: bool) -> None:
         print(f"  {Path(r.path).name:<40}  {d:>10}  ({pct:.1f}%)")
 
 
-def _emit_json(
-    results: list[Result], renames: list[Rename], summary: dict[str, Any], dry_run: bool
-) -> None:
+def _emit_json(results: list[Result], renames: list[Rename], summary: dict[str, Any], dry_run: bool) -> None:
     payload: dict[str, Any] = {
         "dry_run": dry_run,
         "renames": [{"from": r.src, "to": r.dst, "status": r.status} for r in renames],
@@ -630,9 +610,7 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="normalize filenames: transliterate non-ASCII (fa/ar/ko/ja/zh), collapse punctuation/spaces to '_'",
     )
-    g.add_argument(
-        "--slug-lowercase", action="store_true", help="lowercase slugified stems"
-    )
+    g.add_argument("--slug-lowercase", action="store_true", help="lowercase slugified stems")
     g.add_argument(
         "--no-transliterate",
         action="store_true",
@@ -687,9 +665,7 @@ def _build_parser() -> argparse.ArgumentParser:
     g.add_argument("--no-preserve-braces", action="store_true")
 
     g = p.add_argument_group("execution")
-    g.add_argument(
-        "--workers", type=int, default=0, metavar="N", help="worker count (0=auto)"
-    )
+    g.add_argument("--workers", type=int, default=0, metavar="N", help="worker count (0=auto)")
     g.add_argument(
         "--chunksize",
         type=int,
@@ -699,9 +675,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     g = p.add_argument_group("output")
     g.add_argument("--json", action="store_true", help="emit JSON to stdout")
-    g.add_argument(
-        "--top", type=int, default=0, metavar="N", help="show top N savings (0=off)"
-    )
+    g.add_argument("--top", type=int, default=0, metavar="N", help="show top N savings (0=off)")
     g.add_argument("--no-color", action="store_true")
     g.add_argument("--log-file", type=Path, default=None)
     g.add_argument("-q", "--quiet", action="store_true", help="suppress per-file lines")
@@ -756,9 +730,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     use_color = (
         not args.no_color
         and "NO_COLOR" not in os.environ
-        and (
-            os.environ.get("CLICOLOR_FORCE", "") not in ("", "0") or sys.stdout.isatty()
-        )
+        and (os.environ.get("CLICOLOR_FORCE", "") not in ("", "0") or sys.stdout.isatty())
     )
 
     renames: list[Rename]
@@ -805,9 +777,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     cw = len(str(total))
     counter_w = len(f"[{total}/{total}]")
     bytes_w = max(3, len(str(max_orig)))
-    fn_w = min(
-        max(len(p.name) for p in files), max(20, term_w - counter_w - 3 - 2 - bytes_w)
-    )
+    fn_w = min(max(len(p.name) for p in files), max(20, term_w - counter_w - 3 - 2 - bytes_w))
 
     interrupted = False
 
@@ -892,8 +862,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "renamed": renamed,
                 "would_rename": would_rename,
                 "by_extension": {
-                    k: {"files": v[0], "original": v[1], "freed": v[2]}
-                    for k, v in sorted(ext_rollup.items())
+                    k: {"files": v[0], "original": v[1], "freed": v[2]} for k, v in sorted(ext_rollup.items())
                 },
             },
             dry_run,

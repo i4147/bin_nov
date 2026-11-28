@@ -31,9 +31,7 @@ import hunspell
 
 
 def process_line(line: str, autofix: bool = False) -> tuple:
-    h = hunspell.HunSpell(
-        "/usr/share/hunspell/en_US.dic", "/usr/share/hunspell/en_US.aff"
-    )
+    h = hunspell.HunSpell("/usr/share/hunspell/en_US.dic", "/usr/share/hunspell/en_US.aff")
     misspelled_count = 0
     fixed_count = 0
     suggestions_dict = {}
@@ -125,18 +123,12 @@ def process_file(
                 print(f"\n✓ Autofixed {total_fixed} misspelled word(s) in '{path}'.")
                 if total_misspelled > total_fixed:
                     skipped = total_misspelled - total_fixed
-                    print(
-                        f"  ({skipped} misspelled word(s) had no suggestions and were skipped.)"
-                    )
+                    print(f"  ({skipped} misspelled word(s) had no suggestions and were skipped.)")
                     no_suggestion_words = [
-                        word
-                        for word, suggs in all_suggestions.items()
-                        if suggs == ["No suggestions"]
+                        word for word, suggs in all_suggestions.items() if suggs == ["No suggestions"]
                     ]
                     if no_suggestion_words:
-                        print(
-                            f"\n  Words with no suggestions: {', '.join(no_suggestion_words[:10])}"
-                        )
+                        print(f"\n  Words with no suggestions: {', '.join(no_suggestion_words[:10])}")
                         if len(no_suggestion_words) > 10:
                             print(f"  ... and {len(no_suggestion_words) - 10} more")
             except Exception as e:
@@ -144,9 +136,7 @@ def process_file(
         elif total_misspelled == 0:
             print("✓ No misspelled words found to autofix.")
         else:
-            print(
-                "Found misspelled words, but no automatic corrections were available."
-            )
+            print("Found misspelled words, but no automatic corrections were available.")
             print("\nWords and their suggestions:")
             for word, suggs in all_suggestions.items():
                 if suggs != ["No suggestions"]:

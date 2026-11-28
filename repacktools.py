@@ -127,9 +127,7 @@ BINARY_SUFFIXES: set[str] = {".so", ".pyd", ".dll", ".dylib", ".sl"}
 
 
 def _has_binary(root: Path) -> bool:
-    return any(
-        p.is_file() and p.suffix.lower() in BINARY_SUFFIXES for p in root.rglob("*")
-    )
+    return any(p.is_file() and p.suffix.lower() in BINARY_SUFFIXES for p in root.rglob("*"))
 
 
 def _read_metadata(dist_info: Path) -> dict[str, str]:
@@ -170,13 +168,11 @@ def _read_record(dist_info: Path) -> Optional[list[tuple[str, str, str]]]:
         for row in csv.reader(f):
             if not row or not row[0]:
                 continue
-            rows.append(
-                (
-                    row[0],
-                    row[1] if len(row) > 1 else "",
-                    row[2] if len(row) > 2 else "",
-                )
-            )
+            rows.append((
+                row[0],
+                row[1] if len(row) > 1 else "",
+                row[2] if len(row) > 2 else "",
+            ))
     return rows
 
 
@@ -260,9 +256,7 @@ def discover_packages(
         name = meta.get("Name", dist_name)
         version = meta.get("Version", version)
         top_level = _guess_top_level(site_packages, dist_info, name)
-        is_pure = not _has_binary(dist_info.parent) or not _package_has_binary(
-            site_packages, top_level
-        )
+        is_pure = not _has_binary(dist_info.parent) or not _package_has_binary(site_packages, top_level)
         has_bin = not is_pure
         out.append(
             PackageInfo(
@@ -346,9 +340,7 @@ def _zip_directory(src: Path, dest: Path) -> None:
                 zf.write(f, f.relative_to(src).as_posix())
 
 
-def build_wheel_simple(
-    pkg: PackageInfo, output_dir: Path, verbose: bool
-) -> tuple[bool, str, Optional[Path]]:
+def build_wheel_simple(pkg: PackageInfo, output_dir: Path, verbose: bool) -> tuple[bool, str, Optional[Path]]:
     tag = "py3-none-any" if pkg.is_pure else "-".join(current_sys_tag())
     wheel_path = output_dir / pkg.wheel_filename(tag)
     try:
@@ -371,9 +363,7 @@ def build_wheel_simple(
             shutil.copytree(pkg.dist_info, dst_di)
             _write_wheel_metadata(dst_di, pkg, tag)
             if not (dst_di / "top_level.txt").exists():
-                atomic_write(
-                    (dst_di / "top_level.txt"), pkg.top_level + "\n", encoding="utf-8"
-                )
+                atomic_write((dst_di / "top_level.txt"), pkg.top_level + "\n", encoding="utf-8")
             atomic_write(
                 (dst_di / "RECORD"),
                 _compute_record(tmp_p, pkg.dist_info.name),
@@ -496,9 +486,7 @@ def _venv_bin_dir(site_packages: Path) -> Optional[Path]:
     return None
 
 
-def build_wheel_via_subprocess(
-    src_unpacked: Path, output_dir: Path, verbose: bool
-) -> tuple[bool, str, Optional[Path]]:
+def build_wheel_via_subprocess(src_unpacked: Path, output_dir: Path, verbose: bool) -> tuple[bool, str, Optional[Path]]:
     output_dir.mkdir(parents=True, exist_ok=True)
     cmd = [
         sys.executable,
@@ -515,9 +503,7 @@ def build_wheel_via_subprocess(
         return False, "wheel module not available", None
     if res.returncode != 0:
         return False, f"wheel pack failed: {res.stderr.strip()[:200]}", None
-    wheels = sorted(
-        output_dir.glob("*.whl"), key=lambda p: p.stat().st_mtime, reverse=True
-    )
+    wheels = sorted(output_dir.glob("*.whl"), key=lambda p: p.stat().st_mtime, reverse=True)
     if verbose and wheels:
         log.info("  wheelpack: {}", wheels[0].name)
     return True, "ok", wheels[0] if wheels else None
@@ -580,9 +566,7 @@ class Repacker:
                 tmp_p = Path(tmp)
                 with zipfile.ZipFile(path) as zf:
                     zf.extractall(tmp_p)
-                ok2, msg2, _ = build_wheel_via_subprocess(
-                    tmp_p, self.output_dir, self.verbose
-                )
+                ok2, msg2, _ = build_wheel_via_subprocess(tmp_p, self.output_dir, self.verbose)
                 if not ok2:
                     return False, f"wheelpack: {msg2}", path
         return ok, msg, path
@@ -607,16 +591,14 @@ class Repacker:
             else:
                 self.stats.failed += 1
                 log.error("  ✗ {}", msg)
-            self.results.append(
-                {
-                    "package": pkg.name,
-                    "version": pkg.version,
-                    "is_pure_python": pkg.is_pure,
-                    "success": ok,
-                    "wheel": path.name if path else None,
-                    "message": msg,
-                }
-            )
+            self.results.append({
+                "package": pkg.name,
+                "version": pkg.version,
+                "is_pure_python": pkg.is_pure,
+                "success": ok,
+                "wheel": path.name if path else None,
+                "message": msg,
+            })
         return self.stats
 
     def save_report(self, filename: str) -> Path:
@@ -683,9 +665,7 @@ def _wheel_tag_from_dist_info(dist_info: Path) -> str:
     return "py3-none-any"
 
 
-def pack_unpacked_dir_library(
-    src: Path, output_dir: Path, verbose: bool
-) -> tuple[bool, str, Optional[Path]]:
+def pack_unpacked_dir_library(src: Path, output_dir: Path, verbose: bool) -> tuple[bool, str, Optional[Path]]:
     if not _HAS_WHEEL:
         return False, "wheel library not installed", None
     dist_info = _find_dist_info_dir(src)
@@ -709,22 +689,16 @@ def pack_unpacked_dir_library(
         return False, str(e), None
 
 
-def pack_unpacked_dir_subprocess(
-    src: Path, output_dir: Path, verbose: bool
-) -> tuple[bool, str, Optional[Path]]:
+def pack_unpacked_dir_subprocess(src: Path, output_dir: Path, verbose: bool) -> tuple[bool, str, Optional[Path]]:
     ok, msg, path = build_wheel_via_subprocess(src, output_dir, verbose)
     if ok:
         return True, path.name if path else "ok", path
     return False, msg, None
 
 
-async def _pack_async(
-    src: Path, output_dir: Path, queue: "asyncio.Queue[tuple[str, bool]]", verbose: bool
-) -> None:
+async def _pack_async(src: Path, output_dir: Path, queue: "asyncio.Queue[tuple[str, bool]]", verbose: bool) -> None:
     loop = asyncio.get_running_loop()
-    ok, msg, _path = await loop.run_in_executor(
-        None, pack_unpacked_dir_library, src, output_dir, verbose
-    )
+    ok, msg, _path = await loop.run_in_executor(None, pack_unpacked_dir_library, src, output_dir, verbose)
     await queue.put((msg if ok else f"{src.name}: {msg}", ok))
 
 
@@ -749,11 +723,7 @@ def run_pack_dirs(
         log.error("directory not found: {}", directory)
         return 1
     output_dir.mkdir(parents=True, exist_ok=True)
-    dirs = [
-        d
-        for d in sorted(directory.iterdir())
-        if d.is_dir() and not d.name.endswith(".dist-info")
-    ]
+    dirs = [d for d in sorted(directory.iterdir()) if d.is_dir() and not d.name.endswith(".dist-info")]
     if not dirs:
         log.warning("no unpacked wheel directories found under {}", directory)
         return 0

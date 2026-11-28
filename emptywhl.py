@@ -23,8 +23,7 @@ def is_empty_wheel(wheel_path: str) -> bool:
             [
                 name.rstrip("/")
                 for name in z.namelist()
-                if name.endswith(".dist-info/")
-                or (name == name.rstrip("/") + "/" and name.endswith(".dist-info"))
+                if name.endswith(".dist-info/") or (name == name.rstrip("/") + "/" and name.endswith(".dist-info"))
             ]
             dist_info = next(
                 (name.rstrip("/") for name in z.namelist() if ".dist-info" in name),

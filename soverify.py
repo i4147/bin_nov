@@ -64,9 +64,7 @@ class CtypesVerifier:
         if not can_load:
             return (False, symbol_info)
         try:
-            result = subprocess.run(
-                ["nm", str(path)], capture_output=True, timeout=10, text=True
-            )
+            result = subprocess.run(["nm", str(path)], capture_output=True, timeout=10, text=True)
             if result.returncode == 0:
                 lines = [line for line in result.stdout.split("\n") if line.strip()]
                 symbol_info["symbol_count"] = len(lines)
@@ -144,9 +142,7 @@ def main() -> None:
         print(f"{'=' * 40}")
         for path in error_files:
             print(f"  ✗ {path}")
-    print(
-        f"Verification complete: {valid_count} valid, {error_count} errors out of {len(files)} files"
-    )
+    print(f"Verification complete: {valid_count} valid, {error_count} errors out of {len(files)} files")
     if error_count > 0:
         sys.exit(1)
 

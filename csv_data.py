@@ -21,35 +21,33 @@ from dh import atomic_write
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-BINARY_EXT: frozenset[str] = frozenset(
-    {
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".gif",
-        ".webp",
-        ".ico",
-        ".pdf",
-        ".zip",
-        ".tar",
-        ".gz",
-        ".xz",
-        ".bz2",
-        ".7z",
-        ".mp3",
-        ".mp4",
-        ".mkv",
-        ".pyc",
-        ".so",
-        ".o",
-        ".a",
-        ".exe",
-        ".dll",
-        ".bin",
-        ".db",
-        ".sqlite3",
-    }
-)
+BINARY_EXT: frozenset[str] = frozenset({
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".webp",
+    ".ico",
+    ".pdf",
+    ".zip",
+    ".tar",
+    ".gz",
+    ".xz",
+    ".bz2",
+    ".7z",
+    ".mp3",
+    ".mp4",
+    ".mkv",
+    ".pyc",
+    ".so",
+    ".o",
+    ".a",
+    ".exe",
+    ".dll",
+    ".bin",
+    ".db",
+    ".sqlite3",
+})
 PKG_FIELDS: list[str] = [
     "Package",
     "Version",
@@ -103,9 +101,7 @@ def cmd_to_json(args: argparse.Namespace) -> int:
         return 1
     output: Path = args.output or args.input.with_suffix(".json")
     data: object = csv_map(args.input) if args.mode == "map" else csv_rows(args.input)
-    atomic_write(
-        output, json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-    )
+    atomic_write(output, json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Converted: {args.input} -> {output} (mode={args.mode})")
     return 0
 
@@ -138,9 +134,7 @@ def group_by_extension(root: Path, excluded: frozenset[str]) -> dict[str, list[P
 
 def cmd_dup_lines(args: argparse.Namespace) -> int:
     """Report lines that occur at least --min-count times, per extension."""
-    excluded: frozenset[str] = BINARY_EXT | {
-        (e if e.startswith(".") else "." + e).lower() for e in args.exclude
-    }
+    excluded: frozenset[str] = BINARY_EXT | {(e if e.startswith(".") else "." + e).lower() for e in args.exclude}
     groups: dict[str, list[Path]] = group_by_extension(args.root, excluded)
     if not groups:
         print("No eligible files found.")
@@ -151,9 +145,7 @@ def cmd_dup_lines(args: argparse.Namespace) -> int:
         with ThreadPoolExecutor(max_workers=args.workers) as pool:
             for counter in pool.map(count_lines, files):
                 total.update(counter)
-        kept: list[tuple[str, int]] = [
-            (ln, n) for ln, n in total.most_common() if n >= args.min_count
-        ]
+        kept: list[tuple[str, int]] = [(ln, n) for ln, n in total.most_common() if n >= args.min_count]
         label: str = ext.lstrip(".") or "no_extension"
         out_path: Path = args.out_dir / f"{label}.{args.format}"
         if args.format == "csv":
@@ -162,12 +154,8 @@ def cmd_dup_lines(args: argparse.Namespace) -> int:
                 writer.writerow(["number_of_appearance", "line"])
                 writer.writerows([n, ln] for ln, n in kept)
         else:
-            atomic_write(
-                out_path, "".join(ln + "\n" for ln, _ in kept), encoding="utf-8"
-            )
-        print(
-            f"{label}: {len(files)} file(s), {len(kept)} repeated line(s) -> {out_path}"
-        )
+            atomic_write(out_path, "".join(ln + "\n" for ln, _ in kept), encoding="utf-8")
+        print(f"{label}: {len(files)} file(s), {len(kept)} repeated line(s) -> {out_path}")
     return 0
 
 
@@ -216,9 +204,7 @@ def cmd_dpkg_export(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line parser."""
-    parser = argparse.ArgumentParser(
-        description="CSV conversion and reporting utilities."
-    )
+    parser = argparse.ArgumentParser(description="CSV conversion and reporting utilities.")
     sub = parser.add_subparsers(dest="command", required=True)
 
     tj = sub.add_parser("to-json", help="Convert CSV to JSON")
@@ -239,13 +225,9 @@ def build_parser() -> argparse.ArgumentParser:
     tj.set_defaults(handler=cmd_to_json)
 
     dl = sub.add_parser("dup-lines", help="Per-extension repeated-line report")
-    dl.add_argument(
-        "root", nargs="?", type=Path, default=Path.cwd(), help="Root dir (default: .)"
-    )
+    dl.add_argument("root", nargs="?", type=Path, default=Path.cwd(), help="Root dir (default: .)")
     dl.add_argument("--format", choices=("csv", "txt"), default="csv")
-    dl.add_argument(
-        "--min-count", type=int, default=2, help="Minimum occurrences (default: 2)"
-    )
+    dl.add_argument("--min-count", type=int, default=2, help="Minimum occurrences (default: 2)")
     dl.add_argument(
         "--exclude",
         nargs="*",
@@ -253,12 +235,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="EXT",
         help="Extra extensions to skip",
     )
-    dl.add_argument(
-        "-o", "--out-dir", type=Path, default=Path.cwd(), help="Report directory"
-    )
-    dl.add_argument(
-        "-j", "--workers", type=int, default=8, help="Reader threads (default: 8)"
-    )
+    dl.add_argument("-o", "--out-dir", type=Path, default=Path.cwd(), help="Report directory")
+    dl.add_argument("-j", "--workers", type=int, default=8, help="Reader threads (default: 8)")
     dl.set_defaults(handler=cmd_dup_lines)
 
     dp = sub.add_parser("dpkg-export", help="Export dpkg package list to TSV+CSV")

@@ -151,13 +151,9 @@ def collect(target: Path) -> Iterator[Path]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Annotate zsh scripts with beginner-friendly comments."
-    )
+    parser = argparse.ArgumentParser(description="Annotate zsh scripts with beginner-friendly comments.")
     parser.add_argument("target", type=Path, help="a .zsh file or a directory to scan")
-    parser.add_argument(
-        "-i", "--in-place", action="store_true", help="overwrite the original files"
-    )
+    parser.add_argument("-i", "--in-place", action="store_true", help="overwrite the original files")
     args = parser.parse_args()
 
     logger.remove()
@@ -171,11 +167,7 @@ def main() -> int:
     jobs = [
         (
             str(src),
-            str(
-                src
-                if args.in_place
-                else src.with_name(f"{src.stem}.annotated{src.suffix}")
-            ),
+            str(src if args.in_place else src.with_name(f"{src.stem}.annotated{src.suffix}")),
         )
         for src in files
     ]

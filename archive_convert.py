@@ -55,9 +55,7 @@ ARCHIVE_SUFFIXES: tuple[str, ...] = (
     ".txz",
     ".zip",
 )
-SUFFIXES_BY_LENGTH: tuple[str, ...] = tuple(
-    sorted(ARCHIVE_SUFFIXES, key=len, reverse=True)
-)
+SUFFIXES_BY_LENGTH: tuple[str, ...] = tuple(sorted(ARCHIVE_SUFFIXES, key=len, reverse=True))
 CHUNK: int = 1 << 20
 BIG_TAR_THRESHOLD: int = 10 * 1024 * 1024
 BROTLI_QUALITY_DEFAULT: int = 11
@@ -314,9 +312,7 @@ def main(argv: list[str] | None = None) -> int:
     total_in = 0
     total_out = 0
     with mp.Pool(MAX_WORKERS) as pool:
-        for src, dst, ssize, dsize, err in pool.imap_unordered(
-            process, targets, chunksize=1
-        ):
+        for src, dst, ssize, dsize, err in pool.imap_unordered(process, targets, chunksize=1):
             rp = relpath(src, cwd)
             if err is None and dst is not None:
                 saved = ssize - dsize

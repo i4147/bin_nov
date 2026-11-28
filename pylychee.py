@@ -37,29 +37,23 @@ from loguru import logger
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
-EXT_IMAGE: Final[frozenset[str]] = frozenset(
-    {
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".gif",
-        ".webp",
-        ".bmp",
-        ".tif",
-        ".tiff",
-        ".svg",
-    }
-)
+EXT_IMAGE: Final[frozenset[str]] = frozenset({
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".webp",
+    ".bmp",
+    ".tif",
+    ".tiff",
+    ".svg",
+})
 HTTP_SCHEMES: Final[tuple[str, ...]] = ("http://", "https://")
 HTML_ATTR_RE: Final[re.Pattern[str]] = re.compile(
     r'(?P<attr>href|src)\s*=\s*(?P<q>["\'])(?P<url>.*?)(?P=q)', re.IGNORECASE
 )
-MD_IMAGE_RE: Final[re.Pattern[str]] = re.compile(
-    r"!\[([^\]]*?)\]\((?P<url>[^)\s]+)(?:\s+\"[^\"]*\")?\)"
-)
-MD_LINK_RE: Final[re.Pattern[str]] = re.compile(
-    r"\[(?P<text>[^\]]*?)\]\((?P<url>[^)\s]+)(?:\s+\"[^\"]*\")?\)"
-)
+MD_IMAGE_RE: Final[re.Pattern[str]] = re.compile(r"!\[([^\]]*?)\]\((?P<url>[^)\s]+)(?:\s+\"[^\"]*\")?\)")
+MD_LINK_RE: Final[re.Pattern[str]] = re.compile(r"\[(?P<text>[^\]]*?)\]\((?P<url>[^)\s]+)(?:\s+\"[^\"]*\")?\)")
 DEFAULT_TIMEOUT: Final[int] = 8
 TARGET_EXTS: Final[tuple[str, ...]] = (".md", ".html", ".htm")
 
@@ -267,9 +261,7 @@ def main() -> int:
     tasks: list[tuple[str, int]] = [(fp, timeout) for fp in files]
     all_reports: list[str] = []
     with Pool(processes=MAX_WORKERS) as pool:
-        results: Iterable[object] = [
-            pool.apply_async(process_file, (task,)) for task in tasks
-        ]
+        results: Iterable[object] = [pool.apply_async(process_file, (task,)) for task in tasks]
         for fp, res in zip(files, results):
             try:
                 r = res.get()

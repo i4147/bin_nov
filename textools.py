@@ -260,9 +260,7 @@ def _write_json(path: Path, counter: Counter, with_metadata: bool) -> None:
         }
     else:
         payload = sorted_items
-    atomic_write(
-        path, json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
+    atomic_write(path, json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Results saved to {path}")
 
 
@@ -371,9 +369,7 @@ def cmd_collect_chars(args: argparse.Namespace) -> int:
                 unique_chars.update(chars)
                 processed += 1
                 if processed % 100 == 0:
-                    print(
-                        f"  Processed: {processed:,} files | Unique chars so far: {len(unique_chars):,}"
-                    )
+                    print(f"  Processed: {processed:,} files | Unique chars so far: {len(unique_chars):,}")
     else:
         for f in files:
             unique_chars.update(_worker_collect_chars(str(f)))

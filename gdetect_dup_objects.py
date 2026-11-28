@@ -89,24 +89,20 @@ def extract_objects_from_file(file_path: Path) -> list[dict[str, Any]]:
             obj_type = "class"
         elif isinstance(node, (ast.Assign, ast.AnnAssign)):
             targets = node.targets if isinstance(node, ast.Assign) else [node.target]
-            is_constant = any(
-                isinstance(t, ast.Name) and t.id.isupper() for t in targets
-            )
+            is_constant = any(isinstance(t, ast.Name) and t.id.isupper() for t in targets)
             if is_constant:
                 obj_type = "constant"
         if obj_type:
             canonical_code = get_canonical_structure(node)
             has_type_hints = check_annotations(node)
-            results.append(
-                {
-                    "type": obj_type,
-                    "name": getattr(node, "name", ast.unparse(node)),
-                    "file": str(file_path),
-                    "line": node.lineno,
-                    "canonical_code": canonical_code,
-                    "has_annotations": has_type_hints,
-                }
-            )
+            results.append({
+                "type": obj_type,
+                "name": getattr(node, "name", ast.unparse(node)),
+                "file": str(file_path),
+                "line": node.lineno,
+                "canonical_code": canonical_code,
+                "has_annotations": has_type_hints,
+            })
     return results
 
 
@@ -156,9 +152,7 @@ def main() -> None:
     print("\nScan completed!")
     print(f"- Total unique duplicated structures found: {total_duplicates}")
     for obj_type, items in categorized_duplicates.items():
-        annotation_diff_count = sum(
-            1 for item in items if item["differ_in_type_annotations"]
-        )
+        annotation_diff_count = sum(1 for item in items if item["differ_in_type_annotations"])
         print(
             f"- {obj_type.capitalize()}s: {len(items)} duplicates "
             f"({annotation_diff_count} differ in type annotations) -> saved to output/duplicate_{obj_type}s.json"

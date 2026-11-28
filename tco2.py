@@ -154,9 +154,7 @@ def _require_python_and_platform() -> None:
         raise SystemExit(msg)
     machine = platform.machine().casefold()
     if machine not in {"armv8l", "armv7l", "armv7"}:
-        msg = (
-            f"This script targets 32-bit ARM Termux; detected architecture '{machine}'"
-        )
+        msg = f"This script targets 32-bit ARM Termux; detected architecture '{machine}'"
         raise SystemExit(msg)
     if sys.maxsize > 2**32:
         msg = "This script requires a 32-bit Python process"
@@ -197,9 +195,7 @@ def _make_deepl(source: str, target: str, script_path: str) -> TranslatorCallabl
     return translate
 
 
-def _make_deep_translator(
-    source: str, target: str, script_path: str
-) -> TranslatorCallable:
+def _make_deep_translator(source: str, target: str, script_path: str) -> TranslatorCallable:
     _import("deep_translator")
     source_code = _language("deep_translator", source)
     target_code = _language("deep_translator", target)
@@ -218,9 +214,7 @@ def _make_deep_translator(
     return translate
 
 
-def _make_libretranslate_remote(
-    source: str, target: str, script_path: str
-) -> TranslatorCallable:
+def _make_libretranslate_remote(source: str, target: str, script_path: str) -> TranslatorCallable:
     url = os.getenv("LIBRETRANSLATE_URL")
     if not url:
         msg = "LIBRETRANSLATE_URL is not set"
@@ -261,14 +255,10 @@ def _make_translate(source: str, target: str, script_path: str) -> TranslatorCal
     return translate
 
 
-def _make_translators_bing(
-    source: str, target: str, script_path: str
-) -> TranslatorCallable:
+def _make_translators_bing(source: str, target: str, script_path: str) -> TranslatorCallable:
     _import("translators")
     lock = _SERIAL_LOCKS["translators_bing"]
-    logger.warning(
-        "translators_bing is serialized because each request may start a JS runtime"
-    )
+    logger.warning("translators_bing is serialized because each request may start a JS runtime")
 
     def translate(text: str) -> str:
         try:
@@ -304,9 +294,7 @@ def _make_googletrans(source: str, target: str, script_path: str) -> TranslatorC
     return translate
 
 
-def _make_pygoogletranslation(
-    source: str, target: str, script_path: str
-) -> TranslatorCallable:
+def _make_pygoogletranslation(source: str, target: str, script_path: str) -> TranslatorCallable:
     module = _import("pygoogletranslation")
     client_class = getattr(module, "Translator", None)
     if client_class is None:
@@ -413,9 +401,7 @@ def _make_watson(source: str, target: str, script_path: str) -> TranslatorCallab
     def translate(text: str) -> str:
         try:
             module = importlib.import_module("ibm_watson")
-            authenticator_module = importlib.import_module(
-                "ibm_cloud_sdk_core.authenticators"
-            )
+            authenticator_module = importlib.import_module("ibm_cloud_sdk_core.authenticators")
             authenticator = authenticator_module.IamAuthenticator(api_key)
             client = module.LanguageTranslatorV3(
                 version="2018-05-01",
@@ -493,14 +479,12 @@ def _fallback_order() -> list[str]:
     order.append("deep_translator")
     if os.getenv("LIBRETRANSLATE_URL"):
         order.append("libretranslate_remote")
-    order.extend(
-        [
-            "translate",
-            "translators_bing",
-            "googletrans",
-            "pygoogletranslation",
-        ]
-    )
+    order.extend([
+        "translate",
+        "translators_bing",
+        "googletrans",
+        "pygoogletranslation",
+    ])
     return order
 
 
@@ -514,16 +498,11 @@ def _select_backend(
     failures: list[str] = []
     for name in candidates:
         if name not in _BACKEND_FACTORIES:
-            raise SystemExit(
-                f"Unknown backend '{name}'. Choose from: "
-                + ", ".join(sorted(_BACKEND_FACTORIES))
-            )
+            raise SystemExit(f"Unknown backend '{name}'. Choose from: " + ", ".join(sorted(_BACKEND_FACTORIES)))
         try:
             translator = _BACKEND_FACTORIES[name](source, target, script_path)
             if failures:
-                _print(
-                    f"⚠️  Backend '{failures[-1]}' unavailable — falling back to '{name}'."
-                )
+                _print(f"⚠️  Backend '{failures[-1]}' unavailable — falling back to '{name}'.")
             logger.debug("Selected backend '{}'", name)
             return name, translator
         except Exception as exc:
@@ -606,9 +585,7 @@ def _translate_one(
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Translate a one-word-per-line file into a JSON mapping."
-    )
+    parser = argparse.ArgumentParser(description="Translate a one-word-per-line file into a JSON mapping.")
     parser.add_argument("-i", "--input", default="words.txt")
     parser.add_argument("-o", "--output", default="words.json")
     parser.add_argument("--failed", default="failed.txt")

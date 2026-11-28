@@ -67,13 +67,11 @@ def run_urwid(text: str):
             return key
 
     ed = Ed("", text, multiline=True, allow_tab=True, edit_pos=0)
-    root = urwid.Pile(
-        [
-            ("weight", 2, urwid.Filler(ed, "top")),
-            ("pack", urwid.Divider("─")),
-            ("weight", 1, urwid.Filler(pv, "top")),
-        ]
-    )
+    root = urwid.Pile([
+        ("weight", 2, urwid.Filler(ed, "top")),
+        ("pack", urwid.Divider("─")),
+        ("weight", 1, urwid.Filler(pv, "top")),
+    ])
     scr = urwid.display.raw.Screen()
     scr.tty_signal_keys(start="undefined", stop="undefined")
     urwid.MainLoop(root, screen=scr).run()
@@ -190,9 +188,7 @@ def run_prompt_toolkit(text: str):
         event.app.exit()
 
     root = HSplit([edit, Window(height=1, char="─"), prev])
-    Application(
-        Layout(root, focused_element=edit), key_bindings=kb, full_screen=True
-    ).run()
+    Application(Layout(root, focused_element=edit), key_bindings=kb, full_screen=True).run()
     return buf.text
 
 
@@ -239,9 +235,7 @@ BACKENDS: dict[str, Any] = {
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(
-        description="Edit Persian text with live faprint preview (Ctrl+Q saves & quits)"
-    )
+    ap = argparse.ArgumentParser(description="Edit Persian text with live faprint preview (Ctrl+Q saves & quits)")
     ap.add_argument("file")
     ap.add_argument("-b", "--backend", choices=BACKENDS, default="urwid")
     args = ap.parse_args()

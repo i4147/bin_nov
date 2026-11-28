@@ -46,9 +46,7 @@ def find_py_files(root: Path, exclude: Path | None = None) -> list[Path]:
     return files
 
 
-def fullname_for(
-    root: Path, path: Path, package_mode: bool, package_name: str | None
-) -> str:
+def fullname_for(root: Path, path: Path, package_mode: bool, package_name: str | None) -> str:
     """Dotted module name for *path* relative to *root*."""
     parts: list[str] = list(path.relative_to(root).with_suffix("").parts)
     if parts and parts[-1] == "__init__":
@@ -99,25 +97,17 @@ def analyze(
                 elif alias.name.split(".")[0] in known:
                     info.deps.add(alias.name)
         elif isinstance(node, ast.ImportFrom):
-            resolved: str | None = resolve_relative(
-                fullname, node.module, node.level or 0
-            )
+            resolved: str | None = resolve_relative(fullname, node.module, node.level or 0)
             if resolved:
                 info.deps.add(resolved)
-            elif (
-                package_mode
-                and node.module
-                and (node.module == prefix or node.module.startswith(prefix + "."))
-            ):
+            elif package_mode and node.module and (node.module == prefix or node.module.startswith(prefix + ".")):
                 info.deps.add(node.module)
     normalized: set[str] = set()
     for dep in info.deps:
         for candidate in known | info.deps:
-            if (
-                candidate == dep
-                or candidate.startswith(dep + ".")
-                or dep.startswith(candidate + ".")
-            ) and (candidate in known or "." not in candidate):
+            if (candidate == dep or candidate.startswith(dep + ".") or dep.startswith(candidate + ".")) and (
+                candidate in known or "." not in candidate
+            ):
                 normalized.add(candidate if candidate in known else dep)
     info.deps = {d for d in normalized if d in known} or (info.deps & known)
     return info
@@ -125,9 +115,7 @@ def analyze(
 
 def topological_order(modules: dict[str, ModuleInfo]) -> tuple[list[str], bool]:
     """Dependency-first order (cycles appended alphabetically)."""
-    edges: dict[str, set[str]] = {
-        name: {d for d in info.deps if d in modules} for name, info in modules.items()
-    }
+    edges: dict[str, set[str]] = {name: {d for d in info.deps if d in modules} for name, info in modules.items()}
     indegree: dict[str, int] = {name: len(deps) for name, deps in edges.items()}
     queue: deque[str] = deque(sorted(n for n, deg in indegree.items() if deg == 0))
     ordered: list[str] = []
@@ -146,9 +134,7 @@ def topological_order(modules: dict[str, ModuleInfo]) -> tuple[list[str], bool]:
     return ordered, has_cycle
 
 
-def bundle_source(
-    modules: dict[str, ModuleInfo], ordered: list[str], top_name: str
-) -> str:
+def bundle_source(modules: dict[str, ModuleInfo], ordered: list[str], top_name: str) -> str:
     """Generate the self-contained single file (prefactor strategy)."""
     lines: list[str] = [
         '"""Auto-generated single-file package (python_bundle_tool)."""',
@@ -193,9 +179,7 @@ def bundle_source(
     return "\n".join(lines) + "\n"
 
 
-def rewrite_relative_imports(
-    source: str, root: Path, path: Path, package_name: str
-) -> str:
+def rewrite_relative_imports(source: str, root: Path, path: Path, package_name: str) -> str:
     """``from .x import y`` -> ``from <pkg>.x import y`` (concat mode)."""
     fullname: str = fullname_for(root, path, True, package_name)
     try:
@@ -208,17 +192,11 @@ def rewrite_relative_imports(
     for line in src_lines:
         offsets.append(offsets[-1] + len(line))
     for node in ast.walk(tree):
-        if (
-            isinstance(node, ast.ImportFrom)
-            and (node.level or 0) > 0
-            and node.end_lineno
-        ):
+        if isinstance(node, ast.ImportFrom) and (node.level or 0) > 0 and node.end_lineno:
             absolute: str | None = resolve_relative(fullname, node.module, node.level)
             if absolute is None:
                 continue
-            names: str = ", ".join(
-                f"{a.name} as {a.asname}" if a.asname else a.name for a in node.names
-            )
+            names: str = ", ".join(f"{a.name} as {a.asname}" if a.asname else a.name for a in node.names)
             replacement: str = f"from {absolute} import {names}\n"
             start: int = offsets[node.lineno - 1]
             end: int = offsets[node.end_lineno]
@@ -233,9 +211,7 @@ def concat_source(files: list[Path], root: Path, package_name: str) -> str:
     """Naive concatenation with ``# File:`` headers (mergepy strategy)."""
     chunks: list[str] = []
     for path in files:
-        source: str = rewrite_relative_imports(
-            path.read_text(encoding="utf-8"), root, path, package_name
-        )
+        source: str = rewrite_relative_imports(path.read_text(encoding="utf-8"), root, path, package_name)
         rel: Path = path.relative_to(root)
         chunks.append(f"# File: {rel}\n{source.rstrip()}\n")
     return "\n".join(chunks)
@@ -259,9 +235,7 @@ def cmd_merge(args: argparse.Namespace) -> int:
         )
         return 2
     package_mode: bool = (root / "__init__.py").exists()
-    package_name: str | None = args.package_name or (
-        root.name if package_mode else None
-    )
+    package_name: str | None = args.package_name or (root.name if package_mode else None)
     if args.mode == "concat":
         merged: str = concat_source(files, root, package_name or root.name)
         atomic_write(output, merged, encoding="utf-8")
@@ -332,9 +306,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     me = sub.add_parser("merge", help="Merge a directory of .py files into one")
     me.add_argument("input", nargs="?", type=Path, default=Path.cwd())
-    me.add_argument(
-        "-o", "--output", type=Path, default=None, help="Default: <dirname>_single.py"
-    )
+    me.add_argument("-o", "--output", type=Path, default=None, help="Default: <dirname>_single.py")
     me.add_argument(
         "--mode",
         choices=("bundle", "concat"),

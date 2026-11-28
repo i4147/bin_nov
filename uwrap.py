@@ -112,13 +112,9 @@ def parse_args(argv: list[str]) -> tuple[str, list[str], argparse.Namespace]:
         description="Universal command wrapper with logging, colors, and clipboard",
         add_help=False,
     )
-    parser.add_argument(
-        "--no-color", action="store_true", help="Disable colored output"
-    )
+    parser.add_argument("--no-color", action="store_true", help="Disable colored output")
     parser.add_argument("--no-log", action="store_true", help="Disable logging")
-    parser.add_argument(
-        "--timestamp", action="store_true", help="Prefix output with timestamps"
-    )
+    parser.add_argument("--timestamp", action="store_true", help="Prefix output with timestamps")
     parser.add_argument(
         "--no-clipboard",
         action="store_true",
@@ -148,11 +144,7 @@ def main() -> None:
     output_buffer = [] if not opts.no_clipboard else None
     output_size = 0
     try:
-        with (
-            open(log_file, "a", encoding="utf-8")
-            if log_file
-            else nullcontext() as log_f
-        ):
+        with open(log_file, "a", encoding="utf-8") if log_file else nullcontext() as log_f:
             process = subprocess.Popen(
                 command,
                 stdout=subprocess.PIPE,

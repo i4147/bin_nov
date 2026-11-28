@@ -81,22 +81,16 @@ def _run_pool(names: Sequence[str], method: str) -> list[NamePair]:
         if method == "starmap":
             return pool.starmap(translate_name, [(name,) for name in names])
         if method == "imap_unordered":
-            return list(
-                pool.imap_unordered(_translate_name_tuple, [(n,) for n in names])
-            )
+            return list(pool.imap_unordered(_translate_name_tuple, [(n,) for n in names]))
         if method == "apply_async":
-            async_results: list[AsyncResult[NamePair]] = [
-                pool.apply_async(translate_name, (name,)) for name in names
-            ]
+            async_results: list[AsyncResult[NamePair]] = [pool.apply_async(translate_name, (name,)) for name in names]
             return [result.get() for result in async_results]
     msg = f"Unsupported pool method: {method}"
     raise ValueError(msg)
 
 
 def _build_translation_map(paths: Sequence[Path], pool_method: str) -> dict[str, str]:
-    unique_names: list[str] = sorted(
-        {path.name for path in paths if not is_english(path.name)}
-    )
+    unique_names: list[str] = sorted({path.name for path in paths if not is_english(path.name)})
     if not unique_names:
         return {}
     translation_map: dict[str, str] = {}

@@ -198,9 +198,7 @@ def _extract_subtitles_from(
     return subs
 
 
-def _parse_cluster(
-    f: BinaryIO, size: int, track_number: int
-) -> list[tuple[int, str] | tuple[int, str, int]]:
+def _parse_cluster(f: BinaryIO, size: int, track_number: int) -> list[tuple[int, str] | tuple[int, str, int]]:
     end = f.tell() + size
     base = _read_cluster_time(f, end)
     out = []
@@ -224,9 +222,7 @@ def _read_cluster_time(f: BinaryIO, end: int) -> int:
     return 0
 
 
-def _handle_block(
-    f: BinaryIO, sz: int, base: int, track_number: int
-) -> list[tuple[int, str]]:
+def _handle_block(f: BinaryIO, sz: int, base: int, track_number: int) -> list[tuple[int, str]]:
     trk, vlen = read_vint(f)
     t = int.from_bytes(f.read(2), "big", signed=True)
     f.read(1)
@@ -238,9 +234,7 @@ def _handle_block(
     return []
 
 
-def _handle_group(
-    f: BinaryIO, sz: int, base: int, track_number: int
-) -> list[tuple[int, str] | tuple[int, str, int]]:
+def _handle_group(f: BinaryIO, sz: int, base: int, track_number: int) -> list[tuple[int, str] | tuple[int, str, int]]:
     end = f.tell() + sz
     txt = None
     t_rel = None
@@ -286,15 +280,11 @@ def extract_subtitles_as_srt(
     for i, entry in enumerate(entries):
         if len(entry) == 2:
             start, text = entry
-            next_start = (
-                entries[i + 1][0] if i + 1 < len(entries) else start + DEFAULT_DURATION
-            )
+            next_start = entries[i + 1][0] if i + 1 < len(entries) else start + DEFAULT_DURATION
             end = next_start if next_start > start else start + DEFAULT_DURATION
         else:
             start, text, end = entry
-        result.append(
-            f"{i + 1}\n{format_timestamp(start)} --> {format_timestamp(end)}\n{text.strip()}\n\n"
-        )
+        result.append(f"{i + 1}\n{format_timestamp(start)} --> {format_timestamp(end)}\n{text.strip()}\n\n")
     return "".join(result)
 
 
@@ -322,9 +312,7 @@ def main() -> None:
         lang = t.get("language", "und") or "und"
         print(f"Found track#{track_num} ({t['codec_id']} [{lang}])")
 
-        srt_text = extract_subtitles_as_srt(
-            str(input_path), track_num, on_progress=progress_bar
-        )
+        srt_text = extract_subtitles_as_srt(str(input_path), track_num, on_progress=progress_bar)
         print()
 
         out_path = get_output_srt_path(input_path, i, len(tracks), lang)

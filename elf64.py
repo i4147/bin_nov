@@ -67,9 +67,7 @@ def analyze_file(path: Path) -> dict | None:
                 "path": str(path),
                 "size": path.stat().st_size,
                 "type": ELF_TYPES.get(elf.header["e_type"], elf.header["e_type"]),
-                "machine": ELF_MACHINES.get(
-                    elf.header["e_machine"], elf.header["e_machine"]
-                ),
+                "machine": ELF_MACHINES.get(elf.header["e_machine"], elf.header["e_machine"]),
                 "endianness": "little" if elf.little_endian else "big",
                 "entry": f"0x{elf.header['e_entry']:x}",
             }

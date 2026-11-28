@@ -109,13 +109,9 @@ def get_installed_packages(python: Any = None):
     return result
 
 
-def get_imports_info(
-    module: str, pypi_server: str = "https://pypi.python.org/pypi/", proxy: Any = None
-) -> str | None:
+def get_imports_info(module: str, pypi_server: str = "https://pypi.python.org/pypi/", proxy: Any = None) -> str | None:
     try:
-        response = requests.get(
-            "{0}{1}/json".format(pypi_server, module), proxies=proxy, timeout=15
-        )
+        response = requests.get("{0}{1}/json".format(pypi_server, module), proxies=proxy, timeout=15)
         if response.status_code == 200:
             if hasattr(response.content, "decode"):
                 data = json2package(response.content.decode())
@@ -191,9 +187,7 @@ def extract_imports_from_notebook(path: Path, include_optional: bool = False):
     return found
 
 
-def get_project_imports(
-    directory: Path, ignore_dirs: Iterable[Any], include_optional: bool = False
-):
+def get_project_imports(directory: Path, ignore_dirs: Iterable[Any], include_optional: bool = False):
     results = []
     ignore = set(ignore_dirs)
     for path, subdirs, files in os.walk(directory):
@@ -273,9 +267,7 @@ def init(args: list[Any]) -> int:
     if args["ignore_file"]:
         exclude |= {normalize(x) for x in read_ignores(args["ignore_file"])}
     include_only = {normalize(i) for i in (args["include"] or [])}
-    raw = get_project_imports(
-        root, ignore_dirs, include_optional=args["include_optional"]
-    )
+    raw = get_project_imports(root, ignore_dirs, include_optional=args["include_optional"])
     seen = {}
     for name, src in raw:
         if name in STDLIB_SET:
@@ -304,9 +296,7 @@ def init(args: list[Any]) -> int:
             online.append(pkg)
     if online:
         with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
-            futures = {
-                ex.submit(resolve_online, p, index, args["proxy"]): p for p in online
-            }
+            futures = {ex.submit(resolve_online, p, index, args["proxy"]): p for p in online}
             for fut in concurrent.futures.as_completed(futures):
                 pkg = futures[fut]
                 try:
@@ -332,18 +322,10 @@ def init(args: list[Any]) -> int:
     if args["stdout"] or args["dry_run"]:
         sys.stdout.write("\n".join(lines) + ("\n" if lines else ""))
         return 0
-    target = (
-        os.path.join(args["path"], "requirements.txt")
-        if args["path"]
-        else "requirements.txt"
-    )
+    target = os.path.join(args["path"], "requirements.txt") if args["path"] else "requirements.txt"
     if Path(target).exists() and not args["overwrite"]:
         try:
-            existing = [
-                l.strip()
-                for l in Path(target).read_text().splitlines()
-                if l.strip() and not l.startswith("#")
-            ]
+            existing = [l.strip() for l in Path(target).read_text().splitlines() if l.strip() and not l.startswith("#")]
         except Exception:
             existing = []
         merged = set(lines) | set(existing)

@@ -80,21 +80,15 @@ def scan_and_clean(site_packages_dir: Path, remove: bool = False) -> None:
                         except Exception as e:
                             status = f"[ERROR: Couldn't delete - {e}]"
 
-                    size_info = (
-                        f", {human_readable_size(file_size)}" if file_size else ""
-                    )
-                    print(
-                        f"  {status} {src_file.name} (Compiled binary exists{size_info})"
-                    )
+                    size_info = f", {human_readable_size(file_size)}" if file_size else ""
+                    print(f"  {status} {src_file.name} (Compiled binary exists{size_info})")
 
     print("\n" + "=" * 40)
     print("Scan complete.")
     print(f"Total redundant source files found: {total_c_files}")
     if remove:
         print(f"Successfully removed: {removed_c_files}")
-        print(
-            f"Space freed: {human_readable_size(total_freed_bytes)} ({total_freed_bytes} bytes)"
-        )
+        print(f"Space freed: {human_readable_size(total_freed_bytes)} ({total_freed_bytes} bytes)")
     else:
         print("Run with the '-r' flag to delete these redundant files.")
 

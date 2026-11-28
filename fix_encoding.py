@@ -136,9 +136,7 @@ def iter_text_files(
         yield path
 
 
-def detect_encoding(
-    data: bytes, assume: str | None, candidates: Sequence[str] = ()
-) -> str:
+def detect_encoding(data: bytes, assume: str | None, candidates: Sequence[str] = ()) -> str:
     if assume is not None:
         if assume in UTF8_NAMES:
             data.decode(assume)
@@ -186,9 +184,7 @@ def process_file(path: Path, opts: Options) -> Result:
         payload = convert(data, encoding, opts)
         if payload == data:
             return Result(path, encoding, Action.UNCHANGED)
-        encoding_changed = encoding not in UTF8_NAMES or (
-            encoding == "utf-8-sig" and opts.strip_bom
-        )
+        encoding_changed = encoding not in UTF8_NAMES or (encoding == "utf-8-sig" and opts.strip_bom)
         action = Action.CONVERTED if encoding_changed else Action.DOS2UNIX
         if opts.dry_run:
             return Result(path, encoding, Action.DRY_RUN)
@@ -209,9 +205,7 @@ def run(files: Sequence[Path], opts: Options, jobs: int) -> Iterator[Result]:
         yield from map(worker, files)
         return
     with ProcessPoolExecutor(max_workers=workers) as pool:
-        yield from pool.map(
-            worker, files, chunksize=compute_chunksize(len(files), workers)
-        )
+        yield from pool.map(worker, files, chunksize=compute_chunksize(len(files), workers))
 
 
 def make_row(
@@ -267,18 +261,10 @@ def parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
     parser.add_argument("--no-dos2unix", action="store_true")
     parser.add_argument("--strip-bom", action="store_true")
     parser.add_argument("-a", "--assume-encoding", type=codec_name, metavar="ENC")
-    parser.add_argument(
-        "-c", "--candidates", type=codec_list, default=(), metavar="ENC,ENC"
-    )
-    parser.add_argument(
-        "-x", "--exclude-dir", action="append", default=None, metavar="NAME"
-    )
-    parser.add_argument(
-        "-i", "--include", action="append", default=None, metavar="GLOB"
-    )
-    parser.add_argument(
-        "-e", "--exclude", action="append", default=None, metavar="GLOB"
-    )
+    parser.add_argument("-c", "--candidates", type=codec_list, default=(), metavar="ENC,ENC")
+    parser.add_argument("-x", "--exclude-dir", action="append", default=None, metavar="NAME")
+    parser.add_argument("-i", "--include", action="append", default=None, metavar="GLOB")
+    parser.add_argument("-e", "--exclude", action="append", default=None, metavar="GLOB")
     parser.add_argument("-m", "--max-size", type=float, default=64.0, metavar="MB")
     parser.add_argument("-p", "--preserve-mtime", action="store_true")
     parser.add_argument("-q", "--quiet", action="store_true")
@@ -310,9 +296,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     exclude: list[str] = [*(args.exclude or []), "*.bak"]
     max_size = int(args.max_size * 1024 * 1024)
     start = time.perf_counter()
-    files = list(
-        iter_text_files(root, skip_dirs, args.include or [], exclude, max_size)
-    )
+    files = list(iter_text_files(root, skip_dirs, args.include or [], exclude, max_size))
     total = len(files)
     if total == 0:
         console.print("no text files found")
@@ -344,9 +328,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 130
     elapsed = time.perf_counter() - start
     parts = [f"{action.value} {counts[action]}" for action in Action if counts[action]]
-    console.print(
-        Text(f"{total} files | {' | '.join(parts)} | {elapsed:.2f}s", style="bold")
-    )
+    console.print(Text(f"{total} files | {' | '.join(parts)} | {elapsed:.2f}s", style="bold"))
     return 1 if counts[Action.ERROR] else 0
 
 

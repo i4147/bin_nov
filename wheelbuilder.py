@@ -37,9 +37,7 @@ def is_already_built(wheels_dir: Path, source_name: str) -> bool:
     if not wheels_dir.exists():
         return False
     target = normalize(source_pkg_name(source_name))
-    return any(
-        normalize(whl.name.split("-")[0]) == target for whl in wheels_dir.glob("*.whl")
-    )
+    return any(normalize(whl.name.split("-")[0]) == target for whl in wheels_dir.glob("*.whl"))
 
 
 def has_rust_backend(pkg_dir: Path) -> bool:
@@ -100,13 +98,11 @@ def build_wheel_from_dir(pkg_dir: Path) -> tuple[Path, Optional[str]]:
         if is_already_built(wheels_dir, pkg_dir.name):
             logger.info(f"  ~ Skipping {pkg_dir.name} (already built)")
             return pkg_dir, "Skipped (already built)"
-        has_setup = any(
-            [
-                (pkg_dir / "setup.py").exists(),
-                (pkg_dir / "setup.cfg").exists(),
-                (pkg_dir / "pyproject.toml").exists(),
-            ]
-        )
+        has_setup = any([
+            (pkg_dir / "setup.py").exists(),
+            (pkg_dir / "setup.cfg").exists(),
+            (pkg_dir / "pyproject.toml").exists(),
+        ])
         if not has_setup:
             return pkg_dir, "No setup.py/setup.cfg/pyproject.toml found"
         if has_rust_backend(pkg_dir):
@@ -178,14 +174,12 @@ def build_wheel_from_tar_gz(tar_gz_file: Path) -> tuple[Path, Optional[str]]:
 def is_valid_package_dir(path: Path) -> bool:
     if not path.is_dir():
         return False
-    has_metadata = any(
-        [
-            (path / "setup.py").exists(),
-            (path / "setup.cfg").exists(),
-            (path / "pyproject.toml").exists(),
-            (path / "PKG-INFO").exists(),
-        ]
-    )
+    has_metadata = any([
+        (path / "setup.py").exists(),
+        (path / "setup.cfg").exists(),
+        (path / "pyproject.toml").exists(),
+        (path / "PKG-INFO").exists(),
+    ])
     return has_metadata
 
 
@@ -194,9 +188,7 @@ def build_from_directories() -> None:
     pkg_dirs = sorted([d for d in current_dir.iterdir() if is_valid_package_dir(d)])
     if not pkg_dirs:
         logger.warning("No valid Python package directories found in current directory")
-        logger.info(
-            "Looking for directories with setup.py, setup.cfg, or pyproject.toml"
-        )
+        logger.info("Looking for directories with setup.py, setup.cfg, or pyproject.toml")
         return
     logger.info(f"Found {len(pkg_dirs)} package directory/directories to process")
     for pkg_dir in pkg_dirs:
@@ -227,9 +219,7 @@ def build_from_directories() -> None:
                 failed += 1
                 logger.error(f"XX {pkg_dir.name}: {error}")
         logger.info("=" * 70)
-        logger.info(
-            f"Results: {successful} successful, {skipped} skipped, {failed} failed"
-        )
+        logger.info(f"Results: {successful} successful, {skipped} skipped, {failed} failed")
         logger.info("=" * 70)
     except Exception as e:
         logger.error(f"Multiprocessing failed: {e}")
@@ -279,9 +269,7 @@ def build_from_tar_gz() -> None:
                 failed += 1
                 logger.error(f"XX {tar_file.name}: {error}")
         logger.info("=" * 70)
-        logger.info(
-            f"Results: {successful} successful, {skipped} skipped, {failed} failed"
-        )
+        logger.info(f"Results: {successful} successful, {skipped} skipped, {failed} failed")
         logger.info("=" * 70)
     except Exception as e:
         logger.error(f"Multiprocessing failed: {e}")

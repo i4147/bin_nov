@@ -42,15 +42,10 @@ FORMAT_SUFFIX: dict[str, str] = {
 }
 
 
-def create_archive(
-    folder: Path, fmt: str, output: Path | None, cleanup: bool, dry_run: bool
-) -> Path:
+def create_archive(folder: Path, fmt: str, output: Path | None, cleanup: bool, dry_run: bool) -> Path:
     archive: Path = output or folder.parent / f"{folder.name}{FORMAT_SUFFIX[fmt]}"
     if dry_run:
-        print(
-            f"Would create {archive} from {folder}"
-            + (" and delete the folder" if cleanup else "")
-        )
+        print(f"Would create {archive} from {folder}" + (" and delete the folder" if cleanup else ""))
         return archive
     base_name: str = str(archive)
     for suffix in (".tar.gz", ".tar.bz2", ".tar.xz"):
@@ -59,9 +54,7 @@ def create_archive(
             break
     else:
         base_name = str(archive.with_suffix(""))
-    made: str = shutil.make_archive(
-        base_name, fmt, root_dir=folder.parent, base_dir=folder.name
-    )
+    made: str = shutil.make_archive(base_name, fmt, root_dir=folder.parent, base_dir=folder.name)
     print(f"Created: {made}")
     if cleanup:
         shutil.rmtree(folder)
@@ -96,9 +89,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Delete each folder after archiving (default: keep)",
     )
-    create.add_argument(
-        "-n", "--dry-run", action="store_true", help="Only show what would happen"
-    )
+    create.add_argument("-n", "--dry-run", action="store_true", help="Only show what would happen")
     return parser
 
 

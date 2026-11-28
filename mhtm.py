@@ -172,9 +172,7 @@ def run_pool(
             args_iter = ((f, backend) for f in files)
             yield from pool.starmap(process_file, args_iter)
         elif pool_method == "apply_async":
-            async_results = [
-                pool.apply_async(process_file, (f, backend)) for f in files
-            ]
+            async_results = [pool.apply_async(process_file, (f, backend)) for f in files]
             for ar in async_results:
                 yield ar.get()
         elif pool_method == "imap_unordered":
@@ -233,9 +231,7 @@ def main() -> int:
     error_count = 0
     total_before = 0
     total_after = 0
-    for rel, before, after, err in run_pool(
-        files, args.backend, args.pool_method, MAX_WORKERS
-    ):
+    for rel, before, after, err in run_pool(files, args.backend, args.pool_method, MAX_WORKERS):
         total_before += before
         total_after += after
         if err:
@@ -244,16 +240,12 @@ def main() -> int:
         elif after != before:
             changed_count += 1
             saved = before - after
-            print(
-                f"{rel}: minified {_fmt_bytes(before)} -> {_fmt_bytes(after)} (saved {_fmt_bytes(saved)})"
-            )
+            print(f"{rel}: minified {_fmt_bytes(before)} -> {_fmt_bytes(after)} (saved {_fmt_bytes(saved)})")
     total_saved = total_before - total_after
     print(f"\nTotal input size:  {_fmt_bytes(total_before)}")
     print(f"Total output size: {_fmt_bytes(total_after)}")
     print(f"Total space freed: {_fmt_bytes(total_saved)}")
-    print(
-        f"Done: {changed_count}/{len(files)} file(s) minified, {error_count} error(s)."
-    )
+    print(f"Done: {changed_count}/{len(files)} file(s) minified, {error_count} error(s).")
     return 0 if error_count == 0 else 2
 
 

@@ -93,9 +93,7 @@ def _run_pool(tasks: Sequence[UpdateTask], method: str) -> list[FileResult]:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Recursively swap 'import re' with 'import regex as re'"
-    )
+    parser = argparse.ArgumentParser(description="Recursively swap 'import re' with 'import regex as re'")
     parser.add_argument(
         "-r",
         "--reverse",

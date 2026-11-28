@@ -78,9 +78,7 @@ class _Normalizer(ast.NodeTransformer):
     def visit_AnnAssign(self, node: ast.AnnAssign) -> ast.AST:
         self.generic_visit(node)
         if node.value is not None:
-            return ast.copy_location(
-                ast.Assign(targets=[node.target], value=node.value), node
-            )
+            return ast.copy_location(ast.Assign(targets=[node.target], value=node.value), node)
         return ast.copy_location(ast.Pass(), node)
 
 
@@ -172,9 +170,7 @@ def analyze_similarity(
         candidate_sha: str = sha256_hash(candidate_normalized)
         sha_match: bool = candidate_sha == target_sha
         if verbose:
-            print(
-                f"  [sha256] {candidate.name}: {'MATCH' if sha_match else 'no match'}"
-            )
+            print(f"  [sha256] {candidate.name}: {'MATCH' if sha_match else 'no match'}")
         if sha_match:
             sha_matches.append(
                 MatchResult(
@@ -284,9 +280,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     if args.verbose:
         print(f"Comparing {target.name} against files in {bin_dir}...")
-    result: AnalysisResult = analyze_similarity(
-        target, bin_dir, args.top, verbose=args.verbose
-    )
+    result: AnalysisResult = analyze_similarity(target, bin_dir, args.top, verbose=args.verbose)
     print_results(result)
     return 0
 

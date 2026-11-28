@@ -63,9 +63,7 @@ try:
     from tqdm import tqdm
 except ImportError:
     tqdm = None
-DEFAULT_IGNORED_DIRECTORIES: frozenset[str] = frozenset(
-    {".git", "__pycache__", "node_modules"}
-)
+DEFAULT_IGNORED_DIRECTORIES: frozenset[str] = frozenset({".git", "__pycache__", "node_modules"})
 
 
 @dataclass(frozen=True, slots=True)
@@ -108,9 +106,7 @@ def iter_files(options: ScanOptions) -> Iterator[Path]:
         root,
         followlinks=options.include_symlinks,
     ):
-        directories[:] = [
-            name for name in directories if name not in options.ignored_directories
-        ]
+        directories[:] = [name for name in directories if name not in options.ignored_directories]
         current_path = Path(current)
         for filename in filenames:
             path = current_path / filename
@@ -328,10 +324,7 @@ def write_group_report(
         return
     if report_format == "json":
         report_path = output / "similar_report.json"
-        payload = {
-            f"group_{number}": [str(path) for path in group]
-            for number, group in enumerate(groups, start=1)
-        }
+        payload = {f"group_{number}": [str(path) for path in group] for number, group in enumerate(groups, start=1)}
         with report_path.open("w", encoding="utf-8") as file:
             json.dump(payload, file, indent=2)
         print(f"JSON report written to {report_path}")
@@ -633,9 +626,7 @@ def add_common_scan_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Find and manage exact and fuzzy duplicate files."
-    )
+    parser = argparse.ArgumentParser(description="Find and manage exact and fuzzy duplicate files.")
     subparsers = parser.add_subparsers(dest="command")
     scan_parser = subparsers.add_parser(
         "scan",

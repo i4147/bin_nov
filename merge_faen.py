@@ -24,14 +24,10 @@ def load_existing_translations(json_path: str) -> dict[str, str]:
             with open(json_path, "r", encoding="utf-8") as f:
                 existing_data = json.load(f)
                 if isinstance(existing_data, dict):
-                    print(
-                        f"Loaded {len(existing_data)} existing translations from {json_path}"
-                    )
+                    print(f"Loaded {len(existing_data)} existing translations from {json_path}")
                     return existing_data
                 else:
-                    logger.warning(
-                        f"Existing {json_path} is not a valid dictionary format"
-                    )
+                    logger.warning(f"Existing {json_path} is not a valid dictionary format")
         except (OSError, json.JSONDecodeError) as e:
             logger.warning(f"Could not load existing JSON file: {e}")
     return {}
@@ -49,9 +45,7 @@ def load_failed_words(failed_path: str) -> set[str]:
     return set()
 
 
-def process_file_pair(
-    fa_path: Path, en_path: Path
-) -> tuple[dict[str, str], set[str], list[str]]:
+def process_file_pair(fa_path: Path, en_path: Path) -> tuple[dict[str, str], set[str], list[str]]:
     translations = {}
     failed = set()
     warnings = []

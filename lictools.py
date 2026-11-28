@@ -77,9 +77,7 @@ def cmd_clear(directory: Path, valid_exts: list[str]) -> None:
     for p in directory.rglob("*"):
         if p.is_symlink() or not p.is_file():
             continue
-        if p.name.lower().startswith("license") and (
-            p.suffix.lower() in valid_exts or not p.suffix
-        ):
+        if p.name.lower().startswith("license") and (p.suffix.lower() in valid_exts or not p.suffix):
             print(p.name, p.suffix)
             found.append(p)
     print(f"Found {len(found)} license files")
@@ -113,9 +111,7 @@ def cmd_strip(directory: Path, patterns_file: Path, gap: int) -> None:
         new_text = text
         for pat in patterns:
             escaped_pat = re.escape(pat).replace("\n", r"\s*\n\s*")
-            new_text = re.sub(
-                escaped_pat, "", new_text, flags=re.IGNORECASE | re.MULTILINE
-            )
+            new_text = re.sub(escaped_pat, "", new_text, flags=re.IGNORECASE | re.MULTILINE)
         if len(new_text) != len(text):
             atomic_write(file_path, new_text, encoding="utf-8")
             diff = old_size - file_path.stat().st_size
@@ -125,9 +121,7 @@ def cmd_strip(directory: Path, patterns_file: Path, gap: int) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Unified License Manager CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
-    p_collect = subparsers.add_parser(
-        "collect", help="Concatenate license files into one file"
-    )
+    p_collect = subparsers.add_parser("collect", help="Concatenate license files into one file")
     p_collect.add_argument(
         "-d",
         "--dir",
@@ -142,12 +136,8 @@ def main() -> None:
         default=Path("/sdcard/all2.txt"),
         help="Output file path",
     )
-    p_collect.add_argument(
-        "-e", "--exclude", nargs="+", default=[".git"], help="Directories to exclude"
-    )
-    p_clear = subparsers.add_parser(
-        "clear", help="Empty the contents of discovered license files"
-    )
+    p_collect.add_argument("-e", "--exclude", nargs="+", default=[".git"], help="Directories to exclude")
+    p_clear = subparsers.add_parser("clear", help="Empty the contents of discovered license files")
     p_clear.add_argument(
         "-d",
         "--dir",
@@ -161,9 +151,7 @@ def main() -> None:
         default=[".md", ".txt", ".rst"],
         help="Extensions to target",
     )
-    p_strip = subparsers.add_parser(
-        "strip", help="Strip text patterns from non-binary files"
-    )
+    p_strip = subparsers.add_parser("strip", help="Strip text patterns from non-binary files")
     p_strip.add_argument(
         "-d",
         "--dir",

@@ -87,13 +87,9 @@ RE_MD_IMAGE_DEF = re.compile(
     re.MULTILINE,
 )
 RE_HTML_IMG = re.compile(r"<img\b[^>]*>", re.IGNORECASE)
-RE_HTML_PICTURE = re.compile(
-    r"<picture\b[^>]*>.*?</picture>", re.DOTALL | re.IGNORECASE
-)
+RE_HTML_PICTURE = re.compile(r"<picture\b[^>]*>.*?</picture>", re.DOTALL | re.IGNORECASE)
 RE_HTML_FIGURE = re.compile(r"<figure\b[^>]*>.*?</figure>", re.DOTALL | re.IGNORECASE)
-RE_HTML_IMG_SRC = re.compile(
-    r"<img\b[^>]*\bsrc\s*=\s*[\"']([^\"']+)[\"']", re.IGNORECASE
-)
+RE_HTML_IMG_SRC = re.compile(r"<img\b[^>]*\bsrc\s*=\s*[\"']([^\"']+)[\"']", re.IGNORECASE)
 RE_RST_IMAGE = re.compile(r"^\s*\.\.\s+image::\s+(\S+)")
 RE_RST_FIGURE = re.compile(r"^\s*\.\.\s+figure::\s+(\S+)")
 RE_RST_SUBST_IMAGE = re.compile(r"^\s*\.\.\s+\|[^|]+\|\s+image::\s+(\S+)")
@@ -101,9 +97,7 @@ RE_RST_SUBST_REPLACE = re.compile(
     r"^\s*\.\.\s+\|[^|]+\|\s+replace::\s+(\S+\.(?:png|jpg|jpeg|gif|svg|ico|webp|bmp))",
     re.IGNORECASE,
 )
-_RST_PATTERNS: tuple[
-    re.Pattern[str], re.Pattern[str], re.Pattern[str], re.Pattern[str]
-] = (
+_RST_PATTERNS: tuple[re.Pattern[str], re.Pattern[str], re.Pattern[str], re.Pattern[str]] = (
     RE_RST_IMAGE,
     RE_RST_FIGURE,
     RE_RST_SUBST_IMAGE,
@@ -335,9 +329,7 @@ def process_file(
     ext = path.suffix.lower()
     try:
         if ext in (".md", ".markdown"):
-            new_text, removed = process_markdown(
-                text, remote_only, badges, aggressive_defs
-            )
+            new_text, removed = process_markdown(text, remote_only, badges, aggressive_defs)
         elif ext in (".rst", ".txt"):
             new_text, removed = process_rst(text, remote_only)
         elif ext in (".html", ".htm"):
@@ -345,9 +337,7 @@ def process_file(
         else:
             return Result(path, 0, lines_before, lines_before, size_before, size_before)
     except Exception as e:
-        return Result(
-            path, 0, lines_before, lines_before, size_before, size_before, str(e)
-        )
+        return Result(path, 0, lines_before, lines_before, size_before, size_before, str(e))
     if removed == 0:
         return Result(path, 0, lines_before, lines_before, size_before, size_before)
     try:
@@ -355,9 +345,7 @@ def process_file(
             atomic_write(path.with_suffix(path.suffix + ".bak"), text, encoding="utf-8")
         atomic_write(path, new_text, encoding="utf-8")
     except OSError as e:
-        return Result(
-            path, 0, lines_before, lines_before, size_before, size_before, str(e)
-        )
+        return Result(path, 0, lines_before, lines_before, size_before, size_before, str(e))
     lines_after = new_text.count("\n") + 1
     size_after = len(new_text.encode("utf-8"))
     return Result(path, removed, lines_before, lines_after, size_before, size_after)
@@ -433,9 +421,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Only remove remote image references (http://, https://, //)",
     )
-    p.add_argument(
-        "--badges", action="store_true", help="Also strip badge / shield link blocks"
-    )
+    p.add_argument("--badges", action="store_true", help="Also strip badge / shield link blocks")
     p.add_argument(
         "--aggressive-defs",
         action="store_true",

@@ -335,16 +335,12 @@ class RequestsBackend(Backend):
             if end is not None:
                 rng += str(end)
             headers["Range"] = rng
-        r = self._requests.get(
-            url, headers=headers, stream=True, timeout=timeout, allow_redirects=True
-        )
+        r = self._requests.get(url, headers=headers, stream=True, timeout=timeout, allow_redirects=True)
         return _RequestsStream(r)
 
 
 class _PycurlStream(StreamResponse):
-    def __init__(
-        self, pycurl_mod: Any, url: str, start: int, end: int, timeout: float
-    ) -> None:
+    def __init__(self, pycurl_mod: Any, url: str, start: int, end: int, timeout: float) -> None:
         self._pycurl = pycurl_mod
         self.status: int | None = None
         self.headers: dict = {}
@@ -354,9 +350,7 @@ class _PycurlStream(StreamResponse):
         self._header_done = threading.Event()
         self._thread_done = threading.Event()
         self._header_buf = bytearray()
-        self._thread = threading.Thread(
-            target=self._run, args=(url, start, end, timeout), daemon=True
-        )
+        self._thread = threading.Thread(target=self._run, args=(url, start, end, timeout), daemon=True)
         self._thread.start()
         if not self._header_done.wait(timeout=timeout):
             self._cancel.set()
@@ -513,9 +507,7 @@ def guess_filename(url: str, headers: dict) -> str:
 class Probe:
     __slots__ = ("filename", "headers", "size", "supports_range")
 
-    def __init__(
-        self, size: int, filename: str, supports_range: Any, headers: Any
-    ) -> None:
+    def __init__(self, size: int, filename: str, supports_range: Any, headers: Any) -> None:
         self.size = size
         self.filename = filename
         self.supports_range = supports_range
@@ -548,9 +540,7 @@ def probe(backend: Backend, url: str, timeout: float) -> Probe:
         stream.close()
 
 
-def _simple_download(
-    backend: Backend, url: str, part: Path, bar: Bar, timeout: float, offset: int = 0
-) -> None:
+def _simple_download(backend: Backend, url: str, part: Path, bar: Bar, timeout: float, offset: int = 0) -> None:
     stream = backend.open(url, start=offset or None, timeout=timeout)
     try:
         if offset and stream.status != 206:
@@ -698,9 +688,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="FILE",
         help="read URLs from FILE (one per line, # comments)",
     )
-    p.add_argument(
-        "-o", "--output", metavar="PATH", help="output file (single URL only)"
-    )
+    p.add_argument("-o", "--output", metavar="PATH", help="output file (single URL only)")
     p.add_argument(
         "-b",
         "--backend",

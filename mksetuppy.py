@@ -79,9 +79,7 @@ def find_package_data(
             if not directory.is_dir():
                 continue
             relative_parts = directory.relative_to(package_path).parts
-            if "__pycache__" in relative_parts or any(
-                part.startswith(".") for part in relative_parts
-            ):
+            if "__pycache__" in relative_parts or any(part.startswith(".") for part in relative_parts):
                 continue
             if not (directory / "__init__.py").exists():
                 relative_path = directory.relative_to(package_path)
@@ -173,9 +171,7 @@ def handle_flit(data: dict[str, Any]) -> None:
         if setup_metadata["version"] is None:
             setup_metadata["version"] = module.__version__
         if setup_metadata["description"] is None:
-            setup_metadata["description"] = " ".join(
-                module.__doc__.strip().splitlines()
-            )
+            setup_metadata["description"] = " ".join(module.__doc__.strip().splitlines())
     try:
         package_args = auto_find_packages(module_name)
     except RuntimeError:
@@ -249,9 +245,7 @@ def handle_poetry(data: dict[str, Any]) -> None:
             package_args["packages"].extend(packages)
             if subdirectory != ROOT:
                 for package_name in packages:
-                    package_args["package_dir"][package_name] = str(
-                        subdirectory / package_name.replace(".", "/")
-                    )
+                    package_args["package_dir"][package_name] = str(subdirectory / package_name.replace(".", "/"))
     package_args["package_data"] = find_package_data(
         package_args.get("packages", []),
         package_args.get("package_dir", {}),

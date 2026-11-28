@@ -21,13 +21,9 @@ if TYPE_CHECKING:
 GITHUB_API: str = "https://api.github.com"
 
 
-def run_git(
-    repo: Path, *git_args: str, check: bool = True
-) -> subprocess.CompletedProcess[str]:
+def run_git(repo: Path, *git_args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     """Run ``git -C repo ...`` capturing output."""
-    proc = subprocess.run(
-        ["git", "-C", str(repo), *git_args], capture_output=True, text=True
-    )
+    proc = subprocess.run(["git", "-C", str(repo), *git_args], capture_output=True, text=True)
     if check and proc.returncode != 0:
         raise RuntimeError(proc.stderr.strip() or f"git {' '.join(git_args)} failed")
     return proc
@@ -120,9 +116,9 @@ def cmd_sync_branch(args: argparse.Namespace) -> int:
         print(f"Would sync branch {branch!r} in {repo}:")
         for step in steps:
             print(
-                f"  git {' '.join(step)}".replace(
-                    "@{upstream-target}", f"{args.remote}/main|master"
-                ).replace("@{head}", "HEAD")
+                f"  git {' '.join(step)}".replace("@{upstream-target}", f"{args.remote}/main|master").replace(
+                    "@{head}", "HEAD"
+                )
             )
         return 0
     if not args.yes:
@@ -178,9 +174,7 @@ def read_dotenv_token() -> str | None:
     return None
 
 
-def github_request(
-    token: str, method: str, url: str, payload: dict[str, object] | None = None
-) -> dict[str, object]:
+def github_request(token: str, method: str, url: str, payload: dict[str, object] | None = None) -> dict[str, object]:
     """Small GitHub REST helper returning the parsed JSON body."""
     data: bytes | None = json.dumps(payload).encode() if payload is not None else None
     request = urllib.request.Request(url, data=data, method=method)
@@ -195,9 +189,7 @@ def github_request(
 def cmd_publish(args: argparse.Namespace) -> int:
     """Create GitHub repos for local repos that lack a remote, then push."""
     token: str | None = os.environ.get("GITHUB_TOKEN") or read_dotenv_token()
-    repos: list[Path] = [
-        r for r in find_repos(args.root) if git_out(r, "remote") in (None, "")
-    ]
+    repos: list[Path] = [r for r in find_repos(args.root) if git_out(r, "remote") in (None, "")]
     if not repos:
         print("Every repo already has a remote; nothing to publish.")
         return 0
@@ -212,9 +204,7 @@ def cmd_publish(args: argparse.Namespace) -> int:
         name: str = repo.resolve().name
         remote_url: str = f"https://github.com/{username}/{name}.git"
         if args.dry_run:
-            print(
-                f"  would create github repo {name!r} for {repo} and push to {remote_url}"
-            )
+            print(f"  would create github repo {name!r} for {repo} and push to {remote_url}")
             continue
         try:
             github_request(
@@ -238,23 +228,17 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     pa = sub.add_parser("pull-all", help="git pull --ff-only in every repo below ROOT")
     pa.add_argument("root", nargs="?", type=Path, default=Path.cwd())
-    pa.add_argument(
-        "--restore", action="store_true", help="git restore . instead of pull"
-    )
+    pa.add_argument("--restore", action="store_true", help="git restore . instead of pull")
     pa.add_argument("--yes", action="store_true", help="Confirm --restore")
     pa.add_argument("-n", "--dry-run", action="store_true")
     pa.set_defaults(handler=cmd_pull_all)
-    sb = sub.add_parser(
-        "sync-branch", help="Rebase onto upstream main/master + force-with-lease"
-    )
+    sb = sub.add_parser("sync-branch", help="Rebase onto upstream main/master + force-with-lease")
     sb.add_argument("repo", nargs="?", type=Path, default=Path.cwd())
     sb.add_argument("--remote", default="origin")
     sb.add_argument("--yes", action="store_true", help="Confirm the history rewrite")
     sb.add_argument("-n", "--dry-run", action="store_true")
     sb.set_defaults(handler=cmd_sync_branch)
-    pu = sub.add_parser(
-        "publish", help="Create GitHub repos for remote-less local repos"
-    )
+    pu = sub.add_parser("publish", help="Create GitHub repos for remote-less local repos")
     pu.add_argument("root", nargs="?", type=Path, default=Path.cwd())
     pu.add_argument("--private", action="store_true", help="Create private repos")
     pu.add_argument("-n", "--dry-run", action="store_true")

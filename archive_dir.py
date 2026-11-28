@@ -66,9 +66,7 @@ def create_archive(source: Path, output: Path, mode: str) -> None:
         tar.add(source, arcname=source.name)
 
 
-def remove_path(
-    path: Path, *, safe_symlinks: bool = False, quiet: bool = False
-) -> None:
+def remove_path(path: Path, *, safe_symlinks: bool = False, quiet: bool = False) -> None:
     try:
         if path.is_file():
             path.unlink()

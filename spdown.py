@@ -89,9 +89,7 @@ def py_ok(spec: str | None) -> bool:
     if not spec:
         return True
     try:
-        return SpecifierSet(spec).contains(
-            f"{sys.version_info.major}.{sys.version_info.minor}", prereleases=True
-        )
+        return SpecifierSet(spec).contains(f"{sys.version_info.major}.{sys.version_info.minor}", prereleases=True)
     except InvalidSpecifier:
         return True
 

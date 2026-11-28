@@ -78,16 +78,12 @@ def calculate_score(text: str) -> float:
         observed = upper.count(char)
         expected = total * (freq / 100.0)
         chi_sq += ((observed - expected) ** 2) / (expected if expected > 0 else 1)
-    printable_ratio = sum(1 for c in text if 32 <= ord(c) < 127 or c in "\n\r\t") / len(
-        text
-    )
+    printable_ratio = sum(1 for c in text if 32 <= ord(c) < 127 or c in "\n\r\t") / len(text)
     return printable_ratio * 100.0 - chi_sq * 0.01
 
 
 class DecodeNode:
-    def __init__(
-        self, text: str, method: str, depth: int, score: float, path: list[str]
-    ) -> None:
+    def __init__(self, text: str, method: str, depth: int, score: float, path: list[str]) -> None:
         self.text = text
         self.method = method
         self.depth = depth
@@ -132,9 +128,7 @@ def decode_base32(s: str) -> list[str]:
     clean = s.strip().encode("utf-8")
     try:
         padded = clean + b"=" * (-len(clean) % 8)
-        decoded = base64.b32decode(padded, casefold=True).decode(
-            "utf-8", errors="ignore"
-        )
+        decoded = base64.b32decode(padded, casefold=True).decode("utf-8", errors="ignore")
         if decoded and decoded != s:
             res.append(decoded)
     except Exception:
@@ -147,9 +141,7 @@ def decode_base16(s: str) -> list[str]:
     res = []
     clean = s.strip().encode("utf-8")
     try:
-        decoded = base64.b16decode(clean, casefold=True).decode(
-            "utf-8", errors="ignore"
-        )
+        decoded = base64.b16decode(clean, casefold=True).decode("utf-8", errors="ignore")
         if decoded and decoded != s:
             res.append(decoded)
     except Exception:
@@ -331,13 +323,9 @@ def decode_xor_single(s: str) -> list[str]:
     return res
 
 
-def search_pipeline(
-    initial_string: str, max_depth: int, quiet: bool, no_color: bool
-) -> list[DecodeNode]:
+def search_pipeline(initial_string: str, max_depth: int, quiet: bool, no_color: bool) -> list[DecodeNode]:
     visited: set[str] = {initial_string}
-    queue: list[DecodeNode] = [
-        DecodeNode(initial_string, "input", 0, calculate_score(initial_string), [])
-    ]
+    queue: list[DecodeNode] = [DecodeNode(initial_string, "input", 0, calculate_score(initial_string), [])]
     results: list[DecodeNode] = []
     while queue:
         queue.sort(key=lambda x: x.score, reverse=True)
@@ -365,17 +353,11 @@ def main() -> None:
     parser.add_argument("string", nargs="?", help="String to be decoded")
     parser.add_argument("-i", "--input", help="Read input from file")
     parser.add_argument("-o", "--output", help="Write output to file")
-    parser.add_argument(
-        "--json", action="store_true", help="Output results in JSON format"
-    )
+    parser.add_argument("--json", action="store_true", help="Output results in JSON format")
     parser.add_argument("-q", "--quiet", action="store_true", help="Quiet mode")
     parser.add_argument("--no-color", action="store_true", help="Disable color output")
-    parser.add_argument(
-        "--max-depth", type=int, default=2, help="Maximum recursion depth"
-    )
-    parser.add_argument(
-        "-s", "--sensitive", action="store_true", help="For sensitive data"
-    )
+    parser.add_argument("--max-depth", type=int, default=2, help="Maximum recursion depth")
+    parser.add_argument("-s", "--sensitive", action="store_true", help="For sensitive data")
     args = parser.parse_args()
     input_str = ""
     if args.string:
@@ -395,15 +377,13 @@ def main() -> None:
     results = search_pipeline(input_str, args.max_depth, args.quiet, args.no_color)
     output_data = []
     for r in results:
-        output_data.append(
-            {
-                "text": r.text,
-                "method": r.method,
-                "depth": r.depth,
-                "score": r.score,
-                "path": r.path,
-            }
-        )
+        output_data.append({
+            "text": r.text,
+            "method": r.method,
+            "depth": r.depth,
+            "score": r.score,
+            "path": r.path,
+        })
     if args.json:
         out_json = json.dumps(output_data, indent=2)
         if args.output:

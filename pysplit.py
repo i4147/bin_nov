@@ -199,9 +199,7 @@ def build_output_path(
 
 def split_file(options: SplitOptions) -> list[Path]:
     validate_options(options)
-    lines = options.input_path.read_text(encoding=options.encoding).splitlines(
-        keepends=True
-    )
+    lines = options.input_path.read_text(encoding=options.encoding).splitlines(keepends=True)
     if not lines:
         msg = "input file is empty"
         raise SplitError(msg)

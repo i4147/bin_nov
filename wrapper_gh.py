@@ -35,11 +35,7 @@ def find_real_gh() -> Any | None:
     script_path = Path(__file__).resolve()
     for path_dir in path_dirs:
         candidate = Path(path_dir).joinpath("gh")
-        if (
-            Path(candidate).is_file()
-            and os.access(candidate, os.X_OK)
-            and (Path(candidate).resolve() != script_path)
-        ):
+        if Path(candidate).is_file() and os.access(candidate, os.X_OK) and (Path(candidate).resolve() != script_path):
             return candidate
     return None
 

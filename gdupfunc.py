@@ -72,9 +72,7 @@ class CodeNormalizer(ast.NodeTransformer):
 
     def _strip_docstring(self, node: Any) -> None:
         if (
-            isinstance(
-                node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Module)
-            )
+            isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Module))
             and node.body
             and isinstance(node.body[0], ast.Expr)
             and isinstance(node.body[0].value, ast.Constant)
@@ -159,23 +157,19 @@ def process_file_task(task_args: tuple[str, bool, int]) -> list[dict[str, Any]]:
                 obj_type = "constant"
         if obj_type:
             canonical_code = get_canonical_structure(node, fuzzy=enable_fuzzy)
-            extracted_objects.append(
-                {
-                    "type": obj_type,
-                    "name": getattr(node, "name", ast.unparse(node)),
-                    "file": file_str,
-                    "line": node.lineno,
-                    "raw_code": ast.unparse(node),
-                    "canonical_code": canonical_code,
-                    "has_annotations": has_type_annotations(node),
-                }
-            )
+            extracted_objects.append({
+                "type": obj_type,
+                "name": getattr(node, "name", ast.unparse(node)),
+                "file": file_str,
+                "line": node.lineno,
+                "raw_code": ast.unparse(node),
+                "canonical_code": canonical_code,
+                "has_annotations": has_type_annotations(node),
+            })
     return extracted_objects
 
 
-def generate_html_report(
-    categorized_duplicates: dict[str, list[dict[str, Any]]], output_path: Path
-) -> None:
+def generate_html_report(categorized_duplicates: dict[str, list[dict[str, Any]]], output_path: Path) -> None:
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -233,15 +227,9 @@ def generate_html_report(
 
 def main() -> None:
     if sys.version_info < (3, 14):
-        sys.exit(
-            "Error: This script requires Python 3.14 or newer to use InterpreterPoolExecutor."
-        )
-    parser = argparse.ArgumentParser(
-        description="Python 3.14 Duplicate Detector via Subinterpreters"
-    )
-    parser.add_argument(
-        "--dir", type=str, default=".", help="Root directory to scan recursively"
-    )
+        sys.exit("Error: This script requires Python 3.14 or newer to use InterpreterPoolExecutor.")
+    parser = argparse.ArgumentParser(description="Python 3.14 Duplicate Detector via Subinterpreters")
+    parser.add_argument("--dir", type=str, default=".", help="Root directory to scan recursively")
     parser.add_argument(
         "--disable-fuzzy",
         action="store_true",
@@ -266,12 +254,9 @@ def main() -> None:
     python_files = [
         str(p)
         for p in root_dir.rglob("*.py")
-        if not any(part in SKIP_DIRS for part in p.parts)
-        and output_dir not in p.parents
+        if not any(part in SKIP_DIRS for part in p.parts) and output_dir not in p.parents
     ]
-    print(
-        f"Scanning {len(python_files)} Python file(s) using Python 3.14 InterpreterPoolExecutor..."
-    )
+    print(f"Scanning {len(python_files)} Python file(s) using Python 3.14 InterpreterPoolExecutor...")
     tasks = [(p, not args.disable_fuzzy, args.min_nodes) for p in python_files]
     with InterpreterPoolExecutor() as executor:
         raw_results = list(executor.map(process_file_task, tasks))
@@ -328,16 +313,12 @@ def main() -> None:
     print("-" * 50)
     for obj_type, entries in categorized_duplicates.items():
         diff_count = sum(1 for e in entries if e["differ_in_type_annotations"])
-        print(
-            f"  - {obj_type.capitalize()}s: {len(entries)} duplicates ({diff_count} differ in type annotations)"
-        )
+        print(f"  - {obj_type.capitalize()}s: {len(entries)} duplicates ({diff_count} differ in type annotations)")
     print("-" * 50)
     print(f"JSON outputs saved to : {output_dir}/duplicate_*.json")
     print(f"HTML report saved to  : {html_report_path}")
     if args.max_duplicates >= 0 and total_duplicates > args.max_duplicates:
-        print(
-            f"\n[ERROR] Total duplicates ({total_duplicates}) exceeds allowed threshold ({args.max_duplicates})."
-        )
+        print(f"\n[ERROR] Total duplicates ({total_duplicates}) exceeds allowed threshold ({args.max_duplicates}).")
         sys.exit(1)
 
 

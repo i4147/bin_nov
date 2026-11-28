@@ -154,9 +154,7 @@ def _is_probably_text(path: Path) -> bool:
         return False
 
 
-def collect_files(
-    root: Path, *, block_mode: str, extensions: Optional[set[str]]
-) -> list[Path]:
+def collect_files(root: Path, *, block_mode: str, extensions: Optional[set[str]]) -> list[Path]:
     if block_mode == "comment":
         wanted = extensions or {".py"}
     elif block_mode == "segment":
@@ -187,9 +185,7 @@ def _normalize(lines: Sequence[str]) -> str:
     return "\n".join(l.rstrip() for l in lines).strip()
 
 
-def extract_paragraph_blocks(
-    lines: list[str], min_lines: int, min_chars: int
-) -> list[Occurrence]:
+def extract_paragraph_blocks(lines: list[str], min_lines: int, min_chars: int) -> list[Occurrence]:
     blocks: list[Occurrence] = []
     i = 0
     n = len(lines)
@@ -283,9 +279,7 @@ def extract_segment_blocks(lines: list[str], min_lines: int) -> list[Occurrence]
     return blocks
 
 
-def extract_blocks(
-    path: Path, block_mode: str, min_lines: int, min_chars: int
-) -> list[Occurrence]:
+def extract_blocks(path: Path, block_mode: str, min_lines: int, min_chars: int) -> list[Occurrence]:
     try:
         with path.open("r", encoding="utf-8", errors="replace") as f:
             lines = f.readlines()
@@ -356,9 +350,7 @@ def print_report(groups: dict[str, list[Occurrence]]) -> None:
     for i, (key, occ) in enumerate(groups.items(), 1):
         n_files = len({o.path for o in occ})
         n_lines = key.count("\n") + 1
-        print(
-            f"\n--- Block {i} ({len(occ)} occurrences in {n_files} file(s), {n_lines} line(s)) ---"
-        )
+        print(f"\n--- Block {i} ({len(occ)} occurrences in {n_files} file(s), {n_lines} line(s)) ---")
         for line in key.split("\n"):
             print(f"  {line}")
         print("  Found in:")
@@ -384,9 +376,7 @@ def save_report(groups: dict[str, list[Occurrence]], path: Path) -> None:
         err(f"Error writing report to {path}: {e}")
 
 
-def _remove_lines(
-    path: Path, line_indices: set[int], validate_python: bool
-) -> tuple[int, bool]:
+def _remove_lines(path: Path, line_indices: set[int], validate_python: bool) -> tuple[int, bool]:
     try:
         with path.open("r", encoding="utf-8", errors="replace") as f:
             lines = f.readlines()
@@ -411,9 +401,7 @@ def _remove_lines(
     return len(lines) - len(new_lines), True
 
 
-def remove_blocks(
-    groups: dict[str, list[Occurrence]], validate_python: bool
-) -> tuple[int, int]:
+def remove_blocks(groups: dict[str, list[Occurrence]], validate_python: bool) -> tuple[int, int]:
     per_file: dict[Path, set[int]] = defaultdict(set)
     for occ_list in groups.values():
         for o in occ_list:
@@ -451,11 +439,7 @@ def cmd_scan(args: argparse.Namespace) -> int:
     if not root.is_dir():
         err(f"Directory {root} does not exist")
         return 1
-    min_lines = (
-        args.min_lines
-        if args.min_lines is not None
-        else _default_min_lines(args.block_mode)
-    )
+    min_lines = args.min_lines if args.min_lines is not None else _default_min_lines(args.block_mode)
     extensions = _parse_extensions(args.extensions)
     groups = scan_directory(
         root,
@@ -469,12 +453,8 @@ def cmd_scan(args: argparse.Namespace) -> int:
         scanned = collect_files(root, block_mode=args.block_mode, extensions=extensions)
         threshold = len(scanned) / 2
         before = len(groups)
-        groups = {
-            k: v for k, v in groups.items() if len({o.path for o in v}) >= threshold
-        }
-        info(
-            f"--half filter: {before} → {len(groups)} block(s) (>= {int(threshold)} files)"
-        )
+        groups = {k: v for k, v in groups.items() if len({o.path for o in v}) >= threshold}
+        info(f"--half filter: {before} → {len(groups)} block(s) (>= {int(threshold)} files)")
     print_report(groups)
     if not args.no_report and groups:
         report_path = Path(args.report)
@@ -487,11 +467,7 @@ def cmd_remove(args: argparse.Namespace) -> int:
     if not root.is_dir():
         err(f"Directory {root} does not exist")
         return 1
-    min_lines = (
-        args.min_lines
-        if args.min_lines is not None
-        else _default_min_lines(args.block_mode)
-    )
+    min_lines = args.min_lines if args.min_lines is not None else _default_min_lines(args.block_mode)
     extensions = _parse_extensions(args.extensions)
     groups = scan_directory(
         root,
@@ -504,9 +480,7 @@ def cmd_remove(args: argparse.Namespace) -> int:
     if args.half and groups:
         scanned = collect_files(root, block_mode=args.block_mode, extensions=extensions)
         threshold = len(scanned) / 2
-        groups = {
-            k: v for k, v in groups.items() if len({o.path for o in v}) >= threshold
-        }
+        groups = {k: v for k, v in groups.items() if len({o.path for o in v}) >= threshold}
     if not groups:
         print("No repeated multiline blocks to remove.")
         return 0
@@ -541,9 +515,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
 
     def add_common(p: argparse.ArgumentParser) -> None:
-        p.add_argument(
-            "-d", "--directory", default=".", help="Directory to scan (default: .)"
-        )
+        p.add_argument("-d", "--directory", default=".", help="Directory to scan (default: .)")
         p.add_argument(
             "--block-mode",
             choices=("paragraph", "comment", "segment"),
@@ -582,9 +554,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="lic_report.txt",
         help="Report file path (default: lic_report.txt)",
     )
-    p.add_argument(
-        "--no-report", action="store_true", help="Don't write the report file"
-    )
+    p.add_argument("--no-report", action="store_true", help="Don't write the report file")
     p.set_defaults(func=cmd_scan)
     p = sub.add_parser("remove", help="Find repeated blocks and remove them")
     add_common(p)

@@ -68,9 +68,7 @@ def _iter_files(root: Path) -> list[Path]:
     return files
 
 
-def _ctime_if_recent(
-    path: Path, now: float, seconds: float
-) -> tuple[float, Path] | None:
+def _ctime_if_recent(path: Path, now: float, seconds: float) -> tuple[float, Path] | None:
     try:
         ctime = path.stat().st_ctime
     except (FileNotFoundError, PermissionError, OSError):
@@ -88,12 +86,8 @@ def cmd_scan_ctime(args: argparse.Namespace) -> int:
     now = time.time()
     recent: list[tuple[float, Path]] = []
     with mp.Pool(processes=MAX_WORKERS) as pool:
-        async_results = [
-            pool.apply_async(_ctime_if_recent, (p, now, SECONDS_24H)) for p in files
-        ]
-        for ar in tqdm(
-            async_results, total=len(async_results), desc="Scanning", unit="file"
-        ):
+        async_results = [pool.apply_async(_ctime_if_recent, (p, now, SECONDS_24H)) for p in files]
+        for ar in tqdm(async_results, total=len(async_results), desc="Scanning", unit="file"):
             result = ar.get()
             if result is not None:
                 recent.append(result)
@@ -124,9 +118,7 @@ def cmd_filter(args: argparse.Namespace) -> int:
     ctmsorted = dict(sorted(ctm.items(), key=operator.itemgetter(1)))
     for pth, ct in ctmsorted.items():
         ctime_str = datetime.fromtimestamp(ct).strftime("%Y/%m/%d-%H:%M:%S")
-        print(
-            f"\033[05;96m{Path(pth).name[:19]:<{max_path_string}} \033[05;93m{ctime_str}\033[0m"
-        )
+        print(f"\033[05;96m{Path(pth).name[:19]:<{max_path_string}} \033[05;93m{ctime_str}\033[0m")
     return 0
 
 
@@ -172,32 +164,20 @@ def cmd_recent_modified(args: argparse.Namespace) -> int:
         print("Error: minutes must be a non-negative number")
         return 1
     cwd = Path.cwd()
-    all_files = [
-        p
-        for p in cwd.rglob("*")
-        if p.is_file() and not p.is_symlink() and ".git" not in p.parts
-    ]
+    all_files = [p for p in cwd.rglob("*") if p.is_file() and not p.is_symlink() and ".git" not in p.parts]
     if not all_files:
         print("No files found in current directory")
         return 0
-    print(
-        f"Checking {len(all_files)} files for modifications in last {n_minutes} minute(s)..."
-    )
+    print(f"Checking {len(all_files)} files for modifications in last {n_minutes} minute(s)...")
     print()
     with mp.Pool(MAX_WORKERS) as pool:
-        results = pool.map(
-            partial(_check_file_age, n_minutes=float(n_minutes)), all_files
-        )
+        results = pool.map(partial(_check_file_age, n_minutes=float(n_minutes)), all_files)
     recent_files = [r for r in results if r is not None]
     recent_files.sort(key=lambda x: x[1], reverse=True)
     if recent_files:
-        print(
-            f"Found {len(recent_files)} file(s) modified in the last {n_minutes} minute(s):\n"
-        )
+        print(f"Found {len(recent_files)} file(s) modified in the last {n_minutes} minute(s):\n")
         for path, mod_time in recent_files:
-            print(
-                f"{mod_time.strftime('%Y-%m-%d %H:%M:%S')} - {Path(path).relative_to(cwd)}"
-            )
+            print(f"{mod_time.strftime('%Y-%m-%d %H:%M:%S')} - {Path(path).relative_to(cwd)}")
     else:
         print(f"No files modified in the last {n_minutes} minute(s)")
     return 0
@@ -406,9 +386,7 @@ def _get_creation_time_statx(path: str) -> datetime | None:
     except OSError:
         return None
     statx_buf = _Statx()
-    result = libc.statx(
-        AT_FDCWD, path.encode(), 0, STATX_BTIME, ctypes.byref(statx_buf)
-    )
+    result = libc.statx(AT_FDCWD, path.encode(), 0, STATX_BTIME, ctypes.byref(statx_buf))
     if result == 0 and (statx_buf.stx_mask & STATX_BTIME):
         return datetime.fromtimestamp(statx_buf.stx_btime.tv_sec, tz=UTC)
     return None

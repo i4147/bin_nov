@@ -322,9 +322,7 @@ def cmd_empty_files(args: argparse.Namespace) -> int:
     return 0
 
 
-def _is_excluded_dir(
-    path: Path, root: Path, name_ex: set[str], part_ex: set[str]
-) -> bool:
+def _is_excluded_dir(path: Path, root: Path, name_ex: set[str], part_ex: set[str]) -> bool:
     if path.name in name_ex:
         return True
     try:
@@ -380,9 +378,7 @@ def cmd_empty_dirs(args: argparse.Namespace) -> int:
                     if args.verbose:
                         print(f"--> Removed: {_safe_rel(d, root)}")
         except PermissionError:
-            print(
-                f"[ERROR] Permission denied for: {_safe_rel(d, root)}", file=sys.stderr
-            )
+            print(f"[ERROR] Permission denied for: {_safe_rel(d, root)}", file=sys.stderr)
         except OSError as exc:
             print(
                 f"[ERROR] Could not process {_safe_rel(d, root)}: {exc}",

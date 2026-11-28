@@ -212,13 +212,13 @@ def convert_font(
                                 "non-standard .otf anyway."
                             )
                             return result
-                        warning = "font has TrueType outlines; .otf conventionally uses CFF — outlines were NOT converted"
+                        warning = (
+                            "font has TrueType outlines; .otf conventionally uses CFF — outlines were NOT converted"
+                        )
                     else:
                         if not allow_outline_mismatch:
                             result.skipped = True
-                            result.skipped_reason = (
-                                "no recognizable CFF outlines for .otf"
-                            )
+                            result.skipped_reason = "no recognizable CFF outlines for .otf"
                             return result
                         warning = "no recognizable CFF outlines; .otf may be invalid"
                     font.sfntVersion = SFNT_VERSIONS["otf"]
@@ -235,17 +235,15 @@ def convert_font(
                                 "non-standard .ttf anyway."
                             )
                             return result
-                        warning = "font has CFF outlines; .ttf conventionally uses TrueType — outlines were NOT converted"
+                        warning = (
+                            "font has CFF outlines; .ttf conventionally uses TrueType — outlines were NOT converted"
+                        )
                     else:
                         if not allow_outline_mismatch:
                             result.skipped = True
-                            result.skipped_reason = (
-                                "no recognizable TrueType outlines for .ttf"
-                            )
+                            result.skipped_reason = "no recognizable TrueType outlines for .ttf"
                             return result
-                        warning = (
-                            "no recognizable TrueType outlines; .ttf may be invalid"
-                        )
+                        warning = "no recognizable TrueType outlines; .ttf may be invalid"
                     font.sfntVersion = SFNT_VERSIONS["ttf"]
                 else:
                     msg = f"unsupported output format: {output_format}"
@@ -265,20 +263,13 @@ def convert_font(
                     result.removed_original = True
                 except OSError as exc:
                     extra = f"conversion succeeded but could not remove original: {exc}"
-                    result.warning = (
-                        f"{result.warning}; {extra}" if result.warning else extra
-                    )
+                    result.warning = f"{result.warning}; {extra}" if result.warning else extra
         finally:
             with contextlib.suppress(Exception):
                 font.close()
     except Exception as exc:
         result.error = str(exc)
-        if (
-            result.output is not None
-            and not output_existed_before
-            and result.output.exists()
-            and not result.success
-        ):
+        if result.output is not None and not output_existed_before and result.output.exists() and not result.success:
             with contextlib.suppress(OSError):
                 result.output.unlink()
     finally:
@@ -313,14 +304,8 @@ def find_font_files(paths: Sequence[Path]) -> list[Path]:
 def print_file_stats(result: ConversionResult) -> None:
     name = result.input.name
     if result.success:
-        ratio = (
-            result.output_size / result.input_size * 100 if result.input_size else 0.0
-        )
-        saved = (
-            (1 - result.output_size / result.input_size) * 100
-            if result.input_size
-            else 0.0
-        )
+        ratio = result.output_size / result.input_size * 100 if result.input_size else 0.0
+        saved = (1 - result.output_size / result.input_size) * 100 if result.input_size else 0.0
         print(f"  ✓ {name}")
         print(
             f"      {fsz(result.input_size)} → {fsz(result.output_size)}  "
@@ -465,9 +450,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         else:
             to_convert.append(f)
     if already_target:
-        print(
-            f"Skipping {len(already_target)} file(s) already in .{args.output_format} format"
-        )
+        print(f"Skipping {len(already_target)} file(s) already in .{args.output_format} format")
     if not to_convert:
         print("Nothing to convert.")
         return 0
@@ -503,9 +486,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         workers = min(MAX_WORKERS, len(worker_args))
         pool = Pool(processes=workers)
         try:
-            async_results = [
-                pool.apply_async(convert_font, args=wa) for wa in worker_args
-            ]
+            async_results = [pool.apply_async(convert_font, args=wa) for wa in worker_args]
             try:
                 for ar in async_results:
                     result = ar.get()

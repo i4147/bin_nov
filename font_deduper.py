@@ -64,9 +64,7 @@ def main() -> None:
                         )
                 else:
                     seen_fonts[ps_name] = (file_path, file_size)
-    print(
-        f"\n--- Scan Complete: Processed {font_count} fonts. Found {len(duplicates)} duplicates ---"
-    )
+    print(f"\n--- Scan Complete: Processed {font_count} fonts. Found {len(duplicates)} duplicates ---")
     if DRY_RUN:
         print("[DRY-RUN] No files were deleted. Files marked for removal:")
         for dup in duplicates:

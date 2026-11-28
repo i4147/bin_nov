@@ -32,9 +32,7 @@ def remove_conditional_exit_blocks(path: Path) -> None:
             match = IF_BLOCK_REGEX.search(modified_content)
             if not match:
                 break
-            modified_content = (
-                modified_content[: match.start()] + modified_content[match.end() :]
-            )
+            modified_content = modified_content[: match.start()] + modified_content[match.end() :]
         if original_content != modified_content:
             atomic_write(path, modified_content, encoding="utf-8")
             print(f"Cleaned: {path}")
@@ -50,9 +48,9 @@ def main() -> None:
             try:
                 content = item_path.read_text(encoding="utf-8", errors="ignore")
                 is_likely_bash = False
-                if content.startswith(("#!/bin/bash", "#!/usr/bin/env bash")) or oct(
-                    item_path.stat().st_mode
-                )[-3:] not in (
+                if content.startswith(("#!/bin/bash", "#!/usr/bin/env bash")) or oct(item_path.stat().st_mode)[
+                    -3:
+                ] not in (
                     "000",
                     "001",
                     "010",

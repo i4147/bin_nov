@@ -27,9 +27,7 @@ import typer
 
 app = typer.Typer(no_args_is_help=True, help="Inspect and manage Python imports.")
 MAX_WORKERS: int = os.cpu_count() or 1
-SKIP_DIRS = frozenset(
-    {".git", ".venv", "venv", "node_modules", "__pycache__", "build", "dist"}
-)
+SKIP_DIRS = frozenset({".git", ".venv", "venv", "node_modules", "__pycache__", "build", "dist"})
 STDLIB = frozenset(sys.stdlib_module_names)
 BUILTINS = frozenset(dir(builtins))
 IGNORED_AUTOFIX = frozenset({"imp", "cmd", "keyword", "token"})
@@ -161,9 +159,7 @@ def python_files(root: Path, extra_excludes: set[str] | None = None) -> list[Pat
     else:
         candidates = []
         for folder, dirs, files in os.walk(root):
-            dirs[:] = [
-                d for d in dirs if d not in skip and not (Path(folder) / d).is_symlink()
-            ]
+            dirs[:] = [d for d in dirs if d not in skip and not (Path(folder) / d).is_symlink()]
             candidates.extend(Path(folder) / name for name in files)
     result = []
     for path in candidates:
@@ -321,10 +317,7 @@ def check_missing(
         missing = detect_missing(path, strategy)
         if missing:
             total += len(missing)
-            typer.echo(
-                f"\n{path.relative_to(root)}:\n"
-                + "\n".join(f"  - {s}" for s in missing)
-            )
+            typer.echo(f"\n{path.relative_to(root)}:\n" + "\n".join(f"  - {s}" for s in missing))
             if autofix:
                 if insert_imports(path, missing):
                     fixed += 1
@@ -358,9 +351,7 @@ def misplaced_imports(tree: ast.Module) -> list[ast.Import | ast.ImportFrom]:
 @app.command("check-position")
 def check_position(
     directory: Annotated[Path, typer.Option("--directory", "-d")] = Path(),
-    deep: Annotated[
-        bool, typer.Option(help="Enable moving misplaced module-level imports.")
-    ] = False,
+    deep: Annotated[bool, typer.Option(help="Enable moving misplaced module-level imports.")] = False,
     autofix: Annotated[bool, typer.Option("--autofix", "-a")] = False,
     output: Annotated[Path | None, typer.Option("--output", "-o")] = None,
 ) -> None:
@@ -379,23 +370,17 @@ def check_position(
         if not offenders:
             continue
         label = str(path.relative_to(root)) if root.is_dir() else path.name
-        reports.append(
-            f"{label}:\n"
-            + "\n".join(f"  Line {n.lineno}: import after code" for n in offenders)
-        )
+        reports.append(f"{label}:\n" + "\n".join(f"  Line {n.lineno}: import after code" for n in offenders))
         if autofix:
             # Refuse ambiguous physical lines rather than accidentally deleting code or comments.
             source = read_source(path)
             lines = source.splitlines(keepends=True)
             if any(
                 n.col_offset != 0
-                or n.end_col_offset
-                != len(lines[(n.end_lineno or n.lineno) - 1].rstrip("\r\n").encode())
+                or n.end_col_offset != len(lines[(n.end_lineno or n.lineno) - 1].rstrip("\r\n").encode())
                 for n in offenders
             ):
-                typer.echo(
-                    f"Cannot safely move imports in {path}; fix manually.", err=True
-                )
+                typer.echo(f"Cannot safely move imports in {path}; fix manually.", err=True)
                 failed = True
                 continue
             chunks = ["".join(lines[n.lineno - 1 : n.end_lineno]) for n in offenders]
@@ -405,15 +390,11 @@ def check_position(
             try:
                 new_tree = ast.parse(remaining)
                 pos = insertion_line(new_tree, lines)
-                lines[pos:pos] = [
-                    chunk if chunk.endswith("\n") else chunk + "\n" for chunk in chunks
-                ]
+                lines[pos:pos] = [chunk if chunk.endswith("\n") else chunk + "\n" for chunk in chunks]
                 ast.parse("".join(lines))
                 write_source(path, "".join(lines))
             except SyntaxError:
-                typer.echo(
-                    f"Cannot safely move imports in {path}; fix manually.", err=True
-                )
+                typer.echo(f"Cannot safely move imports in {path}; fix manually.", err=True)
                 failed = True
     report = "\n\n".join(reports) if reports else "No misplaced imports found!"
     typer.echo(report)
@@ -458,9 +439,7 @@ def check_load(
     failed = False
     for index, path in enumerate(files):
         try:
-            spec = importlib.util.spec_from_file_location(
-                f"_import_check_{index}", path
-            )
+            spec = importlib.util.spec_from_file_location(f"_import_check_{index}", path)
             if spec is None or spec.loader is None:
                 msg = f"Cannot load {path}"
                 raise ImportError(msg)
@@ -501,9 +480,7 @@ def find_py2(
         from tree_sitter import Language, Parser
         import tree_sitter_python as tsp
     except ImportError as exc:
-        typer.echo(
-            f"Install rapidfuzz, tree-sitter and tree-sitter-python: {exc}", err=True
-        )
+        typer.echo(f"Install rapidfuzz, tree-sitter and tree-sitter-python: {exc}", err=True)
         raise typer.Exit(2) from exc
     root = validate_root(directory)
     parser = Parser(Language(tsp.language()))
@@ -534,9 +511,7 @@ def find_py2(
             low = name.lower()
             label = str(path.relative_to(root)) if root.is_dir() else path.name
             if low in stdlib and low not in {"io", "os", "pathlib", "ast", "urllib"}:
-                typer.secho(
-                    f"{label}: {name}", fg=None if no_color else typer.colors.CYAN
-                )
+                typer.secho(f"{label}: {name}", fg=None if no_color else typer.colors.CYAN)
             elif low not in excluded and len(low) > 3:
                 for candidate in stdlib:
                     score = fuzz.ratio(low, candidate)
@@ -566,15 +541,9 @@ class ImportTransformer(ast.NodeTransformer):
             for a in n.names
             if not a.asname and "." not in a.name
         ]
-        parents = {
-            child: node
-            for node in ast.walk(tree)
-            for child in ast.iter_child_nodes(node)
-        }
+        parents = {child: node for node in ast.walk(tree) for child in ast.iter_child_nodes(node)}
         for module in imports:
-            references = [
-                n for n in ast.walk(tree) if isinstance(n, ast.Name) and n.id == module
-            ]
+            references = [n for n in ast.walk(tree) if isinstance(n, ast.Name) and n.id == module]
             attributes: set[str] = set()
             for reference in references:
                 parent = parents.get(reference)
@@ -601,10 +570,7 @@ class ImportTransformer(ast.NodeTransformer):
                     ast.copy_location(
                         ast.ImportFrom(
                             module=alias.name,
-                            names=[
-                                ast.alias(name=n)
-                                for n in sorted(self.names[alias.name])
-                            ],
+                            names=[ast.alias(name=n) for n in sorted(self.names[alias.name])],
                             level=0,
                         ),
                         node,
@@ -640,8 +606,7 @@ def transform(file: Path) -> None:
         prefix = "".join(
             line
             for i, line in enumerate(original[:2])
-            if (i == 0 and line.startswith("#!"))
-            or re.match(r"^[ \t\f]*#.*?coding[:=]", line)
+            if (i == 0 and line.startswith("#!")) or re.match(r"^[ \t\f]*#.*?coding[:=]", line)
         )
         write_source(file, prefix + ast.unparse(new_tree) + "\n")
         typer.echo(f"Transformed {file}; review changes for semantic differences.")
@@ -701,9 +666,7 @@ def local_module_names(root: Path) -> set[str]:
     """Get local top-level modules and regular packages for dependency filtering."""
     base = root if root.is_dir() else root.parent
     names = {p.stem for p in base.glob("*.py")}
-    names.update(
-        p.name for p in base.iterdir() if p.is_dir() and (p / "__init__.py").exists()
-    )
+    names.update(p.name for p in base.iterdir() if p.is_dir() and (p / "__init__.py").exists())
     return names
 
 
@@ -795,30 +758,19 @@ def requirements(
 ) -> None:
     """Generate unpinned, heuristic requirements and a missing-dependency script."""
     root = validate_root(root)
-    deps = sorted(
-        all_modules(python_files(root))
-        - STDLIB
-        - local_module_names(root)
-        - {"__future__"}
-    )
+    deps = sorted(all_modules(python_files(root)) - STDLIB - local_module_names(root) - {"__future__"})
     packages = sorted({PACKAGE_MAPPING.get(d, d) for d in deps})
-    atomic_write(
-        out, "\n".join(packages) + ("\n" if packages else ""), encoding="utf-8"
-    )
+    atomic_write(out, "\n".join(packages) + ("\n" if packages else ""), encoding="utf-8")
     installed = [d for d in deps if is_installed(d)]
     missing = sorted({PACKAGE_MAPPING.get(d, d) for d in deps if d not in installed})
-    typer.echo(
-        f"Wrote {len(packages)} unpinned requirement(s) to {out}; review package mappings."
-    )
+    typer.echo(f"Wrote {len(packages)} unpinned requirement(s) to {out}; review package mappings.")
     if installed:
         typer.echo(f"Already installed: {', '.join(installed)}")
     if missing:
         script = Path("install_deps.sh")
         atomic_write(
             script,
-            "#!/bin/sh\npython -m pip install "
-            + " ".join(shlex.quote(x) for x in missing)
-            + "\n",
+            "#!/bin/sh\npython -m pip install " + " ".join(shlex.quote(x) for x in missing) + "\n",
             encoding="utf-8",
         )
         script.chmod(0o755)

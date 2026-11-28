@@ -130,14 +130,10 @@ DATA_URI_RE = re.compile(
     re.IGNORECASE,
 )
 CSS_URL_DATA_RE = re.compile(
-    r"""url\(\s*([\"']?)data:(?P<mime>[^;,)\s\"']+)(?:;charset=[^;]+)?;base64,\s*(?P<data>"""
-    + _B64
-    + r""")\1\s*\)""",
+    r"""url\(\s*([\"']?)data:(?P<mime>[^;,)\s\"']+)(?:;charset=[^;]+)?;base64,\s*(?P<data>""" + _B64 + r""")\1\s*\)""",
     re.IGNORECASE | re.VERBOSE,
 )
-IMAGE_DATA_RE = re.compile(
-    r"data:image/(?P<ext>[a-zA-Z0-9+.\-]+);base64,(?P<data>[A-Za-z0-9+/=\n\r]+)"
-)
+IMAGE_DATA_RE = re.compile(r"data:image/(?P<ext>[a-zA-Z0-9+.\-]+);base64,(?P<data>[A-Za-z0-9+/=\n\r]+)")
 
 
 def guess_extension(mime: str) -> str:
@@ -443,21 +439,15 @@ def cmd_extract_css(args: argparse.Namespace) -> int:
 
 _ASSET_PATTERNS: dict[str, re.Pattern[str]] = {
     "url": re.compile(
-        r"""url\(\s*["']?data:(?P<mime>[^;,)\s"']+)(?:;[^,)]*)?;base64\s*,\s*(?P<data>"""
-        + _B64
-        + r""")["']?\s*\)""",
+        r"""url\(\s*["']?data:(?P<mime>[^;,)\s"']+)(?:;[^,)]*)?;base64\s*,\s*(?P<data>""" + _B64 + r""")["']?\s*\)""",
         re.IGNORECASE | re.VERBOSE,
     ),
     "src": re.compile(
-        r"""\bsrc\s*=\s*["']data:(?P<mime>[^;,]+)(?:;[^,]*)?;base64\s*,\s*(?P<data>"""
-        + _B64
-        + r""")["']""",
+        r"""\bsrc\s*=\s*["']data:(?P<mime>[^;,]+)(?:;[^,]*)?;base64\s*,\s*(?P<data>""" + _B64 + r""")["']""",
         re.IGNORECASE | re.VERBOSE,
     ),
     "href": re.compile(
-        r"""\bhref\s*=\s*["']data:(?P<mime>[^;,]+)(?:;[^,]*)?;base64\s*,\s*(?P<data>"""
-        + _B64
-        + r""")["']""",
+        r"""\bhref\s*=\s*["']data:(?P<mime>[^;,]+)(?:;[^,]*)?;base64\s*,\s*(?P<data>""" + _B64 + r""")["']""",
         re.IGNORECASE | re.VERBOSE,
     ),
     "data_uri": DATA_URI_RE,
@@ -640,11 +630,7 @@ def cmd_extract_elements(args: argparse.Namespace) -> int:
     out.mkdir(parents=True, exist_ok=True)
     algo = args.hash
     digest_len = args.hash_len
-    files = (
-        [Path(p) for p in args.files]
-        if args.files
-        else list(iter_files(root, args.extensions or TEXTY_EXT))
-    )
+    files = [Path(p) for p in args.files] if args.files else list(iter_files(root, args.extensions or TEXTY_EXT))
     seen: set[str] = set()
     count = 0
     for f in files:
@@ -738,12 +724,8 @@ def cmd_extract_html(args: argparse.Namespace) -> int:
         for i, tag in enumerate(soup.find_all("style")):
             if not tag.string:
                 continue
-            target = save_asset(
-                tag.string.encode("utf-8"), "text/css", f"{stem}_style{i}"
-            )
-            link = soup.new_tag(
-                "link", rel="stylesheet", href=str(target.relative_to(output))
-            )
+            target = save_asset(tag.string.encode("utf-8"), "text/css", f"{stem}_style{i}")
+            link = soup.new_tag("link", rel="stylesheet", href=str(target.relative_to(output)))
             tag.replace_with(link)
         for i, tag in enumerate(soup.find_all("script")):
             if tag.get("src"):
@@ -754,9 +736,7 @@ def cmd_extract_html(args: argparse.Namespace) -> int:
                         tag["src"] = str(target.relative_to(output))
                 continue
             body = tag.string or ""
-            target = save_asset(
-                body.encode("utf-8"), "application/javascript", f"{stem}_script{i}"
-            )
+            target = save_asset(body.encode("utf-8"), "application/javascript", f"{stem}_script{i}")
             new = soup.new_tag("script", src=str(target.relative_to(output)))
             tag.replace_with(new)
         for tag in soup.find_all("img"):
@@ -776,13 +756,9 @@ def cmd_extract_html(args: argparse.Namespace) -> int:
             if m:
                 target = extract_data_uri(m.group(1), f"{stem}_bg")
                 if target:
-                    tag["style"] = style.replace(
-                        m.group(1), str(target.relative_to(output))
-                    )
+                    tag["style"] = style.replace(m.group(1), str(target.relative_to(output)))
         for i, svg in enumerate(soup.find_all("svg")):
-            target = save_asset(
-                str(svg).encode("utf-8"), "image/svg+xml", f"{stem}_svg{i}"
-            )
+            target = save_asset(str(svg).encode("utf-8"), "image/svg+xml", f"{stem}_svg{i}")
             img = soup.new_tag("img", src=str(target.relative_to(output)))
             svg.replace_with(img)
         font_re = re.compile(r'url\("(data:font\/.+?)"\)')
@@ -812,11 +788,7 @@ def cmd_extract_html(args: argparse.Namespace) -> int:
 def cmd_list_lines(args: argparse.Namespace) -> int:
     root = Path(args.root).resolve()
     report = Path(args.report)
-    files = (
-        [Path(p) for p in args.files]
-        if args.files
-        else list(iter_files(root, args.extensions or TEXTY_EXT))
-    )
+    files = [Path(p) for p in args.files] if args.files else list(iter_files(root, args.extensions or TEXTY_EXT))
     with report.open("a", encoding="utf-8") as fh:
         for f in files:
             text = read_text_safe(f)
@@ -853,13 +825,9 @@ def build_parser() -> argparse.ArgumentParser:
             default=default_root,
             help="Root path to scan (default: current dir)",
         )
-        sp.add_argument(
-            "--dry-run", action="store_true", help="Do not write anything, just report"
-        )
+        sp.add_argument("--dry-run", action="store_true", help="Do not write anything, just report")
 
-    sp = sub.add_parser(
-        "extract-cleanuri", help="Extract data: URIs from css/js/html and rewrite."
-    )
+    sp = sub.add_parser("extract-cleanuri", help="Extract data: URIs from css/js/html and rewrite.")
     add_common(sp)
     sp.add_argument("--out", default="assets")
     sp.add_argument(
@@ -871,44 +839,30 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--hash", default="sha256")
     sp.add_argument("--hash-len", type=int, default=64)
     sp.set_defaults(func=cmd_extract_cleanuri)
-    sp = sub.add_parser(
-        "extract-images", help="Extract data:image/...;base64 URIs from files."
-    )
+    sp = sub.add_parser("extract-images", help="Extract data:image/...;base64 URIs from files.")
     add_common(sp)
     sp.add_argument("--out", default="extracted_images")
-    sp.add_argument(
-        "--extensions", nargs="*", default=None, help="Default: .ipynb .js .html"
-    )
+    sp.add_argument("--extensions", nargs="*", default=None, help="Default: .ipynb .js .html")
     sp.set_defaults(func=cmd_extract_images)
-    sp = sub.add_parser(
-        "ttf-to-base64", help="Convert *.ttf files to base64 .txt files."
-    )
+    sp = sub.add_parser("ttf-to-base64", help="Convert *.ttf files to base64 .txt files.")
     add_common(sp)
     sp.add_argument("--pattern", default="*.ttf")
-    sp.add_argument(
-        "--force", action="store_true", help="Overwrite existing .txt files"
-    )
+    sp.add_argument("--force", action="store_true", help="Overwrite existing .txt files")
     sp.set_defaults(func=cmd_ttf_to_base64)
-    sp = sub.add_parser(
-        "file-to-base64", help="Convert a single file to a base64 .txt."
-    )
+    sp = sub.add_parser("file-to-base64", help="Convert a single file to a base64 .txt.")
     sp.add_argument("file")
     sp.add_argument("--output", default=None)
     sp.add_argument("--force", action="store_true")
     sp.add_argument("--dry-run", action="store_true")
     sp.set_defaults(func=cmd_file_to_base64)
-    sp = sub.add_parser(
-        "extract-css", help="Extract url(data:...;base64,...) from CSS files."
-    )
+    sp = sub.add_parser("extract-css", help="Extract url(data:...;base64,...) from CSS files.")
     sp.add_argument("files", nargs="+")
     sp.add_argument("--out", default="_static")
     sp.add_argument("--hash", default="sha256")
     sp.add_argument("--hash-len", type=int, default=12)
     sp.add_argument("--dry-run", action="store_true")
     sp.set_defaults(func=cmd_extract_css)
-    sp = sub.add_parser(
-        "extract-assets", help="Comprehensive extractor with magic-byte MIME detection."
-    )
+    sp = sub.add_parser("extract-assets", help="Comprehensive extractor with magic-byte MIME detection.")
     add_common(sp)
     sp.add_argument("--out", default="assets")
     sp.add_argument(
@@ -919,18 +873,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sp.add_argument("--hash", default="sha256")
     sp.add_argument("--hash-len", type=int, default=16)
-    sp.add_argument(
-        "--no-magic", action="store_true", help="Disable magic-byte MIME sniffing"
-    )
+    sp.add_argument("--no-magic", action="store_true", help="Disable magic-byte MIME sniffing")
     sp.set_defaults(func=cmd_extract_assets)
-    sp = sub.add_parser(
-        "extract-elements", help="Extract all data:...;base64 blobs into flat dir."
-    )
+    sp = sub.add_parser("extract-elements", help="Extract all data:...;base64 blobs into flat dir.")
     add_common(sp)
     sp.add_argument("--out", default="extracted_base64")
-    sp.add_argument(
-        "--extensions", nargs="*", default=None, help="Default: texty extension set"
-    )
+    sp.add_argument("--extensions", nargs="*", default=None, help="Default: texty extension set")
     sp.add_argument("--hash", default="sha256")
     sp.add_argument("--hash-len", type=int, default=15)
     sp.add_argument(
@@ -940,9 +888,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Explicit file list (overrides root scan)",
     )
     sp.set_defaults(func=cmd_extract_elements)
-    sp = sub.add_parser(
-        "extract-html", help="HTML-only extractor (requires requests+bs4)."
-    )
+    sp = sub.add_parser("extract-html", help="HTML-only extractor (requires requests+bs4).")
     add_common(sp)
     sp.add_argument("--out", default="output")
     sp.add_argument(
@@ -960,9 +906,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.set_defaults(func=cmd_extract_html)
     sp = sub.add_parser("list-lines", help="Report every line containing 'base64,'.")
     add_common(sp)
-    sp.add_argument(
-        "--report", default="b64", help="Output report file (default 'b64')"
-    )
+    sp.add_argument("--report", default="b64", help="Output report file (default 'b64')")
     sp.add_argument("--extensions", nargs="*", default=None)
     sp.add_argument("--files", nargs="*", default=None)
     sp.set_defaults(func=cmd_list_lines)

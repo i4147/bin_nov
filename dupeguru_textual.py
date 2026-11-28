@@ -91,9 +91,7 @@ def normalize_filename(filename: str) -> list[str]:
     return [w for w in words if w]
 
 
-def fuzzy_match_score(
-    words1: list[str], words2: list[str], similarity_threshold: float = 0.8
-) -> float:
+def fuzzy_match_score(words1: list[str], words2: list[str], similarity_threshold: float = 0.8) -> float:
     if not words1 or not words2:
         return 0.0
     matches = 0
@@ -161,11 +159,7 @@ class DuplicateFinder:
             groups[key].append(file)
         for key, files in groups.items():
             if len(files) > 1:
-                self.duplicates.append(
-                    DuplicateGroup(
-                        files=files, match_score=100.0, reason="filename_exact"
-                    )
-                )
+                self.duplicates.append(DuplicateGroup(files=files, match_score=100.0, reason="filename_exact"))
         if self.fuzzy_threshold > 0:
             keys = list(groups.keys())
             checked = set()
@@ -205,9 +199,7 @@ class DuplicateFinder:
             for file in group:
                 if progress_callback:
                     processed += 1
-                    progress_callback(
-                        processed, total_candidates, f"Hashing: {file.path}"
-                    )
+                    progress_callback(processed, total_candidates, f"Hashing: {file.path}")
                 try:
                     file.hash = compute_file_hash(file.path)
                     hash_groups[file.hash].append(file)
@@ -215,11 +207,7 @@ class DuplicateFinder:
                     continue
             for files in hash_groups.values():
                 if len(files) > 1:
-                    self.duplicates.append(
-                        DuplicateGroup(
-                            files=files, match_score=100.0, reason="contents"
-                        )
-                    )
+                    self.duplicates.append(DuplicateGroup(files=files, match_score=100.0, reason="contents"))
 
 
 class ScanSettings(Widget):
@@ -321,11 +309,7 @@ class ResultsTable(Widget):
                 group.size_str,
                 f"{group.match_score:.1f}%",
                 group.reason,
-                (
-                    str(sample.path)[:58] + "…"
-                    if len(str(sample.path)) > 60
-                    else str(sample.path)
-                ),
+                (str(sample.path)[:58] + "…" if len(str(sample.path)) > 60 else str(sample.path)),
                 key=f"group-{i}",
             )
 
@@ -474,9 +458,7 @@ class DupeGuruApp(App):
             path_str = str(self.selected_path)
             if len(path_str) > 70:
                 path_str = "…" + path_str[-67:]
-            self.query_one("#path-display", Static).update(
-                f"[bold]Path:[/bold] {path_str}"
-            )
+            self.query_one("#path-display", Static).update(f"[bold]Path:[/bold] {path_str}")
 
     @on(Button.Pressed, "#scan-btn")
     def on_scan_pressed(self) -> None:
@@ -502,9 +484,7 @@ class DupeGuruApp(App):
         self.push_screen(progress_screen)
 
         def progress_cb(current: int, total: int, message: str = "") -> None:
-            self.call_after_refresh(
-                progress_screen.update_progress, current, total, message
-            )
+            self.call_after_refresh(progress_screen.update_progress, current, total, message)
 
         try:
             self.finder.scan_directory(self.selected_path, progress_cb)

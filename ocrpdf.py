@@ -29,9 +29,7 @@ def _init_worker(pdf_path: str) -> None:
 def _ocr_page(page_num: int) -> str:
     assert _DOC is not None
     page: pymupdf.Page = _DOC.load_page(page_num)
-    textpage: pymupdf.TextPage = page.get_textpage_ocr(
-        flags=0, language="eng", dpi=300, full=True
-    )
+    textpage: pymupdf.TextPage = page.get_textpage_ocr(flags=0, language="eng", dpi=300, full=True)
     return page.get_text("text", textpage=textpage)
 
 

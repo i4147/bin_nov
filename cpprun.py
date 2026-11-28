@@ -55,10 +55,7 @@ def cpp_run(*args: Any):
     if compiler_name is None:
         print("Error: no compiler found. Run: pkg install clang", file=sys.stderr)
         return 1
-    tmpdir = Path(
-        os.environ.get("TMPDIR")
-        or f"{os.environ.get('PREFIX', '/data/data/com.termux/files/usr')}/tmp"
-    )
+    tmpdir = Path(os.environ.get("TMPDIR") or f"{os.environ.get('PREFIX', '/data/data/com.termux/files/usr')}/tmp")
     tmpdir.mkdir(parents=True, exist_ok=True)
     exe = tmpdir / src.stem
     std_flag = "-std=c17" if ext == ".c" else "-std=c++17"

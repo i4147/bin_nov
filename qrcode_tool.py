@@ -105,19 +105,13 @@ def decode_image(path: Path, qr_only: bool) -> list[DecodedCode]:
 
 
 def find_images(inputs: Sequence[Path]) -> list[Path]:
-    suffixes: frozenset[str] = frozenset(
-        {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif"}
-    )
+    suffixes: frozenset[str] = frozenset({".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif"})
     found: list[Path] = []
     for root in inputs:
         if root.is_file():
             found.append(root)
         elif root.is_dir():
-            found.extend(
-                p
-                for p in sorted(root.rglob("*"))
-                if p.is_file() and p.suffix.lower() in suffixes
-            )
+            found.extend(p for p in sorted(root.rglob("*")) if p.is_file() and p.suffix.lower() in suffixes)
     return found
 
 
@@ -175,13 +169,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     rd = sub.add_parser("read", help="Decode codes in image file(s)/dir(s)")
     rd.add_argument("images", nargs="+", type=Path)
-    rd.add_argument(
-        "--qr-only", action="store_true", help="Ignore non-QR barcodes (qrcoder)"
-    )
+    rd.add_argument("--qr-only", action="store_true", help="Ignore non-QR barcodes (qrcoder)")
     rd.add_argument("--data-only", action="store_true", help="Print payloads only")
-    rd.add_argument(
-        "--verbose", action="store_true", help="Also print symbol positions"
-    )
+    rd.add_argument("--verbose", action="store_true", help="Also print symbol positions")
     rd.add_argument("--json", action="store_true", help="JSON output")
     rd.set_defaults(handler=cmd_read)
     mk = sub.add_parser("make", help="Generate a QR code image (needs qrcode pkg)")

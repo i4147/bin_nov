@@ -58,11 +58,7 @@ def find_empty_packages(site_packages: str):
     if not site_packages_path.is_dir():
         return empty
     for entry in site_packages_path.iterdir():
-        if (
-            entry.name.endswith(".dist-info")
-            and entry.is_dir()
-            and is_empty_package(entry)
-        ):
+        if entry.name.endswith(".dist-info") and entry.is_dir() and is_empty_package(entry):
             empty.append(str(entry))
     return empty
 

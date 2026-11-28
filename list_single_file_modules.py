@@ -37,9 +37,7 @@ def parse_record(dist: Distribution) -> list[str] | None:
     record = dist.read_text("RECORD")
     if record is None:
         return None
-    return [
-        line.split(",", 1)[0].strip() for line in record.splitlines() if line.strip()
-    ]
+    return [line.split(",", 1)[0].strip() for line in record.splitlines() if line.strip()]
 
 
 def is_editable(dist: Distribution, entries: list[str]) -> bool:
@@ -52,8 +50,7 @@ def is_editable(dist: Distribution, entries: list[str]) -> bool:
         except json.JSONDecodeError:
             logger.warning(f"Unparseable direct_url.json in {dist.metadata['Name']}")
     return any(
-        entry.startswith("__editable__")
-        or (entry.startswith("__editable___") and entry.endswith("_finder.py"))
+        entry.startswith("__editable__") or (entry.startswith("__editable___") and entry.endswith("_finder.py"))
         for entry in entries
     )
 

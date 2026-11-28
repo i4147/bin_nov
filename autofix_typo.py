@@ -128,11 +128,7 @@ class PatternLearner:
         multi_changes = 0
         for i, char in enumerate(word):
             if char in self.substitution_patterns:
-                multi_corrected = (
-                    multi_corrected[:i]
-                    + self.substitution_patterns[char]
-                    + multi_corrected[i + 1 :]
-                )
+                multi_corrected = multi_corrected[:i] + self.substitution_patterns[char] + multi_corrected[i + 1 :]
                 multi_changes += 1
         if multi_changes > 0 and multi_corrected != word:
             candidates.append((multi_corrected, 0.8 - multi_changes * 0.1))
@@ -171,9 +167,7 @@ class PatternLearner:
 
 
 class TypoFixerWithLearning:
-    def __init__(
-        self, preview: bool = True, learning_db: str = "typo_patterns.json"
-    ) -> None:
+    def __init__(self, preview: bool = True, learning_db: str = "typo_patterns.json") -> None:
         self.preview = preview
         self.learner = PatternLearner(learning_db)
         self.changes_made = 0
@@ -244,9 +238,7 @@ class TypoFixerWithLearning:
         try:
             from difflib import get_close_matches
 
-            matches = get_close_matches(
-                word.lower(), self.valid_words, n=1, cutoff=0.75
-            )
+            matches = get_close_matches(word.lower(), self.valid_words, n=1, cutoff=0.75)
             if matches:
                 if word[0].isupper():
                     return matches[0].capitalize()
@@ -357,20 +349,14 @@ def main() -> None:
         help="Interactive mode (learn from each fix)",
     )
     parser.add_argument("--dir", type=str, default=".", help="Directory to process")
-    parser.add_argument(
-        "--db", type=str, default="typo_patterns.json", help="Learning database file"
-    )
-    parser.add_argument(
-        "--show-patterns", action="store_true", help="Show learned patterns and exit"
-    )
+    parser.add_argument("--db", type=str, default="typo_patterns.json", help="Learning database file")
+    parser.add_argument("--show-patterns", action="store_true", help="Show learned patterns and exit")
     args = parser.parse_args()
     if args.show_patterns:
         learner = PatternLearner(args.db)
         print(f"\nLearned Corrections ({len(learner.learned_corrections)}):")
         for wrong, correct in sorted(learner.learned_corrections.items()):
-            print(
-                f"  {wrong} → {correct} (seen {learner.error_frequency[wrong]} times)"
-            )
+            print(f"  {wrong} → {correct} (seen {learner.error_frequency[wrong]} times)")
         print(f"\nActive Substitution Patterns ({len(learner.substitution_patterns)}):")
         for wrong, correct in sorted(learner.substitution_patterns.items()):
             if wrong in COMMON_SUBSTITUTIONS:
