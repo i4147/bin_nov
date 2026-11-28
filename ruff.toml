@@ -1,0 +1,13 @@
+# ~/bin/ruff.toml
+extend-include = [
+  "*",
+]
+extend-exclude = [
+  "*.sh",
+  "*.bak",
+  "*.pyc",
+  "__pycache__",
+  ".git",
+  ".gitignore",
+  "termux-url-opener",
+]
